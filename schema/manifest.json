@@ -1,0 +1,717 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OSCAR EMR eForm Metadata Schema",
+  "description": "Schema for defining metadata for OSCAR EMR eForms, including identity, licensing, authorship, classification, integrity, versioning, and EMR compatibility.",
+  "type": "object",
+  "required": [
+    "schema_version",  // Added to required fields
+    "form",
+    "licensing",
+    "authorship",
+    "classification",
+    "integrity",
+    "versioning"
+  ],
+  "properties": {
+    "schema_version": { // New property
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "The version of this metadata schema definition (e.g., 1.0.0).",
+      "example": "1.0.0"
+    },
+    "form": {
+      "type": "object",
+      "description": "Core identity and basic information about the eForm.",
+      "required": [
+        "id",
+        "name",
+        "description",
+        "version",
+        "status",
+        "updated",
+        "language"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the eForm (e.g., ZZ_XYZ_TEST_FORM_001)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the eForm."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the eForm's purpose and content."
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version of the eForm (e.g., 2.1.0)."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "deprecated", "draft", "retired"],
+          "description": "Current status of the eForm."
+        },
+        "updated": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of the last significant update to the eForm's content or metadata (YYYY-MM-DD)."
+        },
+        "comment": {
+          "type": "string",
+          "description": "Additional free-text comments about the form's status or usage."
+        },
+        "language": {
+          "type": "array",
+          "description": "List of ISO 639-1 language codes for available languages (e.g., [EN, FR]).",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "licensing": {
+      "type": "object",
+      "description": "Information about the eForm's license and intellectual property.",
+      "required": [
+        "license",
+        "license_url",
+        "copyright_holder",
+        "copyright_year",
+        "usage_restrictions",
+        "attribution_text"
+      ],
+      "properties": {
+        "license": {
+          "type": "string",
+          "description": "Identifier for the license (e.g., CC-BY-4.0)."
+        },
+        "license_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the full license text."
+        },
+        "copyright_holder": {
+          "type": "string",
+          "description": "Name of the copyright holder."
+        },
+        "copyright_year": {
+          "type": "integer",
+          "description": "Year the copyright was established."
+        },
+        "usage_restrictions": {
+          "type": "object",
+          "description": "Details on specific usage restrictions.",
+          "required": [
+            "modification_allowed",
+            "commercial_use",
+            "attribution_required"
+          ],
+          "properties": {
+            "modification_allowed": {
+              "type": "boolean",
+              "description": "True if modification of the form is allowed."
+            },
+            "commercial_use": {
+              "type": "boolean",
+              "description": "True if commercial use of the form is allowed."
+            },
+            "attribution_required": {
+              "type": "boolean",
+              "description": "True if attribution to the copyright holder is required."
+            },
+            "share_alike": {
+              "type": "boolean",
+              "description": "True if derivative works must be shared under the same license."
+            }
+          },
+          "additionalProperties": false
+        },
+        "attribution_text": {
+          "type": "string",
+          "description": "Recommended text for attribution."
+        }
+      },
+      "additionalProperties": false
+    },
+    "authorship": {
+      "type": "object",
+      "description": "Details about the creation and individuals/organizations involved in the eForm.",
+      "required": ["created", "author"],
+      "properties": {
+        "created": {
+          "type": "object",
+          "description": "Date of initial creation.",
+          "required": ["date"],
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "Date of initial creation (YYYY-MM-DD)."
+            }
+          },
+          "additionalProperties": false
+        },
+        "author": {
+          "type": "array",
+          "description": "List of primary authors of the eForm.",
+          "items": {
+            "$ref": "#/$defs/person"
+          },
+          "minItems": 1
+        },
+        "on_behalf_of": {
+          "type": "array",
+          "description": "List of organizations on behalf of which the form was created.",
+          "items": {
+            "$ref": "#/$defs/organization"
+          }
+        },
+        "contributors": {
+          "type": "object",
+          "description": "Categorized list of individuals who contributed to the eForm.",
+          "properties": {
+            "clinical": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/person"
+              }
+            },
+            "technical": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/person"
+              }
+            },
+            "administrative": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/person"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "reviewers": {
+          "type": "array",
+          "description": "Chronological list of formal review events for the eForm.",
+          "items": {
+            "type": "object",
+            "required": ["date", "reviewers", "status"],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date",
+                "description": "Date of the review event."
+              },
+              "reviewers": {
+                "type": "array",
+                "description": "List of individuals who participated in this specific review.",
+                "items": {
+                  "$ref": "#/$defs/personWithDecision"
+                },
+                "minItems": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": ["approved", "pending", "rejected"],
+                "description": "Overall status of the review event."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "classification": {
+      "type": "array",
+      "description": "Categorization of the eForm for search and filtering.",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "specialty",
+          "province",
+          "health_authority",
+          "keywords"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "General type of the form (e.g., referral, diagnostic_request, consent)."
+          },
+          "specialty": {
+            "type": "string",
+            "description": "Medical specialty associated with the form (e.g., cardiology, general_medicine)."
+          },
+          "service": {
+            "type": "string",
+            "description": "Specific service related to the form (e.g., consultation, echocardiogram)."
+          },
+          "province": {
+            "type": "string",
+            "description": "Canadian province the form is relevant to (e.g., BC, ON).",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "health_authority": {
+            "type": "string",
+            "description": "Health authority or region the form applies to."
+          },
+          "keywords": {
+            "type": "array",
+            "description": "List of keywords for searchability.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachments_allowed": {
+            "type": "array",
+            "description": "List of types of attachments permitted with this form (e.g., ECG, Previous reports).",
+            "items": {
+              "type": "string"
+            }
+          },
+          "comment": {
+            "type": "string",
+            "description": "Additional comments on this classification."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "integrity": {
+      "type": "object",
+      "description": "Information for verifying the integrity of the eForm's files.",
+      "required": ["files"],
+      "properties": {
+        "files": {
+          "type": "array",
+          "description": "List of files that constitute the eForm, with their integrity hashes.",
+          "items": {
+            "type": "object",
+            "required": ["filename", "sha256"],
+            "properties": {
+              "filename": {
+                "type": "string",
+                "description": "Name of the file (e.g., cardiology_referral_form.html)."
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-fA-F]{64}$",
+                "description": "SHA256 hash of the file content."
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Size of the file in bytes."
+              },
+              "last_modified": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last modification timestamp of the file (ISO 8601)."
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "versioning": {
+      "type": "object",
+      "description": "Comprehensive details about the eForm's version history and future plans.",
+      "required": ["current_version", "revisions"],
+      "properties": {
+        "current_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "The current semantic version of the form, mirroring form.version."
+        },
+        "revisions": {
+          "type": "array",
+          "description": "Chronological list of all significant revision events for the form.",
+          "items": {
+            "type": "object",
+            "required": ["version", "date", "changes"],
+            "properties": {
+              "version": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                "description": "The version number this revision applies to."
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "description": "Date of the revision (YYYY-MM-DD)."
+              },
+              "changes": {
+                "type": "array",
+                "description": "List of specific changes made in this revision.",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "comment": {
+                "type": "string",
+                "description": "General comment about this revision."
+              },
+              "involved_by": {
+                "type": "array",
+                "description": "List of individuals who actively worked on implementing this revision.",
+                "items": {
+                  "$ref": "#/$defs/person"
+                }
+              },
+              "responsible_by": {
+                "type": "array",
+                "description": "List of individuals (or teams) ultimately responsible for approving/overseeing this revision.",
+                "items": {
+                  "$ref": "#/$defs/person"
+                }
+              },
+              "deprecation": {
+                "type": "object",
+                "description": "Details if this specific version was deprecated.",
+                "required": ["date", "reason"],
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date when this version was deprecated (YYYY-MM-DD)."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "Reason for deprecation of this specific version."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "next_review": {
+          "type": "object",
+          "description": "Details about the next planned review of the eForm.",
+          "required": ["date", "responsible", "scope"],
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "Scheduled date for the next review (YYYY-MM-DD)."
+            },
+            "responsible": {
+              "type": "array",
+              "description": "List of individuals/teams primarily responsible for conducting the next review.",
+              "items": {
+                "$ref": "#/$defs/person"
+              },
+              "minItems": 1
+            },
+            "involved": {
+              "type": "array",
+              "description": "List of individuals/teams expected to be actively involved in the next review.",
+              "items": {
+                "$ref": "#/$defs/person"
+              }
+            },
+            "consulted": {
+              "type": "array",
+              "description": "List of individuals/teams to be consulted during the next review.",
+              "items": {
+                "$ref": "#/$defs/person"
+              }
+            },
+            "scope": {
+              "type": "string",
+              "description": "Scope of the next review (e.g., Clinical accuracy and billing codes)."
+            },
+            "comment": {
+              "type": "string",
+              "description": "Additional comments regarding the next review."
+            }
+          },
+          "additionalProperties": false
+        },
+        "notified_parties": {
+          "type": "array",
+          "description": "List of individuals or teams who should be notified about any revisions or updates to the eForm.",
+          "items": {
+            "$ref": "#/$defs/person"
+          }
+        },
+        "related_forms": {
+          "type": "object",
+          "description": "References to other related eForms.",
+          "properties": {
+            "dependencies": {
+              "type": "array",
+              "description": "Forms this one relies on to function correctly (list of form IDs).",
+              "items": {
+                "type": "string"
+              }
+            },
+            "related": {
+              "type": "array",
+              "description": "Generally related forms (list of form IDs).",
+              "items": {
+                "type": "string"
+              }
+            },
+            "followup": {
+              "type": "array",
+              "description": "Forms that might be used as a follow-up to this one (list of form IDs).",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "provincial_equivalents": {
+          "type": "object",
+          "description": "Mapping to equivalent forms in other provinces/regions.",
+          "patternProperties": {
+            "^[A-Z]{2}$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "compatibility": {
+      "type": "object",
+      "description": "Information about the eForm's compatibility with EMR systems and regions.",
+      "properties": {
+        "emr_systems": {
+          "type": "array",
+          "description": "List of EMR systems and their compatibility status.",
+          "items": {
+            "type": "object",
+            "required": ["name", "status"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the EMR system."
+              },
+              "versions": {
+                "type": "array",
+                "description": "Compatible versions of the EMR system.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "fully_compatible",
+                  "partially_compatible",
+                  "requires_adaptation",
+                  "not_compatible",
+                  "testing"
+                ],
+                "description": "Compatibility status with the EMR system."
+              },
+              "notes": {
+                "type": "string",
+                "description": "Specific notes about compatibility issues or requirements."
+              },
+              "comment": {
+                "type": "string",
+                "description": "General comment about this EMR system's compatibility."
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "regions": {
+          "type": "array",
+          "description": "List of regions and their approval status for this form.",
+          "items": {
+            "type": "object",
+            "required": ["province", "health_authorities", "status"],
+            "properties": {
+              "province": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$",
+                "description": "Canadian province (e.g., BC, ON)."
+              },
+              "health_authorities": {
+                "type": "array",
+                "description": "List of health authorities within the province.",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": ["approved", "testing", "pending", "not_approved"],
+                "description": "Approval status for this region."
+              },
+              "notes": {
+                "type": "string",
+                "description": "Specific notes about regional status."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "technical_requirements": {
+          "type": "object",
+          "description": "Technical requirements for the form's functionality.",
+          "properties": {
+            "pdf_generation": {
+              "type": "string",
+              "enum": ["supported", "not_supported", "n/a"],
+              "description": "Support for PDF generation."
+            },
+            "electronic_submission": {
+              "type": "boolean",
+              "description": "True if electronic submission is supported."
+            },
+            "fax_integration": {
+              "type": "boolean",
+              "description": "True if fax integration is supported."
+            },
+            "attachment_types": {
+              "type": "array",
+              "description": "List of supported attachment file types (e.g., PDF, JPEG).",
+              "items": {
+                "type": "string"
+              }
+            },
+            "max_attachment_size": {
+              "type": "string",
+              "pattern": "^\\d+(KB|MB|GB)$",
+              "description": "Maximum allowed attachment size (e.g., 10MB)."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "contactInfo": {
+      "type": "object",
+      "description": "General contact information for a person or organization.",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address."
+        },
+        "phones": {
+          "type": "array",
+          "description": "List of phone numbers with types.",
+          "items": {
+            "type": "object",
+            "required": ["type", "number"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Type of phone number (e.g., main, cell, work, fax, toll-free)."
+              },
+              "number": {
+                "type": "string",
+                "description": "The phone number (e.g., +1-604-555-1234)."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "website": {
+          "type": "string",
+          "format": "uri",
+          "description": "Website URL."
+        },
+        "github": {
+          "type": "string",
+          "description": "GitHub username, ID, or organization URL."
+        }
+      },
+      "anyOf": [
+        { "required": ["email"] },
+        { "required": ["phones"] },
+        { "required": ["website"] },
+        { "required": ["github"] }
+      ],
+      "additionalProperties": false
+    },
+    "person": {
+      "type": "object",
+      "description": "Schema for an individual person.",
+      "required": ["name", "role", "organization"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the person."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the person (e.g., Cardiology Clinical Lead, Software Developer)."
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization the person belongs to."
+        },
+        "contact": {
+          "$ref": "#/$defs/contactInfo",
+          "description": "Specific contact details for the person."
+        }
+      },
+      "additionalProperties": false
+    },
+    "personWithDecision": {
+      "allOf": [{ "$ref": "#/$defs/person" }],
+      "type": "object",
+      "description": "Schema for a person with an associated decision in a review context.",
+      "required": ["decision"],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": ["approved", "rejected", "pending", "needs_revision"],
+          "description": "Decision made by this reviewer for the specific review event."
+        }
+      },
+      "additionalProperties": false
+    },
+    "organization": {
+      "type": "object",
+      "description": "Schema for an organization.",
+      "required": ["name", "role"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the organization."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the organization (e.g., Healthcare Organization, Collaborative Partner)."
+        },
+        "contact": {
+          "$ref": "#/$defs/contactInfo",
+          "description": "Specific contact details for the organization."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
