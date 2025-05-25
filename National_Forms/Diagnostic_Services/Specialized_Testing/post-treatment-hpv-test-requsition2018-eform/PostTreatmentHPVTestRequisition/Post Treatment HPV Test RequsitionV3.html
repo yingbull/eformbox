@@ -1,0 +1,508 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Post Treatment HPV Test Requisition 2018</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_image_path}jquery-1.9.1.min.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+
+function submission() {
+         setFlag();
+         setTimeout('document.FormName.submit()',2000);
+         }
+
+function setFlag() {
+         // indicate that the form has been submitted
+        if (document.getElementById("newForm").value == 'True')
+        document.getElementById("newForm").value = 'False';
+        }
+</script>
+
+<script type="text/javascript">
+
+                function setDefaults() {
+                        // check the newform flag to ensure this is the initial load of the form
+                        if (document.getElementById("newForm").value == 'True') {
+                                document.getElementById("HPVNo").value = 'X';
+                                document.getElementById("Cervix").value = 'X';
+                                document.getElementById("LEEP").value = 'X';
+                        Names();
+                        parseDate1();
+                        parseDateLMP();
+                        loadFontSize();}
+                }
+
+</script>
+
+<script language="javascript">
+function Names() {
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById('Doctor').value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+				}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+				}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.PhysicianName.value = First_Last_Name ;
+
+    // Change referral name to full First Name, Last Name
+			// Get the name
+			var fullName1 = document.getElementById('referral_name').value;
+			var referralMSP = document.getElementById('bc_referral_no').value;
+	
+			// Split the value
+			var splitName1 = fullName1.split(",");
+			var firstName1 = "";
+			var lastName1  = "";
+
+			// Check for last name
+			if(splitName1.length >= 1) {
+				lastName1 = splitName1[0].trim();
+				}
+			if(splitName1.length >= 2) {
+				firstName1 = splitName1[1].trim();
+				}
+			var First_Last_Name1 = firstName1 + " " + lastName1;
+	
+			// Show the fields on the page
+			document.getElementById("CopyTo").value = First_Last_Name1 + ' MSC# ' + referralMSP;
+			}
+</script>
+
+<script type="text/javascript">
+        function parseDate1() {
+                // Change date field to dd/mmm/yyyy format
+                // Function expects an array of date components in yyyy-mm-dd format
+                // Get the date
+                var FullDate = document.getElementById("Date1").value;
+                var delimiter = '-';
+                // Split the value
+                var Year = FullDate.split(delimiter)[0];
+                var MonthNum = FullDate.split(delimiter)[1];
+                var Day = FullDate.split(delimiter)[2];
+                var Month  = "";
+
+                // Convert Numeric Month to 3 letter month
+                if(MonthNum == 1) { Month = "Jan"; }
+                if(MonthNum == 2) { Month = "Feb"; }
+                if(MonthNum == 3) { Month = "Mar"; }
+                if(MonthNum == 4) { Month = "Apr"; }
+                if(MonthNum == 5) { Month = "May"; }
+                if(MonthNum == 6) { Month = "Jun"; }
+                if(MonthNum == 7) { Month = "Jul"; }
+                if(MonthNum == 8) { Month = "Aug"; }
+                if(MonthNum == 9) { Month = "Sep"; }
+                if(MonthNum == 10) { Month = "Oct"; }
+                if(MonthNum == 11) { Month = "Nov"; }
+                if(MonthNum == 12) { Month = "Dec"; }
+
+                var MixedDate = Day + "/" + Month + "/" + Year;
+                var NumericDate = Day + "/" + MonthNum + "/" + Year;
+
+                // Show the fields on the page
+                document.FormName.TodayDate.value = NumericDate ;
+        }
+</script>
+
+<script type="text/javascript">
+        function parseDateLMP() {
+                // Change date field to dd/mmm/yyyy format
+                // Function expects an array of date components in yyyy-mm-dd format
+                // Get the date
+                var FullDate = document.getElementById("LMP_Pre").value;
+                var delimiter = '-';
+                // Split the value
+                var Year = FullDate.split(delimiter)[0];
+                var MonthNum = FullDate.split(delimiter)[1];
+                var Day = FullDate.split(delimiter)[2];
+                var Month  = "";
+
+                // Convert Numeric Month to 3 letter month
+                if(MonthNum == 1) { Month = "Jan"; }
+                if(MonthNum == 2) { Month = "Feb"; }
+                if(MonthNum == 3) { Month = "Mar"; }
+                if(MonthNum == 4) { Month = "Apr"; }
+                if(MonthNum == 5) { Month = "May"; }
+                if(MonthNum == 6) { Month = "Jun"; }
+                if(MonthNum == 7) { Month = "Jul"; }
+                if(MonthNum == 8) { Month = "Aug"; }
+                if(MonthNum == 9) { Month = "Sep"; }
+                if(MonthNum == 10) { Month = "Oct"; }
+                if(MonthNum == 11) { Month = "Nov"; }
+                if(MonthNum == 12) { Month = "Dec"; }
+
+                var MixedDate = Day + "/" + Month + "/" + Year;
+                var NumericDate = Day + "/" + MonthNum + "/" + Year;
+
+                // Show the fields on the page
+                if(FullDate == ''){
+                document.FormName.LMP.value = '' ;
+				}
+				else {
+                document.FormName.LMP.value = NumericDate ;
+        }
+</script>
+
+<script type="text/javascript">
+        function SendBackLMP() {
+                // Change date field to yyyy-mm-dd format
+                // Function expects an array of date components in dd/mmm/yyyy format
+                // Get the date
+                var FullDate = document.getElementById("LMP").value;
+                var delimiter = '/';
+                // Split the value
+                var Day = FullDate.split(delimiter)[0];
+                var MonthNum = FullDate.split(delimiter)[1];
+                var Year = FullDate.split(delimiter)[2];
+                var Month  = "";
+
+                // Convert Numeric Month to 3 letter month
+                if(MonthNum == 1) { Month = "Jan"; }
+                if(MonthNum == 2) { Month = "Feb"; }
+                if(MonthNum == 3) { Month = "Mar"; }
+                if(MonthNum == 4) { Month = "Apr"; }
+                if(MonthNum == 5) { Month = "May"; }
+                if(MonthNum == 6) { Month = "Jun"; }
+                if(MonthNum == 7) { Month = "Jul"; }
+                if(MonthNum == 8) { Month = "Aug"; }
+                if(MonthNum == 9) { Month = "Sep"; }
+                if(MonthNum == 10) { Month = "Oct"; }
+                if(MonthNum == 11) { Month = "Nov"; }
+                if(MonthNum == 12) { Month = "Dec"; }
+
+                var MixedDate = Year + "-" + Month + "-" + Day;
+                var NumericDate = Year + "-" + MonthNum + "-" + Day;
+
+                // Show the fields on the page
+                document.getElementById("LMP_Post").value = NumericDate ;
+        }
+</script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+
+                /****************************
+                        script to Increase or Decrease the Font Size
+                        name = input name/id, delta = increase (+) or decrease (-) increment #
+                        Requires loadFontSize(); in startUp, or in onload line
+                ****************************/
+                function changeFontSize(name, delta) {
+                        var element = $("#" + name)
+                        var oldSize = parseInt(element.css("font-size"));
+                        var newSize = oldSize + delta;
+
+                        // Save new font size into "value" field of hidden element
+                        $("#" + name + "_fontsize").attr('value', newSize);
+
+                        // Set font size
+                        element.css({'font-size': newSize + 'px'});
+                }
+
+                // Retains altered font size when eForm is reopened;
+                // Requires hidden inputs with format for each field using this feature:
+                // <input type="hidden" name="Input_fontsize" id="Input_fontsize" value="">
+                function loadFontSize() {
+                        $.each($("input[name*='_fontsize'"), function(index, element) {
+                                var fontSize = element.value;
+
+                                if (!!fontSize) {
+                                        var name = element.name.split('_')[0];
+                                        $("#" + name).css({'font-size': fontSize + 'px'});
+                                }
+                        });
+                }
+</script>
+
+
+<!-- Xbox styling -->
+<style type="text/css">
+        .box1 {
+                position: absolute;
+                width: 14px;
+                height: 14px;
+                border: 1px solid #000000;
+                cursor: pointer;
+                font-weight: bold;
+                text-align: center;
+                background: aqua;
+}
+.Show {
+        visibility:visible;
+        display:inline;
+}
+.Hide {
+        visibility:hidden;
+        display:none;
+}
+.FontSizeChange {
+        position:absolute;
+        width:16px;
+        height:15px;
+        font-size:13px;
+        cursor:pointer;
+        background:yellow;
+        text-align:center;
+        border: 1px solid #000000;
+}
+</style>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		var src2 = document.getElementById("BGImage2").href;
+		document.getElementById("BGImage2").href = src2.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();setDefaults();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}post-treatment-HPV-test-req--no-copy-to.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<!-- Hidden input -->
+<input type="hidden" name="Doctor" id="Doctor" oscarDB=doctor>
+<input type="hidden" name="referral_name" id="referral_name" oscarDB=referral_name>
+<input type="hidden" name="bc_referral_no" id="bc_referral_no" oscarDB=bc_referral_no>
+<input type="hidden" name="LMP_Pre" id="LMP_Pre" oscarDB=m$LMP#value>
+<input type="hidden" name="m$LMP#value" id="LMP_Post" >
+<input type="hidden" name="Date1" id="Date1" oscarDB=today>
+<input type="hidden" name="ClinicLabel_fontsize" id="ClinicLabel_fontsize" value="">
+
+<!-- Provider Information-->
+<input name="BillingNo" type="text" class="noborder" style="position:absolute; left:30px; top:140px; width:150px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=doctor_ohip_no>
+<input name="PhysicianName" id="PhysicianName" type="text" class="noborder" style="position:absolute; left:210px; top:140px; width:170px; font-family:sans-serif; font-size:16px; background:transparent;" >
+<input name="CopyTo" id="CopyTo" type="text" class="noborder" style="position:absolute; left:30px; top:185px; width:340px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" >
+<textarea name="ClinicLabel" id="ClinicLabel" type="text" class="noborder" style="position:absolute; left:390px; top:140px; min-width:345px; min-height:70px; max-width:345px; max-height:70px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_address></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="position:absolute; left:750px; top:150px;" onclick="changeFontSize('ClinicLabel', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="position:absolute; left:750px; top:165px;" onclick="changeFontSize('ClinicLabel', -1);">&#9660;</span>
+
+<!--Patient Demographics-->
+<input name="PHN" type="text" class="noborder" style="position:absolute; left:30px; top:230px; width:170px; font-family:sans-serif; font-size:18px; text-align:center; background:transparent;" oscarDB=HINc>
+<input name="DOB" type="text" class="noborder" style="position:absolute; left:210px; top:230px; width:170px; font-family:sans-serif; font-size:18px; text-align:center; background:transparent;" oscarDB=DOBc>
+<input name="CYTO" type="text" class="noborder" style="position:absolute; left:390px; top:230px; width:335px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" oscarDB=m$CYTO#value>
+<input name="PtLastname" type="text" class="noborder" style="position:absolute; left:30px; top:290px; width:170px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" oscarDB=patient_nameL>
+<input name="PtFirstName" type="text" class="noborder" style="position:absolute; left:210px; top:290px; width:170px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" oscarDB=patient_nameF>
+<input name="PtPrevname" type="text" class="noborder" style="position:absolute; left:390px; top:290px; width:335px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+<input name="TodayDate" id="TodayDate" type="text" class="noborder" style="position:absolute; left:30px; top:350px; width:170px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;"  >
+<input name="LMP" id="LMP" type="text" class="noborder" style="position:absolute; left:210px; top:350px; width:170px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" onblur="SendBackLMP()">
+<input name="HPVNo" id="HPVNo" type="text" class="Xbox box1" style="left:535px; top:340px;"
+        onClick="document.FormName.HPVYes.value='';">
+<input name="HPVYes" id="HPVYes" type="text" class="Xbox box1" style="left:620px; top:340px;"
+        onClick="document.FormName.HPVNo.value='';">
+
+<!-- Smear Site: -->
+<input name="Cervix" id="Cervix" type="text" class="Xbox box1" style="left:30px; top:411px;">
+<input name="Endocervix" id="Endocervix" type="text" class="Xbox box1" style="left:30px; top:436px;">
+
+<!-- Clinical Information: -->
+<input name="AbnormalBleeding" id="AbnormalBleeding" type="text" class="Xbox box1" style="left:186px; top:418px;">
+<input name="SuspiciousLesion" id="SuspiciousLesion" type="text" class="Xbox box1" style="left:282px; top:418px;">
+<input name="UsingIUD" id="UsingIUD" type="text" class="Xbox box1" style="left:379px; top:418px;">
+
+<input name="PostMenopausal" id="PostMenopausal" type="text" class="Xbox box1" style="left:186px; top:455px;"
+        onClick="
+                document.FormName.PostPartum.value='';
+                document.FormName.Pregnant.value='';">
+<input name="PostPartum" id="PostPartum" type="text" class="Xbox box1" style="left:282px; top:455px;"
+        onClick="
+                document.FormName.Pregnant.value='';
+                document.FormName.PostMenopausal.value='';">
+<input name="Pregnant" id="Pregnant" type="text" class="Xbox box1" style="left:379px; top:455px;"
+        onClick="
+                document.FormName.PostMenopausal.value='';
+                document.FormName.PostPartum.value='';">
+
+<!-- HRT -->
+<input name="Estrogen" id="Estrogen" type="text" class="Xbox box1" style="left:186px; top:508px;">
+<input name="Progesterone" id="Progesterone" type="text" class="Xbox box1" style="left:282px; top:508px;">
+<input name="Hormone_Other" id="Hormone_Other" type="text" class="Xbox box1" style="left:379px; top:508px;">
+
+<!-- Uterine Procedures -->
+<input name="Colposcopy" id="Colposcopy" type="text" class="Xbox box1" style="left:463px; top:412px;">
+<input name="BiteBiopsy" id="BiteBiopsy" type="text" class="Xbox box1" style="left:607px; top:412px;">
+
+<input name="ConeBiopsy" id="ConeBiopsy" type="text" class="Xbox box1" style="left:463px; top:436px;">
+<input name="LEEP" id="LEEP" type="text" class="Xbox box1" style="left:607px; top:436px;">
+
+<input name="Cryotherapy" id="Cryotherapy" type="text" class="Xbox box1" style="left:463px; top:460px;">
+<input name="Laser" id="Laser" type="text" class="Xbox box1" style="left:607px; top:460px;">
+
+<input name="PelvicRadiation" id="PelvicRadiation" type="text" class="Xbox box1" style="left:463px; top:484px;">
+
+<textarea name="ClinicalComments" type="text" class="noborder" style="position:absolute; left:30px; top:540px; width:700px; height:85px; font-family:sans-serif; font-size:14px; background:transparent;" ></textarea>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:992px; left:0px;">
+	<table><tr><td>
+        <input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag(); submission();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',2000);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> created June 4<sup>th</sup> 2018 by Dr. John Robertson, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. <span style="color:forestgreen;"> Please consider supporting </span><a href="http://oscarbc.ca/" target="_blank" >OSCAR BC.</a><br>
+</div>
+
+
+<script type="text/javascript">
+  Calendar.setup( { inputField :"LMP", ifFormat : "%d/%m/%Y", button : "LMP" } );
+  Calendar.setup( { inputField :"TodayDate", ifFormat : "%d/%m/%Y", button : "TodayDate" } );
+</script>
+
+
+</div>
+</form>
+ <!-- -----------Pop-up menu items ------------------------ -->
+
+<div id="OrdersQuickSelect" class="DoNotPrint" style="position:absolute; left:760px; top:200px; width:400px; background-color:lightyellow; border-style:solid; border-color:black; border-width:1px; font-family: sans-serif; font-size:14;">
+<form name="Instructions">
+<span style=" color:rebeccapurple">
+<b><u>Specimen collection</u></b><br>
+
+<u>Preparation</u><br>
+
+Remove excess mucus from the cervical os and surrounding ectocervix using a cotton or Dacron swab. Discard the swab.<br>
+
+<u>Step 1</u><br>
+
+Insert brush 1&ndash;1.5 cm into the cervical os until the largest outer bristles of
+the  brush  touch  the  ectocervix.  Rotate  it  three  full  turns  in  a  counterclockwise direction.
+ Do not insert the brush completely into the cervical canal.
+Remove the brush from the canal. Avoid touching the bristles to the outside
+of the tube or to any other object. <br>
+
+<u>Step 2</u><br>
+
+Insert the end of the brush into the bottom of the transport tube. 
+Snap off the shaft at the score line, leaving the end of the brush 
+inside the tube.<br>
+
+<u>Step 3</u><br>
+
+Replace the cap on the tube securely by snapping it into place. 
+For storage and shipping instructions, see the package insert.<br><br><br>
+
+<a name="BGImage2" id="BGImage2" href="${oscar_image_path}Digene-HPV-Test-Specimen-Collection-1.png" title="Link to visual instructions page" href="" target="_blank">Link to visual instructions page</a>
+
+</span>
+
+
+</form>
+</div>
+
+<!--  -----------Pop-up end----------------------- -->
+
+</body>
+</html>

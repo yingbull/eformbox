@@ -1,0 +1,683 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>LifeLabs Ontario Cytology and HPV Testing</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+
+
+<!-- Xbox styling -->
+	<style type="text/css">
+		.box1 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+		
+		.only-one-ClinicalIndication {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+		
+		.only-one-Hysterectomy {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+
+		.only-one-Insurance {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+
+		.only-one-Urine {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+
+		.only-one-HPVTesting {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+
+.FontSizeChange {
+        position:absolute;
+        width:16px;
+        height:15px;
+        font-size:13px;
+        cursor:pointer;
+        background:yellow;
+        text-align:center;
+        border: 1px solid #000000;
+}
+
+	</style>
+
+
+<!-- Freeform Signatures -->
+
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script type="text/javascript" src="SignHere.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}SignHere.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	$("#CanvasSignature2").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+	var $sig=$("#CanvasSignature2");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature2").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+	$("#CanvasSignature2").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+	var $sig=$("#CanvasSignature2");
+	var data
+	data=document.getElementById("StoreSignature2").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").value ="X";
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").value ="X";
+	}
+ }
+ </script>
+
+<!-- Check Province -->
+<script type="text/javascript" language="javascript">
+
+
+	function CheckProvince() {
+		// Set alert if patient is from BC
+		var A = document.getElementById("province").value;
+		
+		if (A=="BC"){
+		 alert('This patient is from '+A+' , Private Pay HPV testing is not part of the BC Cancer agency Cytology Screening Program.');
+		}
+		}
+
+ //script to close quick select menu
+                var persistclose=0 //set to 0 or 1. 1 means once the bar is manually closed, it will remain closed for browser session
+
+                function closebar() {
+                        if (persistclose)
+                        document.cookie="remainclosed=1"
+                        document.getElementById("LabQuickSelect").style.visibility="hidden"
+                        document.getElementById("LabQuickSelect").style.display="none"
+                }
+
+                /****************************
+                        script to Increase or Decrease the Font Size
+                        name = input name/id, delta = increase (+) or decrease (-) increment #
+                        Requires loadFontSize(); in startUp, or in onload line
+                ****************************/
+                function changeFontSize(name, delta) {
+                        var element = $("#" + name)
+                        var oldSize = parseInt(element.css("font-size"));
+                        var newSize = oldSize + delta;
+
+                        // Save new font size into "value" field of hidden element
+                        $("#" + name + "_fontsize").attr('value', newSize);
+
+                        // Set font size
+                        element.css({'font-size': newSize + 'px'});
+                }
+
+                // Retains altered font size when eForm is reopened;
+                // Requires hidden inputs with format for each field using this feature:
+                // <input type="hidden" name="Input_fontsize" id="Input_fontsize" value="">
+                function loadFontSize() {
+                        $.each($("input[name*='_fontsize'"), function(index, element) {
+                                var fontSize = element.value;
+
+                                if (!!fontSize) {
+                                        var name = element.name.split('_')[0];
+                                        $("#" + name).css({'font-size': fontSize + 'px'});
+                                }
+                        });
+                }
+</script>
+
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="checkGender();reImg();loadSig(); CheckProvince();loadFontSize();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}Cytology-and-HPV-Testing-Requistion.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<!-- Clinician Informaiton -->
+
+<input name="provider_name_first_init" id="provider_name_first_init" type="text" class=" noborder" style="position:absolute; left:60px; top:125px; width:240px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=provider_name_first_init>
+<textarea name="clinic_address" id="clinic_address" type="text" class=" noborder" style="position:absolute; left:68px; top:153px; width:238px; height:46px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=clinic_address></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:50px; top:165px;" onclick="changeFontSize('clinic_address', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:50px; top:180px;" onclick="changeFontSize('clinic_address', -1);">&#9660;</span>
+
+<input name="doctor_ohip_no" id="doctor_ohip_no" type="text" class=" noborder" style="position:absolute; left:32px; top:209px; width:126px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=doctor_ohip_no>
+<input name="Copy1Name" id="Copy1Name" type="text" class=" noborder" style="position:absolute; left:59px; top:245px; width:115px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Copy1Billing" id="Copy1Billing" type="text" class=" noborder" style="position:absolute; left:215px; top:245px; width:90px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Copy1Address" id="Copy1Address" type="text" class=" noborder" style="position:absolute; left:65px; top:269px; width:240px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Copy2Name" id="Copy2Name" type="text" class=" noborder" style="position:absolute; left:59px; top:294px; width:115px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Copy2Billing" id="Copy2Billing" type="text" class=" noborder" style="position:absolute; left:215px; top:294px; width:90px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Copy2Address" id="Copy2Address" type="text" class=" noborder" style="position:absolute; left:65px; top:318px; width:240px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:315px; top:178px; width:255px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+
+<!-- Patient Information -->
+
+<input name="Chart_Number" id="Chart_Number" type="text" class=" noborder" style="position:absolute; left:580px; top:178px; width:130px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=chartno>
+<input name="HCN" id="HCN" type="text" class=" noborder" style="position:absolute; left:315px; top:210px; width:160px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=hinc>
+<input name="hinversion" id="hinversion" type="text" class=" noborder" style="position:absolute; left:485px; top:210px; width:35px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=hinversion>
+
+<input name="Male" id="Male" type="text" class="Xbox box1" style="left:531px; top:213px;" >
+<input name="Female" id="Female" type="text" class="Xbox box1" style="left:553px; top:213px;" >
+
+<input name="dob_year" id="dob_year" type="text" class=" noborder" style="position:absolute; left:580px; top:210px; width:40px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=dob_year>
+<input name="dob_month" id="dob_month" type="text" class=" noborder" style="position:absolute; left:630px; top:210px; width:35px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=dob_month>
+<input name="dob_day" id="dob_day" type="text" class=" noborder" style="position:absolute; left:675px; top:210px; width:35px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=dob_day>
+
+<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:315px; top:243px; width:35px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=province>
+<input name="OtherProvinceHIN" id="OtherProvinceHIN" type="text" class=" noborder" style="position:absolute; left:365px; top:243px; width:200px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  >
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:580px; top:243px; width:130px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=phone>
+
+<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position:absolute; left:475px; top:263px; width:240px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position:absolute; left:545px; top:292px; width:165px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:315px; top:327px; width:400px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=addressline>
+
+<!-- Gynecologic Cytology -->
+
+<input name="Screen" id="Screen" type="text" class="only-one-ClinicalIndication" style="position:absolute; left:36px; top:384px;" >
+<input name="fu" id="fu" type="text" class="only-one-ClinicalIndication" style="position:absolute; left:36px; top:397px;" >
+<input name="duringcolpo" id="duringcolpo" type="text" class="only-one-ClinicalIndication" style="position:absolute; left:36px; top:412px;" >
+<input name="PatientPay" id="PatientPay" type="text" class="only-one-ClinicalIndication" style="position:absolute; left:36px; top:431px;" >
+
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:179px; top:461px; width:156px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="LMP" id="LMP" type="text" class=" noborder" style="position:absolute; left:179px; top:491px; width:156px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=LMP>
+
+<input name="Cervical" id="Cervical" type="text" class="Xbox box1" style="left:66px; top:532px;" >
+<input name="Vaginal" id="Vaginal" type="text" class="Xbox box1" style="left:190px; top:532px;" >
+<input name="OtherCytology" id="OtherCytology" type="text" class="Xbox box1" style="left:262px; top:532px;" >
+
+<input name="CxN" id="CxN" type="text" class="Xbox box1" style="left:66px; top:562px;" >
+<input name="CxAbN" id="CxAbN" type="text" class="Xbox box1" style="left:124px; top:562px;" >
+
+<input name="Pregnant" id="Pregnant" type="text" class="Xbox box1" style="left:35px; top:607px;" >
+<input name="Postpartum" id="Postpartum" type="text" class="Xbox box1" style="left:145px; top:607px;" >
+<input name="PostMen" id="PostMen" type="text" class="Xbox box1" style="left:35px; top:620px;" >
+<input name="PMB" id="PMB" type="text" class="Xbox box1" style="left:145px; top:620px;" >
+<input name="IUD" id="IUD" type="text" class="Xbox box1" style="left:35px; top:633px;" >
+<input name="HRT" id="HRT" type="text" class="Xbox box1" style="left:145px; top:633px;" >
+<input name="Irradiation" id="Irradiation" type="text" class="Xbox box1" style="left:35px; top:646px;" >
+<input name="OtherStatus" id="OtherStatus" type="text" class="Xbox box1" style="left:145px; top:646px;" >
+
+<input name="SubTotal" id="SubTotal" type="text" class="only-one-Hysterectomy" style="left:112px; top:685px;" >
+<input name="Total" id="Total" type="text" class="only-one-Hysterectomy" style="left:263px; top:684px;" >
+
+<textarea name="History" id="History" type="text" class=" noborder" style="position:absolute; left:30px; top:730px; width:685px; height:40px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=medical_history></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:10px; top:740px;" onclick="changeFontSize('History', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:10px; top:755px;" onclick="changeFontSize('History', -1);">&#9660;</span>
+
+<!-- Non-Gynecologic Cytology -->
+
+<input name="OHIP" id="OHIP" type="text" class="only-one-Insurance" style="left:391px; top:364px;" >
+<input name="3rdParty" id="3rdParty" type="text" class="only-one-Insurance" style="left:477px; top:364px;" >
+<input name="WSIB" id="WSIB" type="text" class="only-one-Insurance" style="left:596px; top:364px;" >
+
+<input name="today2" id="today2" type="text" class=" noborder" style="position:absolute; left:520px; top:378px; width:156px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+<input name="Voided" id="Voided" type="text" class="only-one-Urine" style="left:435px; top:431px;" >
+<input name="Catheterized" id="Catheterized" type="text" class="only-one-Urine" style="left:513px; top:431px;" >
+<input name="Washed" id="Washed" type="text" class="only-one-Urine" style="left:627px; top:431px;" >
+
+<input name="Sputum" id="Sputum" type="text" class="Xbox box1" style="left:435px; top:451px;" >
+<input name="BronchialBrush" id="BronchialBrush" type="text" class="Xbox box1" style="left:513px; top:451px;" >
+<input name="BronchialWash" id="BronchialWash" type="text" class="Xbox box1" style="left:627px; top:451px;" >
+<input name="RespiratorySite" id="RespiratorySite" type="text" class="noborder" style="position:absolute; left:480px; top:465px; width:220px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+
+<input name="Pleural" id="Pleural" type="text" class="Xbox box1" style="left:435px; top:490px;" >
+<input name="Peritoneal" id="Peritoneal" type="text" class="Xbox box1" style="left:513px; top:490px;" >
+<input name="CSF" id="CSF" type="text" class="Xbox box1" style="left:627px; top:490px;" >
+<input name="OtherFluids" id="OtherFluids" type="text" class="Xbox box1" style="left:435px; top:510px;" >
+<input name="FluidSite" id="FluidSite" type="text" class=" noborder" style="position:absolute; left:520px; top:502px; width:195px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="FluidSide" id="FluidSide" type="text" class="noborder" style="position:absolute; left:480px; top:522px; width:220px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+
+<input name="ThyroidLeft" id="ThyroidLeft" type="text" class="Xbox box1" style="left:435px; top:545px;" >
+<input name="ThyroidRight" id="ThyroidRight" type="text" class="Xbox box1" style="left:513px; top:545px;" >
+<input name="ThyroidCyst" id="ThyroidCyst" type="text" class="Xbox box1" style="left:435px; top:560px;" >
+<input name="ThyroidNodule" id="ThyroidNodule" type="text" class="Xbox box1" style="left:513px; top:560px;" >
+<input name="ThyroidSingle" id="ThyroidSingle" type="text" class="Xbox box1" style="left:597px; top:560px;" >
+<input name="ThyroidMultiple" id="ThyroidMultiple" type="text" class="Xbox box1" style="left:661px; top:560px;" >
+
+<input name="BreastLeft" id="BreastLeft" type="text" class="Xbox box1" style="left:435px; top:577px;" >
+<input name="BreastRight" id="BreastRight" type="text" class="Xbox box1" style="left:513px; top:577px;" >
+<input name="BreastCyst" id="BreastCyst" type="text" class="Xbox box1" style="left:435px; top:592px;" >
+<input name="BreastNodule" id="BreastNodule" type="text" class="Xbox box1" style="left:513px; top:592px;" >
+<input name="BreastDischarge" id="BreastDischarge" type="text" class="Xbox box1" style="left:597px; top:592px;" >
+
+<input name="FNABLeft" id="FNABLeft" type="text" class="Xbox box1" style="left:513px; top:611px;" >
+<input name="FNABRight" id="FNABRight" type="text" class="Xbox box1" style="left:627px; top:611px;" >
+<input name="Kidney" id="Kidney" type="text" class="Xbox box1" style="left:393px; top:624px;" >
+<input name="Salivary" id="Salivary" type="text" class="Xbox box1" style="left:513px; top:624px;" >
+<input name="Lung" id="Lung" type="text" class="Xbox box1" style="left:627px; top:624px;" >
+<input name="Liver" id="Liver" type="text" class="Xbox box1" style="left:393px; top:637px;" >
+<input name="LymphNode" id="LymphNode" type="text" class="Xbox box1" style="left:513px; top:637px;" >
+<input name="Pancreas" id="Pancreas" type="text" class="Xbox box1" style="left:627px; top:637px;" >
+<input name="FNABOther" id="FNABOther" type="text" class="Xbox box1" style="left:393px; top:650px;" >
+<input name="FNABText" id="FNABText" type="text" class="noborder" style="position:absolute; left:475px; top:650px; width:235px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+
+<textarea name="OtherSite" id="OtherSite" type="text" class=" noborder" style="position:absolute; left:380px; top:680px; width:330px; height:40px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  ></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:360px; top:685px;" onclick="changeFontSize('OtherSite', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:360px; top:700px;" onclick="changeFontSize('OtherSite', -1);">&#9660;</span>
+
+
+<input name="Reflex" id="Reflex" type="text" class="only-one-HPVTesting" style="left:38px; top:869px;" >
+<input name="CoTesting" id="CoTesting" type="text" class="only-one-HPVTesting" style="left:38px; top:885px;" >
+<input name="DNA_Only" id="DNA_Only" type="text" class="only-one-HPVTesting" style="left:38px; top:901px;" >
+
+<input name="today3" id="today3" type="text" class=" noborder" style="position:absolute; left:145px; top:915px; width:156px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:119px; top:940px; width:200px; height:20; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+	<div id="CanvasSignature2" class="sig" style="position:absolute; left:467px; top:919px; width:200px; height:20; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">created May 20<sup>th</sup> 2018 by Dr. John Robertson, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. 
+</div>
+</div>
+
+
+<!-- Quick Select menu items -->
+<div id="LabQuickSelect" class="DoNotPrint" style="position:absolute; left:770px; top:225px; width:250px; background:lavender; border:solid black 1px; padding:2px; font-size:13px;">
+<span style="font-size:15px;"><b>Use Yellow arrows to increase or decrease font size for text boxes.</b></span><br><br>
+
+<u><b>PAP:</b></u><br>
+
+<input name="PAP" id="PAP_normalnotonBCP" type="radio"
+        onClick="
+                document.FormName.Screen.value='X';
+                document.FormName.Cervical.value='X';
+                document.FormName.Vaginal.value='';
+                document.FormName.OtherCytology.value='';
+
+                document.FormName.PMB.value='';
+                document.FormName.CxN.value='X';
+                document.FormName.IUD.value='';
+
+                document.FormName.PostMen.value='';
+                document.FormName.Pregnant.value='';
+                document.FormName.Postpartum.value='';
+
+                document.FormName.HRT.value='';
+                document.FormName.Irradiation.value='';
+                document.FormName.OtherStatus.value='';
+        ">Normal PAP not on BCP
+
+<br>
+<input name="PAP" id="PAP_normalwithIUD" type="radio"
+        onClick="
+                document.FormName.Screen.value='X';
+                document.FormName.Cervical.value='X';
+                document.FormName.Vaginal.value='';
+                document.FormName.OtherCytology.value='';
+
+                document.FormName.PMB.value='';
+                document.FormName.CxN.value='X';
+                document.FormName.IUD.value='X';
+
+                document.FormName.PostMen.value='';
+                document.FormName.Pregnant.value='';
+                document.FormName.Postpartum.value='';
+
+                document.FormName.HRT.value='';
+                document.FormName.Irradiation.value='';
+                document.FormName.OtherStatus.value='';
+       ">Normal PAP using IUD
+
+<br>
+<input name="PAP" id="PAP_normalpregnant" type="radio"
+        onClick="
+                document.FormName.Screen.value='X';
+                document.FormName.Cervical.value='X';
+                document.FormName.Vaginal.value='';
+                document.FormName.OtherCytology.value='';
+
+                document.FormName.PMB.value='';
+                document.FormName.CxN.value='X';
+                document.FormName.IUD.value='';
+
+                document.FormName.PostMen.value='';
+                document.FormName.Pregnant.value='X';
+                document.FormName.Postpartum.value='';
+
+                document.FormName.HRT.value='';
+                document.FormName.Irradiation.value='';
+                document.FormName.OtherStatus.value='';
+">PAP Pregnant
+
+<br>
+<input name="PAP" id="PAP_postpartum" type="radio"
+        onClick="
+                document.FormName.Screen.value='X';
+                document.FormName.Cervical.value='X';
+                document.FormName.Vaginal.value='';
+                document.FormName.OtherCytology.value='';
+
+                document.FormName.PMB.value='';
+                document.FormName.CxN.value='X';
+                document.FormName.IUD.value='';
+
+                document.FormName.PostMen.value='';
+                document.FormName.Pregnant.value='';
+                document.FormName.Postpartum.value='X';
+
+                document.FormName.HRT.value='';
+                document.FormName.Irradiation.value='';
+                document.FormName.OtherStatus.value='';
+        ">PAP Postpartum
+
+<br>
+<input name="PAP" id="PAP_postmenopausal" type="radio"
+        onClick="
+                document.FormName.Screen.value='X';
+                document.FormName.Cervical.value='X';
+                document.FormName.Vaginal.value='';
+                document.FormName.OtherCytology.value='';
+
+                document.FormName.PMB.value='';
+                document.FormName.CxN.value='X';
+                document.FormName.IUD.value='';
+
+                document.FormName.PostMen.value='X';
+                document.FormName.Pregnant.value='';
+                document.FormName.Postpartum.value='';
+
+                document.FormName.HRT.value='';
+                document.FormName.Irradiation.value='';
+                document.FormName.OtherStatus.value='';
+        ">PAP Postmenopausal
+<br>
+<br>
+
+        <input value="Reset" name="reset" type="reset">
+        <input value="Close" name="Close" type="button" onClick="javascript:closebar(); return false;">
+        F5 to reopen
+<br><br>
+<input name="prevention_link" id="prevention_link" style="color:green;" type="Button" Value="to Prevention" onclick="onBodyLoad(); prevention();">
+</div>
+
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d y-m-d",  button : "today" } );
+	Calendar.setup( { inputField : "LMP", ifFormat : "%Y-%m-%d y-m-d",  button : "LMP" } );
+	Calendar.setup( { inputField : "today2", ifFormat : "%Y-%m-%d y-m-d",  button : "today2" } );
+	Calendar.setup( { inputField : "today3", ifFormat : "%Y-%m-%d y-m-d",  button : "today3" } );
+</script>
+
+</body>
+</html>

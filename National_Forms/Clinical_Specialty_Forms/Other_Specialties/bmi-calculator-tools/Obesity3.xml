@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indicatorTemplateXML>
+	<author>PHC</author>
+	<uid></uid>
+	<heading>
+		<category>Vulnerable Population</category>
+		<subCategory>Obesity</subCategory>
+		<name>Calculated BMI</name>
+		<metricSetName>Obesity Screening</metricSetName>
+		<metricLabel>Obese Class 3</metricLabel>
+		<definition>Providers population, age 18 and older, who are currently overweight or obese.</definition>
+		<framework>Based on and adapted from CIHI’s 2012 Indicator Technical Specifications (Nov 2012)</framework>
+		<frameworkVersion>01-30-2018</frameworkVersion>
+		<notes>All Active Patients</notes>
+	</heading>
+	<indicatorQuery>
+		<version>03-30-2021</version>
+		<params>
+			<!-- 
+				Required parameter provider. Value options are: 
+					[ an individual providerNo, or provider range ] ie: value="370, 1001" 
+					"all" ie: value="all" including null.
+					"loggedInProvider" ie:
+				Default is "loggedInProvider"
+				Use this parameter in the query as ${provider}
+				This parameter should be used for fetching patient's assigned to a MRP.
+				ie: WHERE demographic.provider_no = ${provider}
+			-->
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'AC'" />
+			<parameter id="bmi" name="BMI" value="'BMI'" />
+			<parameter id="height" name="Height" value="'HT'" />		
+			<parameter id="weight" name="Weight" value="'WT'" />
+		</params>
+		<range>
+
+			<lowerLimit id="age" label="Min Age" name="Age" value="18" />
+			
+			<upperLimit id="date" label="Current Date" name="CurrentDate" value="NOW()" />			
+			<lowerLimit id="date" label="Pregnancy Episode Date" name="Date36" value="DATE_SUB( NOW(), INTERVAL 9 MONTH )" />
+			
+			<upperLimit id="height" label="Max Height (cm)" name="Height" value="210.8" />
+			<lowerLimit id="height" label="Min Height (cm)" name="Height" value="91.4" />
+			
+			<upperLimit id="bmi" label="Obese" name="Obese" value="30" />
+			<lowerLimit id="bmi" label="Underweight" name="Underweight" value="18.5" />
+			
+			<upperLimit id="ideal" label="BMI Ideal Max" name="Ideal" value="25" />
+			<lowerLimit id="ideal" label="BMI Ideal Min" name="Ideal" value="18.5" />
+			
+			<upperLimit id="overweight" label="Over Weight Max" name="Overweight" value="30" />
+			<lowerLimit id="overweight" label="Over Weight Min" name="Overweight" value="25" />
+			
+			<upperLimit id="obeseclass1" label="Obese Class 1" name="Obeseclass1" value="35" />
+			<lowerLimit id="obeseclass1" label="Obese Class 1" name="Obeseclass1" value="30" />
+
+			<upperLimit id="obeseclass2" label="Obese Class 2" name="Obeseclass2" value="40" />
+			<lowerLimit id="obeseclass2" label="Obese Class 2" name="Obeseclass2" value="35" />
+			
+			<lowerLimit id="obeseclass3" label="Obese Class 3" name="Obeseclass3" value="40" />
+		</range>
+		<query>
+			<!-- Indicator SQL Query here -->
+			
+			SELECT 
+	
+				IF( COUNT(fin.patient) > 0, 
+						 SUM( IF( fin.bmi >= ${lowerLimit.obeseclass1} AND fin.bmi &lt; ${upperLimit.obeseclass1}, 1, 0 ) ) 
+				,0 ) AS 'Obese Class 1',
+				
+				IF( COUNT(fin.patient) > 0, 
+						 SUM( IF( fin.bmi >= ${lowerLimit.obeseclass2} AND fin.bmi &lt; ${upperLimit.obeseclass2}, 1, 0 ) ) 
+				,0 ) AS 'Obese Class 2',
+				
+				IF( COUNT(fin.patient) > 0, 
+						 SUM( IF( fin.bmi >= ${lowerLimit.obeseclass3}, 1, 0 ) ) 
+				,0 ) AS 'Obese Class 3',
+				
+				IF( COUNT(fin.patient) > 0, 
+						 SUM( IF( fin.bmi &lt; ${lowerLimit.bmi} AND fin.bmi > 0, 1, 0 ) ) 
+				,0 ) AS 'Under Weight',
+			
+				IF( COUNT(fin.patient) > 0, 
+						SUM( IF( fin.bmi >= ${lowerLimit.ideal} AND fin.bmi &lt; ${upperLimit.ideal}, 1, 0 ) )
+				,0 ) AS 'Ideal Weight',
+			
+				IF( COUNT(fin.patient) > 0, 
+						SUM( IF( fin.bmi >= ${lowerLimit.overweight} AND fin.bmi &lt; ${upperLimit.overweight}, 1, 0 ) )
+				,0 ) AS 'Over Weight',
+			
+			
+				IF( COUNT(fin.patient) > 0, 
+						SUM( IF( fin.bmi = 0, 1, 0 ) ) 
+				,0 ) AS 'BMI Not Recorded'
+			
+			FROM (
+			
+				SELECT 
+			
+					d.demographic_no AS patient,
+					IFNULL( BMI.dataField, 0) AS bmi
+			
+				FROM demographic d 
+			
+		
+				-- BMI Screening
+				-- Look for BMI index of 30 or more
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = ${bmi}
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                	AND m1.demographicNo = m2.demographicNo
+					AND m1.type = ${bmi}
+                                	ORDER BY m1.id DESC
+
+				) BMI 
+				ON (d.demographic_no = BMI.demographicNo)
+			
+				-- get the heights so that they can be filtered out.
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = ${height}
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                        AND m1.demographicNo = m2.demographicNo
+					AND m1.type = ${height}
+                                        ORDER BY m1.id DESC
+				) HT 
+				ON (d.demographic_no = HT.demographicNo)
+				
+				-- get the weights so that they can be filtered out.
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = ${weight}
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                        AND m1.demographicNo = m2.demographicNo
+					AND m1.type = ${weight}
+                                        ORDER BY m1.id DESC
+
+				) WT 
+				ON (d.demographic_no = WT.demographicNo)
+			
+	
+				-- exclude any patient that is pregnant (requires episodes)
+				LEFT JOIN (
+					SELECT demographicNo, `status`, startDate
+					FROM Episode
+					WHERE DATE(startDate) > ${lowerLimit.date}
+					GROUP BY demographicNo HAVING COUNT(demographicNo) > -1
+				) PREG
+				ON(PREG.demographicNo = d.demographic_no)
+			
+				WHERE d.patient_status = ${pstatus} 
+				AND provider_no = '${provider}'
+				AND d.demographic_no > 0 
+				
+				AND IFNULL( PREG.`status`, -1) NOT LIKE 'Current' 
+				AND IFNULL( HT.dataField, ${lowerLimit.height}) BETWEEN ${lowerLimit.height} AND ${upperLimit.height}
+	
+				AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+					NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
+				GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			) fin
+		</query>
+	</indicatorQuery>
+	<drillDownQuery>
+		<version>03-30-2021</version>
+		<params>
+			<parameter id="provider" name="provider_no" value="loggedInProvider" />
+			<parameter id="pstatus" name="Patient Status" value="'AC'" />
+			<parameter id="bmi" name="BMI" value="'BMI'" />
+			<parameter id="height" name="Height" value="'HT'" />
+			<parameter id="weight" name="Weight" value="'WT'" />
+			<parameter id="sharedMetricLabel" name="sharedMetricLabel" value="sharedMetricLabel" />
+			<parameter id="excludedPatient" name="Excluded Patient" value="excludedPatient" />
+		</params>
+		<range>
+			<lowerLimit id="age" label="Min Age" name="Age" value="18" />
+			
+			<upperLimit id="date" label="Current Date" name="CurrentDate" value="NOW()" />			
+			<lowerLimit id="date" label="Pregnancy Episode Date" name="Date36" value="DATE_SUB( NOW(), INTERVAL 9 MONTH )" />
+			
+			<upperLimit id="height" label="Max Height (cm)" name="Height" value="210.8" />
+			<lowerLimit id="height" label="Min Height (cm)" name="Height" value="91.4" />
+
+			<upperLimit id="bmi" label="Obese" name="Obese" value="30" />
+			<lowerLimit id="bmi" label="Underweight" name="Underweight" value="18.5" />
+			
+			<upperLimit id="ideal" label="BMI Ideal Max" name="Ideal" value="25" />
+			<lowerLimit id="ideal" label="BMI Ideal Min" name="Ideal" value="18.5" />
+			
+			<upperLimit id="overweight" label="Over Weight Max" name="Overweight" value="29.9" />
+			<lowerLimit id="overweight" label="Over Weight Min" name="Overweight" value="25" />
+			
+			<upperLimit id="obeseclass1" label="Obese Class 1" name="Obeseclass1" value="35" />
+			<lowerLimit id="obeseclass1" label="Obese Class 1" name="Obeseclass1" value="30" />
+
+			<upperLimit id="obeseclass2" label="Obese Class 2" name="Obeseclass2" value="40" />
+			<lowerLimit id="obeseclass2" label="Obese Class 2" name="Obeseclass2" value="35" />
+			
+			<lowerLimit id="obeseclass3" label="Obese Class 3" name="Obeseclass3" value="40" />
+		</range>
+		<displayColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="name" name="CONCAT( d.last_name, ', ', d.first_name )" title="Patient Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Patient DOB (mm-dd-yyyy)" primary="false" />
+			<column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Patient Age" primary="false" />
+			<column id="phonenumber" name="IFNULL( d.phone, '')" title="Patient Phone Number" primary="false" />
+			<column id="height" name="IFNULL(HT.dataField, '')" title="Height" primary="false" />	
+			<column id="weight" name="IFNULL(WT.dataField, '')" title="Weight" primary="false" />				
+			<column id="bmi" name="IFNULL( BMI.dataField, '')" title="BMI" primary="false" />
+			<column id="bmiDate" name="IFNULL( DATE_FORMAT( BMI.dateObserved, '%m-%d-%Y' ), '')" title="Date of Last BMI (mm-dd-yyyy)" primary="false" />
+			<column id="wtDate" name="IFNULL( DATE_FORMAT( WT.dateObserved, '%m-%d-%Y' ), '')" title="Date of Last WT (mm-dd-yyyy)" primary="false" />
+			<column id="calcBMI" name="IFNULL(IF(HT.dataField>0,ROUND(10000*WT.dataField/(HT.dataField*HT.dataField),2),''),'')" title="Calculated BMI from last WT" primary="false" />
+
+		</displayColumns>
+		<exportColumns>
+			<column id="demographic" name="d.demographic_no" title="Patient Id" primary="true" />
+			<column id="firstName" name="d.first_name" title="First Name" primary="false" />
+			<column id="lastName" name="d.last_name" title="Last Name" primary="false" />
+			<column id="dob" name="DATE_FORMAT( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth), '%m-%d-%Y' )" title="Patient DOB (mm-dd-yyyy)" primary="false" />
+                        <column id="age" name="FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,'-',d.month_of_birth,'-',d.date_of_birth) ), NOW() ) ) / 365.25 )" title="Patient Age" primary="false" />
+                        <column id="phonenumber" name="IFNULL( d.phone, '')" title="Patient Phone Number" primary="false" />
+                        <column id="height" name="IFNULL(HT.dataField, '')" title="Height" primary="false" />
+                        <column id="weight" name="IFNULL(WT.dataField, '')" title="Weight" primary="false" />
+                        <column id="bmi" name="IFNULL( BMI.dataField, '')" title="BMI" primary="false" />
+			<column id="wtDate" name="IFNULL( DATE_FORMAT( WT.dateObserved, '%m-%d-%Y' ), '')" title="Date of Last WT (mm-dd-yyyy)" primary="false" />
+			<column id="calcBMI" name="IFNULL(IF(HT.dataField>0,ROUND(10000*WT.dataField/(HT.dataField*HT.dataField),2),''),'')" title="Calculated BMI from last WT" primary="false" />
+		</exportColumns>
+		<drillDownActions>
+			<action id="tickler" name="Tickler"/>
+			<action id="patientStatusUpdate" name="Set Patient Inactive"/>
+			<action id="dxUpdate" name="Disease Registry Update (MORBID OBESITY)" value="27801"/>
+		</drillDownActions>
+		<query>
+			<!-- Drilldown SQL Query here -->
+			SELECT 
+			*
+			FROM demographic d 
+	
+				-- BMI Screening
+				-- Look for BMI index of 30 or more
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = ${bmi}
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                	AND m1.demographicNo = m2.demographicNo
+					AND m1.type = ${bmi}
+                                	ORDER BY m1.id DESC
+
+				) BMI 
+				ON (d.demographic_no = BMI.demographicNo)
+			
+				-- get the heights so that they can be filtered out.
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = ${height}
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                        AND m1.demographicNo = m2.demographicNo
+					AND m1.type = ${height}
+                                        ORDER BY m1.id DESC
+				) HT 
+				ON (d.demographic_no = HT.demographicNo)
+				
+				-- get the weights so that they can be filtered out.
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = ${weight}
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                        AND m1.demographicNo = m2.demographicNo
+					AND m1.type = ${weight}
+                                        ORDER BY m1.id DESC
+
+				) WT 
+				ON (d.demographic_no = WT.demographicNo)
+			
+	
+		
+			-- exclude any patient that is pregnant
+			LEFT JOIN (
+				SELECT demographicNo, `status`, startDate
+				FROM Episode
+				WHERE DATE(startDate) > ${lowerLimit.date}
+				GROUP BY demographicNo HAVING COUNT(demographicNo) > -1
+			) PREG
+			ON(PREG.demographicNo = d.demographic_no)
+		
+			WHERE d.patient_status = ${pstatus} 
+			AND provider_no = '${provider}'
+			AND d.demographic_no > 0 
+			AND IFNULL( PREG.`status`, -1) NOT LIKE 'Current'
+			AND IFNULL( HT.dataField, ${lowerLimit.height}) BETWEEN ${lowerLimit.height} AND ${upperLimit.height}
+			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				NOW() ) ) / 365.25 ) >= ${lowerLimit.age} )
+			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				HT.dateObserved ) ) / 365.25 ) >= 18 )
+                        AND (( BMI.dataField >= ${lowerLimit.obeseclass3} )
+						OR (IF(HT.dataField>0,ROUND(10000*WT.dataField/(HT.dataField*HT.dataField),2),0) >= ${lowerLimit.obeseclass3} ))
+						
+
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1	
+
+
+
+		</query>
+	</drillDownQuery>
+	
+</indicatorTemplateXML>

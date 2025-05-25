@@ -1,0 +1,396 @@
+<html>
+<head>	
+
+<!-- V1 compliments of Dr. David Page; V2_Sep23_2017 updated by Dr. John Yap, for Pathways; requires updated CPRAdvisor_Sep2017.js -->
+
+<style type="text/css" media="print">
+div.DoNotPrint {display: none;}
+.DoNotPrint {display:none;}
+.DoNotPrintSmall {
+	display:none;
+	font-size: 11px;
+}
+input.noborder {
+	border : 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	//scrollbar : none;
+	border : 0px;
+}
+
+.noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+}
+td.noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+}
+</style>
+
+<style type="text/css">
+tr.smaller {
+     font-family:Arial; 
+     font-size: 8pt;
+	 text-align:right;
+}
+td.smaller{
+	font-size: 8;
+	font-family:Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+}
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: white;
+	font-size:14px;
+	width:15px;
+	height:15px;
+}
+</style>
+
+<style>
+<!--A{text-decoration:none}-->
+</style>
+
+<script language="text/javascript" src="CPRAdvisor_Sep2017.js" type="text/javascript"></script>
+<script language="text/javascript" src="${oscar_image_path}CPRAdvisor_Sep2017.js" type="text/javascript"></script>
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type="text/javascript" src="jquery-1.12.0.min.js"></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_image_path}jquery-1.12.0.min.js"></script>
+
+</head>
+
+<body onload="onLoad();"> 
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden inputs -->
+<input type="hidden" name="BP" id="BP" oscarDB=m$BP#value>
+<input type="hidden" name="history1" id="history1" oscarDB=OngoingConcerns>
+<input type="hidden" name="history2" id="history2" oscarDB=Medical_History>
+<input type="hidden" name="history3" id="history3" oscarDB=Other_Medications_History>
+<input type="hidden" name="history4" id="history4" oscarDB=Social_Family_History>
+<input type="hidden" name="Meds" id="Meds" oscarDB=druglist_generic>
+<input type="hidden" name="DMT" id="DMT" oscarDB=m$DMME#value>
+<input type="hidden" name="A1C" id="A1C" oscarDB=m$A1C#value>
+<input type="hidden" name="counter" id="counter" class="nodisplay">
+<input type="hidden" name="date" id="date" oscardb=today >
+<input type="hidden" name="SexGender" id="SexGender" oscarDB=sex>
+<input type="hidden" name="PtName" id="PtName" oscarDB=patient_nameL>
+
+<!-- To create blank background for bottom of eForm -->
+<table width="840px;" style="background:#b0c4de;">
+	<tr><td>
+
+<div id="riskfactorsDiv">	
+		<table width="70%">
+			<tr><td colspan="3"><b>RISK FACTORS AFFECTING SURVIVAL OUTCOMES:</b></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Age over 70:</td>
+				<td><input name="PatientAge1" id="PatientAge1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="PatientAge2" id="PatientAge2" type="hidden">
+					<input name="PatientAge3" id="PatientAge3" type="hidden">
+					<input name="PatientAge4" id="PatientAge4" type="hidden"></td>
+				<td style="text-align:right;">Sepsis:</td>
+				<td><input name="Sepsis1" id="Sepsis1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="Sepsis2" id="Sepsis2" type="hidden">
+					<input name="Sepsis3" id="Sepsis3" type="hidden">
+					<input name="Sepsis4" id="Sepsis4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Systolic BP less than 90:</td>
+				<td><input name="SystolicBP1" id="SystolicBP1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="SystolicBP2" id="SystolicBP2" type="hidden"><input name="SystolicBP3" id="SystolicBP3" type="hidden">
+					<input name="SystolicBP4" id="SystolicBP4" type="hidden"></td>
+				<td style="text-align:right;">Pneumonia:</td>
+				<td><input name="Pneumonia1" id="Pneumonia1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="Pneumonia2" id="Pneumonia2" type="hidden">
+					<input name="Pneumonia3" id="Pneumonia3" type="hidden">
+					<input name="Pneumonia4" id="Pneumonia4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Creatinine over 130mmol/l:</td>
+				<td><input name="Creatinine1" id="Creatinine1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clearCreat220(); totalScore(); setDirtyFlag();">
+					<input name="Creatinine2" id="Creatinine2" type="hidden">
+					<input name="Creatinine3" id="Creatinine3" type="hidden">
+					<input name="Creatinine4" id="Creatinine4" type="hidden"></td>
+				<td style="text-align:right;">Acute MI first day:</td>
+				<td><input name="MI1" id="MI1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clear2(); totalScore(); setDirtyFlag();">
+					<input name="MI2" id="MI2" type="hidden">
+					<input name="MI3" id="MI3" type="hidden">
+					<input name="MI4" id="MI4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Creatinine over 220mmol/l:</td>
+				<td><input name="Creatinine21" id="Creatinine21" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);clearCreat130();totalScore();setDirtyFlag();">
+					<input name="Creatinine22" id="Creatinine22" type="hidden">
+					<input name="Creatinine23" id="Creatinine23" type="hidden">
+					<input name="Creatinine24" id="Creatinine24" type="hidden"></td>
+
+				<td style="text-align:right;">Acute MI 2 days on:</td>
+				<td><input name="MI21" id="MI21" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clear1(); totalScore(); setDirtyFlag();">
+					<input name="MI22" id="MI22" type="hidden">
+					<input name="MI23" id="MI23" type="hidden">
+					<input name="MI24" id="MI24" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Cancer Metastatic:</td>
+				<td><input name="CancerMetastatic1" id="CancerMetastatic1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clearCancerNon(); totalScore(); setDirtyFlag();">
+					<input name="CancerMetastatic2" id="CancerMetastatic2" type="hidden">
+					<input name="CancerMetastatic3" id="CancerMetastatic3" type="hidden">
+					<input name="CancerMetastatic4" id="CancerMetastatic4" type="hidden"></td>
+				<td style="text-align:right;">Acute CVA:</td>
+				<td><input name="CVA1" id="CVA1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="CVA2" id="CVA2" type="hidden">
+					<input name="CVA3" id="CVA3" type="hidden">
+					<input name="CVA4" id="CVA4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Cancer Non Metastatic:</td>
+				<td><input name="CancerNonMetastatic1" id="CancerNonMetastatic1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clearCancerMet(); totalScore(); setDirtyFlag();">
+					<input name="CancerNonMetastatic2" id="CancerNonMetastatic2" type="hidden">
+					<input name="CancerNonMetastatic3" id="CancerNonMetastatic3" type="hidden">
+					<input name="CancerNonMetastatic4" id="CancerNonMetastatic4" type="hidden"></td>
+
+				<td style="text-align:right;">Gallop Rhythm:</td>
+				<td><input name="Gallop1" id="Gallop1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="Gallop2" id="Gallop2" type="hidden">
+					<input name="Gallop3" id="Gallop3" type="hidden">
+					<input name="Gallop4" id="Gallop4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Cirrhosis:</td>
+				<td><input name="Cirrhosis1" id="Cirrhosis1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="Cirrhosis2" id="Cirrhosis2" type="hidden">
+					<input name="Cirrhosis3" id="Cirrhosis3" type="hidden">
+					<input name="Cirrhosis4" id="Cirrhosis4" type="hidden"></td>
+				<td style="text-align:right;">Oliguria:</A></td>
+
+				<td><input name="Oliguria1" id="Oliguria1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="Oliguria2" id="Oliguria2" type="hidden"><input name="Oliguria3" id="Oliguria3" type="hidden">
+					<input name="Oliguria4" id="Oliguria4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Dementia:</td>
+				<td><input name="Dementia1" id="Dementia1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="Dementia2" id="Dementia2" type="hidden"><input name="Dementia3" id="Dementia3" type="hidden"><input name="Dementia4" id="Dementia4" type="hidden"></td>
+				<td style="text-align:right;">Ventilated:</td>
+				<td><input name="Ventilated1" id="Ventilated1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="Ventilated2" id="Ventilated2" type="hidden"><input name="Ventilated3" id="Ventilated3" type="hidden"><input name="Ventilated4" id="Ventilated4" type="hidden"></td>
+			</tr>
+
+			<tr><td style="text-align:right;">Congestive Heart Failure:</td>
+				<td><input name="CHF1" id="CHF1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="CHF2" id="CHF2" type="hidden"><input name="CHF3" id="CHF3" type="hidden"><input name="CHF4" id="CHF4" type="hidden"></td>
+				<td style="text-align:right;">Coma:</td>
+		                <td><input name="Coma1" id="Coma1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="Coma2" id="Coma2" type="hidden"><input name="Coma3" id="Coma3" type="hidden"><input name="Coma4" id="Coma4" type="hidden"></td>				
+			</tr>
+
+			<tr>
+						<td style="text-align:right;">Ischemic Heart Disease:</td>
+		                <td><input name="IHD1" id="IHD1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="IHD2" id="IHD2" type="hidden"><input name="IHD3" id="IHD3" type="hidden"><input name="IHD4" id="IHD4" type="hidden"></td>
+					 	<td style="text-align:right;">Home Bound:</td>
+		                <td><input name="HomeBound1" id="HomeBound1" type="text" class="box1" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="HomeBound2" id="HomeBound2" type="hidden"><input name="HomeBound3" id="HomeBound3" type="hidden"><input name="HomeBound4" id="HomeBound4" type="hidden"></td>					
+					</tr>
+				</table>
+				<br>
+				<table width="100%">
+					<tr><td><a href="http://www.ncbi.nlm.nih.gov/pubmed/2741977" target="_blank"><b>Pre Arrest Morbidity Score (threshold &gt 6):<b></a></td>
+		                <td><input name="PAM" id="PAM" type="text" style="width:24px; font-family:Arial; font-weight:bold; font-size:12px; text-align:center;"></td>
+                        <td>&nbsp&nbsp <b>Interpretation:</b> &nbsp; <input type="text" class="noborder" style="width:225px; font-weight:bold; text-align:center; font-size:14px;" name="PAMScore" id="PAMScore"></input></td>						
+                    </tr>
+
+                    <tr><td><a href="http://171.66.125.180/content/46/2/340.full.pdf" target="_blank"><b>Prognosis After Resuscitation Score (threshold &gt 7):<b></a></td>
+		                <td><input name="PAR" id="PAR" type="text" style="width:24px; font-family:Arial; font-weight:bold; font-size:12px; text-align:center;"></td>
+						<td>&nbsp&nbsp <b>Interpretation:</b> &nbsp; <input type="text" class="noborder" style="width:225px; font-weight:bold; text-align:center; font-size:14px;" name="PARScore" id="PARScore"></input></td>
+					</tr>
+					<tr><td><a href="http://www.ncbi.nlm.nih.gov/pubmed/10225281" target="_blank">
+						<b>Modified PAM Index Score (threshold &gt 6):<b></a></td>
+						<td><input name="MPI" id="MPI" type="text" style="width:24px; font-family:Arial; font-weight:bold; font-size:12px; text-align:center;"></td>
+						<td>&nbsp&nbsp <b>Interpretation:</b> &nbsp; <input type="text" class="noborder" style="width:225px; font-weight:bold; text-align:center; font-size:14px;" name="MPIScore" id="MPIScore"></input></td>
+					</tr>
+				</table>
+</div>
+
+<div class="DoNotPrint" id="TopButtons">	
+	<table>
+		<tr><td>
+		<input type="button" name="scorebutton" onclick="totalScore()" value="Confirm Data Entry and Calculate Scores"><br>	
+		Subject: <input name="subject1" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton2" id="SubmitButton2" type="button" onclick="totalScore(); hideScore(); submission();">
+		<input value="Print" name="PrintButton2" id="PrintButton2" type="button" onclick="totalScore(); hideScore(); printLetter()"> 			
+		<input value="Print and Submit" name="PrintSubmitButton2" type="button" onClick="totalScore(); hideScore(); printSubmit();">
+		</td></tr>
+	</table><br>
+</div>
+
+<!-- Patient handout info/summary -->
+<div id="headingDiv" style="page-break-before:always;">
+	<table width="100%">
+		<tr><td>
+			<input name="PatientSurnameFirstName" type="text" class="noborder" style="width:250px; font-family:Arial; font-size:14px; font-weight:bold;" oscarDB=patient_name>
+		Age: <input name="PatAge" id="PatAge" type="text" class="noborder" style="width:30px; font-family:Arial; font-size:14px; font-weight:bold; text-align:center;" oscarDB=age>
+		Date: <input name="TodaysDate" type="text" class="noborder" style="width:92px; font-family:Arial; font-size:14px; font-weight:bold; text-align:center;" oscardb=today>
+			</td>
+		</tr>
+
+		<tr><td colspan="2"><b>Information Necessary for Advanced Planning:</b></td>
+		</tr> 
+
+	    <tr><td style="font-size:14px;">
+	    No one likes to think of the future, but it is inevitable that we will all one day pass away. It is important to plan in advance for this both in the physical affairs of this world, such as by the creation of a will and a representative agreement, as well as in spiritual affairs, by coming to terms with what will happen to you when you die. We are unable to predict when that day will come but preparation and advance planning is critical. We are unable to predict when that day will come but preparation and advance planning is critical.
+
+	    <br><br>One question that you need to answer is: &nbsp; <b>"If your heart were to stop beating, do you want CPR (Cardiopulmonary Resuscitation) attempted?"</b>
+
+		<br><br>Your first thought is going to be that this question is asking: &nbsp; <b>"Do I want to live or die?"</b>  &nbsp; But that is <b>NOT</b> the question - our presumption is that most people want to live.
+
+		<br><br><b>CPR</b> (Cardiopulmonary Resuscitation) is a very traumatic procedure (both for the person receiving the CPR and for the people giving the CPR), which involves forcible compressions to the chest (with the potential for causing rib fractures) as well as the delivery of very strong electrical shocks across the chest wall. Even though the medical field has advanced significantly over the last fifty years, the success rates from CPR have actually not changed over this time.
+
+		<br><br>The real question that needs to be asked is: &nbsp; <b>"What is my chance of surviving a CPR (Cardiopulmonary Resuscitation) attempt without being left with significant brain damage?"</b>
+
+		<br><br>You need to understand that a cardiac arrest is not a disease, like for example pneumonia, that is treated with antibiotics. To reach a situation requiring CPR means that there is a critical reduction in the circulation of blood and oxygen around the body. Most times this occurs as a culmination of <b>several</b> disease processes in the body, many of which are irreversible. Worded another way: <b>"Organs in the body eventually wear out".</b>
+
+		<br><br>Here are some general statistics to help you come to an informed decision:
+		<br>Your age adjusted chance of surviving an <a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1553-2712.2000.tb02266.x/pdf" target="_blank"><b>Out of Hospital</b></a> cardiac arrest is: &nbsp; <input name="OutofHospitalArrest" id="OutofHospitalArrest" type="text" class="noborder" style="width:45px; font-size:16px; font-weight:bold; font-family:Arial; text-align:center;" value="">
+
+		<br><br>Your possible outcome is better for an <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1497044/" target="_blank"><b>In Hospital</b></a> cardiac arrest. Here are some <b>general</b> hospital outcome results:
+
+		<br><b>Initial survival rate: 44%. &nbsp; &nbsp; &nbsp; &nbsp; 
+			Survival after 24hrs: 20%. &nbsp; &nbsp; &nbsp; &nbsp; 
+			Discharge from hospital: 14%.</b>
+
+		<br><br>The above estimates are an <b>average of ALL patients that underwent CPR in a hospital situation</b>, however it is logical to assume that your specific chance of successful outcome will be influenced by your age and overall health.<br> In simpler terms <b>"The more frail you are at your baseline, the less likely CPR is to be successful".</b>
+		<br>
+		
+<div id="scoreDiv">
+		<br>Tools based on your disease burden have been developed to try to help indicate <b>YOUR</b> chances of successful resuscitation (see attached results). &nbsp; These scores do not return a percentage, rather have a ceiling score after which the outcome is reported as: <b>"CPR unlikely to be successful".</b> &nbsp; Your score in at least one of these calculators indicate that you are <b>unlikely</b> to respond to a resuscitation attempt, in other words, if the general population's chance of successful outcome from in hospital resuscitation is 14%, your chances are <b>much lower</b> and approaching 0%.
+		<br><br>Regardless if your chance of successful resuscitation is 14% or almost 0%, <b>you do need to make a choice whether to allow CPR to be attempted or not.</b> If you are unable to give an answer then it is presumed that CPR should be attempted.
+</div>	
+		
+		<br>In summary, presenting you with this information does <b>not</b> mean that we anticipate that you are about to have a cardiac arrest, instead it is done to aid you in <b>Advance Planning</b> to facilitate the period of our lives that we will all inevitably reach.
+		<br><br>If you choose not to allow CPR to be attempted, you will be asked to choose from the other five levels of care that can be provided to you when you become ill, which range from symptom management only all the way to active management in an ICU situation excluding CPR.<br>Your choice is personal and needs to reflect your desires. This will hopefully allow you to make an informed decision.
+		<br><br>There are some excellent resources out there that we would encourage you to go through with regards to advance planning, an excellent one being <a href="http://www.health.gov.bc.ca/library/publications/year/2013/MyVoice-AdvanceCarePlanningGuide.pdf" target="_blank"><b>"My Voice"</b></a> available online at: 
+		<br><a href="http://www.health.gov.bc.ca/library/publications/year/2013/MyVoice-AdvanceCarePlanningGuide.pdf" target="_blank"> http://www.health.gov.bc.ca/library/publications/year/2013/MyVoice-AdvanceCarePlanningGuide.pdf</a>
+		<td></tr>			
+	</table> 
+</div>
+
+<!-- To create blank background for bottom of eForm -->
+		</td></tr>
+	</table>
+<br>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons">
+	<table><tr style="background:#e5f2ff;"><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="totalScore(); hideScore(); submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="totalScore(); hideScore(); printLetter();">	
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="totalScore(); hideScore(); printSubmit();">
+	</td></tr></table>
+ </div>
+
+<div class="DoNotPrint" id="MedicalHistoryBox" style="position:absolute; left:850px; top:200px;">
+	<table style="outline:black solid thin; background:#D4D4D4;">
+		<tr><td class="Heading1">Medical History box:</td>	
+		</tr>
+	</table>
+
+	<table style="outline:black solid thin; background:#D4D4D4;">
+		<tr><td><textarea name="searchbox" id="searchbox" class="information" style="width:300; height:900px;"></textarea></td>
+		</tr>
+	</table>
+</div>
+ 
+<div class="DoNotPrint" id="LabBox" style="position:absolute; left:850px; top:10px;">
+	<table  style="outline:black solid thin; background:#D4D4D4;">
+		<tr><td><p id="Systolic">Sys BP</p></td>
+			<td><input  name="BP2" id="BP2" type="text" style="width:50px; text-align:center;"></td>
+			<td><input  name="BP3" id="BP3" type="text" style="width:70px; text-align:center;" oscarDB=	m$BP#dateObserved></td>
+		</tr>
+
+		<tr><td><p id="eGFR">eGFR</p></td>
+			<td><input  name="eGFR2" id="eGFR2" type="text" style="width:50px; text-align:center;" oscarDB=	m$EGFR#value></td>
+			<td><input  name="eGFR3" id="eGFR3" type="text" style="width:70px; text-align:center;" oscarDB=	m$EGFR#dateObserved></td>
+		</tr>
+
+		<tr><td><p id="CREAT">CREAT</p></td>
+			<td><input  name="CREATININE2" id="CREATININE2" type="text" style="width:50px; text-align:center;" 	oscarDB=m$SCR#value></td>
+			<td><input  name="CREATININE3" id="CREATININE3" type="text" style="width:70px; text-align:center;" 	oscarDB=m$SCR#dateObserved></td>
+		</tr>
+
+		<tr><td><p id="AST">AST</p></td>
+			<td><input  name="AST2" id="AST2" type="text" style="width:50px; text-align:center;" oscarDB=	m$AST#value></td>
+			<td><input  name="AST3" id="AST3" type="text" style="width:70px; text-align:center;" oscarDB=	m$AST#dateObserved></td>
+		</tr>
+
+		<tr><td><p id="ALT">ALT</p></td>
+			<td><input name="ALT2" id="ALT2" type="text" style="width:50px; text-align:center;" oscarDB=	m$ALT#value></td>
+			<td><input  name="ALT3" id="ALT3" type="text" style="width:70px; text-align:center;" oscarDB=	m$ALT#dateObserved></td>
+		</tr>
+
+		<tr><td><p id="BILI">BILI</p></td>
+			<td><input  name="BILI2" id="BILI2" type="text" style="width:50px; text-align:center;" oscarDB=	m$BILI#value></td>
+			<td><input  name="BILI3" id="BILI3" type="text" style="width:70px; text-align:center;" oscarDB=	m$BILI#dateObserved></td>
+		</tr>
+
+		<tr><td><p id="ALP">ALP</p></td>
+			<td><input  name="ALP2" id="ALP2" type="text" style="width:50px; text-align:center;" oscarDB=	m$ALP#value></td>
+			<td><input  name="ALP3" id="ALP3" type="text" style="width:70px; text-align:center;" oscarDB=	m$ALP#dateObserved></td>
+		</tr>
+	</table>
+</div>
+
+<div class="DoNotPrint" id="BottomButtons2" style="width:850px;">
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">CPR Advisor</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Dr D.A. Page</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.oscarcanada.org/" rel="cc:morePermissions">http://www.oscarcanada.org/</a>.
+<span>Please consider supporting </span>
+<a href="https://oscar-emr.com/" target="_blank" style="color:green;">OSCAR EMR Canada</a> <span> and/or </span>
+<a href="http://oscarbc.ca/" target="_blank" style="color:green;">OSCAR BC.</a>
+<br><br>
+</div>
+ 
+</form>
+</body>
+</html>

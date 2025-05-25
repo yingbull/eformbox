@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+		<!-- CL489B GP Reassessment Report  -->
+
+		<!-- V1_Feb14_2019, John Yap -->
+		<!-- V2_Feb18_2019, add paste function, built off LEAD lab work on Adult Mental Health; and with major contributions from K Yap -->
+		<!-- V3_Feb22_2019, limit choices in work status as per H Chang -->
+		<!-- V4_Mar5_2019, fix functional outcome and treatment outputs as per H Chang -->
+		<!-- V5_Mar17_2019, enhanced Print/Submit section, J Yap -->
+		<!-- V6_Mar19_2019, super-enhanced Print/Submit section, J Yap -->
+		<!-- V7_Mar24_2019, minor tweaks to subject paste, J Yap -->
+		<!-- V8_Mar30_2019b, additional submit info; J Yap -->
+		<!-- V9_Mar31_2019b, Oscar12 compatibility, J Yap -->
+		<!-- V10_Mar31_2019, Oscar12 compatibility, move PasteToEncounter to image library; J Yap -->
+		<!-- V11_Apr1_2019, add consent link, and oscarOpen/close function; J Yap -->
+		<!-- V12_Apr10_2019, enable ICCN, ICDA, ICVN measurements to migrate from ICBC Consent form; J Yap; new date parse, per D Page -->
+		<!-- V14_Apr22_2019, change paste javascript (ICBC_CL489_Paste_Universal.js) to allow for V12/15, FF, and GM compatibility, per D Page -->
+		<!-- V15_May4_2019, 8 day rule for standard vs extended eFORM, as per ICBC Webinar, J Yap -->
+		<!-- V16_Aug1_2019, additional warnings - does not work in Chrome.  Click CANCEL!! J Yap -->
+		<!-- V17_Aug4_2019, access to private billings from eFORM, so eCHART does not close and Copy to Encounter can function; J Yap -->
+		<!-- V18_Aug24_2021, close Quick Lists on print; J Yap -->
+		<!-- V19_Dec12_2021, clean up submit, fix Xbox shapes; J Yap -->
+		<!-- V20_Apr2_2024, update to Feb2023 background; J Yap -->
+
+		<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+		<!-- Do not use \\n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+		<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+		 No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+		 Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+		 This applies to both eForms shared by others, and those created by users themselves.
+		 Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+		 Free: eForms so shared may not be sold or purchased.
+		 Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+		 eForms are not part of the OSCAR core program functionality and code base.
+		 For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+		 eForms are also not subject to the ISO production process for OSCAR.
+		 -->
+
+		<script>
+			// For OSCAR to detect what files to include in the generated ZIP, the
+			// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+			// this serves as a workaround to force the files to be included for ZIP exports.
+			// Allows for appropriate import of all png files that are not referenced by BGImage tags
+			// Place any needed image or js file names within the script tabs, inside double quotations, and to the right of the double slashes
+			// "${oscar_image_path}CL489B_Feb2023_Pg1.png"
+			// "${oscar_image_path}CL489B_Feb2023_Pg2.png"
+			// "${oscar_image_path}CL489B_Feb2023_Pg3.png"
+			// "${oscar_image_path}CL489B_Feb2023_Pg4.png"
+			// "${oscar_image_path}CL489B_Feb2023_Pg5.png"
+			// "${oscar_image_path}CreativeCommonsIcon.png" // for Copy Left footer
+		</script>
+
+		<!-- jQuery for greater functionality -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+		<script>
+			window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>');
+		</script>
+		<script>
+			if (typeof jQuery === "undefined") {
+				document.write(unescape("%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E"));
+			}
+		</script>
+
+		<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors 
+		<script language="javascript1.2" type="text/javascript" src="onBodyLoad_Aug2019.js"></script>
+		<script type="text/javascript" src="ICBC_CL489_Paste_Universal.js"></script>
+		End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+		<!-- script to link to other pages within Oscar - e.g. billing -->
+		<script language="javascript" type="text/javascript" src="${oscar_image_path}onBodyLoad_Aug2019.js"></script>
+
+		<!-- JS file to allow for Copy to Encounter with correct formatting, and proper import -->
+		<script type="text/javascript" src="${oscar_image_path}ICBC_CL489_Paste_Universal.js"></script>
+
+		<!-- main calendar program -->
+		<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+		<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+		<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+		<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+		<style type="text/css" media="screen">
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			input {
+				-moz-box-sizing: content-box;
+				-webkit-box-print-color-adjust: exact;
+				-webkit-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+
+			textarea {
+				resize: none;
+			}
+
+			::placeholder {
+				color: rebeccapurple;
+				font-style: italic;
+				opacity: 1;
+			}
+
+			.CopyFax:hover {
+				/* changes CopyFax element on hover */
+				background: pink;
+				opacity: 0.6;
+				cursor: pointer;
+			}
+
+			.CopyFax:not(:hover) {
+				/* changes CopyFax element on hover */
+				background: transparent;
+				cursor: pointer;
+			}
+		</style>
+
+		<style type="text/css" media="print">
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			input {
+				-moz-box-sizing: content-box;
+				-webkit-box-print-color-adjust: exact;
+				-webkit-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+
+			.DoNotPrint {
+				display: none;
+			}
+			.noborder {
+				border: 0px;
+				background: transparent;
+				scrollbar-3dlight-color: transparent;
+				scrollbar-arrow-color: transparent;
+				scrollbar-base-color: transparent;
+				scrollbar-darkshadow-color: transparent;
+				scrollbar-face-color: transparent;
+				scrollbar-highlight-color: transparent;
+				scrollbar-shadow-color: transparent;
+				scrollbar-track-color: transparent;
+				overflow: hidden;
+			}
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+			.BoxBorderThick {
+				display: none;
+			}
+
+			/* hide placehoders */
+			::placeholder {
+				color: transparent;
+			}
+		</style>
+
+		<style type="text/css">
+			.noborder {
+				background: transparent;
+			}
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+			.BoxBorderThick {
+				position: absolute;
+				border: 2px solid red;
+			}
+		</style>
+
+		<!-- ICD9 QuickPick styling -->
+		<style>
+			.borderClass {
+				position: absolute;
+				border-color: black;
+				border-width: 3px;
+				border-style: solid;
+				padding: 5px;
+				margin: 5px;
+				width: 30%;
+			}
+			.diagnosis {
+				cursor: pointer;
+				position: absolute;
+			}
+			.treatment {
+				cursor: pointer;
+				position: absolute;
+			}
+		</style>
+
+		<!-- Xbox styling -->
+		<style type="text/css">
+			.box1 {
+				position: absolute;
+				width: 10px;
+				height: 12px;
+				font-size: 12px;
+				font-family: Arial;
+				border: 1px solid #000000;
+				cursor: pointer;
+				font-weight: bold;
+				text-align: center;
+				background: aquamarine;
+			}
+
+			.box2 {
+				position: absolute;
+				width: 8px;
+				height: 10px;
+				font-size: 10px;
+				font-family: Arial;
+				border: 1px solid #000000;
+				cursor: pointer;
+				font-weight: bold;
+				text-align: center;
+				background: aquamarine;
+			}
+
+			.FontSizeChange {
+				position: absolute;
+				width: 16px;
+				height: 15px;
+				font-size: 13px;
+				cursor: pointer;
+				background: yellow;
+				text-align: center;
+				border: 1px solid #000000;
+			}
+		</style>
+
+		<script language="javascript" type="text/javascript">
+			/****************************
+			Startup functions
+			****************************/
+			function startUp() {
+				setDocumentTitle("CL489B_Reassessment_Report", document.getElementById("PatientNameL").value);
+				changeImage("CL489B_Feb2023_Pg1.png", "BGImage1");
+				changeImage("CL489B_Feb2023_Pg2.png", "BGImage2");
+				changeImage("CL489B_Feb2023_Pg3.png", "BGImage3");
+				changeImage("CL489B_Feb2023_Pg4.png", "BGImage4");
+				//				changeImage("CL489B_Feb2023_Pg5.png", "BGImage5");
+				changeImage("CreativeCommonsIcon.png", "CreativeCommons"); // for Copy Left footer
+				loadFontSize();
+				setDefaults();
+				//optimize window size/width
+				top.window.resizeTo(1300, screen.availHeight);
+			}
+
+			function changeImage(img, imgId) {
+				// Changes the src value of an <img>.
+				document.getElementById(imgId).src = resourceLink(img);
+				document.getElementById(imgId).href = resourceLink(img);
+			}
+
+			function resourceLink(resource, extension) {
+				// Takes two arguments -- the base filename and its extension -- and
+				// returns a string depending on whether the page has been opened
+				// locally or if it has been uploaded to OSCAR.
+				//
+				// Example usage: resourceLink('image1', 'png')
+				// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+				var prefix = window.location.href.toLowerCase().indexOf("http") != -1 ? "${oscar_image_path}" : "";
+				if (typeof extension === "undefined") {
+					var extension = "";
+				} else {
+					var extension = "." + extension;
+				}
+				return prefix + resource + extension;
+			}
+
+			function setDocumentTitle(Title, PatientNameL) {
+				// set document title
+				document.title = Title + "_" + PatientNameL;
+			}
+
+			function setDefaults() {
+				// check the newform flag to ensure this is the initial load of the form
+				if (document.getElementById("newForm").value == "True") {
+					//document.getElementById("").value = 'X';
+					document.getElementById("RegularMD_1").click();
+					parseDate1();
+					parseName("CurrentProviderDoctor");
+					parseNameL("CurrentProviderDoctorL");
+					parseNameF("CurrentProviderDoctorF");
+				} else {
+					// do this on reload
+				}
+			}
+
+			/****************************
+			Create name in proper order
+			****************************/
+			function parseName(id) {
+				// Get the name
+				var fullName = document.getElementById(id).value;
+				// Split the value
+				var splitName = fullName.split(",");
+				var firstName = "";
+				var lastName = "";
+				// Check for last name
+				if (splitName.length >= 1) {
+					lastName = splitName[0].trim();
+				}
+				if (splitName.length >= 2) {
+					firstName = splitName[1].trim();
+				}
+				var First_Last_Name = firstName + " " + lastName;
+				// Show the fields on the page
+				document.getElementById(id).value = First_Last_Name;
+			}
+
+			/****************************
+			Extract first name
+			****************************/
+			function parseNameF(id) {
+				// Get the name
+				var fullName = document.getElementById(id).value;
+				// Split the value
+				var splitName = fullName.split(",");
+				var First_Name = "";
+				var Last_Name = "";
+				// Check for last name
+				if (splitName.length >= 1) {
+					lastName = splitName[0].trim();
+				}
+				if (splitName.length >= 2) {
+					First_Name = splitName[1].trim();
+				}
+				// Show the fields on the page
+				document.getElementById(id).value = First_Name;
+			}
+
+			/****************************
+			Extract last name only; assumes original format is LAST NAME, FIRST NAME
+			****************************/
+			function parseNameL(id) {
+				// Get the name
+				var fullName = document.getElementById(id).value;
+				// Split the value
+				var splitName = fullName.split(",");
+				var First_Name = "";
+				var Last_Name = "";
+				// Check for last name
+				if (splitName.length >= 1) {
+					Last_Name = splitName[0].trim();
+				}
+				if (splitName.length >= 2) {
+					First_Name = splitName[1].trim();
+				}
+				// Show the fields on the page
+				document.getElementById(id).value = Last_Name;
+			}
+
+			/****************************
+			Submit and print functions
+			****************************/
+			function printLetter() {
+				// ensure Warnings are removed
+				document.getElementById("WorkStatus_warning").className = "DoNotPrint";
+				// ensure Quick Picks are closed
+				Close_list();
+				window.print();
+			}
+
+			function submission() {
+				setFlag();
+				releaseDirtyFlag();
+				document.FormName.subject.value = "Completed Reassessment MVA " + document.getElementById("MVA_Date").value;
+			}
+
+			function partialSubmission() {
+				setFlag();
+				releaseDirtyFlag();
+				document.FormName.subject.value = "Partial Reassessment MVA " + document.getElementById("MVA_Date").value;
+			}
+
+			function setFlag() {
+				// indicate that the form has been submitted
+				if (document.getElementById("newForm").value == "True") document.getElementById("newForm").value = "False";
+			}
+
+			/****************************
+			Checkbox functions
+			****************************/
+			$(document).ready(function () {
+				$(".Xbox").click(function () {
+					var st = $(this).val();
+					if (st == "X") {
+						$(this).val("");
+					} else {
+						$(this).val("X");
+					}
+				});
+
+				$(".Xbox").keypress(function (event) {
+					// any key press except tab will constitute a value change to the checkbox
+					if (event.which != 0) {
+						$(this).click();
+						return false;
+					}
+				});
+			});
+
+			/****************************
+			Scripts to confirm closing of window if it has not been saved yet
+			****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = false;
+			document.onkeyup = setDirtyFlag;
+			function setDirtyFlag() {
+				needToConfirm = true;
+			}
+
+			function releaseDirtyFlag() {
+				needToConfirm = false; //Call this function if does not require an alert.
+				//this could be called when save button is clicked
+			}
+			window.onbeforeunload = confirmExit;
+
+			function confirmExit() {
+				if (needToConfirm) {
+					return "You have attempted to leave this page. If you have made any changes to the fields without clicking the ave button, your changes will be lost. Are you sure you want to exit this page?";
+				}
+			}
+
+			/****************************
+			Script to Increase or Decrease the Font Size
+			name = input name/id, delta = increase (+) or decrease (-) increment #
+			Requires loadFontSize(); in startUp, or in onload line
+			****************************/
+			function changeFontSize(name, delta) {
+				var element = $("#" + name);
+				var oldSize = parseInt(element.css("font-size"));
+				var newSize = oldSize + delta;
+
+				// Save new font size into "value" field of hidden element
+				$("#" + name + "_fontsize").attr("value", newSize);
+				// Set font size
+				element.css({ "font-size": newSize + "px" });
+			}
+
+			// Retains altered font size when eForm is reopened;
+			// Requires hidden inputs with format for each field using this feature:
+			// <input type="hidden" name="Input_fontsize" id="Input_fontsize">
+			function loadFontSize() {
+				$.each($("input[name*='_fontsize'"), function (index, element) {
+					var fontSize = element.value;
+
+					if (!!fontSize) {
+						var name = element.name.split("_")[0];
+						$("#" + name).css({ "font-size": fontSize + "px" });
+					}
+				});
+			}
+
+			/****************************
+			Script to Push and Pull date with correct format
+			for form background AND Oscar
+			****************************/
+			function parseDate1() {
+				// Function expects components in Oscar yyyy-mm-dd format
+
+				// converting Date1 (today) to ICBC format
+				var FullDate = $("#Date1").val();
+				var Year = FullDate.split("-")[0];
+				var MonthNum = FullDate.split("-")[1];
+				var Day = FullDate.split("-")[2];
+				var Date1_ICBCdateFormat = Day + "/" + MonthNum + "/" + Year;
+				$("#TodayDate").val(Date1_ICBCdateFormat);
+
+				// converting MVA_Date to ICBC format
+				var dateAccident = $("#MVA_Date").val();
+				var Year_MVA = dateAccident.split("-")[0];
+				var Month_MVA = dateAccident.split("-")[1];
+				var Day_MVA = dateAccident.split("-")[2];
+				var MVA_ICBCdateFormat = Day_MVA + "/" + Month_MVA + "/" + Year_MVA;
+				$("#AccidentDate").val(MVA_ICBCdateFormat);
+			}
+
+			function UpdateEncounterBoxes(boxIds, boxDetails, header) {
+				// PasteToEncounter function now located in image library: ICBC_CL489_Paste.js
+				// Translate checkbox items via array and
+				// add text input document.getElementById(box).value, use null as output
+				var notes = [];
+				for (i = 0; i < boxIds.length; i++) {
+					var box = boxIds[i];
+					if (document.getElementById(box).value === "X") {
+						notes.push(boxDetails[i]);
+					} else if (document.getElementById(box).value != "") {
+						notes.push(document.getElementById(box).value);
+					}
+				}
+				notes = notes.join(" ");
+
+				// Copy textarea to Encounter
+				if (notes.length !== 0) {
+					PasteToEncounter(notes, header);
+				}
+			}
+
+			function UpdateAllEncounters() {
+				// Hidden Header
+				UpdateEncounterBoxes(["HiddenHeader"], [null], "Seen for initial MVA assessment on:");
+
+				UpdateEncounter("SubjectiveHx", "Subjective:");
+
+				// Work Status check box items - absent from vocation 1
+				UpdateEncounterBoxes(["AbsentWork_Yes", "AbsentWork_No", "AbsentTraining_Yes", "AbsentTraining_No", "AbsentSchool_Yes", "AbsentSchool_No", "AbsentHomemaking_Yes", "AbsentHomemaking_No"], ["The patient has been unable to work.", "The patient has been able to work.", "The patient has been unable to train.", "The patient has continued their training.", "The patient has been unable to continue their studies.", "The patient has continued their studies,", "The patient has been unable to do homemaking or caregiving.", "The patient has continued homemaking and caregiving."], "Since the crash:");
+
+				// Work Status check box items - continuing to work status 2, 3
+				UpdateEncounterBoxes(["Duties_1", "Duties_2", "Duties_3", "Duties_4", "Duties_5", "Duties_6", "Duties_7", "Duties_8", "Hours_1", "Hours_2", "Hours_3", "Hours_4", "Hours_5", "Hours_6", "Hours_7", "Hours_8"], ["The patient has been doing full work duties, at", "The patient has been doing modified work duties, at", "The patient has been doing full training activities, at", "The patient has been doing modified training activities, at", "The patient has been doing full study activities, at", "The patient has been doing modified study activities, at", "The patient has been doing full homemaking/caregiving activities, at", "The patient has been doing modified homemaking/caregiving activities, at", "full hours.", "modified hours.", "full hours.", "modified hours.", "full hours.", "modified hours.", "full hours.", "modified hours."], "As a result of the crash:");
+
+				// Impaired because.... 4
+				UpdateEncounter("NotWorking", "Vocational Impairment:");
+
+				// Continued restrictions needed 5
+				UpdateEncounterBoxes(["Restrictions_Yes", "Restrictions_No", "RestrictionsComments"], ["Ongoing restrictions are required. Comments: ", "No ongoing restrictions are required.", null], "Restrictions: ");
+
+				// Earliest RTW date 6
+				UpdateEncounter("RTWDate", "Earliest RTW date:");
+
+				// Avocational Status 7
+				UpdateEncounterBoxes(["Avocational_1", "Avocational_2", "Avocational_3", "AvocationalImpaired"], ["The patient has returned to pre-crash level of activities, outside of work.", "The patient has NOT returned to pre-crash level of activities, outside of work.  Details:", "The patient&#8217;s avocational status was never impacted by the crash.", null], "Avocational Status:");
+
+				// Avocational Status - engaging activities 8
+				UpdateEncounterBoxes(["AvocationalDuty_1", "AvocationalDuty_2", "AvocationalHour_1", "AvocationalHour_2"], ["The patient is performing regular avocational activities at", "The patient is performing modified avocational activities at", "regular hours.", "modified hours."], "Avocational activities:");
+				// Avocational details 8
+				UpdateEncounter("AvocationalModified", "Avocational activity modifications:");
+
+				// Diagnosis change
+				UpdateEncounterBoxes(["DiagnosisChange_Yes", "DiagnosisChange_No"], ["The diagnosis of the injuries sustained in the crash has changed as below.", "The diagnosis of the injuries sustained in the crash has NOT changed since the last report."], "");
+
+				// Diagnosis 1 items
+				UpdateEncounterBoxes(["Diagnosis1", "Orientation1", "Diagnosis1BodyPart", "Comments1"], [null, null, null, null], "Diagnosis 1:");
+
+				// Diagnosis 2 items
+				UpdateEncounterBoxes(["Diagnosis2", "Orientation2", "Diagnosis2BodyPart", "Comments2"], [null, null, null, null], "Diagnosis 2:");
+
+				// Diagnosis 3 items
+				UpdateEncounterBoxes(["Diagnosis3", "Orientation3", "Diagnosis3BodyPart", "Comments3"], [null, null, null, null], "Diagnosis 3:");
+
+				// Diagnosis 4 items
+				UpdateEncounterBoxes(["Diagnosis4", "Orientation4", "Diagnosis4BodyPart", "Comments4"], [null, null, null, null], "Diagnosis 4:");
+
+				// Diagnosis 5 items
+				UpdateEncounterBoxes(["Diagnosis5", "Orientation5", "Diagnosis5BodyPart", "Comments5"], [null, null, null, null], "Diagnosis 5:");
+
+				// Exam findings
+				UpdateEncounter("Objective", "Exam:");
+
+				// Medical Restrictions/Limitations 9
+				UpdateEncounter("MedicalRestrictions", "Medical Restrictions/Limitations:");
+
+				// Medical Restrictions 10
+				UpdateEncounterBoxes(["Duration_1", "Duration_2", "MedicalRestrictionsDuration"], ["The restrictions are temporary.  Details: ", "The restrictions are permanent.  Details: ", null], "Medical Restrictions:");
+
+				// Barriers
+				UpdateEncounter("Barriers", "Barriers to recovery:");
+
+				// Management Plan 11
+				UpdateEncounter("Management", "Management Plan:");
+
+				// Additional therapy needed 12
+				UpdateEncounterBoxes(["AdditionalRx_1", "AdditionalRx_2", "AdditionalRx"], ["Will be required.", "Will not be required.", null], "Additional therapy: ");
+
+				// Prognosis details 13
+				UpdateEncounter("Prognosis", "Prognosis:");
+
+				// Prognosis timeline 214
+				UpdateEncounter("Timelines", "Prognosis timeline:");
+
+				// Additional comments
+				UpdateEncounter("AdditionalComments", "Additional comments:");
+
+				// Consent
+				UpdateEncounterBoxes(["Consent_1", "Consent_2"], ["Consent was obtained from the patient to share this information with ICBC.", "This information and report is being provided pursuant to the Insurance (Vehicle) Act."], "Consent: ");
+			}
+
+			/****************************
+			Radio-Xbox functions
+			Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x and is named in the convention name_X where X appears in the string defined in scales
+			****************************/
+			function Radio_Box(x) {
+				var scales = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+				var partA = x.substring(0, x.indexOf("_"));
+				var i = x.substring(x.indexOf("_"));
+				var j = i.substr(1);
+				for (var n in scales) {
+					if (j == scales[n]) {
+						for (var m in scales) {
+							if (m != n) {
+								document.getElementById(partA + "_" + scales[m]).value = "";
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			function Radio_Box1(x) {
+				var scales = ["Yes", "No"];
+				var partA = x.substring(0, x.indexOf("_"));
+				var i = x.substring(x.indexOf("_"));
+				var j = i.substr(1);
+
+				for (var n in scales) {
+					if (j == scales[n]) {
+						for (var m in scales) {
+							if (m != n) {
+								document.getElementById(partA + "_" + scales[m]).value = "";
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			/****************************
+			ICD9 Quick Pick scripts
+			****************************/
+			$(function () {
+				$("#list").hide();
+				$(".diagnosis").click(function (e) {
+					$("#list").show();
+					var boxS = $(this).attr("id");
+					var box = boxS.replace("*", "");
+					$("#boxName").val(box);
+				});
+
+				$(".code").click(function (e) {
+					var icd9 = $(this).attr("id");
+					var Pickname = $(this).attr("name");
+					var Quickpick = Pickname.split("-");
+					var Diagnosis = Quickpick[0].trim();
+					var Injury = Quickpick[1].trim();
+					var injury = Injury.replace(/\_/g, " ");
+					var diagnosis = Diagnosis.replace(/\_/g, " ");
+					var box = $("#boxName").val();
+					$("#" + box).val(injury);
+					$("#" + box + "BodyPart").val(diagnosis);
+					$("#" + box + "_ICD").val(icd9);
+					$("#list").hide();
+				});
+			});
+
+			function Close_list() {
+				$("#list").hide();
+			}
+
+			/****************************
+			Script to trigger required filed with name id_text
+			where id is the triggering X-box input field.
+			****************************/
+			function changeAndCheck(id) {
+				// Subsequent text field must be name of Xbox + _text so Other and Other_text
+				var id2 = id + "_text";
+				if (document.getElementById(id).value != "X") {
+					document.getElementById(id2).required = true;
+					document.getElementById(id2).reportValidity();
+				} else {
+					document.getElementById(id2).required = false;
+					document.getElementById(id2).value = "";
+				}
+			}
+
+			/****************************
+			Copy to Clipboard
+			Uses span elements
+			****************************/
+			function copyToClipboard(id) {
+				var range = document.createRange();
+				range.selectNode(document.getElementById(id));
+				window.getSelection().removeAllRanges(); // clear current selection
+				window.getSelection().addRange(range); // to select text
+				document.execCommand("copy");
+				window.getSelection().removeAllRanges(); // to deselect
+				document.getElementById(id).style.background = "pink";
+				document.getElementById(id).style.opacity = "0.5";
+			}
+		</script>
+	</head>
+
+	<body onLoad="startUp();">
+		<form method="post" action="" name="FormName" id="FormName">
+			<!-- Hidden input for title name -->
+			<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB="patient_nameL" />
+
+			<!-- Hidden input for dd/mm/yyyy format for date -->
+			<input type="hidden" name="Date1" id="Date1" oscarDB="today" />
+			<input type="hidden" name="MVA_Date" id="MVA_Date" oscarDB="m$ICDA#value" />
+
+			<!-- Hidden input for font size changer inputs -->
+			<input type="hidden" name="SubjectiveHx_fontsize" id="SubjectiveHx_fontsize" />
+			<input type="hidden" name="PrevSxRx_fontsize" id="PrevSxRx_fontsize" />
+			<input type="hidden" name="Objective_fontsize" id="Objective_fontsize" />
+			<input type="hidden" name="AdaptiveEquip_fontsize" id="AdaptiveEquip_fontsize" />
+			<input type="hidden" name="AdditionalComments_fontsize" id="AdditionalComments_fontsize" />
+			<input type="hidden" name="MedRxDetails_fontsize" id="MedRxDetails_fontsize" />
+
+			<!-- Hidden Header for eChart note -->
+			<input type="hidden" name="HiddenHeader" id="HiddenHeader" oscarDB="today" />
+
+			<!-- Hidden input for Quick Pick ICD9 and treatment -->
+			<input type="hidden" id="boxName" />
+
+			<div id="page1" style="position: relative; left: 0px; top: 0px; width: 850px" class="pagebreak">
+				<img id="BGImage1" src="" />
+
+				<!-- CL 489 links -->
+				<input name="Standard_Form" id="Standard_Form" type="hidden" oscarOPEN="CL489" />
+				<input name="CL489" id="CL489" class="DoNotPrint" type="button" style="position: absolute; left: 310px; top: 10px; background: lightskyblue" onclick="$('#Standard_Form').click(); window.close();" title="Click to close this eForm without saving, and open Standard eForm (Patient IS NOT IMPAIRED FOR MORE THAN 8 DAYS)." value="Standard" />
+				<input type="hidden" id="Extended_Form" name="Extended_Form" oscarOPEN="CL489A" />
+				<input value="Extended" class="DoNotPrint" type="button" name="CL489A" id="CL489A" style="position: absolute; left: 400px; top: 10px; background: lightskyblue" onclick="$('#Extended_Form').click(); window.close();" title="Click to close current eForm without saving, and open Extended eForm (Patient HAS BEEN/WILL BE IMPAIRED FOR MORE THAN 8 days)." />
+				<a name="SGP_ref" class="DoNotPrint" style="position: absolute; left: 495px; top: 14px; font-size: 15px; color: black; text-decoration: none" href="https://sgp.bc.ca/new-icbc-fees-and-regulations-effective-april-1st/" target="_blank" title="SGP website">SGP Reference</a>
+				<a name="ICBC" style="position: absolute; left: 33px; top: 33px; width: 47px; height: 50px; border: 3px solid lightskyblue" href="https://www.icbc.com/partners/health-services/Pages/Physicians.aspx" target="_blank" title="Web reference"></a>
+
+				<span class="DoNotPrint" style="position: absolute; left: 100px; top: 39px; width: 415px; height: 19px; cursor: pointer" title="Use if ICBC requests an update on the patient&#8217;s condtion"></span>
+
+				<!-- Invoice Info -->
+				<input name="ClaimNo" id="ClaimNo" type="text" class="noborder" style="position: absolute; left: 40px; top: 172px; width: 180px; font-size: 16px; background: transparent" oscarDB="m$ICCN#value" />
+				<input name="AccidentDate" id="AccidentDate" type="text" class="noborder" style="position: absolute; left: 233px; top: 172px; width: 180px; font-size: 16px; text-align: center; background: transparent" />
+				<input name="TodayDate" id="TodayDate" type="text" class="noborder" style="position: absolute; left: 427px; top: 172px; width: 180px; font-size: 16px; text-align: center; background: transparent" />
+				<input name="VendorNo" id="VendorNo" type="text" class="noborder" style="position: absolute; left: 620px; top: 172px; width: 180px; font-size: 16px; text-align: center; background: transparent" oscarDB="m$ICVN#value" />
+
+				<input name="InvoiceNo" id="InvoiceNo" type="text" class="noborder" style="position: absolute; left: 40px; top: 200px; width: 180px; font-size: 16px; background: transparent" oscarDB="e$last#InvoiceNo" />
+				<input name="CurrentProviderDoctor" id="CurrentProviderDoctor" type="text" class="noborder" style="position: absolute; left: 233px; top: 200px; width: 567px; font-size: 16px; background: transparent" oscarDB="current_user" />
+				<textarea name="clinic_addressLineFull" id="clinic_addressLineFull" type="text" class="noborder" style="position: absolute; left: 40px; top: 235px; width: 763px; height: 43px; font-size: 18px; background: white" oscarDB="clinic_addressLineFull"></textarea>
+
+				<!-- Patient Info -->
+				<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position: absolute; left: 40px; top: 330px; width: 373px; font-size: 18px; background: transparent" oscarDB="patient_nameF" />
+				<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position: absolute; left: 427px; top: 330px; width: 373px; font-size: 18px; background: transparent" oscarDB="patient_nameL" />
+				<input name="dobc" id="dobc" type="text" class="noborder" style="position: absolute; left: 40px; top: 361px; width: 180px; font-size: 18px; text-align: center; background: transparent" oscarDB="dobc" />
+				<input name="HIN" id="HIN" type="text" class="noborder" style="position: absolute; left: 233px; top: 361px; width: 180px; font-size: 18px; text-align: center; background: transparent" oscarDB="HIN" />
+
+				<input name="Interpreter_Y" id="Interpreter_1" type="text" class="Xbox box1" style="left: 426px; top: 364px" onclick="changeAndCheck(this.id); Radio_Box(this.id);" />
+				<input name="Interpreter_N" id="Interpreter_2" type="text" class="Xbox box1" style="left: 468px; top: 364px" onclick="document.getElementById('Interpreter_1_text').required = false; document.getElementById('Interpreter_1_text').value = ''; Radio_Box(this.id);" />
+				<input name="Interpreter_1_text" id="Interpreter_1_text" type="text" class="noborder" style="position: absolute; left: 510px; top: 361px; width: 290px; font-size: 18px; background: transparent" />
+
+				<!-- Practitioner Info -->
+				<input name="CurrentProviderDoctorF" id="CurrentProviderDoctorF" type="text" class="noborder" style="position: absolute; left: 40px; top: 424px; width: 373px; font-size: 18px; background: transparent" oscarDB="current_user" />
+				<input name="CurrentProviderDoctorL" id="CurrentProviderDoctorL" type="text" class="noborder" style="position: absolute; left: 427px; top: 424px; width: 373px; font-size: 18px; background: transparent" oscarDB="current_user" />
+				<input name="MSPNo" id="MSPNo" type="text" class="noborder" style="position: absolute; left: 40px; top: 456px; width: 373px; font-size: 18px; background: transparent" oscarDB="current_user_ohip_no" />
+
+				<input name="RegularMD_Y" id="RegularMD_1" type="text" class="Xbox box1" style="left: 426px; top: 459px" onclick="document.getElementById('RegularMD_2_text').required = false; document.getElementById('RegularMD_2_text').value = ''; Radio_Box(this.id);" />
+				<input name="RegularMD_N" id="RegularMD_2" type="text" class="Xbox box1" style="left: 468px; top: 459px" onclick="changeAndCheck(this.id); Radio_Box(this.id);" />
+				<input name="RegularMD_2_text" id="RegularMD_2_text" type="text" class="noborder" style="position: absolute; left: 510px; top: 456px; width: 290px; font-size: 18px; background: transparent" />
+
+				<!-- Subjective -->
+				<textarea name="SubjectiveHx" id="SubjectiveHx" type="text" class="noborder" style="position: absolute; left: 40px; top: 520px; width: 763px; height: 123px; font-size: 17px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 522px" onclick="changeFontSize('SubjectiveHx', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 537px" onclick="changeFontSize('SubjectiveHx', -1);">&#9660;</span>
+
+				<!-- Vocational Status: absent from 1 -->
+				<span name="highlight" id="WorkStatus_2" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 685px; font-size: 32px; color: red" title="Is the patient been ABSENT from the following as a result of the crash?">*</span>
+				<input name="AbsentWork_Yes" id="AbsentWork_Yes" type="text" class="Xbox box2" style="left: 70px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Hide';" />
+				<input name="AbsentWork_No" id="AbsentWork_No" type="text" class="Xbox box2" style="left: 109px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Show';" />
+
+				<input name="AbsentTraining_Yes" id="AbsentTraining_Yes" type="text" class="Xbox box2" style="left: 193px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Hide';" />
+				<input name="AbsentTraining_No" id="AbsentTraining_No" type="text" class="Xbox box2" style="left: 233px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Show';" />
+
+				<input name="AbsentSchool_Yes" id="AbsentSchool_Yes" type="text" class="Xbox box2" style="left: 352px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Hide';" />
+				<input name="AbsentSchool_No" id="AbsentSchool_No" type="text" class="Xbox box2" style="left: 392px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Show';" />
+
+				<input name="AbsentHomemaking_Yes" id="AbsentHomemaking_Yes" type="text" class="Xbox box2" style="left: 560px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Hide';" />
+				<input name="AbsentHomemaking_No" id="AbsentHomemaking_No" type="text" class="Xbox box2" style="left: 600px; top: 700px" onclick="Radio_Box1(this.id); document.getElementById('WorkStatus_warning').className = 'Show';" />
+
+				<!-- Vocational Status: status of duties 2 -->
+				<input name="Duties_WorkFull" id="Duties_1" type="text" class="Xbox box2" style="left: 70px; top: 755px" onclick="Radio_Box(this.id);" />
+				<input name="Duties_WorkModified" id="Duties_2" type="text" class="Xbox box2" style="left: 109px; top: 755px" onclick="Radio_Box(this.id);" />
+
+				<input name="Duties_TrainFull" id="Duties_3" type="text" class="Xbox box2" style="left: 207px; top: 755px" onclick="Radio_Box(this.id);" />
+				<input name="Duties_TrainModified" id="Duties_4" type="text" class="Xbox box2" style="left: 247px; top: 755px" onclick="Radio_Box(this.id);" />
+
+				<input name="Duties_SchoolFull" id="Duties_5" type="text" class="Xbox box2" style="left: 348px; top: 755px" onclick="Radio_Box(this.id);" />
+				<input name="Duties_SchoolModified" id="Duties_6" type="text" class="Xbox box2" style="left: 387px; top: 755px" onclick="Radio_Box(this.id);" />
+
+				<input name="Duties_HomemakingFull" id="Duties_7" type="text" class="Xbox box2" style="left: 586px; top: 755px" onclick="Radio_Box(this.id);" />
+				<input name="Duties_HomemakingModified" id="Duties_8" type="text" class="Xbox box2" style="left: 624px; top: 755px" onclick="Radio_Box(this.id);" />
+
+				<span name="warning" id="Duties_warning" type="text" class="DoNotPrint" style="position: absolute; left: 700px; top: 755px; width: 240px; font-size: 12px; color: green">Please choose one corresponding item only.</span>
+
+				<!-- Vocational Status: status of hours 3 -->
+				<input name="Hours_WorkFull" id="Hours_1" type="text" class="Xbox box2" style="left: 70px; top: 788px" onclick="Radio_Box(this.id);" />
+				<input name="Hours_WorkModified" id="Hours_2" type="text" class="Xbox box2" style="left: 109px; top: 788px" onclick="Radio_Box(this.id);" />
+
+				<input name="Hours_TrainFull" id="Hours_3" type="text" class="Xbox box2" style="left: 207px; top: 788px" onclick="Radio_Box(this.id);" />
+				<input name="Hours_TrainModified" id="Hours_4" type="text" class="Xbox box2" style="left: 247px; top: 788px" onclick="Radio_Box(this.id);" />
+
+				<input name="Hours_SchoolFull" id="Hours_5" type="text" class="Xbox box2" style="left: 348px; top: 788px" onclick="Radio_Box(this.id);" />
+				<input name="Hours_SchoolModified" id="Hours_6" type="text" class="Xbox box2" style="left: 387px; top: 788px" onclick="Radio_Box(this.id);" />
+
+				<input name="Hours_HomemakingFull" id="Hours_7" type="text" class="Xbox box2" style="left: 586px; top: 788px" onclick="Radio_Box(this.id);" />
+				<input name="Hours_HomemakingModified" id="Hours_8" type="text" class="Xbox box2" style="left: 624px; top: 788px" onclick="Radio_Box(this.id);" />
+
+				<span name="warning" id="Hours_warning" type="text" class="DoNotPrint" style="position: absolute; left: 700px; top: 788px; width: 240px; font-size: 12px; color: green">Please choose one corresponding item only.</span>
+
+				<!-- Vocational Status: not continuing to work 4 -->
+				<span name="highlight" id="NotWorking_highlight" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 828px; font-size: 32px; color: red" title="Provide reasons why the patient is not working, studying, training, or providing homemaking/caregiving">*</span>
+				<textarea name="NotWorking" id="NotWorking" type="text" class="noborder" style="position: absolute; left: 40px; top: 840px; width: 763px; height: 45px; font-size: 17px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 842px" onclick="changeFontSize('NotWorking', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 857px" onclick="changeFontSize('NotWorking', -1);">&#9660;</span>
+
+				<!-- Vocational Status: continued restrictions 5 -->
+				<span name="highlight" id="Impaired_status" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 895px; font-size: 32px; color: red" title="Do you support any continued restrictions on regular duties or hours?">*</span>
+
+				<input name="Restrictions_Yes" id="Restrictions_Yes" type="text" class="Xbox box2" style="left: 38px; top: 910px" onclick="document.getElementById('RestrictionsComments').style.background = 'yellow'; document.getElementById('RestrictionsComments').placeholder = 'add details'; Radio_Box1(this.id);" />
+				<input name="Restrictions_No" id="Restrictions_No" type="text" class="Xbox box2" style="left: 80px; top: 910px" onclick="document.getElementById('RestrictionsComments').style.background = 'transparent'; document.getElementById('RestrictionsComments').placeholder = ''; document.getElementById('RestrictionsComments').value = ''; Radio_Box1(this.id);" />
+
+				<textarea name="RestrictionsComments" id="RestrictionsComments" type="text" class="noborder" style="position: absolute; left: 40px; top: 940px; width: 763px; height: 60px; font-size: 13px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 942px" onclick="changeFontSize('RestrictionsComments', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 957px" onclick="changeFontSize('RestrictionsComments', -1);">&#9660;</span>
+
+				<!-- Vocational Status: RTW date 6 -->
+				<span name="highlight" id="RTW_highlight" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 1010px; font-size: 32px; color: red" title="Indicate the earliest date the patient could return to their pre-crash vocational activities.">*</span>
+				<input name="RTWDate" id="RTWDate" type="text" class="noborder" style="position: absolute; left: 40px; top: 1022px; width: 763px; font-size: 16px; background: transparent" />
+			</div>
+
+			<!-- START OF PAGE 2 -->
+			<div id="page2" style="position: relative; page-break-after: always">
+				<img id="BGImage2" src="" style="width: 850px" />
+
+				<!-- Avocational Status: return to baseline avocations 7 -->
+				<span name="highlight" id="Impaired_status" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 61px; font-size: 32px; color: red" title="Has the patient returned to a pre-crash level of activity outside of work?">*</span>
+				<input name="Avocational_Y" id="Avocational_1" type="text" class="Xbox box2" style="left: 39px; top: 76px" onclick="document.getElementById('AvocationalImpaired').style.background = 'transparent'; document.getElementById('AvocationalImpaired').placeholder = ''; Radio_Box(this.id);" />
+				<input name="Avocational_N" id="Avocational_2" type="text" class="Xbox box2" style="left: 80px; top: 76px" onclick="document.getElementById('AvocationalImpaired').style.background = 'yellow'; document.getElementById('AvocationalImpaired').placeholder = 'add details'; document.getElementById('AvocationalImpaired').value = ''; Radio_Box(this.id);" />
+				<input name="Avocational_NA" id="Avocational_3" type="text" class="Xbox box2" style="left: 119px; top: 76px" onclick="document.getElementById('AvocationalImpaired').style.background = 'transparent'; document.getElementById('AvocationalImpaired').placeholder = ''; document.getElementById('AvocationalImpaired').value = ''; Radio_Box(this.id);" />
+				<textarea name="AvocationalImpaired" id="AvocationalImpaired" type="text" class="noborder" style="position: absolute; left: 40px; top: 105px; width: 763px; height: 54px; font-size: 17px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 107px" onclick="changeFontSize('AvocationalImpaired', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 122px" onclick="changeFontSize('AvocationalImpaired', -1);">&#9660;</span>
+
+				<!-- Avocational Status: continuing avocational activities 8 -->
+				<span name="highlight" id="AvocationalDuties_1" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 169px; font-size: 32px; color: red" title="If the patient is continuing to engage in their avocational activities, indicate their status as applicable">*</span>
+				<input name="AvocationalDuty_reg" id="AvocationalDuty_1" type="text" class="Xbox box2" style="left: 79px; top: 184px" onclick="Radio_Box(this.id);" />
+				<input name="AvocationalDuty_mod" id="AvocationalDuty_2" type="text" class="Xbox box2" style="left: 142px; top: 184px" onclick="Radio_Box(this.id);" />
+				<input name="AvocationalHour_reg" id="AvocationalHour_1" type="text" class="Xbox box2" style="left: 252px; top: 184px" onclick="Radio_Box(this.id);" />
+				<input name="AvocationalHour_mod" id="AvocationalHour_2" type="text" class="Xbox box2" style="left: 315px; top: 184px" onclick="Radio_Box(this.id);" />
+				<textarea name="AvocationalModified" id="AvocationalModified" type="text" class="noborder" style="position: absolute; left: 40px; top: 215px; width: 763px; height: 67px; font-size: 17px; background: transparent" placeholder="add details"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 217px" onclick="changeFontSize('AvocationalModified', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 232px" onclick="changeFontSize('AvocationalModified', -1);">&#9660;</span>
+
+				<!-- Assessment Diagnosis -->
+				<span name="highlight" id="DiagnosisChange" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 342px; font-size: 32px; color: red" title="Has the diagnosis of the injuries sustained in the crash changed since the last report? (If no, skip to the next section)">*</span>
+				<span name="highlight" id="DiagnosisChange_warning" style="position: absolute; left: 455px; top: 342px; width: 130px; height: 15px; background: transparent; opacity: 0.4"></span>
+				<input name="DiagnosisChange_Yes" id="DiagnosisChange_Yes" type="text" class="Xbox box2" style="left: 38px; top: 357px" onclick=" document.getElementById('Diagnosis1').style.background = 'yellow'; document.getElementById('Diagnosis2').style.background = 'yellow'; document.getElementById('Diagnosis3').style.background = 'yellow';  document.getElementById('Diagnosis4').style.background = 'yellow'; document.getElementById('Diagnosis5').style.background = 'yellow';  document.getElementById('DiagnosisChange_warning').style.background = 'transparent'; Radio_Box1(this.id);" />
+				<input name="DiagnosisChange_No" id="DiagnosisChange_No" type="text" class="Xbox box2" style="left: 80px; top: 357px" onclick=" document.getElementById('Diagnosis1').style.background = 'transparent'; document.getElementById('Diagnosis2').style.background = 'transparent'; document.getElementById('Diagnosis3').style.background = 'transparent'; document.getElementById('Diagnosis4').style.background = 'transparent'; document.getElementById('Diagnosis5').style.background = 'transparent'; document.getElementById('DiagnosisChange_warning').style.background = 'yellow'; Radio_Box1(this.id);" />
+
+				<div id="Assessment" style="position: absolute; top: 411px">
+					<textarea name="Diagnosis1" id="Diagnosis1" type="text" class="noborder" style="position: absolute; left: 40px; top: 0px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Diagnosis1BodyPart" id="Diagnosis1BodyPart" type="text" class="noborder" style="position: absolute; left: 170px; top: 0px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Orientation1" id="Orientation1" type="text" class="noborder" style="position: absolute; left: 301px; top: 0px; width: 120px; height: 50px; font-size: 16px; background: transparent" placeholder="e.g. Left, Right, Bilateral"></textarea>
+					<textarea name="Diagnosis1_ICD" id="Diagnosis1_ICD" type="text" class="noborder" style="position: absolute; left: 432px; top: 0px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Comments1" id="Comments1" type="text" class="noborder" style="position: absolute; left: 562px; top: 0px; width: 240px; height: 50px; font-size: 16px; background: transparent" placeholder="add relevant comments"></textarea>
+					<span id="Diagnosis1*" class="diagnosis DoNotPrint" style="left: 815px; top: 0px"><b>?</b></span>
+					<input name="diagnosis1" id="diagnosis1" type="hidden" />
+
+					<textarea name="Diagnosis2" id="Diagnosis2" type="text" class="noborder" style="position: absolute; left: 40px; top: 98px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Diagnosis2BodyPart" id="Diagnosis2BodyPart" type="text" class="noborder" style="position: absolute; left: 170px; top: 98px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Orientation2" id="Orientation2" type="text" class="noborder" style="position: absolute; left: 301px; top: 98px; width: 120px; height: 50px; font-size: 16px; background: transparent" placeholder="e.g. Left, Right, Bilateral"></textarea>
+					<textarea name="Diagnosis2_ICD" id="Diagnosis2_ICD" type="text" class="noborder" style="position: absolute; left: 432px; top: 98px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Comments2" id="Comments2" type="text" class="noborder" style="position: absolute; left: 562px; top: 98px; width: 240px; height: 50px; font-size: 16px; background: transparent" placeholder="add relevant comments"></textarea>
+					<span id="Diagnosis2*" class="diagnosis DoNotPrint" style="left: 815px; top: 98px"><b>?</b></span>
+					<input name="diagnosis2" id="diagnosis2" type="hidden" />
+
+					<textarea name="Diagnosis3" id="Diagnosis3" type="text" class="noborder" style="position: absolute; left: 40px; top: 173px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Diagnosis3BodyPart" id="Diagnosis3BodyPart" type="text" class="noborder" style="position: absolute; left: 170px; top: 173px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Orientation3" id="Orientation3" type="text" class="noborder" style="position: absolute; left: 301px; top: 173px; width: 120px; height: 50px; font-size: 16px; background: transparent" placeholder="e.g. Left, Right, Bilateral"></textarea>
+					<textarea name="Diagnosis3_ICD" id="Diagnosis3_ICD" type="text" class="noborder" style="position: absolute; left: 432px; top: 173px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Comments3" id="Comments3" type="text" class="noborder" style="position: absolute; left: 562px; top: 173px; width: 240px; height: 50px; font-size: 16px; background: transparent" placeholder="add relevant comments"></textarea>
+					<span id="Diagnosis3*" class="diagnosis DoNotPrint" style="left: 815px; top: 173px"><b>?</b></span>
+					<input name="diagnosis3" id="diagnosis3" type="hidden" />
+
+					<textarea name="Diagnosis4" id="Diagnosis4" type="text" class="noborder" style="position: absolute; left: 40px; top: 250px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Diagnosis4BodyPart" id="Diagnosis4BodyPart" type="text" class="noborder" style="position: absolute; left: 170px; top: 250px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Orientation4" id="Orientation4" type="text" class="noborder" style="position: absolute; left: 301px; top: 250px; width: 120px; height: 50px; font-size: 16px; background: transparent" placeholder="e.g. Left, Right, Bilateral"></textarea>
+					<textarea name="Diagnosis4_ICD" id="Diagnosis4_ICD" type="text" class="noborder" style="position: absolute; left: 432px; top: 250px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Comments4" id="Comments4" type="text" class="noborder" style="position: absolute; left: 562px; top: 250px; width: 240px; height: 50px; font-size: 16px; background: transparent" placeholder="add relevant comments"></textarea>
+					<span id="Diagnosis4*" class="diagnosis DoNotPrint" style="left: 815px; top: 250px"><b>?</b></span>
+					<input name="diagnosis4" id="diagnosis4" type="hidden" />
+
+					<textarea name="Diagnosis5" id="Diagnosis5" type="text" class="noborder" style="position: absolute; left: 40px; top: 325px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Diagnosis5BodyPart" id="Diagnosis5BodyPart" type="text" class="noborder" style="position: absolute; left: 170px; top: 325px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Orientation5" id="Orientation5" type="text" class="noborder" style="position: absolute; left: 301px; top: 325px; width: 120px; height: 50px; font-size: 16px; background: transparent" placeholder="e.g. Left, Right, Bilateral"></textarea>
+					<textarea name="Diagnosis5_ICD" id="Diagnosis5_ICD" type="text" class="noborder" style="position: absolute; left: 432px; top: 325px; width: 120px; height: 50px; font-size: 16px; background: transparent"></textarea>
+					<textarea name="Comments5" id="Comments5" type="text" class="noborder" style="position: absolute; left: 562px; top: 325px; width: 240px; height: 50px; font-size: 16px; background: transparent" placeholder="add relevant comments"></textarea>
+					<span id="Diagnosis5*" class="diagnosis DoNotPrint" style="left: 815px; top: 325px"><b>?</b></span>
+					<input name="diagnosis5" id="diagnosis5" type="hidden" />
+				</div>
+
+				<!-- Quick Pick for Diagnoses -->
+				<div id="list" class="borderClass" style="left: 880px; top: 410px; width: 315px">
+					<div name="close_box">
+						<input name="Close" type="button" value="Close" style="position: absolute; left: -57px; top: -2px; color: green" onclick="Close_list();" />
+					</div>
+					<span id="840" name="Shoulder_and_upper_arm-Sprain" class="code">Shoulder-840</span><br />
+					<span id="847.0" name="Neck-Sprain" class="code">Neck sprain-847.0</span><br />
+					<span id="847.1" name="Thoracic-Sprain" class="code">Thoracic sprain-847.1</span><br />
+					<span id="847.2" name="Lumbar-Sprain" class="code">Lumbar sprain-847.2</span><br />
+					<span id="847.3" name="Sacral-Sprain" class="code">Sacral sprain-847.3</span><br />
+					<span id="847.4" name="Coccyx-Sprain" class="code">Coccyx sprain-847.4</span><br />
+					<span id="841" name="Elbow_and_forearm-Sprain" class="code">Elbow and forearm sprain-841</span><br />
+					<span id="842" name="Wrist_and_hand-Sprain" class="code">Wrist and hand sprain-842</span><br />
+					<span id="843" name="Hip_and_thigh-Sprain" class="code">Hip and thigh sprain-843</span><br />
+					<span id="844" name="Knee_and_leg-Sprain" class="code">Knee and leg sprain-844</span><br />
+					<span id="845" name="Ankle_and_foot-Sprain" class="code">Ankle and foot sprain-845</span><br />
+					<span id="846" name="Sacroiliac_region-Sprain" class="code">Sacroiliac region sprain-846</span><br />
+					<span id="300" name="-Anxiety_state" class="code">Anxiety state-300</span><br />
+					<span id="309" name="-Adjustment_reaction" class="code">Adjustment reaction-309</span><br />
+					<span id="308.0" name="-Acute_reaction_to_stress" class="code">Acute reaction to stress-308.0</span><br />
+					<span id="850" name="-Concussion" class="code">Concussion</span><br />
+					<span id="920" name="Face_scalp_and_neck-Contusion" class="code">Contusion face-920</span><br />
+					<span id="921" name="eyes_and_adnexa-Contusion" class="code">Contusion eye-921</span><br />
+					<span id="922" name="Trunk-Contusion" class="code">Contusion trunk-922</span><br />
+					<span id="923" name="Upper_limb-Contusion" class="code">Contusion upper limb-923</span><br />
+					<span id="924" name="Lower_limb-Contusion" class="code">Contusion lower limb-924</span><br />
+				</div>
+
+				<!-- Objective -->
+				<textarea name="Objective" id="Objective" type="text" class="noborder" style="position: absolute; left: 40px; top: 860px; width: 763px; height: 157px; font-size: 17px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 862px" onclick="changeFontSize('Objective', +1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 877px" onclick="changeFontSize('Objective', -1);">&#9660;</span>
+			</div>
+
+			<!-- START OF PAGE 3 -->
+			<div id="page3" style="position: relative; page-break-after: always">
+				<img id="BGImage3" src="" style="width: 850px" />
+
+				<!-- Medical Restrictions 9 -->
+				<span name="highlight" id="Restrictions_highlight" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 57px; font-size: 32px; color: red" title="Describe any medical restrictions or limitations">*</span>
+				<textarea name="MedicalRestrictions" id="MedicalRestrictions" type="text" class="noborder" style="position: absolute; left: 40px; top: 70px; width: 763px; height: 49px; font-size: 16px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 72px" onclick="changeFontSize('MedicalRestrictions', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 87px" onclick="changeFontSize('MedicalRestrictions', -1);">&#9660;</span>
+
+				<!-- Medical Restrictions/Limitations 10 -->
+				<input name="Duration_temp" id="Duration_1" type="text" class="Xbox box2" style="left: 207px; top: 130px" onclick="Radio_Box(this.id);" />
+				<input name="Duration_perm" id="Duration_2" type="text" class="Xbox box2" style="left: 272px; top: 130px" onclick="Radio_Box(this.id);" />
+				<textarea name="MedicalRestrictionsDuration" id="MedicalRestrictionsDuration" type="text" class="noborder" style="position: absolute; left: 40px; top: 160px; width: 763px; height: 65px; font-size: 16px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 162px" onclick="changeFontSize('MedicalRestrictionsDuration', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 177px" onclick="changeFontSize('MedicalRestrictionsDuration', -1);">&#9660;</span>
+
+				<textarea name="Barriers" id="Barriers" type="text" class="noborder" style="position: absolute; left: 40px; top: 255px; width: 763px; height: 57px; font-size: 16px; background: transparent" placeholder="add details"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 257px" onclick="changeFontSize('Barriers', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 272px" onclick="changeFontSize('Barriers', -1);">&#9660;</span>
+
+				<!-- Recommended Care Management Plan 11 -->
+				<textarea name="Management" id="Management" type="text" class="noborder" style="position: absolute; left: 40px; top: 374px; width: 763px; height: 40px; font-size: 16px; background: transparent" placeholder="add details"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 376px" onclick="changeFontSize('Management', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 391px" onclick="changeFontSize('Management', -1);">&#9660;</span>
+
+				<!-- Recommended Care Management Plan 12 -->
+				<span name="highlight" id="AdditionalRx_highlight" type="text" class="DoNotPrint" style="position: absolute; left: 20px; top: 425px; font-size: 32px; color: red" title="Will the patient likely require additional therapy beyond the above recommended care management plan?">*</span>
+				<input name="AdditionalRx_Y" id="AdditionalRx_1" type="text" class="Xbox box2" style="left: 39px; top: 440px" onclick="document.getElementById('AdditionalRx').style.background = 'yellow'; document.getElementById('AdditionalRx').placeholder = 'add details'; Radio_Box(this.id);" title="Warning: click will delete all input" />
+				<input name="AdditionalRx_N" id="AdditionalRx_2" type="text" class="Xbox box2" style="left: 77px; top: 440px" onclick="document.getElementById('AdditionalRx').style.background = 'transparent'; document.getElementById('AdditionalRx').placeholder = ''; document.getElementById('AdditionalRx').value = ''; Radio_Box(this.id);" />
+
+				<textarea name="AdditionalRx" id="AdditionalRx" type="text" class="noborder" style="position: absolute; left: 40px; top: 470px; width: 763px; height: 65px; font-size: 16px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 472px" onclick="changeFontSize('AdditionalRx', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 487px" onclick="changeFontSize('AdditionalRx', -1);">&#9660;</span>
+
+				<!-- Prognosis 13 -->
+				<textarea name="Prognosis" id="Prognosis" type="text" class="noborder" style="position: absolute; left: 40px; top: 580px; width: 763px; height: 35px; font-size: 16px; background: transparent" placeholder="add details"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 582px" onclick="changeFontSize('Prognosis', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 597px" onclick="changeFontSize('Prognosis', -1);">&#9660;</span>
+
+				<!-- Timelines 14 -->
+				<textarea name="Timelines" id="Timelines" type="text" class="noborder" style="position: absolute; left: 40px; top: 640px; width: 763px; height: 37px; font-size: 16px; background: transparent" placeholder="add details"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 467px" onclick="changeFontSize('Timelines', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 482px" onclick="changeFontSize('Timelines', -1);">&#9660;</span>
+
+				<!-- Additional Comments -->
+				<textarea name="AdditionalComments" id="AdditionalComments" type="text" class="noborder" style="position: absolute; left: 40px; top: 713px; width: 763px; height: 89px; font-size: 17px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 815px; top: 715px" onclick="changeFontSize('AdditionalComments', +1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 815px; top: 730px" onclick="changeFontSize('AdditionalComments', -1);">&#9660;</span>
+
+				<input name="TrueAndCorrect" id="TrueAndCorrect" type="text" class="Xbox box1" style="left: 36px; top: 824px" />
+
+				<input value="Consent" class="DoNotPrint" type="button" name="CL489_consent" id="CL489_consent" style="position: absolute; left: 200px; top: 842px; background: lightskyblue" title="to ICBC Consent eFORM" oscarOPEN="ICBC Consent" />
+				<input name="Consent_Y" id="Consent_1" type="text" class="Xbox box1" style="left: 36px; top: 867px" onclick="Radio_Box(this.id);" />
+				<input name="Consent_N" id="Consent_2" type="text" class="Xbox box1" style="left: 36px; top: 900px" onclick="Radio_Box(this.id);" />
+
+				<span name="ICBCFax" id="ICBCFax" type="text" class="CopyFax DoNotPrint" style="position: absolute; left: 137px; top: 1038px; width: 90px; height: 15px; color: transparent" title="Click to copy" onclick="copyToClipboard(this.id);">1-877-686-4222</span>
+				<span name="faxNo_highlight" class="BoxBorderThick DoNotPrint" style="left: 137px; top: 1050px; width: 87px"></span>
+			</div>
+
+			<!-- START OF PAGE 4 -->
+			<div id="page4" style="position: relative; page-break-after: always">
+				<img id="BGImage4" src="" style="width: 850px" />
+				<div class="DoNotPrint" id="BottomButtons" style="position: absolute; left: 25px; top: 1080px; width: 825px; font-size: 13px">
+					<table style="font-size: 14px">
+						<tr>
+							<td style="background: #e5f2ff; width: 800px; padding: 5px">
+								<input type="hidden" id="newForm" name="newForm" value="True" />
+								Subject: <input name="subject" id="subject" size="80" type="text" /><br /><br />
+
+								If you wish to complete this form later, click on
+								<input value="Partial Submit" name="PartialSubmitButton" id="PartialSubmitButton" style="color: green; font-size: 14px" type="submit" onclick="partialSubmission();" title="May take up to 5 seconds to save" />
+								and <b>DO NOT COPY</b> to encounter. &nbsp; You may proceed to finish your encounter note as usual.<br /><br />
+
+								The <b>COMPLETED FORM</b> can be copied to the eCHART as a standard progress note, with <input value="Copy to Encounter" name="CopyToEncounter" id="CopyToEncounter" style="color: green; font-size: 14px" type="button" onclick="UpdateAllEncounters();" />.<br />
+								<li style="position: relative; left: 10px">This feature only works when the CL489 eFORM is opened from the eCHART and the chart <b>REMAINS OPEN.</b></li>
+								<li style="position: relative; left: 10px">
+									If the eCHART is closed, do a <b><span style="color: green; font-size: 14px">Partial Submit</span></b
+									>, reopen the chart, and reopen the CL489 eFORM then do the Copy to Encounter.
+								</li>
+								<li style="position: relative; left: 10px">This feature <b>does not work in CHROME.</b></li>
+								<li style="position: relative; left: 10px">
+									You will encounter a warning box <b><u>STATING</u></b
+									>: <b>Click OK to save it or Cancel to continue editing the current note.</b>
+								</li>
+								<li style="position: relative; left: 10px">
+									<span style="color: red"
+										><b><u>DO NOT CLICK OK</u></b></span
+									>
+								</li>
+								<li style="position: relative; left: 10px">
+									Please <b><span style="color: green">click CANCEL repeatedly</span></b> to complete the copy process.
+								</li>
+								<li style="position: relative; left: 10px"><b>Copy to Encounter</b> does not Submit (save) the eForm.</li>
+								<li style="position: relative; left: 10px"><b>Copy to Encounter</b> should be done before <b>Complete Submit.</b></li>
+								<br />
+
+								Access <b>PRIVATE BILLING</b> via
+								<input value="Master Record" name="Master" id="Master" style="color: green; font-size: 14px" type="button" onclick="onBodyLoad(); masterRecord();" />
+								to create an invoice number. &nbsp; Add to invoice number field on page 1. <br /><br />
+
+								<input value="Print" name="PrintButton" id="PrintButton" style="color: green; font-size: 14px" type="button" onclick="printLetter();" /> the completed eForm and fax to ICBC for payment. &nbsp; This is also your invoice.<br /><br />
+								Use
+								<input value="Complete Submit" name="SubmitButton" id="SubmitButton" style="color: green; font-size: 14px" type="submit" onclick="submission();" title="May take up to 5 seconds to save" /> for the final save.
+
+								<input value="Reset" name="ResetButton" id="ResetButton" style="color: red; font-size: 16px; float: right" type="reset" title="WARNING: this will erase all the inputs to this form." onClick="history.go(0);" />
+							</td>
+						</tr>
+					</table>
+					<br />
+					<!-- Copy Left -->
+					<a rel="licence" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" id="CreativeCommons" style="border: 0px" src="" /></a>
+					<span> CL489B eFORM, V20_Apr2_2024, was created as a collaborative effort by OSCAR BC, and is licensed under a </span>
+					<a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br />
+					<span style="color: forestgreen">Please consider supporting </span><a href="https://oscarbc.ca/" target="_blank">oscarbc.ca.</a> | <a id="emailLnk1" style="cursor: pointer" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> | <a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | <a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | <a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> | <br /><br />
+				</div>
+
+				<!-- Define Date Calendars -->
+				<script type="text/javascript">
+					Calendar.setup({ inputField: "TodayDate", ifFormat: "%d/%m/%Y", showsTime: false, button: "TodayDate", singleClick: true, step: 1 });
+					Calendar.setup({ inputField: "AccidentDate", ifFormat: "%d/%m/%Y", showsTime: false, button: "AccidentDate", singleClick: true, step: 1 });
+					Calendar.setup({ inputField: "RTWDate", ifFormat: "%d/%m/%Y", showsTime: false, button: "RTWDate", singleClick: true, step: 1 });
+				</script>
+			</div>
+		</form>
+	</body>
+</html>

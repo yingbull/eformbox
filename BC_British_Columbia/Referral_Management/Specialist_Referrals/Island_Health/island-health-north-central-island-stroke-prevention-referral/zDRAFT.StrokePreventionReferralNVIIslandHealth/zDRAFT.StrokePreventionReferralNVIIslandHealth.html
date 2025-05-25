@@ -1,0 +1,184 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>zDRAFT.StrokePreventionReferralNVI</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+</head>
+
+<body onload="loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}IslandHealthNVIStrokePreventionReferral.Sep2021.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="patient_name" id="patient_name" type="text" class=" noborder" style="position:absolute; left:400px; top:48px; width:273px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+<input name="page1_1" id="page1_1" type="text" class=" noborder" style="position:absolute; left:400px; top:66px; width:41px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="DOB">
+<input name="dobc2" id="dobc2" type="text" class=" noborder" style="position:absolute; left:444px; top:66px; width:99px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc2>
+<input name="page1_2" id="page1_2" type="text" class=" noborder" style="position:absolute; left:547px; top:66px; width:45px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="PHN">
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:596px; top:66px; width:90px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<textarea name="address" id="address" type="text" class=" noborder" style="position:absolute; left:400px; top:80px; width:281px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address></textarea>
+<input name="page1_3" id="page1_3" type="text" class=" noborder" style="position:absolute; left:400px; top:125px; width:25px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="Ph:">
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:429px; top:125px; width:104px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:552px; top:125px; width:121px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="page1_4" id="page1_4" class="only-one-Date of Event" type="checkbox" style="position:absolute; left:85px; top:378px; ">
+<input name="today" id="today" class="only-one-Date of Event" type="date" style="position:absolute; left:180px; top:378px; width:125px; height:12px; " oscarDB=today>
+<input name="page1_5" id="page1_5" class="only-one-Stroke" type="checkbox" style="position:absolute; left:461px; top:378px; ">
+<input name="page1_6" id="page1_6" class="only-one-TIA" type="checkbox" style="position:absolute; left:541px; top:378px; ">
+<input name="page1_7" id="page1_7" class="only-one-TIA Score" type="checkbox" style="position:absolute; left:86px; top:407px; ">
+<input name="page1_8" id="page1_8" class="only-one-TIA Score" type="text" style="position:absolute; left:210px; top:407px; width:100px; height:12px; ">
+<input name="page1_9" id="page1_9" class="only-one-CT Head" type="checkbox" style="position:absolute; left:91px; top:478px; ">
+<input name="page1_10" id="page1_10" class="only-one-Fasting Lipids" type="checkbox" style="position:absolute; left:91px; top:504px; ">
+<input name="page1_11" id="page1_11" class="only-one-Carotid US" type="checkbox" style="position:absolute; left:234px; top:478px; ">
+<input name="page1_12" id="page1_12" class="only-one-FBS" type="checkbox" style="position:absolute; left:234px; top:504px; ">
+<input name="page1_13" id="page1_13" class="only-one-CXR" type="checkbox" style="position:absolute; left:382px; top:478px; ">
+<input name="page1_14" id="page1_14" class="only-one-Holter Monitor" type="checkbox" style="position:absolute; left:382px; top:504px; ">
+<input name="page1_15" id="page1_15" class="only-one-ECG" type="checkbox" style="position:absolute; left:522px; top:478px; ">
+<input name="page1_16" id="page1_16" class="only-one-OP Discharged" type="checkbox" style="position:absolute; left:86px; top:546px; ">
+<input name="today1" id="today1" class="only-one-OP Discharged" type="date" style="position:absolute; left:248px; top:546px; width:125px; height:12px; "oscarDB=today>
+<input name="page1_17" id="page1_17" class="only-one-Admitted" type="checkbox" style="position:absolute; left:86px; top:582px; ">
+<input name="doctor_title" id="doctor_title" class=" noboarder" type="text" style="position:absolute; left:183px; top:774px; width:20px; height:12px; "oscarDB=doctor_title>
+<input name="doctor_first_name" id="doctor_first_name" class=" noboarder" type="text" style="position:absolute; left:205px; top:774px; width:125px; height:12px; " oscarDB=doctor_first_name>
+<input name="doctor_last_name" id="doctor_last_name" class=" noboarder" type="text" style="position:absolute; left:335px; top:774px; width:125px; height:12px; " oscarDB=doctor_last_name>
+<input name="page1_18" id="page1_18" type="text" class=" noborder" style="position:absolute; left:252px; top:813px; width:218px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:202px; top:845px; width:124px; height:31; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:972px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+</div>
+ </form>
+</body>
+</html>

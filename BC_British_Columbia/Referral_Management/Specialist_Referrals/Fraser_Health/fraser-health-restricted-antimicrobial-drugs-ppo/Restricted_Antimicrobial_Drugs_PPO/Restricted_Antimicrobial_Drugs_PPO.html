@@ -1,0 +1,404 @@
+
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Restricted_Antimicrobial_Drugs_PPO</title>
+<style type="text/css" media="screen" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: transparent;
+ }
+    /* Drawing the 'gripper' for touch-enabled devices */
+    html.touch #content {
+        float:left;
+        width:92%;
+    }
+    html.touch #scrollgrabber {
+        float:right;
+        width:4%;
+        margin-right:2%;
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+    }
+    html.borderradius #scrollgrabber {
+        border-radius: 1em;
+    }
+ </style>
+
+<style type="text/css" media="print">
+
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+.sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+
+<!-- Freeform Signatures -->
+
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'#FFFFFF'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	  $( ".Xbox" ).click(function() {
+		  var st = $( this ).val();
+		  if (st=="X") {
+			  $( this ).val("");
+		  } else {
+			  $( this ).val("X");
+		  }
+	});
+
+$( ".Xbox" ).keypress(function(event) {
+	  // any key press except tab will constitute a value change to the checkbox
+	  if (event.which != 0){
+		  $( this ).click();
+		  return false;
+		  }
+	});
+
+});
+</script>
+
+	<!-- Xbox styling -->
+
+	<style type="text/css">
+		.box1 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: white;
+			font-size: 12px;
+			width:12px;
+			height:12px;
+		}
+	</style>
+
+	<!-- XBox styling -->
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+<!-----------------script for current time--------->
+<script language="javascript">
+
+<!-- hide javascript
+
+function StartClock12() {
+Time12 = new Date();
+Cur12Hour = Time12.getHours();
+Cur12Mins = Time12.getMinutes();
+The12Time = 0;
+The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+The12Time += (Cur12Hour > 11) ? ' PM': ' AM';
+window.status = The12Time;
+setTimeout('StartClock12()',1000);
+}
+
+// done hiding -->
+</script> 
+
+<!-----------------script for current date--------->
+
+<script language="javascript">
+
+<!-- hide javascript
+
+function doDate() {
+       var digital = new Date();
+       var days = digital.getDate();
+       var months = digital.getMonth()*1 +1;
+       var years = digital.getFullYear();
+       var date =" " + days + "-" + months + "-" + years + " " ;
+       return date;
+}
+
+// done hiding -->
+
+</script>
+
+</head>
+
+<body onload="reImg(); StartClock12(); loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+
+<!-- Hidden Inputs -->
+<input type="hidden" name="counter" id="counter">
+
+
+
+<img id="BGImage1" src="${oscar_image_path}Restricted-Antimicrobial-Drugs-Fraser-Health.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<a style="position:absolute; left:60px; top:25px; width:79px; height:58px;" href="http://xkcd.com/1223/" target="_blank" title="Sub recusatione"></a> 
+
+<textarea name="PatientLabel" id="PatientLabel" class="noborder" style="position:absolute; left:460px; top:8px; width:270px; height:170px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  oscarDB=label></textarea>
+
+<textarea name="Allergies" id="Allergies" class="noborder" style="position:absolute; left:66px; top:216px; width:657px; height:33px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  oscarDB=allergies_des_no_archived></textarea>
+
+<div style="position: absolute; left: 355px; top: 327px;">Recent eGFR        
+         <input name="eGFR" id="eGFR" class="noborder"  style="width: 67px; height:20px; font-family: Arial; font-size:12px; text-align: center; background-color:transparent;"  type="text"oscarDB=m$EGFR#value>
+Date 
+	<input name="eGFRDate" id ="eGFRDate"class="noborder"  style="width: 70px; height:20px; font-family: Arial; font-size:12px; text-align: center; background-color:transparent;" type="text" oscarDB=m$EGFR#dateObserved>
+</div>
+
+<input name="CNS" id="CNS" type="text" class="Xbox box1" style="position:absolute; left:72px; top:353px;" value="">
+
+<input name="CF" id="CF" type="text" class="Xbox box1" style="position:absolute; left:330px; top:353px;" value="">
+
+<input name="OtherCarbapenem" id="OtherCarbapenem" type="text" class="Xbox box1" style="position:absolute; left:72px; top:393px;" value="">
+
+<input name="CarbapenemConditions" id="CarbapenemConditions" type="text" class="noborder" style="position:absolute; left:359px; top:410px; width:130px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:right; background-color:transparent;" value="">
+
+<input name="CarbapenemOrganisms" id="CarbapenemOrganisms" type="text" class="noborder" style="position:absolute; left:640px; top:410px; width:80px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:right; background-color:transparent;" value="">
+
+<input name="Meropenem" id="Meropenem" type="text" class="Xbox box1" style="position:absolute; left:89px; top:435px;" value="">
+
+<input name="Meroepenem500Q6" id="Meroepenem500Q6" type="text" class="Xbox box1" style="position:absolute; left:250px; top:435px;" value="">
+
+<input name="MeropenemQ6Days" id="MeropenemQ6Days" type="text" class="noborder" style="position:absolute; left:375px; top:430px; width:26px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:right; background-color:transparent;" value="">
+
+<input name="Meroepenem500Q" id="Meroepenem500Q" type="text" class="Xbox box1" style="position:absolute; left:250px; top:457px;" value="">
+
+<input name="MeropenemInterval" id="MeropenemInterval" type="text" class="noborder" style="position:absolute; left:341px; top:452px; width:22px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="MeropenemDays" id="MeropenemDays" type="text" class="noborder" style="position:absolute; left:397px; top:452px; width:25px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="MeropenemCNS" id="MeropenemCNS" type="text" class="Xbox box1" style="position:absolute; left:250px; top:480px;" value="">
+
+<input name="2000mg" id="2000mg" type="text" class="noborder" style="position:absolute; left:530px; top:478px; width:23px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="2000mgDays" id="2000mgDays" type="text" class="noborder" style="position:absolute; left:589px; top:478px; width:25px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Imipenem" id="Imipenem" type="text" class="Xbox box1" style="position:absolute; left:89px; top:505px;" value="">
+
+<input name="Imipenem500" id="Imipenem500" type="text" class="Xbox box1" style="position:absolute; left:230px; top:505px;" value="">
+
+<input name="Imipenem500Q6Days" id="Imipenem500Q6Days" type="text" class="noborder" style="position:absolute; left:355px; top:500px; width:22px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Imipenem500GFR" id="Imipenem500GFR" type="text" class="Xbox box1" style="position:absolute; left:230px; top:530px;" value="">
+
+<input name="Imipenem500GFRFrequency" id="Imipenem500GFRFrequency" type="text" class="noborder" style="position:absolute; left:320px; top:523px; width:22px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Imipenem500GFRDays" id="Imipenem500GFRDays" type="text" class="noborder" style="position:absolute; left:377px; top:523px; width:22px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Outpatient" id="Outpatient" type="text" class="Xbox box1" style="position:absolute; left:89px; top:551px;" value="">
+
+<input name="Ertapenem" id="Ertapenem" type="text" class="Xbox box1" style="position:absolute; left:230px; top:574px;" value="">
+
+<input name="Ertapenem1000Days" id="Ertapenem1000Days" type="text" class="noborder" style="position:absolute; left:368px; top:569px; width:22px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Ertapenem500" id="Ertapenem500" type="text" class="Xbox box1" style="position:absolute; left:230px; top:597px;" value="">
+
+<input name="Ertapenem500Days" id="Ertapenem500Days" type="text" class="noborder" style="position:absolute; left:368px; top:592px; width:22px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="LinezolidGmPos" id="LinezolidGmPos" type="text" class="Xbox box1" style="position:absolute; left:72px; top:642px;" value="">
+
+<input name="IntolerantVanco" id="IntolerantVanco" type="text" class="Xbox box1" style="position:absolute; left:525px; top:642px;" value="">
+
+<input name="LinezolidOther" id="LinezolidOther" type="text" class="Xbox box1" style="position:absolute; left:72px; top:665px;" value="">
+
+<input name="LinezolidOtherCondition" id="LinezolidOtherCondition" type="text" class="noborder" style="position:absolute; left:335px; top:660px; width:160px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="LinezolidOtherOrganism" id="LinezolidOtherOrganism" type="text" class="noborder" style="position:absolute; left:632px; top:660px; width:80px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Linezolid600BID" id="Linezolid600BID" type="text" class="Xbox box1" style="position:absolute; left:150px; top:688px;" value="">
+
+<input name="Linezolid600BIDDays" id="Linezolid600BIDDays" type="text" class="noborder" style="position:absolute; left:280px; top:682px; width:25px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Linezolid600IV" id="Linezolid600IV" type="text" class="Xbox box1" style="position:absolute; left:150px; top:710px;" value="">
+
+<input name="Linezolid600IVDays" id="Linezolid600IVDays" type="text" class="noborder" style="position:absolute; left:285px; top:704px; width:25px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="LinezolidIDConsult" id="LinezolidIDConsult" type="text" class="Xbox box1" style="position:absolute; left:72px; top:736px;" value="">
+
+<input name="DaptomycinGmPos" id="DaptomycinGmPos" type="text" class="Xbox box1" style="position:absolute; left:72px; top:784px;" value="">
+
+<input name="DaptomycinIntolerant" id="DaptomycinIntolerant" type="text" class="Xbox box1" style="position:absolute; left:72px; top:808px;" value="">
+
+<input name="DaptomycinOther" id="DaptomycinOther" type="text" class="Xbox box1" style="position:absolute; left:72px; top:832px;" value="">
+
+<input name="DaptomycinOtherCondition" id="DaptomycinOtherCondition" type="text" class="noborder" style="position:absolute; left:335px; top:824px; width:160px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="DaptomycinOtherOrganism" id="DaptomycinOtherOrganism" type="text" class="noborder" style="position:absolute; left:632px; top:824px; width:80px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="Daptomycin" id="DaptomycinGmPos" type="text" class="Xbox box1" style="position:absolute; left:90px; top:851px;" value="">
+
+<input name="DaptomycinMg" id="DaptomycinMg" type="text" class="noborder" style="position:absolute; left:430px; top:847px; width:65px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="DaptomycinH" id="DaptomycinH" type="text" class="noborder" style="position:absolute; left:552px; top:847px; width:20px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="DaptomycinDays" id="DaptomycinDays" type="text" class="noborder" style="position:absolute; left:617px; top:847px; width:20px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="DaptomycinIDConsult" id="DaptomycinIDConsult" type="text" class="Xbox box1" style="position:absolute; left:72px; top:875px;" value="">
+
+<input value="Today in d-m-y" name="DateButton" id="DateButton" class="DoNotPrint" type="button" style="position:absolute; left:260px; top:870px; " onclick="document.FormName.Date.value=doDate();">
+
+<input value="Insert Time" name="TimeButton" id="TimeButton" class="DoNotPrint" type="button" style="position:absolute; left:390px; top:870px; " onclick="document.FormName.Time.value = The12Time;">
+
+<input name="Date" id="Date" type="text" class="noborder" style="position:absolute; left:64px; top:910px; width:120px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+<input name="Time" id="Time" type="text" class="noborder" style="position:absolute; left:205px; top:910px; width:70px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:291px; top:912px; width:200px; height:45; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<span style="position:absolute; left:510px; top:910px;">CPSID <input name="CPSID" id="CPSID" type="text" class="noborder" style="width:155px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=current_user_cpsid></span>
+
+</div>
+
+
+ <div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:997px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+
+<!-- Copy Left -->
+ 
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">created Dec 17 2015 by Dr. John Robertson, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. <span style="color:forestgreen;">Please consider supporting  </span> <a  href="https://oscar-emr.com/support-oscar/" target="_blank" >OSCAR EMR Canada</a> .<br><br>
+ </div>
+ </form>
+
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"Date", ifFormat : "%d-%m-%Y", button : "Date" } );
+</script>
+
+</body>
+</html>

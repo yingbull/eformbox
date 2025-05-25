@@ -1,0 +1,226 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ABI_Clinic_Referral_Campbell_River_Island_Health</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Classic Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+<script type="text/javascript">
+if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:54, width:331, top:830, left:156});});}
+	 
+function SignForm2() {
+	//stamp by delegation model 
+	var provNum = '';
+	var userBillingNo = $('#user_ohip_no').val();
+	if (parseInt(userBillingNo) > 100) {
+		// then a valid billing number so use the current user id 
+		provNum = $('#user_id').val(); 
+	} else { 
+		provNum = $('#doctor_no').val(); 
+	}
+	document.getElementById('signature').src = '../eform/displayImage.do?imagefile=consult_sig_'+provNum+'.png';
+	$('#signature').error(function() {$(this).hide();});
+	$('#signature').click(function() {$(this).hide();});
+}
+</script>
+
+
+<!-- Freeform Signatures -->
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+}
+function clearSig(){
+}
+function loadSig(){
+	var provNum = '';
+	var userBillingNo = $('#user_ohip_no').val();
+	if (parseInt(userBillingNo) > 100) {
+		// then a valid billing number so use the current user id 
+		provNum = $('#user_id').val(); 
+	} else { 
+		provNum = $('#doctor_no').val(); 
+	}
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+	document.getElementById('FormName').submit()
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();SignForm2();loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}VihaCrABI.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:104px; top:308px; width:302px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:104px; top:347px; width:302px; height:25px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:104px; top:389px; width:302px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<textarea name="clinic_address" id="clinic_address" type="text" class=" noborder" style="position:absolute; left:104px; top:432px; width:296px; height:79px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_address></textarea>
+<textarea name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:415px; top:313px; width:303px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=first_last_name></textarea>
+<textarea name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:415px; top:352px; width:303px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin></textarea>
+<textarea name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:415px; top:393px; width:303px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc></textarea>
+<textarea name="address" id="address" type="text" class=" noborder" style="position:absolute; left:415px; top:435px; width:303px; height:44px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address></textarea>
+<textarea name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:415px; top:493px; width:147px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone></textarea>
+<textarea name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:573px; top:493px; width:143px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell></textarea>
+<textarea name="ReasonForReferral" id="ReasonForReferral" type="text" class=" noborder" style="position:absolute; left:98px; top:551px; width:622px; height:37px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<textarea name="MedDx" id="MedDx" type="text" class=" noborder" style="position:absolute; left:98px; top:603px; width:617px; height:85px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=medical_history></textarea>
+<textarea name="OtherComments" id="OtherComments" type="text" class=" noborder" style="position:absolute; left:98px; top:703px; width:617px; height:92px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:229px; top:805px; width:200px; height:26px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<img id="signature" src="${oscar_image_path}BNK.png" style="position:absolute; left:156px; top:830px; width:331px; height:54px;" >
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+<input type="hidden" name="user_id" id="user_id" oscarDB=current_user_id>
+<input type="hidden" name="user_ohip_no" id="user_ohip_no" oscarDB=current_user_ohip_no>
+<input type="hidden" name="doctor_no" id="doctor_no" oscarDB=doctor_provider_no>
+<div id="signatureDisplay"></div>
+<input type="hidden" name="signatureValue" id="signatureValue">
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1042px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" id="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+</body>
+</html>

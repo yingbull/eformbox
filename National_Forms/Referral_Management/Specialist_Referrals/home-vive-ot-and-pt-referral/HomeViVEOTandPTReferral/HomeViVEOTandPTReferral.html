@@ -1,0 +1,487 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+<title>Home Vive - OT/PT Referral </title>
+<!-- April 26, 2019 eForm Commission Project by Home Vive Program - Created by NerdEMR -->
+<!-- April 27, 2019 - Reformated for font-size:15px -->
+
+<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+<!-- Do not use \\n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+
+<link rel="stylesheet" type="text/css" media="print" href="../eform/displayImage.do?imagefile=JSMPC.css" />
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='../eform/displayImage.do?imagefile=jquery-1.12.0.min.js'></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display:none;
+ }
+ .noborder {
+	 border :0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 background:transparent;
+	 overflow:hidden;
+ }
+.Show {
+	visibility:visible;
+	display:inline;
+ }
+.Hide {
+	visibility:hidden;
+	display:none;
+ }
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 16px;
+	height: 15px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: yellow;
+}
+.box2 {
+	position: absolute;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: yellow;
+	width:10px;
+	height:9px;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+.FontSizeChange {
+	position:absolute;
+	width:16px;
+	height:15px;
+	font-size:15px;
+	cursor:pointer;
+	background:yellow;
+	text-align:center;
+	border: 1px solid #000000;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			releaseDirtyFlag();			
+			submission();
+		}
+
+		function printLetter() {
+			// do not hide the bottom buttons
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			setTimeout('document.FormName.submit()',3000);			
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		
+				/****************************
+				Checkbox functions
+				****************************/
+				$(document).ready(function() {
+						$( ".Xbox" ).click(function() {
+						var st = $( this ).val();
+						if (st=="X") {
+						$( this ).val("");
+						}
+						else {
+								$( this ).val("X");
+						}
+				});
+
+				$( ".Xbox" ).keypress(function(event) {
+						// any key press except tab will constitute a value change to the checkbox
+						if (event.which != 0) {
+						$( this ).click();
+						return false;
+						}
+					});
+				});
+
+
+		//scripts to confirm closing of window if it has not been saved yet -->
+		//keypress events trigger dirty flag
+		var needToConfirm = false;
+		document.onkeyup=setDirtyFlag;
+	function setDirtyFlag() {
+	needToConfirm = true;
+	}
+
+	function releaseDirtyFlag() {
+		needToConfirm = false; //Call this function if does not require an alert.
+		//this could be called when save button is clicked
+	}
+		window.onbeforeunload = confirmExit;
+
+	function confirmExit() {
+		 if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+		}
+	}
+
+
+</script>
+
+<script>
+		/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x and is named in the convention name_X where X appears in the string defined in scales
+		****************************/
+		function Radio_Box1(x) {
+			var scales = ["Yes", "No", "Unknown"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+		function Radio_Box2(x) {
+			var scales = ["Yes", "No"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+		function Radio_Box3(x) {
+			var scales = ["OT", "PT", "Unsure"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}						
+</script>
+
+
+</head>
+
+<body>
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px; height:1100px;" class="pagebreak" >
+
+
+
+<!-- Hidden input for font size changer inputs -->
+
+<img id="BGImage1" src="../eform/displayImage.do?imagefile=vchlogo.png" style="position:absolute; left:0px; top:0px; width:25%">
+
+<span style="position:absolute; left:322px; top:10px; font-family:Arial; font-size:20px; font-weight:bold; text-align:left; background-color:transparent;">Home ViVE - OT and/or PT Referrals</span>
+
+<span style="position:absolute; left:10px; top:90px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Date of Referral (yyyy-mm-dd): </span>
+<input name="Date_of_referral" id="Date_of_referral" type="text" oscardb=today style="position: absolute;left: 220px;top: 90px;">
+
+<span style="position:absolute; left:10px; top:125px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Patient's Name: </span>
+<input name="Patient_Name" id="Patient_Name" type="text" oscardb=patient_name style="position: absolute;left: 120px;top: 123px;">
+
+<span style="position:absolute; left:10px; top:150px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">DOB (yyyy/mm/dd): </span>
+<input name="DOB" id="DOB" type="text" oscardb=dobc2 style="position: absolute;left: 145px;top: 148px;">
+
+<span style="position:absolute; left:10px; top:175px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">PHN:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp PARIS ID: </span>
+<input name="PHN" id="PHN" type="text" oscardb=hin style="position: absolute;left: 50px;top: 173px;">
+<input name="Paris_Id" id="Paris_Id" type="text" oscardb=chartno style="position: absolute;left: 300px;top: 173px;">
+
+<span style="position:absolute; left:10px; top:200px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Referring Clinician:</span>
+<input name="Referring_physician" id="Referring_physician" type="text" oscardb=current_user style="position: absolute;left: 145px;top: 198px;">
+
+<span style="position:absolute; left:10px; top:230px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">1.	Referral to:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp OT &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp PT &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Unsure	</span>
+
+
+
+<input name="ReferralTo_OT" id="ReferralTo_OT" type="text" class="XBox box1" style="left:120px; top:230px;" onclick="Radio_Box3(this.id);">
+<input name="ReferralTo_PT" id="ReferralTo_PT" type="text" class="XBox box1" style="left:183px; top:230px;" onclick="Radio_Box3(this.id);">
+<input name="ReferralTo_Unsure" id="ReferralTo_Unsure" type="text" class="XBox box1" style="left:243px; top:230px;" onclick="Radio_Box3(this.id);">
+
+
+<span style="position:absolute; left:510px; top:230px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Client Consents to Referral:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Yes &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp No</span>
+
+
+<input name="ClientConsentToReferral_Yes" id="ClientConsentToReferral_Yes" type="text" class="XBox box1" style="left:712px; top:230px;" onclick="Radio_Box2(this.id);">
+<input name="ClientConsentToReferral_No" id="ClientConsentToReferral_No" type="text" class="XBox box1" style="left:779px; top:230px;" onclick="Radio_Box2(this.id);">
+
+
+<span style="position:absolute; left:10px; top:260px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">2.	There has been a Recent Functional Decline:(E.g. Ambulation, Transfers, ADL, IADL, Leisure etc.): <br>   
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Yes &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp No &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  If yes, please describe: 
+</span>
+
+<textarea name="RecentFunctionalDecline" type="text" class="noborder" style="position:absolute; left:10px; top:298px; height:65px; max-height:65px; width:815px; max-width:815px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+<input name="FunctionalDecline_Yes" id="FunctionalDecline_Yes" type="text" class="XBox box1" style="left:28px; top:280px;" onclick="Radio_Box2(this.id);">
+<input name="FunctionalDecline_No" id="FunctionalDecline_No" type="text" class="XBox box1" style="left:95px; top:280px;" onclick="Radio_Box2(this.id);">
+
+
+<span style="position:absolute; left:25px; top:370px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">a)	Describe Previous Functional Status & Timeframe that client was able to perform activities:<br>           
+<i>(E.g. Client was able to walk outdoors x 1 block, independently with 4 wheel walker 2 months ago)</i>
+</span>
+
+<textarea name="PreviousFunctionalState" type="text" class="noborder" style="position:absolute; left:25px; top:410px; height:70px; max-height:70px; width:800px; max-width:800px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+
+
+<span style="position:absolute; left:25px; top:487px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">b)   Describe Current Function Status and Level of Assistance Required:<br>
+<i>(E.g. No longer ambulating except few steps in the bathroom) </i>
+</span>
+
+<textarea name="CurrentFunctionalState" type="text" class="noborder" style="position:absolute; left:25px; top:525px; height:70px; max-height:70px; width:800px; max-width:800px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+
+<span style="position:absolute; left:25px; top:605px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">c)	Clinical Frailty Scale:  ______
+</span>
+
+<input name="ClinicalFrailtyScore" id="ClinicalFrailtyScore" type="text" class="noborder" style="position:absolute; left:182px; top:601px; width:54px; height:24px; font-family:Arial; font-size:12px; font-weight:bold; text-align:center; background-color:transparent;">
+
+<span style="position:absolute; left:10px; top:645px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">3. Describe Client's Functional Goals:</span>
+
+<textarea name="FunctionalGoals" type="text" class="noborder" style="position:absolute; left:10px; top:665px; height:80px; max-height:80px; width:815px; max-width:815px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+
+
+<span style="position:absolute; left:10px; top:760px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">4.	Client is Agreeable to Consider/Follow Through with Recommendations for: <br><br> &nbsp&nbsp&nbsp&nbsp<u>Home Activity Program:</u>
+</span>
+
+<span style="position:absolute; left:40px; top:815px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Exercise Program <br>
+Transfer Training<br>
+Wheelchair Skills Training <br>
+Other: 
+</span>
+
+<input name="ExerciseProgram" id="ExerciseProgram" type="text" class="XBox box1" style="left:22px; top:816px;">
+<input name="TransferTraining" id="TransferTraining" type="text" class="XBox box1" style="left:22px; top:834px;">
+<input name="WheelchairSkillsTraining" id="WheelchairSkillsTraining" type="text" class="XBox box1" style="left:22px; top:852px;">
+<input name="GoalsOfCare_Yes" id="GoalsOfCare_Yes" type="text" class="XBox box1" style="left:22px; top:872px;">
+
+<span style="position:absolute; left:300px; top:815px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">ADL Training <br>
+IADL Training<br>
+Falls Safety
+</span>
+
+<input name="ADLTraining" id="ADLTraining" type="text" class="XBox box1" style="left:283px; top:816px;">
+<input name="IADLTraining" id="IADLTraining" type="text" class="XBox box1" style="left:283px; top:834px;">
+<input name="FallsSafety" id="FallsSafety" type="text" class="XBox box1" style="left:283px; top:852px;">
+
+<span style="position:absolute; left:500px; top:815px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Mobility Training<br>
+Meal Management
+</span>
+
+<input name="MobilityTraining" id="MobilityTraining" type="text" class="XBox box1" style="left:482px; top:816px;">
+<input name="MealManagement" id="MealManagement" type="text" class="XBox box1" style="left:482px; top:834px;">
+
+<textarea name="HAPOther" type="text" class="noborder" style="position:absolute; left:20px; top:895px; height:90px; max-height:90px; width:805px; max-width:805px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+
+
+</div>
+
+
+<!-- Start of Page 2 -->
+<div id="page2" style="position:relative; width:850px; height:1100px; page-break-after:always;">
+
+<!-- NOTE: This first span line position needs to be relative for the 2nd page of the form to print out properly. -->
+<span style="position:absolute; left:25px; top:100px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;"><u>Environmental Modifications:</u></span>
+
+<span style="position:absolute; left:40px; top:120px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Bathroom Equipment <br>
+Transfer Equipment, Including Lifts<br>
+Other: 
+</span>
+
+<input name="BathroomEquipment" id="BathroomEquipment" type="text" class="XBox box1" style="left:22px; top:121px;">
+<input name="TransferEquipment" id="TransferEquipment" type="text" class="XBox box1" style="left:22px; top:140px;">
+<input name="EMOther" id="EMOther" type="text" class="XBox box1" style="left:22px; top:158px;">
+
+<span style="position:absolute; left:500px; top:120px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">Home Accessibility<br>
+Caregiver Training
+</span>
+
+<input name="HomeAccessibility" id="HomeAccessibility" type="text" class="XBox box1" style="left:482px; top:121px;">
+<input name="CaregiverTraining" id="CaregiverTraining" type="text" class="XBox box1" style="left:482px; top:140px;">
+
+<textarea name="EMOther" type="text" class="noborder" style="position:absolute; left:20px; top:175px; height:90px; max-height:90px; width:805px; max-width:805px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+<span style="position:relative; left:25px; top:285px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;"><u>Education, Techniques and Strategies for Functional Impact:</u></span>
+<span style="position:absolute; left:40px; top:305px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Skin Integrity Management/Positioning<br>
+Chronic Disease Management<br>
+Other:
+</span>
+
+<input name="SkinIntegrityManagement" id="SkinIntegrityManagement" type="text" class="XBox box1" style="left:22px; top:306px;">
+<input name="ChronicDiseaseManagement" id="ChronicDiseaseManagement" type="text" class="XBox box1" style="left:22px; top:325px;">
+<input name="FunctionalImpactEducationTechniquesOther" id="FunctionalImpactEducationTechniquesOther" type="text" class="XBox box1" style="left:22px; top:343px;">
+
+<span style="position:absolute; left:335px; top:305px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Edema Management<br>
+Anxiety Management
+</span>
+
+<input name="PainManagement" id="PainManagement" type="text" class="XBox box1" style="left:520px; top:306px;">
+<input name="CommunityAccessibility" id="CommunityAccessibility" type="text" class="XBox box1" style="left:520px; top:325px;">
+
+<span style="position:absolute; left:540px; top:305px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Pain Management<br>
+Community Accessibility
+</span>
+
+<input name="EdemaManagement" id="EdemaManagement" type="text" class="XBox box1" style="left:316px; top:306px;">
+<input name="AnxietyManagement" id="AnxietyManagement" type="text" class="XBox box1" style="left:316px; top:325px;">
+
+<textarea name="EducationTechniquesStrategiesOther" type="text" class="noborder" style="position:absolute; left:20px; top:365px; height:90px; max-height:90px; width:800px; max-width:800px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+
+<span style="position:absolute; left:10px; top:470px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">5. Client is Able to Actively Participate in a Rehabilitation Program:
+</span>
+
+<span style="position:absolute; left:25px; top:510px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;"><u>Client Consistently Follows Directions: </u></span>
+<span style="position:absolute; left:40px; top:530px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Written Instructions<br>
+Client Can Direct Own Care
+</span>
+
+
+<input name="WrittenInstructions" id="WrittenInstructions" type="text" class="XBox box1" style="left:22px; top:531px;">
+<input name="ClientCanDirectOwnCare" id="ClientCanDirectOwnCare" type="text" class="XBox box1" style="left:22px; top:550px;">
+
+
+<span style="position:absolute; left:300px; top:530px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Verbal Cues
+</span>
+
+<input name="VerbalCues" id="VerbalCues" type="text" class="XBox box1" style="left:282px; top:531px;">
+
+
+<span style="position:absolute; left:500px; top:530px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Physical Cues/Mimics Movements
+</span>
+<input name="PhysicalCuesMimicsMovements" id="PhysicalCuesMimicsMovements" type="text" class="XBox box1" style="left:482px; top:531px;">
+
+<span style="position:absolute; left:25px; top:585px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;"><u>Client Activity Tolerance: </u></span>
+<span style="position:absolute; left:40px; top:605px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Sitting Tolerance (4hours+, e.g. able to sit up in chair for meals)<br>
+Standing Tolerance (10mins+ activity with rests, e.g. can stand to brush teeth)<br>
+Walking Tolerance (10ft+, e.g. able to walk from bed to bathroom)
+</span>
+
+<input name="SittingTolerance" id="SittingTolerance" type="text" class="XBox box1" style="left:22px; top:606px;">
+<input name="StandingTolerance" id="StandingTolerance" type="text" class="XBox box1" style="left:22px; top:625px;">
+<input name="WalkingTolerance" id="WalkingTolerance" type="text" class="XBox box1" style="left:22px; top:645px;">
+
+<span style="position:absolute; left:10px; top:675px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">6.	Client Unwilling/Unable to participate; Caregivers are willing/able to actively participate? &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Yes &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp No  <br>
+<i>(E.g. wife willing to walk with client 1x/day to/from bathroom)</i>
+</span>
+
+<input name="CaregiverParticipate_Yes" id="CaregiverParticipate_Yes" type="text" class="XBox box1" style="left:630px; top:676px;" onclick="Radio_Box2(this.id);">
+<input name="CaregiverParticipate_No" id="CaregiverParticipate_No" type="text" class="XBox box1" style="left:696px; top:676px;" onclick="Radio_Box2(this.id);">
+
+<span style="position:absolute; left:10px; top:730px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">7.	Other Relevant Information: (e.g. client homebound?) 
+</span>
+
+<textarea name="Otherrelevantinformation" type="text" class="noborder" style="position:absolute; left:20px; top:760px; height:140px; max-height:140px; width:800px; max-width:800px; font-family:Arial; font-size:15px; font-weight:bold; text-align:left; background-color:transparent;"></textarea>
+
+<span style="position:absolute; left:10px; top:910px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">8.	Preferred Priority of Visit: 
+</span>
+
+<span style="position:absolute; left:40px; top:930px; font-family:Arial; font-size:15px; font-weight:normal; text-align:left; background-color:transparent;">
+Urgent - Same Day (Priority 1B) <br>
+Urgent - Next Day (Priority 2)<br>
+Visit within One Week (Priority 3)<br>
+Visit within Two Weeks (Priority 4)<br>
+Visit More than Two Weeks (Priority 5)<br>
+</span>
+
+<input name="Priority1B" id="Priority1B" type="text" class="XBox box1" style="left:22px; top:931px;">
+<input name="Priority2" id="Priority2" type="text" class="XBox box1" style="left:22px; top:949px;">
+<input name="Priority3" id="Priority3" type="text" class="XBox box1" style="left:22px; top:967px;">
+<input name="Priority4" id="Priority4" type="text" class="XBox box1" style="left:22px; top:989px;">
+<input name="Priority5" id="Priority5" type="text" class="XBox box1" style="left:22px; top:1004px;">
+
+
+</div>
+
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:relative; ">
+	<table><tr><td style="background-color:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject:<input name="subject" size="40" type="text"><br>
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="releaseDirtyFlag(); submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="window.print();">
+		<input value="Print and Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onClick="printSubmit();">
+	</td></tr></table>
+</div>
+
+</form>
+
+
+
+
+</body></html>

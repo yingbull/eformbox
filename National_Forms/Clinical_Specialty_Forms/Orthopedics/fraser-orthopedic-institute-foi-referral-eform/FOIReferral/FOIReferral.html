@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Fraser Orthopaedic Institute Physician Referral eForm" />
+<meta name="keywords" content="FOI, Orthopaedic Surgery, Sports Medicine, Fraser" />
+<meta name="robots" content="nofollow" />
+<meta http-equiv="author" content="John Yap" />
+
+<!-- Fraser Orthopaedic Institute Referral Form -->
+
+<!-- Created March 2015, for Oscar V12 -->
+<!-- Version 3: Updated May 25, 2015 -->
+<!-- Version 4: updated Aug 18, 2015: sport med does not see neck/back problems -->
+<!-- Updated Sep 27, 2015: addition of Dr. Baron, removal Dr. Wray -->
+<!-- V6 Oct5_2016: updated background Sep2016; incorporate fax cover, jQuery X-boxes, First_Last_Name -->
+<!-- V7_Nov24_2021: 2018 background; remove cover sheet; 2021 upgrades; John Yap -->
+<!-- V8_Nov18_2023: new background; new personnel added; John Yap -->
+<!-- V9_Apr14_2025: update patient info label area - PHN, DOB needed; John Yap -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+<!-- Do not use \n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}FOI_Physician_Referral_2023.png"
+// "${oscar_image_path}CreativeCommonsIcon.png" // for Copy Left footer
+</script>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous" ></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+
+<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors 
+<script language="javascript" src="onBodyLoad_Dec2019.js"></script>
+End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+<!-- script to link to other pages -->
+<script language="javascript" src="${oscar_image_path}onBodyLoad_Dec2019.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-box-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+input#SubmitButton { 
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background: #229ece;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+	background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+	background: -o-linear-gradient(top, #6bb5d2, #229ece);
+	background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+
+input#SubmitButton:hover {
+	color: #333333;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #a0dbc4;
+	background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#F2EFFB));
+	background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+	background: -o-linear-gradient(top, #229ece, #6bb5d2);
+	background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+
+.CopyFax:hover { /* changes CopyFax element on hover */
+	background-color: pink;
+	cursor: pointer;
+}
+
+.attn {
+	animation-name: lookHere;
+	animation-duration: 5s;
+	animation-timing-function: linear;
+	animation-iteration-count: 3;
+	animation-direction: alternate;
+}
+
+@keyframes lookHere {
+  0%   {border-color:#ced5e3;
+box-shadow: 0 0 5px #ced5e3;}
+  25%  {border-color:#364460;
+box-shadow: 0 0 20px #364460;}
+  50%  {border-color:#a21d22;
+box-shadow: 0 0 5px #a21d22;}
+  75%  {border-color:#f7977b;
+box-shadow: 0 0 20px #f7977b;}
+  100% {border-color:#ced5e3;
+box-shadow: 0 0 5px #ced5e3;}
+}
+
+.sig {
+	border: 2px dotted blue;
+	background: transparent ;
+}
+
+a {text-decoration:none;} 
+a:hover { border: 1px solid #000000; border-style:outset; background:pink; opacity:0.6;}
+a:active { border: 3px solid #000000; border-style: inset;}
+
+::placeholder {
+	color: rebeccapurple;
+	font-style: italic;
+	opacity: 1;
+}
+
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+
+textarea {resize: none;}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+
+input {
+	-moz-box-sizing: content-box;
+	-webkit-box-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+.DoNotPrint {display: none;}
+.noborder {
+	border: 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+}
+.sig {
+	background: transparent;
+}
+
+.Show{
+	visibility: visible;
+	display: inline;
+}
+.Hide{
+	visibility: hidden;
+	display: none;
+}
+
+/* hide placehoders */
+::placeholder {
+	color: transparent;
+} 
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 14px;
+	height: 16px;
+	font-size: 16px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+
+.box2 {
+	position: absolute;
+	width:11px;
+	height:13px;
+	font-size: 13px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+
+.FontSizeChange {
+	position:absolute;
+	width:16px;
+	height:15px;
+	font-size:13px;
+	cursor:pointer;
+	background:yellow;
+	text-align:center;
+	border: 1px solid #000000;
+}
+
+.BoxBorderThin {
+	position: absolute;
+	border: 1px solid red;
+}
+
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+	/****************************
+		startup functions 
+	****************************/
+	function startUp() {
+		// new off-line architecture as per K Yap
+		setDocumentTitle('FOI',document.getElementById('PatientNameL').value);
+		changeImage("FOI_Physician_Referral_2023.png", "BGImage");
+		changeImage("CreativeCommonsIcon.png", "CreativeCommons"); // for Copy Left footer
+		loadFontSize();
+		setDefaults();
+		//optimize window size/width
+		top.window.resizeTo(1095, screen.availHeight);
+	}
+
+	function resourceLink(resource, extension) {
+		// Takes two arguments -- the base filename and its extension -- and
+		// returns a string depending on whether the page has been opened
+		// locally or if it has been uploaded to OSCAR.
+		//
+		// Example usage: resourceLink('image1', 'png')
+		// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+		var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+		if (typeof extension === "undefined") {
+			var extension = '';
+		} else {
+			var extension = '.' + extension;
+		}
+		return prefix + resource + extension;
+	}
+
+	function changeImage(img, imgId) {
+		// Changes the src value of an <img>.
+		document.getElementById(imgId).src = resourceLink(img)
+		document.getElementById(imgId).href = resourceLink(img)
+	}
+
+	function setDocumentTitle(Title,PatientNameL) {
+		// set document title
+		document.title = Title + '_' + PatientNameL;
+	}
+
+	function setDefaults() { 
+		// check the newform flag to ensure this is the initial load of the form
+		if (document.getElementById("newForm").value == 'True') {
+			parseName("current_user");
+			contactChoice('home_choice'); // default contact phone is home
+		} else { // actions if eForm is reopened
+		}
+	} 
+
+	/****************************
+		Create name in conventional order 
+	****************************/
+	function parseName(id) {
+		// Get the name
+		var fullName = document.getElementById(id).value;
+		// Split the value
+		var splitName = fullName.split(",");
+		var firstName = "";
+		var lastName  = "";
+		// Check for last name
+		if(splitName.length >= 1) {
+			lastName = splitName[0].trim();
+		}
+		if(splitName.length >= 2) {
+			firstName = splitName[1].trim();
+		}
+		var First_Last_Name = firstName + " " + lastName;
+		// Show the fields on the page
+		document.getElementById(id).value = First_Last_Name;
+	}
+
+	/****************************
+		print and submit/save functions 
+	****************************/
+	function printLetter() { // prints back page
+		// Save reminder; allows for validity testing
+		document.getElementById('ResetButton').style.color = 'black';
+		document.getElementById('SubmitButton').classList.toggle('attn');
+		document.getElementById('SubmitButton').style.border = '2px solid red';
+		alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+		window.print();
+	}
+
+	function submission() {  // requires type="submit" in submit button input to allow for validity testing
+		setFlag();
+		releaseDirtyFlag();
+	}
+
+	function setFlag() {
+	// indicate that the form has been submitted
+	if (document.getElementById("newForm").value == 'True')
+		document.getElementById("newForm").value = 'False';
+	}
+
+	/****************************
+		Checkbox functions 
+	****************************/
+	$(document).ready(function() {
+		$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+		$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+		// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0) {
+			$( this ).click();
+			return false;
+		}
+		});
+	});
+
+	/****************************
+		scripts to confirm closing of window if have not saved yet
+	****************************/
+		//keypress events trigger dirty flag
+		var needToConfirm = true;
+		document.onkeyup=setDirtyFlag;
+	function setDirtyFlag() {
+		needToConfirm = true;
+	}
+
+	function releaseDirtyFlag() {
+		needToConfirm = false; //Call this function if does not require an alert.
+		//this could be called when save button is clicked
+	}
+	window.onbeforeunload = confirmExit;
+
+	function confirmExit() {
+		if (needToConfirm) {
+			return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+		}
+	}
+
+	/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x 
+		and is named in the convention name_X where X appears in the string defined in scales
+		Ensure that the list is sequential. Do no skip numbers. An input can be hidden if appropriate.
+	****************************/
+	function Radio_Box(x) {
+		var scales = ["1", "2", "3", "4", "5", "6", "7", "8"];
+		var partA = x.substring(0, x.indexOf("_"));
+		var i = x.substring(x.indexOf("_"));
+		var j = i.substr(1);
+
+		for (var n in scales) {
+			if ( j == scales[n]) {
+				for (var m in scales){
+					if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+				}
+			}
+		}
+	return false;
+	}
+
+	/****************************
+		script to Increase or Decrease the Font Size
+		name = input name/id, delta = increase (+) or decrease (-) increment #
+		Requires loadFontSize(); in startUp, or in onload line
+	****************************/
+	function changeFontSize(name, delta) {
+		var element = $("#" + name)
+		var oldSize = parseInt(element.css("font-size"));
+		var newSize = oldSize + delta;
+		// Save new font size into "value" field of hidden element
+		$("#" + name + "_fontsize").attr('value', newSize);
+		// Set font size
+		element.css({'font-size': newSize + 'px'});
+	}
+
+	// Retains altered font size when eForm is reopened; 
+	// Requires hidden inputs with format for each field using this feature: 
+	// <input type="hidden" name="Input_fontsize" id="Input_fontsize">
+	function loadFontSize() {
+		$.each($("input[name*='_fontsize'"), function(index, element) {
+			var fontSize = element.value;
+			if (!!fontSize) {
+				var name = element.name.split('_')[0];
+				$("#" + name).css({'font-size': fontSize + 'px'});
+			}
+		});
+	}
+
+	/****************************
+		Script to add element name to subject, no toggling
+		It is possible to use spaces in name!  name="add this to subject"
+	****************************/
+	function addSubject(i) { // adds site and requested exam to subject box
+		var name = document.getElementById(i).name;
+		var value = document.getElementById(i).value;
+		if (value != 'X')
+		document.FormName.subject.value = name;
+		else
+		document.FormName.subject.value = '';
+	} 
+
+	/****************************
+		Copy to Clipboard
+		Uses span elements
+	****************************/
+	function copyToClipboard(id) {
+		var range = document.createRange();
+		range.selectNode(document.getElementById(id));
+		window.getSelection().removeAllRanges(); // clear current selection
+		window.getSelection().addRange(range); // to select text
+		document.execCommand("copy");
+		window.getSelection().removeAllRanges();// to deselect
+		document.getElementById(id).style.background = 'pink';
+	}
+
+	/****************************
+		Additional Hx Info
+	****************************/
+	function Add_PMHx() {
+		document.getElementById('PatientHistory').value += document.getElementById('PMHx_Hx').value + '\n';
+	}
+	function Add_Meds() {
+		document.getElementById('PatientHistory').value += 'Meds: ' + document.getElementById('PMHx_Meds').value + '\n';;
+	}
+	function Add_Allergy() {
+		document.getElementById('PatientHistory').value += 'Allergies: ' + document.getElementById('PMHx_Allergy').value + '\n';;
+	}
+	function Restart() {
+		document.getElementById('PatientHistory').value = '';
+	}
+
+	/****************************
+		script for contact phone number choice
+	****************************/
+	function contactChoice(i) {
+		var choice = i.substring(0, i.indexOf("_"));
+		document.FormName.phone.value = document.getElementById(choice).value + ', ' + choice;
+	}
+
+	/****************************
+		Chrome Compatible Phone drop-down menu as per P Mehta
+	****************************/
+	function SetPhone(i) {
+		switch(i) {
+			case "work_choice":
+			contactChoice(i);
+			break;
+
+			case "cell_choice":
+			contactChoice(i);
+			break;
+
+			case "home_choice":
+			contactChoice(i);
+			break;
+		}
+	}
+</script>
+</head>
+
+<body onload="startUp();" onbeforeprint="document.forms['FormName'].reportValidity();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px; page-break-after:always;">
+	<img id="BGImage" src="">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for font size changer inputs -->
+<input type="hidden" name="label_fontsize" id="label_fontsize">
+<input type="hidden" name="addressline_fontsize" id="addressline_fontsize">
+<input type="hidden" name="clinicLabel_fontsize" id="clinicLabel_fontsize">
+<input type="hidden" name="PatientHistory_fontsize" id="PatientHistory_fontsize">
+
+<!-- Hidden input for Medication and Allergy List -->
+<input type="hidden" name="Medications" id="Medications" oscarDB=druglist_line>
+<input type="hidden" name="Allergies" id="Allergies" oscarDB=allergies_des_no_archived>
+
+<!-- Hidden input for adding PMHx -->
+<input type="hidden" name="PMHx_Hx" id="PMHx_Hx" oscarDB=medical_history>
+<input type="hidden" name="PMHx_Allergy" id="PMHx_Allergy" oscarDB=allergies_des_no_archived>
+<input type="hidden" name="PMHx_Meds" id="PMHx_Meds" oscarDB=druglist_line>
+
+<!-- Hidden Inputs for contact phone -->
+<input type="hidden" name="home" id="home" oscarDB=phone>
+<input type="hidden" name="cell" id="cell" oscarDB=cell>
+<input type="hidden" name="work" id="work" oscarDB=phone2>
+
+<!-- Demographics -->
+<textarea name="label" id="label" type="text" class="noborder" style="position:absolute; left:35px; top:153px; width:370px; height:68px; font-size:14px; background:white;" oscarDB=label></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:12px; top:155px;" onclick="changeFontSize('label', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:12px; top:170px;" onclick="changeFontSize('label', -1);">&#9660;</span>
+
+<span class="DoNotPrint" style="position:absolute; left:13px; top:233px; font-size:40px; color:green;">&#42;</span>
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:165px; top:231px; width:240px; font-size:16px; background:transparent;" placeholder="Required">
+
+<div id="Default_phone" class="DoNotPrint" style="position:absolute; left:860px; top:230px; width:250px; font-size:14px; color:green;">
+	<span style="position:absolute; top:-3px; font-size:40px;">&#42; </span>
+	<span style="position:absolute; left:15px;">Default contact &#35; is home. Click to choose alternate contact phone #</span><br><br>
+	<select id="list" style="position:absolute; left:15px; font-size:12px; color:green;" onchange="SetPhone(this.value)">
+		<option>Default is home</option>
+		<option id="work_choice" value="work_choice">Work</option>
+		<option id="cell_choice" value="cell_choice">Cell</option>
+		<option id="home_choice" value="home_choice">Home</option>
+	</select>
+</div>
+
+<textarea name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:35px; top:273px; width:370px; height:65px; font-size:18px; background:white;" oscarDB=addressline></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:12px; top:275px;" onclick="changeFontSize('addressline', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:12px; top:290px;" onclick="changeFontSize('addressline', -1);">&#9660;</span>
+
+	<input name="email" id="email" type="text" class="noborder" style="position:absolute; left:90px; top:348px; width:315px; font-size:16px; background:transparent;" placeholder="Required" oscarDB=email required>
+
+<!-- WSBC? -->
+<input name="WSBC_Yes" id="WSBC_1" type="text" class="Xbox box2" style="left:134px; top:377px;" 
+	onclick="
+		if (WSBC_1.value != 'X') {
+			document.getElementById('WSBC_claim').required = true; getElementById('WSBC_claim').reportValidity();
+		} else {
+			document.getElementById('WSBC_claim').required = false;
+			document.getElementById('WSBC_claim').value = '';
+		}
+		Radio_Box(this.id);">
+<input name="WSBC_No" id="WSBC_2" type="text" class="Xbox box2" style="left:181px; top:377px;" 
+	onclick="
+		getElementById('WSBC_claim').required = false;
+		document.getElementById('WSBC_claim').value = '';
+		Radio_Box(this.id);">
+
+<input name="WSBC_claim" id="WSBC_claim" type="text" class="noborder" style="position:absolute; left:255px; top:374px; width:140px; font-size:16px; background:transparent;">
+
+<!-- Referring Doctor -->
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:420px; top:163px; width:400px; font-size:16px; background:transparent;" oscarDB=current_user>
+
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position:absolute; left:420px; top:188px; width:400px; font-size:16px; background:transparent;" oscarDB=current_user_ohip_no>
+
+<textarea name="clinicLabel" id="clinicLabel" type="text" class="noborder" style="position:absolute; left:420px; top:210px; width:400px; height:150px; font-size:18px; background:transparent;" oscarDB=clinic_label></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:830px; top:212px;" onclick="changeFontSize('clinicLabel', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:830px; top:227px;" onclick="changeFontSize('clinicLabel', -1);">&#9660;</span>
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:570px; top:374px; width:250px; font-size:16px; background:transparent;" oscarDB=today>
+
+<!-- Reason for Visit -->
+<input name="Hip" id="Hip" type="text" class="Xbox box1" style="left:33px; top:452px;">
+<input name="Knee" id="Knee" type="text" class="Xbox box1" style="left:184px; top:452px;">
+<input name="Foot_ankle" id="Foot_ankle" type="text" class="Xbox box1" style="left:283px; top:452px;">
+<input name="Shoulder_elbow_wrist" id="Shoulder_elbow_wrist" type="text" class="Xbox box1" style="left:434px; top:452px;">
+<input name="Hand_fingers" id="Hand_fingers" type="text" class="Xbox box1" style="left:635px; top:452px;">
+<input name="Other_reason" id="Other_reason" type="text" class="noborder" style="position:absolute; left:80px; top:473px; width:740px; font-size:16px; background:transparent;">
+
+<!-- Additional Info -->
+<div id="ReferenceDocuments" class="DoNotPrint" style="position:absolute; left:840px; top:500px; width:250px;">
+	<input name="PMHx_Buttons" type="button" style="width:105px; font-size:12px; color:green;" value="Add PMHx" onclick="Add_PMHx();"><br>
+	<input name="PMHx_Buttons" type="button" style="width:105px; font-size:12px; color:green;" value="Add Meds" onclick="Add_Meds();"><br>
+	<input name="PMHx_Buttons" type="button" style="width:105px; font-size:12px; color:green;" value="Add Allergy" onclick="Add_Allergy();"> <br>
+	<input name="PMHx_Buttons" type="button" style="width:105px; font-size:12px; color:red;" value="Restart" onclick="Restart();" title="CAUTION: deletes all input in field"><br><br>
+	<input name="Consult" type="Button" class="DoNotPrint" style="width:105px; cursor:pointer; color:green;" value="To Consult" title="to Consult module" onclick="onBodyLoad(); consult();"><br>
+	<input value="To Documents" name="ConsultReports_link" type="button" style="width:105px; cursor:pointer; color:green" onclick="onBodyLoad(); documents_all();" title="link to document library" /><br>
+	<input value="Labs & Reports" name="Labs" type="button" style="width:105px; cursor:pointer; color:green;" onclick="onBodyLoad(); labs();" /><br>
+	<input value="Lab Row Display" name="LabSummary" type="button" style="width:105px; cursor:pointer; color:green;" onclick="onBodyLoad(); labRow();" /><br>
+	<input value="To Medications" name="Rx_module" type="button" style="width:105px; cursor:pointer; color:green;" onclick="onBodyLoad(); Rx();" /><br><br>
+	<span name="Hint" class="DoNotPrint" style="width:250px; font-size:14px; color:blue;">Hint: if insufficient room, attach<br>
+	<input name="PtSummary_Link" id="PtSummary_Link" type="button" class="DoNotPrint" style="width:105px; color:blue;" value="Pt Summary" oscarOPEN="Pt Summary" title="to eForm">
+</div>
+
+<!-- Diagnosis and Treatment to date -->
+<textarea name="PatientHistory" id="PatientHistory" class="noborder" style="position:absolute; left:35px; top:515px; height:180px; width:784px; font-size:16px; background:transparent;"></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:12px; top:517px;" onclick="changeFontSize('PatientHistory', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:12px; top:532px;" onclick="changeFontSize('PatientHistory', -1);">&#9660;</span>
+
+<input name="Letter_attached" id="Letter_attached" type="text" class="Xbox box2" style="left:192px; top:712px;">
+
+<!-- Orthopedic Surgeons -->
+<input name="Apostle" id="Ortho_1" type="text" class="Xbox box1" style="left:32px; top:816px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Apostle" style="position:absolute; left:368px; top:820px; width:95px; height:15px; background:white;"></span>
+<span name="Apostle_fax" id="Apostle_fax" type="text" class="CopyFax" style="position:absolute; left:367px; top:820px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>778-312-0134</b></span>
+<a id="emailLnk_Apostle" style="position:absolute; left:474px; top:820px; width:211px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-apostle@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Boyer" id="Ortho_2" type="text" class="Xbox box1" style="left:32px; top:839px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Boyer" style="position:absolute; left:467px; top:842px; width:107px; height:15px; background:white;"></span>
+<span name="Boyer_fax" id="Boyer_fax" type="text" class="CopyFax" style="position:absolute; left:469px; top:842px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>1-877-679-1960</b></span>
+<a id="emailLnk_Boyer" style="position:absolute; left:584px; top:842px; width:201px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-boyer@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Cinats" id="Ortho_3" type="text" class="Xbox box1" style="left:32px; top:861px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Cinats" style="position:absolute; left:497px; top:864px; width:107px; height:15px; background:white;"></span>
+<span name="Cinats_fax" id="Cinats_fax" type="text" class="CopyFax" style="position:absolute; left:499px; top:864px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>1-888-454-7811</b></span>
+<a id="emailLnk_Cinats" style="position:absolute; left:612px; top:864px; width:201px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-cinats@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Lodhia" id="Ortho_4" type="text" class="Xbox box1" style="left:32px; top:883px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Lodhia" style="position:absolute; left:447px; top:886px; width:107px; height:15px; background:white;"></span>
+<span name="Lodhia_fax" id="Lodhia_fax" type="text" class="CopyFax" style="position:absolute; left:448px; top:886px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>1-855-753-0102</b></span>
+<a id="emailLnk_Lodhia" style="position:absolute; left:561px; top:886px; width:203px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-lodhia@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Moola" id="Ortho_5" type="text" class="Xbox box1" style="left:32px; top:905px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Moola" style="position:absolute; left:443px; top:908px; width:107px; height:15px; background:white;"></span>
+<span name="Moola_fax" id="Moola_fax" type="text" class="CopyFax" style="position:absolute; left:442px; top:908px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>1-866-883-1615</b></span>
+<a id="emailLnk_Moola" style="position:absolute; left:557px; top:908px; width:205px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-moola@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Perey" id="Ortho_6" type="text" class="Xbox box1" style="left:32px; top:927px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Perey" style="position:absolute; left:441px; top:931px; width:97px; height:15px; background:white;"></span>
+<span name="Perey_fax" id="Perey_fax" type="text" class="CopyFax" style="position:absolute; left:443px; top:931px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>604-525-2628</b></span>
+<a id="emailLnk_Perey" style="position:absolute; left:545px; top:931px; width:199px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-perey@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Stone" id="Ortho_7" type="text" class="Xbox box1" style="left:32px; top:950px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Stone" style="position:absolute; left:414px; top:953px; width:97px; height:15px; background:white;"></span>
+<span name="Stone_fax" id="Stone_fax" type="text" class="CopyFax" style="position:absolute; left:417px; top:953px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>778-312-0118</b></span>
+<a id="emailLnk_Stone" style="position:absolute; left:518px; top:953px; width:182px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:moa.dr.stone@gmail.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+
+<input name="Viskontas" id="Ortho_8" type="text" class="Xbox box1" style="left:32px; top:972px;" onclick="addSubject(this.id); Radio_Box(this.id);">
+<span name="whiteout_Viskontas" style="position:absolute; left:440px; top:975px; width:97px; height:15px; background:white;"></span>
+<span name="Viskontas_fax" id="Viskontas_fax" type="text" class="CopyFax" style="position:absolute; left:443px; top:975px; font-size:15px;" title="Click to copy" onclick="copyToClipboard(this.id);"><b>604-777-5644</b></span>
+<a id="emailLnk_Viskontas" style="position:absolute; left:544px; top:975px; width:227px; height:14px; cursor:pointer;" onclick="javascript:window.open('mailto:info-viskontas@fraserortho.com', 'mail'); event.preventDefault();" title="Send eMAIL"></a>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:50px; top:1050px; width:800px; font-size:13px;">
+	<table><tr><td style="background:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value = "True" />
+		Subject: <input name="subject" id="subject" size="40" type="text"> 
+		<input value = "Reset" name="ResetButton" id="ResetButton" type="reset" style="color:red;" onclick="history.go(0);"> 
+		<input value = "Print" name="PrintButton" id="PrintButton" type="button" style="color:green;" onclick="printLetter();"> 
+		<input value = "Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();">
+	 </td></tr></table>
+
+<!-- Copy Left -->
+<a rel="licence" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" id="CreativeCommons" style="border:0px;" src="" /></a>
+<span> Fraser Orthopaedic Institute (FOI) eFORM, V9_Apr14_2025, by Dr. John Yap, is licensed under a </span> 
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br>
+<span style="color:forestgreen;">Please consider supporting </span><a href="https://oscarbc.ca/" target="_blank">oscarbc.ca.</a> |
+<a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> |
+<a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | 
+<a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | 
+<a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> |
+<br><br>
+</div>
+
+</form>
+
+<!-- Calendar function -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"today", ifFormat : "%Y-%m-%d", button : "today" , singleClick:true, step:1 });
+</script>
+
+</body>
+</html>

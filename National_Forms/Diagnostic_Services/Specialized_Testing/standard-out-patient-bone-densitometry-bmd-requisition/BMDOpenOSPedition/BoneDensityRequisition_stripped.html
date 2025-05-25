@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="description" content="Standard Out-Patient Bone Densitometry Requisition eForm" />
+		<meta name="keywords" content="Bone Density, BMD, Requisition" />
+		<meta name="robots" content="nofollow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+		<meta http-equiv="author" content="John Yap" />
+
+		<!-- Created July 2013 by John Yap; background from Vancouver Coastal Health website, modified; FF ESR, Oscar V12.x; debugged Sep28/2013 -->
+		<!-- Updated Mar2015 by John Yap; submit colour bar, and radio-X-boxes for location -->
+		<!-- Updated Aug2015 by John Yap; additional locations, complete address; image source finder as per K Yap; X-box to Jquery locations hived off to BMD_ImageLocations2015.js -->
+		<!-- V6: updated Mar25_2016 by John Yap; typos, calendar function, user name normal order -->
+		<!-- V7, V8: updated Mar25_2016 by John Yap; input from Herb Chang - bold locations, colour cues, signature script, CopyTo function -->
+		<!-- V9: updated Mar27_2016 by John Yap; input from Herb Chang - minor X-box cosmesis, screening default -->
+		<!-- V10: updated Mar27_2016 by John Yap; input from John Robertson - alert for missing weight measurement -->
+		<!-- V11: updated Mar28_2016 by John Yap; input from John Robertson - manual push to measurement -->
+		<!-- V12: updated Mar28_2016 by John Yap; merge old WT measurement with new WT measurement, to simplify -->
+		<!-- V13: updated Mar28_2016 by John Yap; add date warning for old weight measurement - set at 180 days (6 mo) -->
+		<!-- V14: updated Apr14_2016 by John Yap; correct CopyTo behaviour; does not execute on reload -->
+		<!-- V15: updated Aug27_2017 by John Yap; PMHx, font-size changer, for Pathways -->
+		<!-- V16: updated Oct12_2017 by John Yap; new Standard Req from MoH! -->
+		<!-- V17_Feb24_2018b: fix FORE calculator link; and update FRAX link; debug non-reloading signature; default setting is E-Signature; thanks K Phan for finding bug. -->
+		<!-- V18_Dec25_2023; update to 2023 standards, full signature features. John Yap -->
+		<!-- V19_Apr23_2024; fix errors as per D Warren, OpenOSP. John Yap -->
+		<!-- V20_Apr23_2024; stripped of internal validations for OpenOSP. John Yap -->
+
+		<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+		<!-- Do not use \\n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+		<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+		 No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+		 Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+		 This applies to both eForms shared by others, and those created by users themselves.
+		 Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+		 Free: eForms so shared may not be sold or purchased.
+		 Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+		 eForms are not part of the OSCAR core program functionality and code base.
+		 For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+		 eForms are also not subject to the ISO production process for OSCAR. 
+		-->
+
+		<script>
+			// For OSCAR to detect what files to include in the generated ZIP, the
+			// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+			// this serves as a workaround to force the files to be included for ZIP exports.
+			// Allows for appropriate import of all png files that are not referenced by BGImage tags
+			// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+			// "${oscar_image_path}1905_sobdr_BMD_2017.png"
+			// "${oscar_image_path}BMD_Req_2013_Pg2.png"
+			// "${oscar_image_path}CreativeCommonsIcon.png" // for Copy Left footer
+		</script>
+
+		<!-- jQuery for greater functionality -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+		<script>
+			window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>');
+		</script>
+		<script>
+			if (typeof jQuery === "undefined") {
+				document.write(unescape("%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E"));
+			}
+		</script>
+
+		<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors. 		End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+		<script type="text/javascript" src="jSignature.min.js"></script>
+		<script type="text/javascript" src="onBodyLoad_Dec2019.js"></script>
+		<script language="javascript" type="text/javascript" src="BMD_ImageLocations2023.js"></script>
+
+		<!-- Freeform Signatures -->
+		<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+		<!-- script to link to other pages -->
+		<script language="javascript" src="${oscar_image_path}onBodyLoad_Dec2019.js"></script>
+		<!-- BMD locations inside/outside of Oscar; drop Down menu Chrome Compatible -->
+		<script language="javascript" type="text/javascript" src="${oscar_image_path}BMD_ImageLocations2023.js"></script>
+
+		<!-- main calendar program -->
+		<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+		<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+		<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+		<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+		<style type="text/css" media="screen">
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			input {
+				-moz-box-sizing: content-box;
+				-webkit-box-print-color-adjust: exact;
+				-webkit-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+
+			input#SubmitButton {
+				color: white;
+				text-shadow: 0px 1px 1px #ffffff;
+				border-bottom: 2px solid #b2b2b2;
+				background: #229ece;
+				background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+				background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+				background: -o-linear-gradient(top, #6bb5d2, #229ece);
+				background: -ms-linear-gradient(top, #6bb5d2, #229ece);
+			}
+
+			input#SubmitButton:hover {
+				color: #333333;
+				border: 1px solid #a4a4a4;
+				border-top: 2px solid #b2b2b2;
+				background-color: #a0dbc4;
+				background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#6bb5d2));
+				background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+				background: -o-linear-gradient(top, #229ece, #6bb5d2);
+				background: -ms-linear-gradient(top, #229ece, #6bb5d2);
+			}
+
+			.attn {
+				animation-name: lookHere;
+				animation-duration: 5s;
+				animation-timing-function: linear;
+				animation-iteration-count: 3;
+				animation-direction: alternate;
+			}
+
+			@keyframes lookHere {
+				0% {
+					border-color: #ced5e3;
+					box-shadow: 0 0 5px #ced5e3;
+				}
+				25% {
+					border-color: #364460;
+					box-shadow: 0 0 20px #364460;
+				}
+				50% {
+					border-color: #a21d22;
+					box-shadow: 0 0 5px #a21d22;
+				}
+				75% {
+					border-color: #f7977b;
+					box-shadow: 0 0 20px #f7977b;
+				}
+				100% {
+					border-color: #ced5e3;
+					box-shadow: 0 0 5px #ced5e3;
+				}
+			}
+
+			.sig {
+				border: 2px dotted blue;
+				background: lightgrey;
+			}
+
+			.CopyFax:hover {
+				/* changes CopyFax class element on hover */
+				background-color: pink;
+				cursor: pointer;
+			}
+
+			a {
+				text-decoration: none;
+			}
+			a:hover {
+				border: 1px solid #000000;
+				border-style: outset;
+				background: pink;
+				opacity: 0.6;
+			}
+			a:active {
+				border: 3px solid #000000;
+				border-style: inset;
+			}
+
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+
+			::placeholder {
+				color: rebeccapurple;
+				font-style: italic;
+				opacity: 1;
+			}
+
+			textarea {
+				resize: none;
+			}
+		</style>
+
+		<style type="text/css" media="print">
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			input {
+				-moz-box-sizing: content-box;
+				-webkit-box-print-color-adjust: exact;
+				-webkit-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+
+			.DoNotPrint {
+				display: none;
+			}
+			.noborder {
+				border: 0px;
+				background: transparent;
+				scrollbar-3dlight-color: transparent;
+				scrollbar-arrow-color: transparent;
+				scrollbar-base-color: transparent;
+				scrollbar-darkshadow-color: transparent;
+				scrollbar-face-color: transparent;
+				scrollbar-highlight-color: transparent;
+				scrollbar-shadow-color: transparent;
+				scrollbar-track-color: transparent;
+				overflow: hidden;
+			}
+
+			.sig {
+				background: transparent;
+			}
+
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+
+			/* hide placehoders */
+			::placeholder {
+				color: transparent;
+			}
+		</style>
+
+		<!-- Xbox styling -->
+		<style type="text/css">
+			.box1 {
+				position: absolute;
+				width: 11px;
+				height: 13px;
+				font-size: 13px;
+				font-family: Arial;
+				border: 1px solid #000000;
+				cursor: pointer;
+				font-weight: bold;
+				text-align: center;
+				background: aquamarine;
+			}
+			.box2 {
+				position: absolute;
+				width: 8px;
+				height: 10px;
+				font-size: 10px;
+				font-family: Arial;
+				border: 1px solid #000000;
+				cursor: pointer;
+				font-weight: bold;
+				text-align: center;
+				background: aquamarine;
+			}
+
+			.FontSizeChange {
+				position: absolute;
+				width: 16px;
+				height: 15px;
+				font-size: 13px;
+				cursor: pointer;
+				background: yellow;
+				text-align: center;
+				border: 1px solid #000000;
+			}
+		</style>
+
+		<script language="javascript" type="text/javascript">
+			/****************************
+			Startup functions
+			****************************/
+			function startUp() {
+				setDocumentTitle("BMD", document.getElementById("PatientNameL").value);
+				changeImage("1905_sobdr_BMD_2017.png", "BGImage1");
+				changeImage("BMD_Req_2013_Pg2.png", "BGImage2");
+				changeImage("CreativeCommonsIcon.png", "CreativeCommons"); // for Copy Left footer
+				loadFontSize();
+				setDefaults();
+				//	Check for last WT measured + warnings
+				//		date();
+				//	Optimize window size/width
+				top.window.resizeTo(1000, screen.availHeight);
+			}
+
+			function changeImage(img, imgId) {
+				// Changes the src value of an <img>.
+				document.getElementById(imgId).src = resourceLink(img);
+				document.getElementById(imgId).href = resourceLink(img);
+			}
+
+			function resourceLink(resource, extension) {
+				// Takes two arguments -- the base filename and its extension -- and
+				// returns a string depending on whether the page has been opened
+				// locally or if it has been uploaded to OSCAR.
+				//
+				// Example usage: resourceLink('image1', 'png')
+				// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+				var prefix = window.location.href.toLowerCase().indexOf("http") != -1 ? "${oscar_image_path}" : "";
+				if (typeof extension === "undefined") {
+					var extension = "";
+				} else {
+					var extension = "." + extension;
+				}
+				return prefix + resource + extension;
+			}
+
+			function setDocumentTitle(Title, PatientNameL) {
+				// set document title
+				document.title = Title + "_" + PatientNameL;
+			}
+
+			function setDefaults() {
+				// check the newform flag to ensure this is the initial load of the form
+				if (document.getElementById("newForm").value == "True") {
+					document.getElementById("Bill_1").value = "X";
+					contactChoice("hm_choice"); // default contact phone is home
+					parseName("current_user");
+					CheckCopyTo();
+					//	OST_Calculate();
+					document.getElementById("Stamp").click(); // use Stamp as default signature
+					//		document.getElementById('Add_Wet').click(); // use Wet signature as default signature
+					parseMeasurementDate("WTDate");
+				} else {
+					// actions if eForm is reopened
+					loadSig();
+					reloadSignature();
+				}
+			}
+
+			/****************************
+			Create name in proper order
+			****************************/
+			function parseName(id) {
+				// Get the name
+				var fullName = document.getElementById(id).value;
+				// Split the value
+				var splitName = fullName.split(",");
+				var firstName = "";
+				var lastName = "";
+				// Check for last name
+				if (splitName.length >= 1) {
+					lastName = splitName[0].trim();
+				}
+				if (splitName.length >= 2) {
+					firstName = splitName[1].trim();
+				}
+				var First_Last_Name = firstName + " " + lastName;
+				// Show the fields on the page
+				document.getElementById(id).value = First_Last_Name;
+			}
+
+			/****************************
+			Remove time stamp from measurement
+			Oscar default is yyyy-mm-dd hh:mm:ss
+			From database tag e.g. oscardb=m$PHQ9#dateObserved
+			****************************/
+			function parseMeasurementDate(id) {
+				// Change observed measurement date field to yyyy-mm-dd format, without time stamp
+				var FullMeasurementDate = document.getElementById(id).value;
+				var DateOnly = FullMeasurementDate.split(" ")[0];
+				// Show the parsed field
+				document.getElementById(id).value = DateOnly;
+			}
+
+			/****************************
+			Submit and print functions
+			****************************/
+			function printLetter() {
+				// ensure all inputs completed
+				// Save reminder; allows for validity testing
+				// ensure all inputs completed before printLetter
+				//	if (CheckComplete()) {
+				document.getElementById("SubmitButton").classList.toggle("attn");
+				document.getElementById("ResetButton").style.color = "black";
+				document.getElementById("SubmitButton").style.border = "2px solid red";
+				alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+				window.print();
+				//		}
+			}
+
+			function submission() {
+				// requires type="submit" in submit button input to allow for validity testing
+				// ensure all inputs completed
+				//	if (!CheckComplete()) {
+				//		return;
+				//	}
+				setFlag();
+				saveSig();
+				releaseDirtyFlag();
+			}
+
+			function setFlag() {
+				// indicate that the form has been submitted
+				if (document.getElementById("newForm").value == "True") {
+					document.getElementById("newForm").value = "False";
+				}
+			}
+
+			/****************************
+			Check form for completeness
+			function CheckComplete() {
+				var complete = true;
+				// Check that all questions are answered before print
+				if (document.getElementById("PrevBoneDensity_1").value == "" && document.getElementById("PrevBoneDensity_2").value == "") {
+					document.getElementById("PrevBoneDensity_1").style.background = "red";
+					document.getElementById("PrevBoneDensity_2").style.background = "red";
+					complete = false;
+				} else {
+					document.getElementById("PrevBoneDensity_1").style.background = "aquamarine";
+					document.getElementById("PrevBoneDensity_2").style.background = "aquamarine";
+				}
+
+				if (document.getElementById("PrevLSpineXR_1").value == "" && document.getElementById("PrevLSpineXR_2").value == "") {
+					document.getElementById("PrevLSpineXR_1").style.background = "red";
+					document.getElementById("PrevLSpineXR_2").style.background = "red";
+					complete = false;
+				} else {
+					document.getElementById("PrevLSpineXR_1").style.background = "aquamarine";
+					document.getElementById("PrevLSpineXR_2").style.background = "aquamarine";
+				}
+				if (!complete) {
+					alert("Form incomplete. Please cancel print, and provide highlighted details before proceeding");
+					return false;
+				}
+				return true;
+			}
+			****************************/
+
+			/****************************
+			Signature functions - 1 signature
+			****************************/
+			jQuery(document).ready(function () {
+				$("#CanvasSignature1").jSignature({ "decor-color": "rgba(255, 255, 255, 0.0)" });
+			});
+
+			function saveSig() {
+				var $sig = $("#CanvasSignature1");
+				var datapair = new Array();
+				datapair = $sig.jSignature("getData", "base30");
+				document.getElementById("StoreSignature1").value = datapair.join(",");
+				// signature checker - placed a single dot in corner if signature field blank
+				if ($("#CanvasSignature1").jSignature("getData", "base30")[1] == "") {
+					document.getElementById("StoreSignature1").value = "image/jsignature;base30,0_0";
+				}
+			}
+
+			function clearSig() {
+				$("#CanvasSignature1").jSignature("reset");
+			}
+
+			function loadSig() {
+				var $sig = $("#CanvasSignature1");
+				var data;
+				data = document.getElementById("StoreSignature1").value;
+				$sig.jSignature("setData", "data:" + data);
+			}
+
+			/****************************
+			Script to enable signature stamps. No Array needed.
+			Signature assigned to ProviderNumber in the format:
+			consult_sig_+ProviderNumber+.png
+			****************************/
+			function SignForm() {
+				var ProviderNumber = document.getElementById("current_user_id").value;
+				document.getElementById("StampSignature").src = "../eform/displayImage.do?imagefile=consult_sig_" + ProviderNumber + ".png";
+			}
+
+			/****************************
+			Script to add/remove Wet signature option
+			****************************/
+			function Add_Wet() {
+				document.getElementById("CanvasSignature1").className = "sig";
+				document.getElementById("Signature_Stamp").className = "Hide";
+				document.getElementById("Stamp").checked = false;
+				document.getElementById("SignatureChoice").value = "Wet";
+			}
+			function remove_Wet() {
+				document.getElementById("CanvasSignature1").className = "Hide";
+				document.getElementById("SignatureChoice").value = "None";
+			}
+
+			/****************************
+			Script to add/remove Stamp signature option
+			****************************/
+			function Add_Stamp() {
+				SignForm();
+				document.getElementById("Signature_Stamp").className = "Show";
+				document.getElementById("CanvasSignature1").className = "Hide";
+				document.getElementById("Wet").checked = false;
+				document.getElementById("SignatureChoice").value = "Stamp";
+			}
+			function remove_Stamp() {
+				document.getElementById("Signature_Stamp").className = "Hide";
+				document.getElementById("SignatureChoice").value = "None";
+			}
+
+			/****************************
+			Script to load None signature option
+			****************************/
+			function Add_None() {
+				document.getElementById("CanvasSignature1").className = "Hide";
+				document.getElementById("Signature_Stamp").className = "Hide";
+			}
+
+			/****************************
+			Script to reload signature option selected on submit
+			****************************/
+			function reloadSignature() {
+				// show chosen signature format on submit: e.g.  Wet, Stamp, None
+				var chosenSig = document.getElementById("SignatureChoice").value;
+				document.getElementById(chosenSig).checked = true;
+				if (chosenSig === "Stamp") {
+					Add_Stamp();
+				} else if (chosenSig === "Wet") {
+					Add_Wet();
+				} else if (chosenSig === "None") {
+					Add_None();
+				}
+			}
+
+			/****************************
+			Checkbox functions
+			****************************/
+			$(document).ready(function () {
+				$(".Xbox").prop("readonly", "true");
+				$(".Xbox").mousedown(function (evt) {
+					changeValue(evt.target);
+				});
+				$(".Xbox").keydown(function (evt) {
+					displayKeyCode(evt);
+				});
+			});
+
+			function changeValue(element) {
+				if (element.val == undefined) {
+					element = $(element); // Convert to jquery element
+				}
+				if (element.val() == "") {
+					element.val("X");
+				} else {
+					element.val("");
+				}
+			}
+
+			function displayKeyCode(evt) {
+				var charCode = evt.which || evt.keyCode;
+				// any key press except tab will constitute a value change to the checkbox
+				if (charCode != 9) {
+					changeValue(evt.target);
+					return false;
+				}
+			}
+
+			/****************************
+			Scripts to confirm closing of window if have not saved yet
+			****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup = setDirtyFlag;
+			function setDirtyFlag() {
+				needToConfirm = true;
+			}
+
+			function releaseDirtyFlag() {
+				needToConfirm = false; //Call this function if does not require an alert.
+				//this could be called when save button is clicked
+			}
+			window.onbeforeunload = confirmExit;
+
+			function confirmExit() {
+				if (needToConfirm) {
+					return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+				}
+			}
+
+			/****************************
+			Radio-Xbox functions
+			Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x
+			and is named in the convention name_X where X appears in the string defined in scales
+			Ensure that the list is sequential. Do no skip numbers. An input can be hidden if appropriate.
+			****************************/
+			function Radio_Box(x) {
+				var scales = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+				var partA = x.substring(0, x.indexOf("_"));
+				var i = x.substring(x.indexOf("_"));
+				var j = i.substr(1);
+
+				for (var n in scales) {
+					if (j == scales[n]) {
+						for (var m in scales) {
+							if (m != n) {
+								document.getElementById(partA + "_" + scales[m]).value = "";
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			/****************************
+			Script to Increase or Decrease the Font Size
+			name = input name/id, delta = increase (+) or decrease (-) increment #
+			Requires loadFontSize(); in startUp, or in onload line
+			****************************/
+			function changeFontSize(name, delta) {
+				var element = $("#" + name);
+				var oldSize = parseInt(element.css("font-size"));
+				var newSize = oldSize + delta;
+
+				// Save new font size into "value" field of hidden element
+				$("#" + name + "_fontsize").attr("value", newSize);
+
+				// Set font size
+				element.css({ "font-size": newSize + "px" });
+			}
+
+			// Retains altered font size when eForm is reopened;
+			// Requires hidden inputs with format for each field using this feature:
+			// <input type="hidden" name="Input_fontsize" id="Input_fontsize">
+			function loadFontSize() {
+				$.each($("input[name*='_fontsize'"), function (index, element) {
+					var fontSize = element.value;
+
+					if (!!fontSize) {
+						var name = element.name.split("_")[0];
+						$("#" + name).css({ "font-size": fontSize + "px" });
+					}
+				});
+			}
+
+			/****************************
+			Scripts to copy regular GP if locum or other physician has ordered lab
+			also cc to referral doc for specialists
+			****************************/
+			function CheckCopyTo() {
+				if (document.getElementById("PhysicianName").value != document.getElementById("PatientMD").value) {
+					document.getElementById("CopyTo").value = document.getElementById("PatientMD").value + "-" + document.getElementById("PatientMD_MSP").value + ", " + document.getElementById("ReferralMD").value + "-" + document.getElementById("ReferralMD_MSP").value;
+				} else {
+					document.getElementById("CopyTo").value = document.getElementById("ReferralMD").value + " " + document.getElementById("ReferralMD_MSP").value;
+				}
+			}
+
+			/****************************
+			Osteoporosis Self-Assessment Tool initial and re-calculation
+			****************************/
+			function OST_Calculate() {
+				//Check for Weight value
+				if (document.getElementById("Weight_kg").value == "") {
+					document.getElementById("Update_Weight_kg").style.background = "red";
+					document.getElementById("Recalculate_OST_score").style.color = "red";
+					alert("Please enter WT value in kg, and recalculate. This will update the WT measurement. Or proceed without OST.");
+					return false;
+				} else {
+					document.getElementById("Update_Weight_kg").style.background = "transparent";
+					document.getElementById("Recalculate_OST_score").style.color = "green";
+				}
+				var i = 0;
+				var WT = document.getElementById("Weight_kg").value;
+				var age = document.getElementById("age").value;
+				var sex = document.getElementById("sex").value;
+				if (sex != "M" && sex != "F") {
+					sex = "F";
+				}
+				i = (WT - age) / 5;
+				document.FormName.OST_score.value = i.toFixed(1);
+				if ((sex == "M" && i < 4) || (sex == "F" && i < 2)) {
+					document.getElementById("OST_Warning").style.background = "lightgreen";
+					document.getElementById("OST_Warning").value = "Screening recommended";
+				} else {
+					document.getElementById("OST_Warning").style.background = "pink";
+					document.getElementById("OST_Warning").value = "Screening not recommended";
+				}
+			}
+
+			function OST_ReCalculate() {
+				var i = 0;
+				//	document.getElementById("Update_Weight_kg").value = document.getElementById("Weight_kg").value;
+				var WT = document.getElementById("Update_Weight_kg").value;
+				var age = document.getElementById("age").value;
+				var sex = document.getElementById("sex").value;
+				if (sex != "M" && sex != "F") {
+					sex = "F";
+				}
+				i = (WT - age) / 5;
+				document.FormName.OST_score.value = i.toFixed(1);
+				if ((sex == "M" && i < 4) || (sex == "F" && i < 2)) {
+					document.getElementById("OST_Warning").style.background = "lightgreen";
+					document.getElementById("OST_Warning").value = "Screening recommended";
+				} else {
+					document.getElementById("OST_Warning").style.background = "pink";
+					document.getElementById("OST_Warning").value = "Screening not recommended";
+				}
+				document.getElementById("Recalculate_OST_score").style.color = "green";
+				document.getElementById("Weight_kg").value = WT;
+			}
+
+			function WarningOff() {
+				document.getElementById("Update_Weight_kg").style.background = "transparent";
+			}
+
+			function date() {
+				var digital = new Date();
+				var days = digital.getDate();
+				var months = (digital.getMonth() * 1 + 1) * 30.4;
+				var years = digital.getFullYear() * 365;
+				var dToday = days + months + years;
+				var myString2 = document.getElementById("WT_Date").value;
+				if (myString2 > "0") {
+					var mySplitResult2 = myString2.split("-");
+					var aeWTDate = mySplitResult2[0] * 365;
+					var beWTDate = mySplitResult2[1] * 30.4;
+					var feWTDate = mySplitResult2[2];
+					var geWTDate = feWTDate.split(" ");
+					var ceWTDate = geWTDate[0];
+					var deWTDate = aeWTDate * 1 + beWTDate * 1 + ceWTDate * 1;
+					var eeWTDate = dToday - deWTDate;
+				}
+				// eeWTDate = days since last WT check
+				if (eeWTDate <= 180) {
+					document.getElementById("WTDate").style.background = "lightgreen";
+					document.getElementById("Weight_Warning").className = "Hide";
+				}
+				if (eeWTDate > 180) {
+					document.getElementById("WTDate").style.background = "red";
+					document.getElementById("Weight_Warning").className = "Show";
+				}
+			}
+
+			/****************************
+			Copy to Clipboard
+			****************************/
+			$(document).ready(function () {
+				var y = document.getElementsByClassName("copyable");
+				$(y).click(function () {
+					this.select();
+					document.execCommand("copy");
+					$(this).css("background-color", "pink").fadeIn("slow");
+				});
+			});
+
+			/****************************
+			Script for contact phone number choice
+			****************************/
+			function contactChoice(i) {
+				var choice = i.substring(0, i.indexOf("_"));
+				document.FormName.phone.value = document.getElementById(choice).value + ", " + choice;
+			}
+
+			/****************************
+			Script to trigger required filed with name id_text
+			where id is the triggering X-box input field.
+			****************************/
+			function changeAndCheck(id) {
+				// Subsequent text field must be name of Xbox + _text so Other and Other_text
+				var id2 = id + "_text";
+				if (document.getElementById(id).value != "X") {
+					document.getElementById(id2).required = false;
+					document.getElementById(id2).value = "";
+				} else {
+					document.getElementById(id2).required = true;
+					document.getElementById(id2).reportValidity();
+				}
+			}
+		</script>
+	</head>
+
+	<body onload="startUp();" onbeforeprint="document.forms['FormName'].reportValidity();">
+		<div id="Page1" style="position: absolute; left: 0px; top: 0px; width: 850px">
+			<img id="BGImage1" src="" />
+			<form method="post" action="" name="FormName" id="FormName">
+				<!-- Hidden input for title name -->
+				<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB="patient_nameL" />
+
+				<!-- Hidden input for OST calculation -->
+				<input name="WT_Date" id="WT_Date" type="hidden" oscardb="m$WT#dateObserved" />
+				<input name="age" id="age" type="hidden" oscarDB="age" />
+
+				<!-- Hidden input for storing Signature data -->
+				<input type="hidden" name="StoreSignature1" id="StoreSignature1" />
+
+				<!-- Hidden Inputs for signature stamps -->
+				<input type="hidden" name="SignatureChoice" id="SignatureChoice" />
+				<input type="hidden" name="current_user_id" id="current_user_id" oscarDB="current_user_id" />
+
+				<!-- Hidden Inputs for contact phone -->
+				<input type="hidden" name="hm" id="hm" oscarDB="phone" />
+				<input type="hidden" name="cell" id="cell" oscarDB="cell" />
+				<input type="hidden" name="wk" id="wk" oscarDB="phone2" />
+
+				<!-- Hidden input for font size changer inputs-->
+				<input type="hidden" name="clinicLabel_fontsize" id="clinicLabel_fontsize" />
+				<input type="hidden" name="CopyTo_fontsize" id="CopyTo_fontsize" />
+
+				<!-- CopyTo hidden tags -->
+				<input type="hidden" name="PatientMD" id="PatientMD" oscarDB="doctor" />
+				<input type="hidden" name="PatientMD_MSP" id="PatientMD_MSP" oscarDB="doctor_ohip_no" />
+				<input type="hidden" name="ReferralMD" id="ReferralMD" oscarDB="referral_name" />
+				<input type="hidden" name="ReferralMD_MSP" id="ReferralMD_MSP" oscarDB="referral_no" />
+				<input type="hidden" name="PhysicianName" id="PhysicianName" oscarDB="current_user" />
+
+				<!-- Location Drop Down List as per P Mehta, Chrome Compatible -->
+				<input name="LocationSite" id="LocationSite" class="noborder" style="position: absolute; left: 25px; top: 2px; width: 795px; font-size: 14px; background: transparent" />
+
+				<select class="DoNotPrint" style="position: absolute; left: 830px; top: 2px; color: green">
+					<option>Choose Location</option>
+					<option value="ARH" title="Abbotsford Regional Hospital" onclick="SetLocation(this.value);">ARH</option>
+					<option value="BCWH" title="BC Woman&#8217;s and Children&#8217;s Hospital" onclick="SetLocation(this.value);">BCWH</option>
+					<option value="JPOCSC" title="Jim Pattison Outpatient Care and Surgical Centre" onclick="SetLocation(this.value);">JPOCSC</option>
+					<option value="LGH" title="Lion&#8217;s Gate Hospital" onclick="SetLocation(this.value);">LGH</option>
+					<option value="RCH" title="Royal Columbian Hospital" onclick="SetLocation(this.value);">RCH</option>
+					<option value="SPH" title="St. Paul&#8217;s Hospital" onclick="SetLocation(this.value);">SPH</option>
+					<option value="VGH" title="Vancouver General Hospital" onclick="SetLocation(this.value);">VGH</option>
+					<option value="MedRay" title="MedRay Coquitlam" onclick="SetLocation(this.value);">MedRay</option>
+					<option value="BrookeBurnaby" title="Brooke Radiology Burnaby" onclick="SetLocation(this.value);">Brooke</option>
+					<option value="GreigVictoria" title="" onclick="SetLocation(this.value);">Greig Victoria</option>
+					<option value="GreigOakridge" title="" onclick="SetLocation(this.value);">Greig Oakridge</option>
+					<option value="NorthShoreImaging" title="" onclick="SetLocation(this.value);">North Shore Imaging</option>
+				</select>
+
+				<span class="DoNotPrint" style="position: absolute; left: 830px; top: 30px; width: 50px; font-size: 14px; color: green">Fax to:</span><br />
+				<input name="CopyFax" id="CopyFax" type="text" class="DoNotPrint CopyFax copyable" style="position: absolute; left: 875px; top: 28px; width: 95px; font-size: 14px; color: green" onclick="copyToClipboard(this.id);" title="Click to copy fax number" />
+
+				<!-- References and resources -->
+				<a id="BGImage2" class="DoNotPrint" style="position: absolute; left: 300px; top: 58px; font-size: 14px" href="" target="_blank" title="Ctrl-P or Cmd-P to print">Patient Info</a>
+				<a name="Reference" style="position: absolute; left: 295px; top: 93px; width: 265px; height: 32px; font-size: 14px" href="http://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/osteoporosis" target="_blank" title="To BC Guideline Website"></a>
+				<a name="Reference" style="position: absolute; left: 205px; top: 512px; width: 100px; height: 12px" href="http://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/osteoporosis" target="_blank" title="To BC Guideline Website"></a>
+				<a name="Reference" style="position: absolute; left: 567px; top: 512px; width: 105px; height: 12px" href="https://www.sheffield.ac.uk/FRAX/tool.aspx?country=19" target="_blank" title="To website"></a>
+
+				<a class="DoNotPrint" style="position: absolute; left: 850px; top: 505px; width: 120px; font-size: 14px" href="https://riskcalculator.fore.org/" target="_blank">FORE Calculator</a>
+
+				<!-- Osteoporosis Self-Assessment Tool (OST) calculation -->
+				<div name="OST" class="DoNotPrint" style="position: absolute; left: 850px; top: 555px; width: 290px; font-size: 14px">
+					<span style="position: absolute; top: 0px; color: green">OST score: </span>
+					<input name="OST_score" id="OST_score" type="text" style="position: absolute; left: 75px; top: -2px; width: 30px; font-size: 14px; text-align: center" /><br />
+					<input name="OST_Warning" id="OST_Warning" type="text" style="position: absolute; width: 190px; font-size: 14px; text-align: center" /><br /><br />
+
+					<!-- Patient Weight -->
+					<span style="position: absolute; font-size: 14px; color: green">Weight (kg):</span><br />
+					<input name="Weight_kg" id="Weight_kg" type="text" style="width: 30px; font-size: 14px; text-align: center; background: transparent" oscardb="m$WT#value" />
+					<input name="WTDate" id="WTDate" type="text" style="width: 80px; font-size: 14px; background: transparent" title="If WT is more than 6 mo old, consider updating." oscardb="m$WT#dateObserved" /><br /><br />
+
+					<!-- Update or add initial weight to measurement -->
+					<input name="m$WT#value" id="Update_Weight_kg" type="text" style="width: 30px; font-size: 14px; text-align: center; background: transparent" onfocus="WarningOff();" title="Input new weight and save to measurement" />
+					<input name="Recalculate_OST_score" id="Recalculate_OST_score" type="button" style="color: red" onclick="OST_ReCalculate();" title="Recalculate will push updated WT to measurement on submit" value="Recalculate" /><br /><br />
+					<span id="Weight_Warning" class="Hide" style=color:red;">Weight measurement is more than 6 mo old.<br />
+					Please update weight measurement today.
+				</div>
+
+				<!-- Bill to: -->
+				<input name="Bill_MSP" id="Bill_1" type="text" class="Xbox box1" style="left: 76px; top: 133px" onclick="Radio_Box(this.id);" />
+				<input name="Bill_ICBC" id="Bill_2" type="text" class="Xbox box1" style="left: 126px; top: 133px" onclick="Radio_Box(this.id);" />
+				<input name="Bill_WSBC" id="Bill_3" type="text" class="Xbox box1" style="left: 180px; top: 133px" onclick="Radio_Box(this.id);" />
+				<input name="Bill_Patient" id="Bill_4" type="text" class="Xbox box1" style="left: 264px; top: 133px" onclick="Radio_Box(this.id);" />
+				<input name="Bill_Other" id="Bill_5" type="text" class="Xbox box1" style="left: 330px; top: 133px" onclick="Radio_Box(this.id);" />
+				<input name="Bill_5_text" id="Bill_5_text" type="text" class="noborder" style="position: absolute; left: 390px; top: 131px; width: 160px; font-size: 16px; background: transparent" />
+
+				<!-- Referring Physician Info -->
+				<input name="current_user" id="current_user" type="text" class="noborder" style="position: absolute; left: 565px; top: 40px; width: 250px; font-size: 16px; background: transparent" oscarDB="current_user" />
+				<textarea name="clinicLabel" id="clinicLabel" class="noborder" style="position: absolute; left: 565px; top: 61px; width: 250px; height: 87px; font-size: 14px; background: transparent" oscarDB="clinic_label"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 826px; top: 63px" onclick="changeFontSize('clinicLabel', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 826px; top: 78px" onclick="changeFontSize('clinicLabel', -1);">&#9660;</span>
+
+				<input name="LocumName" id="LocumName" type="text" class="noborder" style="position: absolute; left: 565px; top: 171px; width: 250px; font-size: 14px; background: transparent" placeholder="add details" />
+				<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position: absolute; left: 565px; top: 204px; width: 250px; font-size: 14px; background: transparent" oscarDB="current_user_ohip_no" />
+				<input name=" STATContact" type="text" class="noborder" style="position: absolute; left: 565px; top: 236px; width: 250px; font-size: 14px; background: transparent" />
+				<textarea name="CopyTo" id="CopyTo" type="text" class="noborder" style="position: absolute; left: 565px; top: 270px; width: 250px; height: 48px; font-size: 14px; background: transparent"></textarea>
+				<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 826px; top: 272px" onclick="changeFontSize('CopyTo', 1);">&#9650;</span>
+				<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 826px; top: 287px" onclick="changeFontSize('CopyTo', -1);">&#9660;</span>
+
+				<!-- Patient Demographics -->
+				<input name="HIN" id="HIN" type="text" class="noborder" style="position: absolute; left: 25px; top: 171px; width: 260px; font-size: 14px; background: transparent" oscardb="HIN" />
+				<input name="ICBC_WSBC_RCMPNumber" type="text" class="noborder" style="position: absolute; left: 295px; top: 171px; width: 255px; font-size: 14px; background: transparent" />
+
+				<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position: absolute; left: 25px; top: 204px; width: 260px; font-size: 14px; background: transparent" oscarDB="patient_nameL" />
+				<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position: absolute; left: 295px; top: 204px; width: 255px; font-size: 14px; background: transparent" oscarDB="patient_nameF" />
+
+				<input name="DOB" type="text" class="noborder" style="position: absolute; left: 25px; top: 237px; width: 160px; font-size: 14px; text-align: center; background: transparent" oscardb="dob" />
+
+				<input name="sex" id="sex" type="text" class="noborder" style="position: absolute; left: 195px; top: 237px; width: 85px; font-size: 14px; text-align: center; background: white" oscarDB="sex" />
+
+				<input name="Pregnant_Y" id="Pregnant_1" type="text" class="Xbox box2" style="left: 302px; top: 239px" onclick="Radio_Box(this.id)" />
+				<input name="Pregnant_N" id="Pregnant_2" type="text" class="Xbox box2" style="left: 337px; top: 239px" onclick="Radio_Box(this.id)" />
+
+				<input name="ChartNumber" id="ChartNumber" type="text" class="noborder" style="position: absolute; left: 385px; top: 236px; width: 165px; font-size: 14px; background: transparent" />
+
+				<span class="DoNotPrint" style="position: absolute; left: 10px; top: 258px; font-size: 40px; color: green">&#42;</span>
+				<input name="phone" id="phone" type="text" class="noborder" style="position: absolute; left: 25px; top: 269px; width: 170px; font-size: 14px; background: transparent" />
+
+				<div id="Default_phone" class="DoNotPrint" style="position: absolute; left: 850px; top: 270px; width: 250px; font-size: 14px; color: green">
+					<span style="position: absolute; top: 2px; font-size: 40px">&#42; </span>
+					<span style="position: absolute; left: 15px">Default contact # is home. Click to choose alternate contact phone #</span><br /><br />
+					<select style="position: absolute; left: 15px; color: green; font-size: 12px">
+						<option>Default is home</option>
+						<option name="wk_choice" id="wk_choice" onclick="contactChoice(this.id);">Work</option>
+						<option name="cell_choice" id="cell_choice" onclick="contactChoice(this.id);">Cell</option>
+						<option name="hm_choice" id="hm_choice" onclick="contactChoice(this.id);">Home</option>
+					</select>
+				</div>
+
+				<input name="phone2" id="phone2" type="text" class="noborder" style="position: absolute; left: 205px; top: 269px; width: 170px; font-size: 14px; text-align: center; background: transparent" oscardb="phone2" />
+				<input name="cell" id="cell" type="text" class="noborder" style="position: absolute; left: 385px; top: 269px; width: 170px; font-size: 14px; text-align: center; background: transparent" oscardb="cell" />
+
+				<input name="addressLine" b id="addressLine" type="text" class="noborder" style="position: absolute; left: 25px; top: 303px; width: 525px; font-size: 14px; background: white" oscardb="addressLine" />
+
+				<!-- Diagnosis; onblur adds indication to subject line -->
+				<input name="DiagnosisAndIndications" id="DiagnosisAndIndications" type="text" class="noborder" style="position: absolute; left: 25px; top: 337px; width: 390px; font-size: 14px; background: yellow" onblur="document.FormName.subject.value=DiagnosisAndIndications.value;" />
+
+				<!-- Current Meds/Patient Instructions -->
+				<input name="CurrentMedicationsLastDose" type="text" class="noborder" style="position: absolute; left: 427px; top: 337px; width: 385px; font-size: 14px; background: transparent" title="Specify anti-osteoporosis medication and date given" />
+
+				<!-- Pertinent History -->
+				<input name="PrevBoneDensity_Y" id="PrevBoneDensity_1" type="text" class="Xbox box1" style="left: 45px; top: 407px" onclick="Radio_Box(this.id)" />
+				<input name="PrevBoneDensity_N" id="PrevBoneDensity_2" type="text" class="Xbox box1" style="left: 99px; top: 407px" onclick="Radio_Box(this.id)" />
+
+				<input name="PrevBoneDensityLocation" type="text" class="noborder" style="position: absolute; left: 195px; top: 402px; width: 400px; font-size: 16px; background: transparent" />
+				<input name="PrevBoneDensityDate" id="PrevBoneDensityDate" type="text" class="noborder" style="position: absolute; left: 615px; top: 402px; width: 200px; font-size: 16px; background: transparent" />
+
+				<input name="PrevLSpineXR_Y" id="PrevLSpineXR_1" type="text" class="Xbox box1" style="left: 45px; top: 442px" onclick="Radio_Box(this.id)" />
+				<input name="PrevLSpineXR_N" id="PrevLSpineXR_2" type="text" class="Xbox box1" style="left: 99px; top: 442px" onclick="Radio_Box(this.id)" />
+
+				<input name="PrevLSpineXRLocation" type="text" class="noborder" style="position: absolute; left: 195px; top: 436px; width: 400px; font-size: 16px; background: transparent" />
+				<input name="PrevLSpineXRDate" id="PrevLSpineXRDate" type="text" class="noborder" style="position: absolute; left: 615px; top: 436px; width: 200px; font-size: 16px; background: transparent" />
+
+				<!-- Diagnostic BMD -->
+				<input name="ModRisk" id="ModRisk" type="text" class="Xbox box2" style="left: 82px; top: 586px" />
+				<input name="RecentHipFracture" id="RecentHipFracture" type="text" class="Xbox box2" style="left: 365px; top: 586px" />
+				<input name="HyperPTH" id="HyperPTH" type="text" class="Xbox box2" style="left: 531px; top: 586px" />
+
+				<input name="HighRisk" id="HighRisk" type="text" class="Xbox box2" style="left: 82px; top: 602px" />
+				<input name="FragilityFracture" id="FragilityFracture" type="text" class="Xbox box2" style="left: 365px; top: 602px" />
+
+				<!-- Follow-Up BMD -->
+				<input name="More3Yr_Y" id="More3Yr_1" type="text" class="Xbox box2" style="left: 82px; top: 677px" onclick="Radio_Box(this.id);" />
+
+				<input name="More3Yr_N" id="More3Yr_2" type="text" class="Xbox box2" style="left: 327px; top: 677px" onclick="Radio_Box(this.id);" />
+
+				<input name="Prednisone" id="Prednisone" type="text" class="Xbox box2" style="left: 82px; top: 716px" />
+				<input name="On_OP_Meds" id="On_OP_Meds" type="text" class="Xbox box2" style="left: 82px; top: 745px" />
+				<input name="PrimaryHyperPTH" id="PrimaryHyperPTH" type="text" class="Xbox box2" style="left: 82px; top: 774px" />
+				<input name="Other_Indication" id="Other_Indication" type="text" class="Xbox box2" style="left: 82px; top: 790px" onclick="changeAndCheck(this.id);" />
+				<input name="Other_Indication_text" id="Other_Indication_text" type="text" class="noborder" style="position: absolute; left: 140px; top: 806px; width: 675px; font-size: 16px; background: transparent" />
+
+				<!-- Non-Diagnostic BMD -->
+				<input name="Screening_Yes" id="Screening_1" type="text" class="Xbox box1" style="left: 82px; top: 892px" onclick="Radio_Box(this.id);" />
+				<input name="Screening_No" id="Screening_2" type="text" class="Xbox box1" style="left: 82px; top: 909px" onclick="Radio_Box(this.id);" />
+
+				<input name="History" id="History" type="text" class="noborder" style="position: absolute; left: 30px; top: 943px; width: 465px; font-size: 16px; background: transparent" />
+
+				<input name="ApptDateTime" id="ApptDateTime" type="text" class="noborder" style="position: absolute; left: 505px; top: 943px; width: 310px; font-size: 16px; background: transparent" />
+
+				<input name="today" id="today" type="text" class="noborder" style="position: absolute; left: 282px; top: 985px; width: 210px; font-size: 16px; text-align: center; background: transparent" oscardb="today" />
+
+				<!-- Signature script -->
+				<div id="CanvasSignature1" class="sig" style="position: absolute; left: 500px; top: 975px; width: 320px; height: 40px; background: transparent"></div>
+
+				<!-- Signature Stamp -->
+				<div id="Signature_Stamp" class="Hide" style="position: absolute; left: 530px; top: 983px">
+					<img id="StampSignature" src="" style="width: 168px; height: 30px" />
+				</div>
+
+				<!-- Signature Control -->
+				<div id="signatureControl" class="DoNotPrint" style="position: absolute; left: 850px; top: 975px">
+					<input name="Stamp" id="Stamp" type="checkbox" style="position: absolute; left: 0px; top: 0px; color: green" onclick="document.getElementById('Wet').checked = false; if (this.checked == true) {Add_Stamp();} else {remove_Stamp();}" />
+					<span style="position: absolute; left: 25px; top: 5px; width: 80px; font-size: 12px; color: green">Stamp</span>
+
+					<input name="Wet" id="Wet" type="checkbox" style="position: absolute; left: 0px; top: 15px; color: green" onclick="document.getElementById('Stamp').checked = false; if (this.checked == true) {Add_Wet();} else {remove_Wet();}" />
+					<span style="position: absolute; left: 25px; top: 20px; width: 150px; font-size: 12px; color: green">Signature</span>
+					<input name="ClearButton" id="ClearButton" type="button" style="position: absolute; left: 85px; top: 18px; font-size: 10px; color: red" onclick="clearSig();" value="Clear Sig" />
+				</div>
+
+				<!-- The submit/print/reset buttons -->
+				<div class="DoNotPrint" id="BottomButtons" style="position: absolute; left: 25px; top: 1080px; width: 800px; font-size: 13px">
+					<table>
+						<tr>
+							<td style="background: #e5f2ff">
+								<input type="hidden" id="newForm" name="newForm" value="True" />
+								Subject: <input name="subject" id="subject" size="40" type="text" />
+								<input value="Reset" name="ResetButton" id="ResetButton" type="reset" style="color: red" onclick="history.go(0);" />
+								<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color: green" onclick="printLetter();" />
+								<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();" />
+							</td>
+						</tr>
+					</table>
+
+					<!-- Copy Left -->
+					<a rel="licence" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" id="CreativeCommons" style="border: 0px" src="" /></a>
+					<span> Standard Outpatient Bome Denistometry Requesition eFORM, V20_Apr23_2024, by Dr. John Yap, is licensed under a</span>
+					<a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br />
+					<span style="color: forestgreen">Please consider supporting </span><a href="https://oscarbc.ca/" target="_blank">oscarbc.ca.</a> | <a id="emailLnk1" style="cursor: pointer" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> | <a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | <a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | <a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> | <br /><br />
+				</div>
+			</form>
+
+			<!-- Define Date Calendars -->
+			<script type="text/javascript">
+				Calendar.setup({ inputField: "today", ifFormat: "%Y-%m-%d", button: "today" });
+				Calendar.setup({ inputField: "PrevBoneDensityDate", ifFormat: "%Y-%m-%d", button: "PrevBoneDensityDate" });
+				Calendar.setup({ inputField: "PrevLSpineXRDate", ifFormat: "%Y-%m-%d", button: "PrevLSpineXRDate" });
+			</script>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,1007 @@
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- V1_2017: Breast Imaging eForm created by Dr. D. Page - Chilliwack Specific -->
+<!-- V2_Dec10_2017: update and genericized to FHA and other HA's; restore setDefaults, CopyTo, proper name order, subject field. 
+	Drop-down menu Chrome compatible. Bottom of form modified to be sensible! Dr. J. Yap -->
+<!-- V3_Sep5_2018: remove menopause checker in LMPDate as it voided input on reload.  Add LMP poster. 
+	Modified menopause-by-age checker to exclude male gender.  Updated to breastImaging_V3_Sep5_2018.js; Dr. J. Yap -->
+<!-- V4_Nov19_2019: default location set differently to allow for saving of alternate location on submit; Dr. J. Yap -->
+<!-- V5_Mar24_2020 repositioned newform input so that setFlag function will work. Minor cosmetic tweaks.  Dr. J. Yap -->
+<!-- V6_Mar7_2021 apply global font-family CSS, in preparation for Tickler Loop Closer. Change to FormName from BreastImagingForm; Dr. J. Yap -->
+<!-- V7_May11_2021 adjust logic on side-menu that does not allow US and Mammo F/U; Dr. J. Yap -->
+<!-- V8_Jun17_2022 simplify validity testing; John Yap -->
+<!-- V9_Jun19_2022 add MedRay and Brooke options; John Yap -->
+<!-- V10_Jul29_2022 add BCWH options; John Yap -->
+<!-- V11_Jan5_2023 add missing fontsizechange hidden measurements; John Yap -->
+
+<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors.
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+<link rel="stylesheet" type="text/css" href="BreastImaging_V4_May11_2021.css">
+<script language="javascript" type="text/javascript" src="wz_jsgraphics.js"></script>
+<script language="javascript" type="text/javascript" src="breastfunction.js"></script>
+<script language="javascript" type="text/javascript" src="xboxCheckbox.js"></script>
+<script language="javascript" type="text/javascript" src="breastImaging_V4_May11_2021.js"></script>
+ End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+ <!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_image_path}jquery-1.12.0.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="${oscar_image_path}BreastImaging_V4_May11_2021.css">
+<script language="javascript" type="text/javascript" src="${oscar_image_path}wz_jsgraphics.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}breastfunction.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}xboxCheckbox.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}breastImaging_V4_May11_2021.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, inside double quotations, and to the right of the double slashes
+// "${oscar_image_path}BreastImagingReq.png"
+// "${oscar_image_path}BreastCancerScreening.png"
+</script>
+
+<style type="text/css" media="screen">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	}
+
+input#SubmitButton { 
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background: #229ece;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bb5d2), to(#229ece));
+	background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+	background: -o-linear-gradient(top, #6bb5d2, #229ece);
+	background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+input#SubmitButton:hover {
+	color: #333333;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #a0dbc4;
+	background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#6bb5d2));
+	background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+	background: -o-linear-gradient(top, #229ece, #6bb5d2);
+	background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+
+.sig {
+	border: 2px dotted blue;
+	background: lightgrey;
+}
+
+a {text-decoration: none;} 
+a:hover {border: 1px solid #000000; border-style: outset; background: pink; opacity: 0.6;}
+a:active {border: 3px solid #000000; border-style: inset;}
+
+::placeholder {
+	color: rebeccapurple;
+	font-style: italic;
+	opacity: 1;
+}
+
+textarea{resize: none;}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	}
+
+.sig {
+	background: transparent;
+}
+
+/* hide placeholders */
+::placeholder {
+color: transparent;
+}
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+	.box1 {
+		position: absolute;
+		width: 12px;
+		height: 14px;
+		font-size: 14px;
+		font-family: Arial;
+		border: 1.5px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+	.box2 {
+		position: absolute;
+		width: 10px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 1.5px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+
+	.FontSizeChange {
+		position: absolute;
+		width: 16px;
+		height: 15px;
+		font-size: 13px;
+		cursor: pointer;
+		background: yellow;
+		text-align: center;
+		border: 1px solid #000000;
+	}
+</style>
+
+<script language="javascript" type="text/javascript">
+//Changes the src value of image to use on desktop. Give the image an id. Need to manually change InteractiveXray.js and InsertText.html
+		function changeSRC() {
+			setDocumentTitle('Breast_Imaging_Requisition',document.getElementById('PatientNameL').value);
+			changeImage("BreastImagingReq.png", "BGImage1");
+			changeImage("BreastCancerScreening.png", "BGImage2");
+			loadFontSize();
+			setDefaults();
+		}
+		
+		function resourceLink(resource, extension) {
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+			return prefix + resource + extension;
+		}
+
+		function changeImage(img, imgId) {
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title, PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form 
+			if (document.getElementById("newForm").value == 'True') {
+				document.getElementById('BillToMSP').value = 'X';
+				document.getElementById('ArrangeBiopsy').value = 'X';
+				document.getElementById('Proceed').value = 'X';
+				document.getElementById('InterpreterNo').value = 'X';
+				document.getElementById('Language').value = 'English';
+
+				CheckCopyTo();
+				document.getElementById('ChooseDefault').click();
+				SetStrokeColor("black");
+
+				parseName("current_user");
+			} else { // actions if eForm is reopened
+			}
+		}	
+		/****************************
+			Create name in proper order 
+		****************************/
+		function parseName(id) {
+			// Get the name
+			var fullName = document.getElementById(id).value;
+
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+
+			// Show the fields on the page
+			document.getElementById(id).value = First_Last_Name;
+		}
+
+		/****************************
+			print and submit/save functions 
+		****************************/
+		function printDocument() {
+			// Save reminder; allows for validity testing
+			SubmitImage();
+			document.getElementById('ResetButton').style.color = 'black';
+			document.getElementById('SubmitButton').style.border = '2px solid red';
+			alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+			window.print();
+		}
+
+		function submitDocument() {  // requires type="submit" in submit button input to allow for validity testing
+			SubmitImage();
+			setFlag();
+			releaseDirtyFlag();
+		}
+
+		function chooseDefaultSite() {
+			// set default mammogram location
+			SetLocation("RCH");
+		}
+
+		function postLMP() {
+			document.FormName.LMPDate.value = document.getElementById('oscarLMP').value;
+		}
+
+		function setFlag() {
+			// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+			scripts to copy regular GP if locum or other physician has ordered lab
+			also cc to referral doc for specialists
+		****************************/
+		function CheckCopyTo() {
+			if (document.getElementById("PhysicianName").value != document.getElementById("PatientMD").value)
+				(document.getElementById("CopyTo").value = document.getElementById("PatientMD").value + ' - ' + document.getElementById("PatientMD_MSP").value + ', ' + document.getElementById("ReferralMD").value + ' - ' + document.getElementById("ReferralMD_MSP").value);
+			else (document.getElementById("CopyTo").value = document.getElementById("ReferralMD").value + ' ' + document.getElementById("ReferralMD_MSP").value);
+		}
+
+		/****************************
+			script to set Tickler reminder for future date (aka loop closer)
+		****************************/
+		Date.prototype.addDays = function(days) {
+			var dat = new Date(this.valueOf());
+			dat.setDate(dat.getDate() + days);
+			return dat;
+		}
+
+		Date.prototype.addMonths = function(months) {
+			var dat = new Date(this.valueOf());
+			dat.setMonth(dat.getMonth() + months);
+			return dat;
+		}
+			
+		function addMonths(months) {
+			var d = new Date();
+			d = d.addMonths(months);
+			var mth = ((d.getMonth()+1)<10)? ("0"+(d.getMonth()+1)) : (d.getMonth()+1);
+			var day =  d.getDate() > 10 ? d.getDate() : ("0" + d.getDate());
+			var newD = d.getFullYear() + "-" + mth + "-" + day;
+			document.FormName.Tickler_date.value = newD;
+		}
+
+		function addDays(numDays) {
+			var d = new Date();
+			d = d.addDays(numDays);  
+			var mth = ((d.getMonth()+1)<10)? ("0"+(d.getMonth()+1)) : (d.getMonth()+1);
+			var day =  d.getDate() > 10 ? d.getDate() : ("0" + d.getDate());
+			var newD = d.getFullYear() + "-" + mth + "-" + day;
+			document.FormName.Tickler_date.value = newD;
+		}
+
+		ticklerReminder = function() {
+			// adds Tickler details to appropriate input fields
+			var patient_id = document.getElementById('patient_id').value;
+			var user_id = document.getElementById('current_user_id').value;
+			var ticklerDate = $( '#Tickler_date' ).val();
+			var ticklerMsg = "Review Breast Imaging request. " + $( '#Tickler_msg' ).val();  // preset message + optional message
+
+			sendTickler(patient_id, ticklerMsg, user_id, ticklerDate);
+
+			if (ticklerDate == '') { // non-WELL systems may not have fail-safe input of today when Tickler Date is null
+				return("ERROR: Tickler reminder date is blank.  Please correct before proceeding.");
+				return;
+			}
+		} 
+
+		sendTickler = function(demographicNo, message, taskAssignedTo, ticklerDate) {
+			var ticklerToSend = {};
+
+			ticklerToSend.demographicNo = demographicNo;
+			ticklerToSend.message = message;
+			ticklerToSend.taskAssignedTo = taskAssignedTo;
+			ticklerToSend.serviceDate = ticklerDate ;
+
+			jQuery.ajax( {
+				type: "POST",
+				url:  '../ws/rs/tickler/add',
+				dataType:'json',
+				contentType:'application/json',
+				data: JSON.stringify(ticklerToSend),
+				success: processTicklerCallBack
+				});
+			}
+	
+		processTicklerCallBack = function(data) {
+			if(data.success) {
+				alert("Breast Imaging reminder Tickler created and assigned to you.");
+			} else {
+				alert("ERROR: Tickler failed. Please create tickler manually.");
+			}
+		}
+
+		calculateTicklerDays = function() {
+			if(jQuery.trim($('#Tickler_date').val()).length > 0) {
+			// calculate future date for Tickler
+				var t = new Date(); // today
+				var d = new Date(Date.parse(jQuery.trim($('#Tickler_date').val()))); // chosen date or (today + add) - days
+				var i = ((Math.floor((d - t)/(1000 * 60 * 60 * 24))) +2); // days forward from today
+				d.setDate(d.getDate());
+				$( "#Tickler_date" ).val(d.toISOString().substring(0,10));
+				var NewTickler = document.getElementById('Tickler_date').value;
+				alert("Once you click Set Tickler button, a reminder will be set for " + i + " day(s) from today.  Expect Breast Imaging reply by " +  $( '#Tickler_date' ).val() + ". Click the Set Tickler button to create reminder now.");
+			}
+		}
+
+	/****************************
+		script to Increase or Decrease the Font Size
+		name = input name/id, delta = increase (+) or decrease (-) increment #
+		Requires loadFontSize(); in startUp, or in onload line
+	****************************/
+	function changeFontSize(name, delta) {
+		var element = $("#" + name)
+		var oldSize = parseInt(element.css("font-size"));
+		var newSize = oldSize + delta;
+
+		// Save new font size into "value" field of hidden element
+		$("#" + name + "_fontsize").attr('value', newSize);
+
+		// Set font size
+		element.css({'font-size': newSize + 'px'});
+	}
+
+	// Retains altered font size when eForm is reopened; 
+	// Requires hidden inputs with format for each field using this feature: 
+	// <input type="hidden" name="Input_fontsize" id="Input_fontsize">
+	function loadFontSize() {
+		$.each($("input[name*='_fontsize'"), function(index, element) {
+			var fontSize = element.value;
+
+		if (!!fontSize) {
+			var name = element.name.split('_')[0];
+			$("#" + name).css({'font-size': fontSize + 'px'});
+		}
+	});
+	}
+
+	/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is 
+		passed as x and is named in the convention name_X where X appears in the string defined in scales
+	****************************/
+	function Radio_Box(x) {
+		var scales = ["1", "2", "3", "4", "5", "6", "7"];
+		var partA = x.substring(0, x.indexOf("_"));
+		var i = x.substring(x.indexOf("_"));
+		var j = i.substr(1);
+
+		for (var n in scales) {
+			if ( j == scales[n]) {
+				for (var m in scales){
+					if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+				}
+			}
+		}
+	return false;
+	}
+</script>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+			Chrome Compatible Location drop-down menu as per P Mehta
+		****************************/
+function SetLocation(i) {
+	switch(i) {
+		default:
+		LocationSite = "";
+		subject = "";
+		break;
+
+		case "RCH":
+		LocationSite = 'RCH Fax: 604-523-8811';
+		subject = i; 
+		break;
+
+		case "RMH":
+		LocationSite = 'RMH Fax: 604-463-1879';
+		subject = i; 
+		break;
+
+		case "PAH":
+		LocationSite = 'PAH Fax: 604-535-4559';
+		subject = i; 
+		break;
+
+		case "Delta":
+		LocationSite = 'DH Fax: 604-940-3974';
+		subject = i; 
+		break;
+
+		case "RCH":
+		LocationSite = 'RCH Fax: 604-523-8811';
+		subject = i; 
+		break;
+
+		case "JPOCSC":
+		LocationSite = 'JPOCSC Fax: 604-582-3766';
+		subject = i; 
+		break;
+
+		case "BCWH":
+		LocationSite = 'BCWH Fax: 604-875-3080';
+		subject = i; 
+		break;
+
+		case "CGH":
+		LocationSite = 'CGH Fax: 604-795-4109';
+		subject = i; 
+		break;
+
+		case "ARH":
+		LocationSite = 'ARH Fax: 604-851-4904';
+		subject = i; 
+		break;
+
+		case "MedRay":
+		LocationSite = 'MedRay Fax: 604-942-4612';
+		subject = i; 
+		break;
+
+		case "Brooke_Metrotown":
+		LocationSite = 'Brooke Fax: 604-435-1309';
+		subject = i; 
+		break;
+
+		case "Brooke_Hastings":
+		LocationSite = 'Brooke Fax: 604-299-5773';
+		subject = i; 
+		break;
+		}
+
+	document.FormName.LocationSite.value = LocationSite;
+	document.FormName.subject.value = subject; 
+	}
+</script>
+</head>
+
+<body onload="changeSRC(); window.scroll(0, 150); init(); ReloadImage(); SetSwitchOn('Freehand');" onbeforeprint="document.forms['FormName'].reportValidity();"></body>
+
+<form method="post" action="" name="FormName" id="FormName">
+	<img id="BGImage1" src="" style="position:absolute; left:0px; top:0px; width:850px;">
+
+	<!-- Hidden input for eForm title -->
+	<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+	<input type="hidden" name="printOption" id="printOption" />
+	<input type="hidden" name="oscarLMP" id="oscarLMP" oscarDB=m$LMP#value />
+	<input type="hidden" name="oscarEDC" id="oscarEDC" oscarDB=m$EDC#value />
+	<input type="hidden" name="oscarEDD" id="oscarEDD" oscarDB=m$EDD#value />
+	<input type="hidden" name="ptAge" id="ptAge" oscarDB=age />
+	<input type="hidden" name="PatientSex" id="PatientSex" oscardb=sex />
+	<input type="hidden" name="PrevMamY" id="PrevMamY" />
+	<input type="hidden" name="PrevMamN" id="PrevMamN" />
+	<input type="hidden" name="PrevUSY" id="PrevUSY" />
+	<input type="hidden" name="PrevUSN" id="PrevUSN" />
+	<input type="hidden" name="dateToday" id="dateToday" oscardb=today />
+
+	<!-- CopyTo hidden tags -->
+	<input type="hidden" name="PatientMD" id="PatientMD" oscarDB=doctor>
+	<input type="hidden" name="PatientMD_MSP" id="PatientMD_MSP" oscarDB=doctor_ohip_no>
+	<input type="hidden" name="ReferralMD" id="ReferralMD" oscarDB=referral_name>
+	<input type="hidden" name="ReferralMD_MSP" id="ReferralMD_MSP" oscarDB=referral_no>
+	<input type="hidden" name="PhysicianName" id="PhysicianName" oscarDB=current_user>
+
+	<!-- Hidden inputs needed for Tickler generator (loop closer) -->
+	<input type="hidden" name="patient_id" id="patient_id" oscarDB=patient_id />
+	<input type="hidden" name="current_user_id" id="current_user_id" oscarDB=current_user_id /> 
+
+	<!-- Hidden input for font size changer inputs -->
+	<input type="hidden" name="PreviousBiopsy_fontsize" id="PreviousBiopsy_fontsize">
+	<input type="hidden" name="Concerns_fontsize" id="Concerns_fontsize">
+	<input type="hidden" name="FollowUpDetails_fontsize" id="FollowUpDetails_fontsize">
+
+<!-- top left label -->
+	<input name="LocationSite" id="LocationSite" type="text" class="noborder" style="position:absolute; left:125px; top:58px; width:220px; font-size:16px;" />
+
+	<input name="InterpreterYes" id="InterpreterYes" type="text" class="XBox box1 radio intp" style="left:176px; top:102px;" />
+	<input name="InterpreterNo" id="InterpreterNo" type="text" class="XBox box1 radio intp" style="left:247px; top:102px;" />
+
+	<input name="Language" id="Language" type="text" class="noborder" style="position:absolute; left:106px; top:122px; width:200px; font-size:16px;" />
+
+	<input name="BreastUS" id="BreastUS" type="text" class="XBox box1 gr inv chk" style="left:30px; top:166px;" />
+	<input name="Mammogram" id="Mammogram" type="text" class="XBox box1 gr inv chk" style="left:30px; top:186px;" />
+	<input name="Right" id="Right" type="text" class="XBox box1 gr radio side chk" style="left:30px; top:207px;" />
+	<input name="Left" id="Left" type="text" class="XBox box1 gr radio side chk" style="left:110px; top:207px;" />
+	<input name="Bilateral" id="Bilateral" type="text" class="XBox box1 gr radio side chk" style="left:191px; top:207px;" />
+
+	<input name="Proceed" id="Proceed" type="text" class="XBox box1" style="left:30px; top:234px;" />
+	<input name="ArrangeBiopsy" id="ArrangeBiopsy" type="text" class="XBox box1" style="left:30px; top:256px;" />
+
+	<!-- top right label -->
+	<input name="DateOrdered" id="DateOrdered" type="text" class="noborder" style="position:absolute; left:392px; top:17px; width:110px; text-align:center;" oscardb=today />
+	<input name="DateRequired" id="DateRequired" type="text" class="noborder" style="position:absolute; left:555px; top:17px; width:110px; text-align:center;" />
+	<input name="DateReceived" id="DateReceived" type="text" class="noborder" style="position:absolute; left:716px; top:17px; width:110px; text-align:center;" />
+
+	<input name="PatientSex" id="PatientSex" type="text" class="noborder" style="position:absolute; left:394px; top:41px; width:65px; font-size:20px; text-align:center;" oscardb=sex />
+
+	<input name="patient_name" id="patient_name" type="text" class="noborder field3 chk" style="position:absolute; left:480px; top:51px; width:360px; background:transparent;" oscarDB=patient_name />
+
+	<input name="Patient_1_Line_Address" id="Patient_1_Line_Address" type="text" class="noborder field" style="position:absolute; left:415px; top:74px; width:425px;" oscardb=addressLine />
+
+	<span style="position:absolute; left:367px; top:104px;">Cell: </span>
+	<input name="PatientCell" id="PatientCell" type="text" class="noborder contact chk" style="position:absolute; left:405px; top:106px; width:235px;" oscardb=cell />
+	<input name="PatientHomePhone" id="PatientHomePhone" type="text" class="noborder contact chk" style="position:absolute; left:690px; top:106px; width:150px;" oscardb=phone />
+
+	<input name="DateOfBirth" id="DateOfBirth" type="text" class="noborder field2 chk" style="position:absolute; left:440px; top:140px; width:200px;" oscardb=dob />
+	<input name="PatientWorkPhone" id="PatientWorkPhone" type="text" class="noborder contact chk" style="position:absolute; left:690px; top:140px; width:150px;" oscardb=phone2 />
+
+	<input name="MSPPHN" id="MSPPHN" type="text" class="noborder field1 chk" style="position:absolute; left:440px; top:174px; width:200px;" oscardb=hinc />
+	<input name="Claim#" id="Claim#" type="text" class="noborder" style="position:absolute; left:650px; top:180px; width:190px;" />
+
+	<!-- Bill to: -->
+	<input name="BillToMSP" id="BillToMSP" type="text" class="XBox box1 radio Bill" style="left:375px; top:209px;" />
+	<input name="BillToWSBC" id="BillToWSBC" type="text" class="XBox box1 radio Bill" style="left:432px; top:209px;" />
+	<input name="BillToICBC" id="BillToICBC" type="text" class="XBox box1 radio Bill" style="left:490px; top:209px;" />
+	<input name="BillToPatient" id="BillToPatient" type="text" class="XBox box1 radio Bill" style="left:549px; top:209px;" />
+	<input name="BillToOther" id="BillToOther" type="text" class="XBox box1 radio Bill" style="left:631px; top:209px;" />
+	<input name="BillToOtherText" type="text" class="noborder" style="width:110px; position:absolute; left:705px; top:206px; width:135px;">
+
+	<!-- bottom right  -->
+	<input name="PreviousMamYes" id="PreviousMamYes" type="text" class="XBox box1 radio PrevM chk MY chk2" style="left:666px; top:302px;" oscarDB=e$last#PrevMamY />
+	<input name="PreviousMamNo" id="PreviousMamNo" type="text" class="XBox box1 radio PrevM chk" style="left:742px; top:302px;" oscarDB=e$last#PrevMamN  />
+
+	<input name="MamLocation1" id="MamLocation1" type="text" class="noborder MY chk2" style="position:absolute; left:425px; top:337px; width:230px;" oscarDB=e$last#MamLocation1 title='Please provide location of all previous imaging' />
+	<input name="MamLocation1Date" id="MamLocation1Date" type="text" class="noborder" style="position:absolute; left:710px; top:337px; width:130px;" oscarDB=e$last#MamLocation1Date />
+
+	<input name="MamLocation2" id="MamLocation2" type="text" class="noborder" style="width:230px; position:absolute; left:425px; top:364px;" oscarDB=e$last#MamLocation2 title='Please provide location of all previous imaging' />
+	<input name="MamLocation2Date" id="MamLocation2Date" type="text" class="noborder" style="width:130px; position:absolute; left:710px; top:364px;" oscarDB=e$last#MamLocation2Date />
+
+	<input name="PreviousUSYes" id="PreviousUSYes" type="text" class="XBox box1 radio PrevUS chk UY chk2" style="left:666px; top:390px;" oscarDB=e$last#PrevUSY />
+	<input name="PreviousUSNo" id="PreviousUSNo" type="text" class="XBox box1 radio PrevUS chk" style="left:739px; top:390px;" oscarDB=e$last#PrevUSN />
+
+	<input name="USLocation1" id="USLocation1" type="text" class="noborder UY chk2" style="position:absolute; left:425px; top:414px; width:230px;" oscarDB=e$last#USLocation1 />
+	<input name="USLocation1Date" id="USLocation1Date" type="text" class="noborder" style="position:absolute; left:710px; top:414px; width:130px;" oscarDB=e$last#USLocation1Date title='Please provide location of all previous imaging' />
+
+	<input name="USLocation2" id="USLocation2" title='Please provide location of all previous imaging' class="noborder" style="width:230px; position:absolute; left:425px; top:440px;" type="text" oscarDB=e$last#USLocation2 />
+	<input name="USLocation2Date" id="USLocation2Date" type="text" class="noborder" style="position:absolute; left:710px; top:440px; width:130px;" oscarDB=e$last#USLocation2Date title='Please provide location of all previous imaging' />
+
+	<input name="LMPDate" id="LMPDate" type="text" class="noborder lmp chk" style="position:absolute; left:560px; top:469px; width:280px;" />
+
+	<input name="PreMen" id="Premenopausal" type="button" class="DoNotPrint meno" style="position:absolute; left:420px; top:490px; font-size:10px; color:green;" value="Pre" title="add Premenopausal" />
+	<input name="Men" id="Menopausal" type="button" class="DoNotPrint meno" style="position:absolute; left:470px; top:490px; font-size:10px; color:green;" value="Men" title="add Menopausal" />
+	<input name="Preg" id="PREGNANT" type="button" class="DoNotPrint meno" style="position:absolute; left:520px; top:490px; font-size:10px; color:green;" value="Preg" title="add Pregnant" />
+	<input name="LMP" id="LMP" type="button" class="DoNotPrint" style="position:absolute; left:570px; top:490px; font-size:10px; color:green;" value="LMP" onclick="postLMP();" title="add LMP" />
+
+	<input name="HormoneRxYes" id="HormoneRxYes" type="text" class="XBox box1 radio HrRx chk" style="left:666px; top:504px;" oscarDB=e$last#HormoneRxYes />
+	<input name="HormoneRxNo" id="HormoneRxNo" type="text" class="XBox box1 radio HrRx chk" style="left:733px; top:504px;" oscarDB=e$last#HormoneRxNo />
+	
+	<input name="FHYes" id="FH_1" type="text" class="XBox box1" style="left:666px; top:541px;" oscarDB=e$last#FHYes
+		onclick="if (FHYes.value =='X') {
+			document.getElementById('Who1').required = true;
+			document.getElementById('Who1').reportValidity();
+		} else {
+			document.getElementById('Who1').value = '';
+			document.getElementById('Who1').required = false;
+		}
+		Radio_Box(this.id)" />
+	<input name="FHNo" id="FH_2" type="text" class="XBox box1" style="left:733px; top:541px;" oscarDB=e$last#FHNo
+		onclick="if (FH_2.value =='X') {
+			document.getElementById('Who1').value = '';
+			document.getElementById('Who1').required = false;
+		}
+		Radio_Box(this.id)" />
+
+	<input name="Who1" id="Who1" type="text" class="noborder" style="position:absolute; left:500px; top:562px; width:340px;" oscarDB=e$last#Who1 />
+
+	<textarea name="PreviousBiopsy" id="PreviousBiopsy" class="noborder" style="position:absolute; left:427px; top:609px; width:418px; height:80px;" oscarDB=e$last#PreviousBiopsy></textarea>
+		<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:408px; top:611px;" onclick="changeFontSize('PreviousBiopsy', 1);">&#9650;</span>
+		<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:408px; top:627px;" onclick="changeFontSize('PreviousBiopsy', -1);">&#9660;</span>
+
+	<!-- bottom left  -->
+	<textarea name="Concerns" id="Concerns" class="noborder" style="position:absolute; left:22px; top:477px; width:392px; height:70px; font-size:15px;"></textarea>
+		<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:3px; top:479px;" onclick="changeFontSize('Concerns', 1);">&#9650;</span>
+		<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:3px; top:495px;" onclick="changeFontSize('Concerns', -1);">&#9660;</span>
+
+	<input name="Lump" id="lump" type="text" class="XBox box1 com chk find chk3" style="left:36px; top:578px;" /> 
+	<input name="Thickening" id="Thickening" type="text" class="XBox box1 com chk find chk3" style="left:36px; top:600px;" />
+	<input name="PrevCa" id="PrevCa" type="text" class="XBox box1 com chk" style="left:36px; top:623px;" />
+	<input name="NippleDischarge" id="NippleDischarge" type="text" class="XBox box1 com chk" style="left:36px; top:646px;" />
+	<input name="Pain" id="Pain" type="text" class="XBox box1 com chk find chk3" style="left:36px; top:669px;" />
+	<input name="AbnMammo" id="AbnMammo" type="text" class="XBox box1 com chk" style="left:36px; top:692px;" />
+
+	<input name="FollowUp" id="FollowUp" type="text" class="XBox box1" style="left:36px; top:717px;"
+		onclick="if (FollowUp.value =='X') {
+			document.getElementById('FollowUpDetails').required = true;
+			document.getElementById('FollowUpDetails').reportValidity();
+		} else {
+			document.getElementById('FollowUpDetails').value = '';
+			document.getElementById('FollowUpDetails').required = false;
+		}" />
+
+	<textarea name="FollowUpDetails" id="FollowUpDetails" class="noborder" style="position:absolute; left:36px; top:740px; width:378px; height:71px;"></textarea>
+		<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:17px; top:742px;" onclick="changeFontSize('FollowUpDetails', 1);">&#9650;</span>
+		<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:17px; top:758px;" onclick="changeFontSize('FollowUpDetails', -1);">&#9660;</span>
+
+	<input name="Dimpling" id="Dimpling" type="text" class="XBox box1 com chk find chk3" style="left:36px; top:817px;" />
+	<input name="Prosthesis" id="Prosthesis" type="text" class="XBox box1 com chk" style="left:36px; top:840px;" oscarDB=e$last#Prosthesis />
+	<input name="OtherSpecify" id="OtherSpecify" type="text" class="XBox box1" style="left:36px; top:860px;"
+		onclick="if (OtherSpecify.value =='X') {
+			document.getElementById('OtherSpecifyText').required = true;
+			document.getElementById('OtherSpecifyText').reportValidity();
+		} else {
+			document.getElementById('OtherSpecifyText').value = '';
+			document.getElementById('OtherSpecifyText').required = false;
+		}" />
+	<input name="OtherSpecifyText" id="OtherSpecifyText" type="text" class="noborder" style="position:absolute; left:36px; top:880px; width:372px;" />
+	 
+	<!-- Bottom line -->
+	<input name="current_user" id="current_user" type="text" class="noborder field" style="width:265px; position:absolute; left:165px; top:941px;" oscarDB=current_user />
+	<span style="position:absolute; left:590px; top:940px; font-family:verdana; font-size:18px;"><i><b>"Electronically signed"</b></i></span>
+
+	<!-- Replacement Bottom line -->
+	<div style="position:absolute; left:23px; top:980px; width:830px; height:70px; font-weight:bold; background:white;">
+		<span>Billing #: </span>
+		<input name="BillingNo" id="BillingNo" type="text" class="noborder field" style="width:70px;" oscarDB=current_user_ohip_no>
+
+		<span>Phone: </span>
+		<input name="ClinicPhone" id="ClinicPhone" type="text" class="noborder field" style="width:140px;" oscardb=clinic_phone />
+
+		<span>Fax: </span>
+		<input name="ClinicFax" id="ClinicFax" type="text" class="noborder field" style="width:140px;" oscardb=clinic_fax />
+
+		<span style="position:absolute; left:550px; top:3px;" >Additional Copies of Report: </span>
+		<textarea name="CopyTo" id="CopyTo" type="text" class="noborder field" style="position:absolute; left:550px; top:20px; width:270px; height:75px;"></textarea>
+	</div>
+
+	<!-- Hidden input for storing Image data -->
+	<input type="hidden" name="TempData" id="TempData">
+	<input type="hidden" name="DrawData" id="DrawData">
+	<input type="hidden" name="SubmitData" id="SubmitData">
+
+	<!-- Subject Line - removed from side menu so input will be saved! -->
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" style="position:absolute; left:20px; top:1080px; width:920px; font-size:13px;">
+	<table><tr><td style="background:#CEE7EE;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" id="subject" size="49" type="text">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="button" style="color:red;" onclick= "formReset(); history.go(0);">
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color:green;" onclick="autoComp(); $('#printOption').val('P'); check();">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="autoComp(); $('#printOption').val('S'); check(); setFlag();">
+	</td></tr></table>
+
+<!-- Copy Left -->
+	<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+	<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> Breast Imaging eForm, original by Dr. D. Page, is licensed under a</span>
+	<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a>
+	Update V11_Jan5_2023 by Dr. John Yap.<br>
+	<span style="color:forestgreen;">Please consider supporting </span>
+	<a href="http://oscarbc.ca/" target="_blank">oscarbc.ca.</a> |
+	<a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> | 
+	<a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | 
+	<a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | 
+	<a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> |
+<br><br>
+</div>
+</div>
+
+<!-- Tickler Reminders (aka loop closer) -->
+<div name="SetTickler" id="SetTickler" style="position:absolute; left:860px; top:810px; width:390px; font-size:14px;" class="DoNotPrint">
+	<span style="width:430px; font-size:12px; color:green;">Choose specific Tickler reminder date</span>
+	<input name="Tickler_date" id="Tickler_date" type="text" class="noborder" style="width:80px; font-size:14px; text-align:center; background:transparent;" onblur="calculateTicklerDays();"><br>
+	<span style="width:430px; font-size:12px; color:green;">Quick picks:</span>
+	<input name="Two_weeks" id="Two_weeks" type="checkbox" 
+		onclick="
+			document.getElementById('Four_weeks').checked = false;
+			document.getElementById('Eight_weeks').checked = false;
+			addDays(14);">2 wk
+	<input name="Four_weeks" id="Four_weeks" type="checkbox" 
+		onclick="
+			document.getElementById('Two_weeks').checked = false;
+			document.getElementById('Eight_weeks').checked = false;
+			addDays(28);">4 wk
+	<input name="Eight_weeks" id="Eight_weeks" type="checkbox" 
+		onclick="
+			document.getElementById('Two_weeks').checked = false;
+			document.getElementById('Four_weeks').checked = false;
+			addDays(56);">8 wk &nbsp;&nbsp;
+<input name="ResetTickler" id="ResetTickler" type="button" style="font-size:12px; color:red;" onclick="document.getElementById('Tickler_date').value = ''; document.getElementById('Two_weeks').checked = false; document.getElementById('Four_weeks').checked = false; addDays(0);" value="Reset">
+	<input name="Tickler_msg" id="Tickler_msg" type="text" class="noborder" style="width:230px; font-size:14px; font-weight:normal; background:transparent;" placeholder="Optional Tickler msg here.">
+	<input value="Set Tickler" name="Tickler" id="Tickler" type="button" class="link"  style="color:green; background:yellow;" title="Set tickler reminder for chosen future date" onclick="ticklerReminder();">
+</div>
+
+<!-- Code for side menu -->
+	<div id="topbar" class="DoNotPrint" style="outline:1px solid black; padding-left:5px;">
+		<form id="LazySelect" name="LazySelect">
+
+		<h3><u> 1. Choose Hospital Site</u> &nbsp;
+		<input name="ChooseDefault" id="ChooseDefault" type="button" style="color:green; cursor:pointer" value="Click for RCH Site" onclick="chooseDefaultSite();">
+		</h3>
+
+		<!-- Mammogram Locations -->
+		<select id="List" style="color:green;" onchange="SetLocation(this.value);">
+			<option>Choose a location</option>
+			<option value="RCH" name="RCH" title="RRCHoyal Columbian Hospital">RCH</option>
+			<option value="RMH" name="RMH" title="Ridge Meadows Hospital">RMH</option>
+			<option value="PAH" name="PAH" title="Peace Arch Hospital">PAH</option>
+			<option value="Delta" name="Delta" title="Delta Hospital">Delta</option>
+			<option value="JPOCSC" name="JPOCSC" title="Jim Pattison Outpatient-Surgical Centre">JPOCSC</option>
+			<option value="BCWH" name="BCWH" title="BC Womens Hospital">BCWH<option>
+			<option value="CGH" name="CGH" title="Chilliwack General Hospital">CGH</option>
+			<option value="ARH" name="ARH" title="Abbotsford Regional Hospital">ARH</option>
+			<option value="MedRay" name="MedRay" title="MedRay Coquitlam">MedRay</option>
+			<option value="Brooke_Metrotown" name="Brooke_Metrotown" title="Brooke Metrotown Bby">Brooke Metrotown</option>
+			<option value="Brooke_Hastings" name="Brooke_Hastings" title="Brooke E Hastings Bby">Brooke Hastings</option>
+		</select> &nbsp; &nbsp;
+
+		<a id="BGImage2" href="" target="_blank">Screening Info</a> &nbsp; &nbsp;
+		<a name="WebInfo" href="http://www.bccancer.bc.ca/screening/breast" target="_blank" title="BC Cancer Screening">Web Info</a>
+
+		<h3><u> 2. Location of previous imaging </u></h3>
+		<b>Location of Mammogram:</b><br>
+		See attached&nbsp;<input id="ATM" name="ATM" type="text" class="XBox box2 Lo radio Loc"><br>
+		Fraser <input id="FHM" name="FHM" type="text" class="XBox box2 Lo radio Loc">&nbsp; &nbsp; &nbsp;
+		Vancouver <input id="VHM" name="VHM" type="text" class="XBox box2 Lo radio Loc">&nbsp; &nbsp; &nbsp;
+		Interior <input id="THM" name="THM" type="text" class="XBox box2 Lo radio Loc">&nbsp; &nbsp; &nbsp;
+		Island <input id="SHM" name="SHM" type="text" class="XBox box2 Lo radio Loc">&nbsp; &nbsp; &nbsp;
+		Northern&nbsp;<input id="NHM" name="NHM" type="text" class="XBox box2 Lo radio Loc">
+		<br><br>
+
+		<b>Location of US:</b><br>
+		See attached&nbsp;<input id="ATU" name="ATU" type="text" class="XBox box2 Lo radio Loc1"><br>
+		Fraser <input id="FHU" name="FHU" type="text" class="XBox box2 Lo radio Loc1">&nbsp; &nbsp; &nbsp;
+		Vancouver <input id="VHU" name="VHU" type="text" class="XBox box2 Lo radio Loc1">&nbsp; &nbsp; &nbsp;
+		Interior <input id="THU" name="THU" type="text" class="XBox box2 Lo radio Loc1">&nbsp; &nbsp; &nbsp;
+		Island <input id="SHU" name="SHU" type="text" class="XBox box2 Lo radio Loc1">&nbsp; &nbsp; &nbsp;
+		Northern&nbsp;<input id="NHU" name="NHU" type="text" class="XBox box2 Lo radio Loc1">
+		<br><br>
+
+		<h3 title="choose only one"><u> 2. Radiology follow up request </u></h3>
+		<b>&nbsp;Date of recent imaging</b> <input id="dateI" name="dateI" type="text" style="background:yellow; text-align:center;" size='10' maxlength='10'>
+		Today <input id="recent" name="recent" type="text" class="XBox box2 Td">&nbsp; &nbsp; &nbsp; 
+		<input value="Start again" name="ResetFU" id="ResetFU" type="button" style="color:green;" 
+			onclick="
+				document.FormName.FollowUp.value=''; 
+				document.FormName.FollowUpDetails.value=''; 
+				document.FormName.dateI.value=''; 
+				document.FormName.recent.value=''; 
+				FollowUpReset();">
+		<br>
+
+<table width=100% style="font-size:14px;">
+	<tr><td><b>Follow Up:</b></td></tr>
+	<tr>
+		<td width=35%>Mammo Lt</td>
+		<td width=20%>3 mo&nbsp;<input id="ML3" name="ML3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td width=20%>6 mo&nbsp;<input id="ML6" name="ML6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td width=20%>12 mo&nbsp;<input id="ML12" name="ML12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+	<tr>
+		<td>Mammo Rt</td>
+		<td>3 mo&nbsp;<input id="MR3" name="MR3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="MR6" name="MR6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="MR12" name="MR12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+	<tr>
+		 <td>Mammo Bil</td>
+		 <td>3 mo&nbsp;<input id="MB3" name="MB3" type="text" class="XBox box2 FU radio FUM"></td>
+		 <td>6 mo&nbsp;<input id="MB6" name="MB6" type="text" class="XBox box2 FU radio FUM"></td>
+		 <td>12 mo&nbsp;<input id="MB12" name="MB12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+<tr></tr><tr></tr>
+	<tr>
+		<td>US Lt</td>
+		<td>3 mo&nbsp;<input id="UL3" name="UL3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="UL6" name="UL6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="UL12" name="UL12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+	<tr>
+		<td>US Rt</td>
+		<td>3 mo&nbsp;<input id="UR3" name="UR3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="UR6" name="UR6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="UR12" name="UR12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+	<tr>
+		<td>US Bil</td>
+		<td>3 mo&nbsp;<input id="UB3" name="UB3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="UB6" name="UB6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="UB12" name="UB12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+<tr></tr><tr></tr>
+	<tr>
+		<td>US + Mammo Lt</b></td>
+		<td>3 mo&nbsp;<input id="BL3" name="BL3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="BL6" name="BL6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="BL12" name="BL12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+	<tr>
+		<td>US + Mammo Rt</b></td>
+		<td>3 mo&nbsp;<input id="BR3" name="BR3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="BR6" name="BR6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="BR12" name="BR12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+	<tr>
+		<td>US + Mammo Bil</b></td>
+		<td>3 mo&nbsp;<input id="BB3" name="BB3" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>6 mo&nbsp;<input id="BB6" name="BB6" type="text" class="XBox box2 FU radio FUM"></td>
+		<td>12 mo&nbsp;<input id="BB12" name="BB12" type="text" class="XBox box2 FU radio FUM"></td>
+	</tr>
+</table>
+
+		<h3><u> 3. Previous biopsies or surgeries </u> &nbsp; &nbsp; 
+		<input type="button" class="clr" style="color:green; cursor:pointer" value="Start again"
+			onclick="
+				document.FormName.RS.value = '';
+				document.FormName.LS.value = '';
+				document.FormName.BilS.value = '';
+				document.FormName.EB.value = '';
+				document.FormName.NB.value = '';
+				document.FormName.MB.value = '';
+				document.FormName.dateP.value = '';">
+		</h3>
+
+		Right&nbsp;<input id="RS" name="RS" type="text" class="XBox box2 radio SI">&nbsp; &nbsp; &nbsp;
+		Left&nbsp;<input id="LS" name="LS" type="text" class="XBox box2 radio SI">&nbsp; &nbsp; &nbsp;
+		Bilateral&nbsp;<input id="BilS" name="BilS" type="text" class="XBox box2 radio SI">
+		<br><br>
+
+		Excision biopsy&nbsp;<input id="EB" name="EB" type="text" class="XBox box2 radio SU">&nbsp; &nbsp; &nbsp;
+		Needle biopsy&nbsp;<input id="NB" name="NB" type="text" class="XBox box2 radio SU">&nbsp; &nbsp; &nbsp;
+		Mastectomy&nbsp;<input id="MB" name="MB" type="text" class="XBox box2 radio SU">
+		<br><br>
+
+		<b>Date of procedure</b>  <input id="dateP" name="dateP" class="dateP" type="text" size='8' maxlength='8' title="Click once to open calendar; click again to paste">
+		<br><br>
+	</div>
+</form>
+
+<!--  Drawing code:start onload="init(); ReloadImage(); SetSwitchOn('Circle');window.scroll(0, 150)" -->
+<div id="preview" style="position:absolute; left:20px; top:360px; width:390px; height:100px;"></div>
+<div id="myCanvas" class="find chk3"
+	style="position:absolute; left:20px; top:360px; width:390px; height:100px;"
+	onmouseover="SetDrawOn();" 
+	onmouseout="SetDrawOff();" 
+	onmousedown="SetMouseDown(); SetStart();" 
+	onmouseup="SetMouseUp(); DrawMarker();" 
+	onmousemove="DrawPreview();"> 
+</div>
+
+<div id="instructions" class="tool DoNotPrint" style="position:absolute; left:85px; top:305px; font-size:13px; color:green;">
+	<span>Hover over the tools below for instructions.</span>
+</div>
+
+<div style="position:absolute; left:155px; top:321px;" id="diagram" class="DoNotPrint">
+<input id="ClearButton" type="button"  value="Clear" onclick="Clear();" style="color:green;">
+<input id="UndoButton" type="button" value="Undo" onclick="Undo();" style="color:green;"><br>
+</div>
+
+<div style="position:absolute; left:50px; top:342px;" id="controls" class="DoNotPrint">
+<input id="Circle" name="Dot" class='color' value='Circle' type='button' onclick="SetSwitchOn(this.id); changeClass(this.id);" title="Click in the center of lesion and drag out the radius"></input>  
+
+<input id="SymbolPattern" name="Symb" value='O' type='button' class='color' onclick="SetSwitchOn(this.id); changeClass(this.id);" title="Click on this then click on the image to place the symbol. You can change the symbol and the size in the boxes that appear above after you have selected the tool."></input>  
+
+<input id="Freehand" name="Pen" value='Pen' type='button' class='color blue' onclick="SetSwitchOn(this.id); changeClass(this.id);" title="This is the default tool. Click on this to draw freehand with the mouse. You can change stroke thickness in the boxes that appear above after you have selected the tool."></input>  
+
+<input id="Text" name="TextI"  value='Text' type='button' class='color' onclick="SetSwitchOn(this.id); changeClass(this.id);" title="Click on this then write the text in the box that appears above and click on the image where you want it placed. You can change text size if you wish."></input>
+</div>
+
+<div id= "lineColor" class =" DoNotPrint" style="position:absolute; left:280px; top:342px;">
+	<select id="strokeColor" name="strokeColor" style="width:80px;" onchange="SetStrokeColor(this.value);" title="Use this to change the color if you desire a different color.">
+			<option value="black" selected>Black</option>
+			<option value="red">Red</option>
+			<option value="lime">Lime</option>
+			<option value="blue">Blue</option>
+			<option value="grey">Grey</option>
+			<option value="magenta">Magenta</option>
+			<option value="yellow">Yellow</option>
+			<option value="cyan">Cyan</option>
+	</select>
+</div>
+
+<div id= "AFreehand" class ="tool hidden DoNotPrint" style="position:absolute; left:50px; top:300px;">
+	Line Thickness:
+	<select id="Thickness" name="Thickness" style="width:50px;" onchange="SetThickness(this.value);">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3" selected>3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+	</select>
+</div>
+
+<div id= "AText" class ="tool hidden DoNotPrint" style="position:absolute; left:50px; top:300px;">
+	Size:
+	<select id="FontSize" name="FontSize" style="width:50px;" onchange="SetFontSize(this.value);">
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12" selected>12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+	</select>
+		  &nbsp; &nbsp;   
+		  <input id="TextString" type="text" onchange="GetTxt();" style="width:200px">
+</div>
+
+<div id= "ASymbolPattern" class ="tool hidden DoNotPrint" style="position:absolute; left:50px; top:300px;">
+	Size:
+	<select id="SymbolSize" name="SymbolSize" style="width:50px;" onchange="SetSymbolSize(this.value);">
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10" selected>10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="24">24</option>
+			<option value="28">28</option>
+			<option value="32">32</option>
+			<option value="36">36</option>
+	</select>
+		 &nbsp; &nbsp;  
+		 <input id="Symbol" type="text" value="O" onchange="GetSymbol();" maxlength="1" style="width:20px;">
+</div>
+
+<script language="javascript" type="text/javascript" src="${oscar_image_path}breastgraphics2.js"> </script>
+<script language="javascript" type="text/javascript" src="breastgraphics2.js"></script>
+<!-- Drawing Code: End -->
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+Calendar.setup( { inputField:"dateI", ifFormat:"%Y-%m-%d", showsTime:false, button:"dateI", singleClick:true, step:1 } );
+Calendar.setup( { inputField:"dateP", ifFormat:"%m/%Y", showsTime:false, button:"dateP", singleClick:true, step:1 } );
+Calendar.setup({ inputField:"Tickler_date", ifFormat:"%Y-%m-%d", showsTime:false, button:"Tickler_date", singleClick:true, step:1 });
+</script>
+
+</body>
+</html>

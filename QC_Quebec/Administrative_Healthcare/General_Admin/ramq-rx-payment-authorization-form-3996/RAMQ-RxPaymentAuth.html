@@ -1,0 +1,313 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- <meta http-equiv="refresh" content="3" > -->
+<title>RAMQ-RxPaymentAuth</title>
+<!-- Sep 29,2021 - E.Wertheimer -->
+<style type="text/css" media="screen" >
+ input {
+     font-size:16px;
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+.noborder {
+	 border : 0px;
+ 	 background: white;
+ 	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 overflow: hidden;
+     font-family: sans-serif;
+	 font-style:normal;
+	 font-weight:normal; 	 
+	 text-align:left; 
+	 background-color:transparent;
+ }
+.sig {
+	 border: 2px dotted blue;
+	 background-color : lightgrey;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+.noborder {
+	 border : 0px;
+ 	 background: transparent;
+ 	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 overflow: hidden;
+     font-family: sans-serif;
+	 font-style:normal;
+	 font-weight:normal; 	 
+	 text-align:left; 
+	 background-color:transparent;
+ }
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+  	 background-color: transparent;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Autosign Signature -->
+<script type="text/javascript">
+function SignForm() {
+// autosign from stored signature
+	document.getElementById('Stamp').src = "${oscar_image_path}sig-" + document.getElementById("CurrentUserCPSID").value + ".png";
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- autofill fax number -->
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="8663123858"',1000);
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+	document.getElementById('FormName').submit()
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- main calendar program -->
+<!-- 
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+-->
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		var src2 = document.getElementById("BGImage2").src;
+		document.getElementById("BGImage2").src = src2.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+<script type="text/javascript">
+// convert YYYY-MM-DD to YYYYMMDD
+function FormatDates() {
+    document.getElementById('dobc2').value  = document.getElementById('dob').value.substr(0,4)   + document.getElementById('dob').value.substr(5,2)   + document.getElementById('dob').value.substr(8,2) ;
+    document.getElementById('todayd').value = document.getElementById('today').value.substr(0,4) + document.getElementById('today').value.substr(5,2) + document.getElementById('today').value.substr(8,2) ;
+}    
+</script>
+
+</head>
+
+<body onload="reImg();SignForm();setFaxNo();FormatDates()">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}RAMQ-3996-p1.jpg" style="position: relative; left: 0px; top: 0px; width:8in">
+
+<!-- RAMQ Card -->
+<input name="hinc"      id="hinc"      type="text" style="position:absolute;  left:20px; top:137px; width:310px; height:38px; font-size:24px;"  oscarDB=hinc>
+<input name="pat_name"  id="pat_name"  type="text" style="position:absolute;  left:20px; top:183px; width:310px; height:22px;"  oscarDB=patient_name>
+<input name="hinver"    id="hinver"    type="text" style="position:absolute;  left:20px; top:213px;  width:35px; height:16px;"  oscarDB=hinversion>
+<input name="hc_renew"  id="hc_renew"  type="text" style="position:absolute; left:250px; top:216px;  width:80px; height:16px;"  oscarDB=hc_renew_date>
+<input name="dob_year"  id="dob_year"  type="text" style="position:absolute;  left:20px; top:252px;  width:40px; height:16px;"  oscarDB=dob_year>
+<input name="dob_month" id="dob_month" type="text" style="position:absolute;  left:70px; top:252px;  width:30px; height:16px;"  oscarDB=dob_month>
+<input name="dob_day"   id="dob_day"   type="text" style="position:absolute; left:120px; top:252px;  width:30px; height:16px;"  oscarDB=dob_day>
+<input name="sex"       id="sex"       type="text" style="position:absolute; left:250px; top:252px;  width:20px; height:16px;"  oscarDB=sex>
+
+<input name="provider"  id="provider"  type="text" class="noborder" style="position:absolute; left:350px; top:130px; width:280px; height:30px;"  oscarDB=current_user>
+<input name="prov_ohip" id="prov_ohip" type="text" class="noborder" style="position:absolute; left:633px; top:130px; width:125px; height:30px; font-size:29px; font-family:monospace;"  oscarDB=doctor_ohip_no>
+<input name="clinic_ad" id="clinic_ad" type="text" class="noborder" style="position:absolute; left:350px; top:180px; width:400px; height:22px;"  oscarDB=clinic_addressLine>
+<input name="clinic_ct" id="clinic_ct" type="text" class="noborder" style="position:absolute; left:350px; top:220px; width:220px; height:22px;"  oscarDB=clinic_city>
+<input name="clinic_pr" id="clinic_pr" type="text" class="noborder" style="position:absolute; left:570px; top:220px; width:110px; height:22px;"  oscarDB=clinic_province>
+<input name="clinic_po" id="clinic_po" type="text" class="noborder" style="position:absolute; left:680px; top:220px;  width:75px; height:22px;"  oscarDB=clinic_postal>
+<input name="clinic_ph" id="clinic_ph" type="text" class="noborder" style="position:absolute; left:350px; top:263px; width:200px; height:22px;"  oscarDB=clinic_phone>
+<input name="clinic_fx" id="clinic_fx" type="text" class="noborder" style="position:absolute; left:555px; top:263px; width:200px; height:22px;"  oscarDB=clinic_fax>
+
+<input name="hinc2" id="hinc2" type="text" class="noborder" style="position:absolute; left:18px; top:329px; width:200px; height:23px; font-size:27px; font-family:monospace;"  oscarDB=hinc>
+
+<input name="pat_nameL" id="pat_nameL" type="text" class="noborder" style="position:absolute; left:230px; top:320px; width:250px; height:22px;"  oscarDB=patient_nameL>
+<input name="pat_nameF" id="pat_nameF" type="text" class="noborder" style="position:absolute; left:480px; top:320px; width:165px; height:22px;"  oscarDB=patient_nameF>
+<!-- <input name="dobc2"     id="dobc2"     type="text" class="noborder" style="position:absolute; left:627px; top:322px; width:130px; height:22px; font-size:22px; font-family:monospace;"  oscarDB=dobc2>  -->
+<input name="dobc2"     id="dobc2"     type="text" class="noborder" style="position:absolute; left:627px; top:322px; width:130px; height:27px; font-size:27px; font-family:monospace;" >
+<input name="address"   id="address"   type="text" class="noborder" style="position:absolute; left:230px; top:360px; width:530px; height:18px;"  oscarDB=addressline>
+<input name="city"      id="city"      type="text" class="noborder" style="position:absolute; left:230px; top:396px; width:210px; height:18px;"  oscarDB=city>
+<input name="postal"    id="postal"    type="text" class="noborder" style="position:absolute; left:500px; top:396px;  width:80px; height:18px;"  oscarDB=postal>
+<input name="phone"     id="phone"     type="text" class="noborder" style="position:absolute; left:585px; top:396px; width:170px; height:18px;"  oscarDB=phone>
+
+<!-- Medication -->
+<input name="RxName" id="RxName" type="text" class="noborder" style="position:absolute;  left:11px; top:460px; width:270px; height:22px;" >
+<input name="RxForm" id="RxForm" type="text" class="noborder" style="position:absolute; left:285px; top:460px;  width:95px; height:22px;" >
+<input name="RxTen"  id="RxTen"  type="text" class="noborder" style="position:absolute; left:390px; top:460px;  width:70px; height:22px;" >
+<input name="RxFmDt" id="RxFmDt" type="text" class="noborder" style="position:absolute; left:477px; top:462px; width:133px; height:22px; font-size:27px; font-family:monospace;" >
+<input name="RxToDt" id="RxToDt" type="text" class="noborder" style="position:absolute; left:628px; top:462px; width:133px; height:22px; font-size:27px; font-family:monospace;" >
+
+<input name="RxDose" id="RxDose" type="text" class="noborder" style="position:absolute;  left:11px; top:500px; width:410px; height:22px;" >
+<input name="HospDt" id="HospDt" type="text" class="noborder" style="position:absolute; left:628px; top:498px; width:130px; height:22px; font-size:27px; font-family:monospace;" >
+<!-- Objective -->
+<input name="Diag1"  id="Diag1"  type="text" class="noborder" style="position:absolute; left:190px; top:560px; width:570px; height:22px;" >
+<input name="Diag2"  id="Diag2"  type="text" class="noborder" style="position:absolute;  left:11px; top:580px; width:750px; height:22px;" >
+<input name="Object" id="Object" type="text" class="noborder" style="position:absolute; left:147px; top:605px; width:610px; height:22px;" >
+<!-- Diag info -->
+<input name="DxDt"   id="DxDt"   type="text" class="noborder" style="position:absolute; left:378px; top:672px; width:140px; height:22px; font-size:27px; font-family:monospace;" >
+<input name="DxFreq" id="DxFreq" type="text" class="noborder" style="position:absolute; left:380px; top:693px; width:375px; height:22px;" >
+<!-- Seriousness -->
+<input name="Ser1"   id="Ser1"   type="text" class="noborder" style="position:absolute; left:650px; top:820px; width:30px; height:22px;" >
+<input name="Ser2"   id="Ser2"   type="text" class="noborder" style="position:absolute; left:650px; top:848px; width:30px; height:22px;" >
+<input name="Ser3"   id="Ser3"   type="text" class="noborder" style="position:absolute; left:650px; top:875px; width:30px; height:22px;" >
+<input name="Ser4"   id="Ser4"   type="text" class="noborder" style="position:absolute; left:650px; top:902px; width:30px; height:22px;" >
+
+<input name="RiskN"  id="RiskN"  type="text" class="Xbox" style="position:absolute; left:24px; top:958px; width:14px; height:14px;"  onkeypress="javascript:return displayKeyCode(event,this.id);" onClick="document.FormName.RiskY.value='';">
+<input name="RiskY"  id="RiskY"  type="text" class="Xbox" style="position:absolute; left:74px; top:958px; width:14px; height:14px;"  onkeypress="javascript:return displayKeyCode(event,this.id);" onClick="document.FormName.RiskN.value='';">
+<input name="RiskTx" id="RiskTx" type="text" class="noborder" style="position:absolute; left:200px; top:955px; width:560px; height:22px;" >
+</div>
+
+<div id="page2" style="position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}RAMQ-3996-p2.jpg" style="position: relative; left: 0px; top: 0px; width:8in">
+
+<input name="hinc3"      id="hinc3"      type="text" class="noborder" style="position:absolute;  left:11px; top:25px; width:200px; height:22px; font-size:22px; font-size:27px; font-family:monospace;"  oscarDB=hinc>
+<input name="Prov_ohip2" id="prov_ohip2" type="text" class="noborder" style="position:absolute; left:225px; top:26px; width:150px; height:22px; font-size:22px; font-size:32px; font-family:monospace;"  oscarDB=doctor_ohip_no>
+
+<textarea name="p2_6C"  id="p2_6C"  type="text" class="noborder" style="position:absolute;  left:15px;  top:95px; width:740px; height:56px;" ></textarea>
+<textarea name="p2_6D"  id="p2_6D"  type="text" class="noborder" style="position:absolute;  left:15px; top:178px; width:740px; height:78px;" ></textarea>
+<textarea name="p2_6E1" id="p2_6E1" type="text" class="noborder" style="position:absolute; left:290px; top:260px; width:465px; height:22px;" ></textarea>
+<textarea name="p2_6E2" id="p2_6E2" type="text" class="noborder" style="position:absolute;  left:15px; top:313px; width:740px; height:51px;" ></textarea>
+<textarea name="p2_7A"  id="p2_7A"  type="text" class="noborder" style="position:absolute;  left:15px; top:420px; width:740px; height:140px;" ></textarea>
+<textarea name="p2_7B"  id="p2_7B"  type="text" class="noborder" style="position:absolute;  left:15px; top:590px; width:740px; height:49px;" ></textarea>
+<textarea name="p2_7C"  id="p2_7C"  type="text" class="noborder" style="position:absolute;  left:15px; top:660px; width:740px; height:24px;" ></textarea>
+
+<textarea name="p2_8"   id="p2_8"   type="text" class="noborder" style="position:absolute; left:15px; top:720px; width:740px; height:24px;" ></textarea>
+
+<textarea name="p2_9"   id="p2_9"   type="text" class="noborder" style="position:absolute; left:15px; top:785px; width:740px; height:54px;" ></textarea>
+
+<div style="position:absolute; left:10px; top:892px;">
+    <div class="sig"><img id="Stamp" src="${oscar_image_path}BNK.png" width="310" height="45"></div>
+</div>
+
+<input name="todayd" id="todayd" type="text" class="noborder" style="position:absolute; left:323px; top:910px; width:135px; height:22px; font-size:27px; font-family:monospace;">
+<!-- <input name="today" id="today" type="text" class="noborder" style="position:absolute; left:323px; top:910px; width:135px; height:22px; font-size:22px; font-family:monospace;"  oscarDB=today> -->
+
+<!-- Hidden fields -->
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+<input type="hidden" name="user_id" id="user_id" oscarDB=current_user_id>
+<input type="hidden" name="user_ohip_no" id="user_ohip_no" oscarDB=current_user_ohip_no>
+<input type="hidden" name="CurrentUserCPSID" id="CurrentUserCPSID" oscarDB=current_user_cpsid>
+<input type="hidden" name="doctor_no" id="doctor_no" oscarDB=doctor_provider_no>
+
+<input type="hidden" name="dob"   id="dob"   oscarDB=dobc2>
+<input type="hidden" name="today" id="today" oscarDB=today>
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1070px; left:30px;">
+	<table><tr><td>
+		Subject: <input name="subject" id="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick=" releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+	</td></tr></table>
+
+</div>
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<!-- 
+<script type="text/javascript">
+	Calendar.setup( { inputField : "hc_renew_date", ifFormat : "%Y-%m-%d",  button : "hc_renew_date" } );
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+-->
+
+</body>
+</html>

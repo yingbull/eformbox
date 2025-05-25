@@ -1,0 +1,268 @@
+<html>
+<head>
+
+<!-- VIHA Covid assessment clinic referral V5 adapted for OSCAR eForm by Gunther Klein on 04-Apr-2020 --> 
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>VIHA_COVID_clinic_referral</title>
+
+<style type="text/css" media="screen">
+ .input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width:16px;
+	height:16px;
+	font-size: 16px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.box2 {
+	position: absolute;
+	width:14px;
+	height:14px;
+	font-size: 14px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+</head>
+
+<body onload="document.FormName.ClinicalQuestion.focus();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<div id="page1" style="position:relative;">
+<img id="BGImage1" src="${oscar_image_path}COVID_clinic_referral_V5.png" style="position:relative; left:0px; top:0px; width:750px;">
+
+<!-- Patient Info -->
+<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position:absolute; left:125px; top:254px; width:234px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=patient_nameL>
+
+<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position:absolute; left:125px; top:275px; width:234px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=patient_nameF>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:125px; top:296px; width:169px; font-family:sans-serif; font-weight:bold; font-size:14px; background:white;" oscarDB=dob>
+
+<input name="hinc" id="hinc" type="text" class="noborder" style="position:absolute; left:125px; top:317px; width:239px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=hinc>
+
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:204px; top:338px; width:158px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=phone>
+
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:204px; top:359px; width:158px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=cell>
+
+<input name="Specialinstructions" id="Specialinstructions" type="text" class="noborder" style="position:absolute; left:219px; top:380px; width:143px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+
+<input name="Covidstatus" id="Covidstatus" type="text" class="Xbox box1" style="left:148px; top:402px;">
+<input name="covidstat1" id="covidstat1" type="text" class="Xbox box1" style="left:215px; top:402px;">
+<input name="covidstat2" id="covidstat2" type="text" class="Xbox box1" style="left:285px; top:402px;">
+
+<input name="testdate" id="testdate" type="text" class="noborder" style="position:absolute; left:240px; top:423px; width:123px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+<input name="today1" id="today1" type="text" class="noborder" style="position:absolute; left:240px; top:445px; width:123px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=today>
+
+<!-- Provider Info -->
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:511px; top:254px; width:184px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=current_user>
+
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position:absolute; left:442px; top:275px; width:253px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=current_user_ohip_no>
+
+<textarea name="clinic_label" id="clinic_label" type="text" class="noborder" style="position:absolute; left:382px; top:295px; width:313px; height:58px; resize:none; font-family:sans-serif; font-weight:bold; font-size:10px; background:white;" oscarDB=clinic_label></textarea>
+
+<input name="doctor_work_phone" id="doctor_work_phone" type="text" class="noborder" style="position:absolute; left:452px; top:370px; width:156px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=doctor_work_phone>
+
+<input name="MRP" id="MRP" type="text" class="Xbox box1" style="left:382px; top:406px;">
+<input name="doctor1" id="doctor1" type="text" class="noborder" style="position:absolute; left:532px; top:403px; width:164px; height:22px; font-family:sans-serif; font-weight:bold; font-size:12px; background:transparent;" oscarDB=doctor>
+
+<input name="Copyto" id="Copyto" type="text" class="noborder" style="position:absolute; left:381px; top:445px; width:315px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+
+<!-- Question -->
+<textarea name="ClinicalQuestion" id="ClinicalQuestion" type="text" class="noborder" style="position:absolute; left:320px; top:470px; width:375px; height:34px; resize:none; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;"></textarea>
+
+<input name="attach2" id="attach2" type="text" class="Xbox box2" style="left:294px; top:510px;">
+<input name="attach3" id="attach3" type="text" class="Xbox box2" style="left:171px; top:526px;">
+
+<input name="Chiefcomplaint" id="Chiefcomplaint" type="text" class="noborder" style="position:absolute; left:155px; top:559px; width:540px; font-family:sans-serif; font-size:14px; background:transparent;">
+
+<!-- Current Symptoms -->
+<input name="currentSxLeft4" id="currentSxLeft4" type="text" class="Xbox box2" style="left:59px; top:598px;">
+
+<input name="currentSxLeft5" id="currentSxLeft5" type="text" class="Xbox box2" style="left:59px; top:612px;">
+
+<input name="currentSxLeft6" id="currentSxLeft6" type="text" class="Xbox box2" style="left:59px; top:626px;">
+
+<input name="currentSxLeft7" id="currentSxLeft7" type="text" class="Xbox box2" style="left:59px; top:641px;">
+
+<input name="currentSxLeft8" id="currentSxLeft8" type="text" class="Xbox box2" style="left:59px; top:655px;">
+
+<input name="currentSxLeft9" id="currentSxLeft9" type="text" class="Xbox box2" style="left:59px; top:669px;">
+
+<input name="currentSxLeft10" id="currentSxLeft10" type="text" class="Xbox box2" style="left:59px; top:684px;">
+
+<input name="currentSxRight11" id="currentSxRight11" type="text" class="Xbox box2" style="left:189px; top:598px;">
+
+<input name="currentSxRight12" id="currentSxRight12" type="text" class="Xbox box2" style="left:189px; top:612px;">
+
+<input name="currentSxRight13" id="currentSxRight13" type="text" class="Xbox box2" style="left:189px; top:626px;">
+
+<input name="currentSxRight14" id="currentSxRight14" type="text" class="Xbox box2" style="left:189px; top:641px;">
+
+<input name="currentSxRight15" id="currentSxRight15" type="text" class="Xbox box2" style="left:189px; top:655px;">
+
+<input name="currentSxRight16" id="currentSxRight16" type="text" class="Xbox box2" style="left:189px; top:669px;">
+
+<input name="currentSxRight17" id="currentSxRight17" type="text" class="Xbox box2" style="left:189px; top:684px;">
+
+<textarea name="other" id="other" type="text" class="noborder" style="position:absolute; left:240px; top:684px; width:135px; height:28px; resize:none; font-family:sans-serif; font-size:12px; background:white;"></textarea>
+
+<textarea name="otherSx" id="otherSx" type="text" class="noborder" style="position:absolute; left:385px; top:598px; width:310px; height:110px; resize:none; font-family:sans-serif; font-weight:bold; font-size:14px; background:white;"></textarea>
+
+<input name="prelimDx" id="prelimDx" type="text" class="noborder" style="position:absolute; left:409px; top:715px; width:286px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+
+<input name="diffDx" id="diffDx" type="text" class="noborder" style="position:absolute; left:50px; top:750px; width:645px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+
+<input name="plan" id="plan" type="text" class="noborder" style="position:absolute; left:268px; top:768px; width:428px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+
+<textarea name="PMhx" id="PMhx" type="text" class="noborder" style="position:absolute; left:275px; top:800px; width:421px; height:74px; resize:none; font-family:sans-serif; font-weight:bold; font-size:13px; background:transparent;"></textarea>
+
+<textarea name="Meds" id="Meds" type="text" class="noborder" style="position:absolute; left:49px; top:823px; width:222px; height:76px; resize:none; font-family:sans-serif;  font-size:12px; background:transparent;" oscarDB=druglist_line></textarea>
+
+<input name="allergies_des_no_archived" id="allergies_des_no_archived" type="text" class="noborder" style="position:absolute; left:330px; top:878px; width:366px; font-family:sans-serif; font-size:12px; background:transparent;" oscarDB=allergies_des_no_archived>
+
+<div class="DoNotPrint" id="SideButtons">
+	<input type="button" name="PatientSummary" id="PatientSummary" class="DoNotPrint" style="position:absolute; left:710px; top:510px; font-size:12px; color:red" value="Patient Summary" oscarOPEN="PCP Patient Summary">
+	<span style="position:absolute; left:840px; top:515px; font-size:9px; color:grey;">(import missing eForm <a target="_blank" href="https://worldoscar.org/?s=patient+summary">here</a>)</span>
+
+	<input type="button" name="VIHAMOST" id="VIHAMOST" class="DoNotPrint" style="position:absolute; left:710px; top:535px; font-size:12px; color:red" value="VIHA MOST Form" oscarOPEN="MOST VIHA">
+	<span style="position:absolute; left:840px; top:540px; font-size:9px; color:grey;">(import missing eForm <a target="_blank" href="https://worldoscar.org/?wpdmpro=island-health-medical-orders-for-scope-of-treatment-most-eform">here</a>)</span>
+</div>
+
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:40px; top:971px;">
+	<table><tr style="background:#e5f2ff;"><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint(); releaseDirtyFlag(); setTimeout('SubmitButton.click()',2000);"> 
+	 </td></tr></table>
+</div>
+
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "testdate", ifFormat : "%d-%b-%Y",  button : "testdate" } );
+	Calendar.setup( { inputField : "today1", ifFormat : "%d-%b-%Y",  button : "today1" } );
+</script>
+
+</body>
+</html>

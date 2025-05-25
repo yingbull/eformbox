@@ -1,0 +1,804 @@
+<html>
+<head>
+
+<!-- VIHA Primary Care Provider Patient Summary -->
+<!-- V1_Mar19_2019 - based on PrEP intake form, John Yap -->
+<!-- V2_Mar23_2019 - add autoExpand textarea, labs, collapse/expand features, link to labs, John Yap -->
+<!-- V3_Mar25_2019 - fix auto-expanding input lines, and save expanded scrollheight textareas for reload; as per K Yap -->
+<!-- V4_Mar26_2019 - add remaining sections, reminders, link to documents. J Yap -->
+<!-- V5_Mar29_2019 - combine ongoing concerns and medical Hx. J Yap -->
+<!-- V6_Apr2_2019 - detune show/hide until we can make setting stick on reload; 
+	hive \n\n function to PatientSummary2019.js;  J Yap -->
+<!-- V7_Apr4_2019 - add back show/hide, with retention script, as per K Yap -->
+<!-- V8_Apr7_2019 - manipulate Json and other fields, as per K Yap ; unable to split lines for
+		ongoing concerns and Medical Hx; update \n-active lines to PatientSummary_Apr7_2019.js -->
+<!-- V9_Apr11_2019 - incremental adjustment to CPP boxes, amalgamate MedicalHx and Json fixes into JsonFix_V9_Apr11_2019.js; JohnY -->
+<!-- V10_Apr14_2019 - fine-tune Switch function; extract on 10-digit, ISO standard date format yyyy-mm-dd; JohnY -->
+<!-- V11_Jun3_2019 - find and remove selected blank sections; needs updated JsonFix - JsonFix_V10_Jun3_2019.js; JohnY -->
+<!-- V12_Jun9_2019 - fix formatting for Medical Hx, etc (asterisks), needs updated JsonFix - JsonFix_V11_Jun9_2019.js; JohnY -->
+<!-- V13_Dec1_2019 - add Frailty Score reference; needs FRAI measurement; JohnY -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+<!-- Do not use \n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- script to link to other pages -->
+<script language="javascript" src="${oscar_image_path}onBodyLoad_Oct2018.js"></script>
+<script language="javascript1.2" type="text/javascript" src="onBodyLoad_Oct2018.js"></script>
+
+<!-- script to allow Json fixes, etc -->
+<script language="javascript" type="text/javascript" src="${oscar_image_path}JsonFix_V11_Jun9_2019.js"></script>
+<script language="javascript1.2" type="text/javascript" src="JsonFix_V11_Jun9_2019.js"></script>
+
+<style type="text/css">
+.title {
+	text-transform: uppercase;
+	font-size: 16;
+	font-family: Arial;
+	font-weight: bolder;
+	text-align: left;
+	color: black;
+}
+.heading1 {
+	//text-transform: capitalize;
+	width: 100%;
+	font-size: 14;
+	font-family: Arial;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.heading2 {
+	//text-transform: capitalize;
+	font-size: 14;
+	font-family: Arial;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.heading3 {
+	//text-transform: capitalize;
+	font-size: 14;
+	font-family: Arial;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.normaltext {
+	font-size: 14;
+	font-family: Arial;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 0;
+}
+.formtext {
+	width: 100%;
+	font-size: 14;
+	font-family: Arial;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 1;
+	border-style: solid; 
+	border-radius: 3px;
+	resize:none;
+  }
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {display: none;}
+td.subjectline {
+	display: none;
+}
+input.noborder {
+	border : 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	border-radius: 3px;
+
+	//scrollbar : none;
+	border: 0px;
+}
+</style>
+
+<!-- Script to optimize window on loading -->
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {
+			// new off-line architecture as per K Yap
+
+		// Need to to execute fixJson() immediately on load; adjust format before loading up autoscroll, etc.
+			setDefaults();
+			setDocumentTitle('Primary_Care_Provider_Patient_Summary_',document.getElementById('PatientNameL').value);
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+			// on initial Load do this; do not fixJson on reload as it disables autoscroll
+			// add two databases, Ongoing Concerns and Medical History, into one textfield
+			fixJson(); 
+
+			// Extract only yyyy-mm-dd from lab dates
+			document.FormName.MOST_date.value = document.getElementById("Oscar_MOST_date").value.substring(0, 10);
+			document.FormName.BP_date.value = document.getElementById("Oscar_BP_date").value.substring(0, 10);
+			document.FormName.WT_date.value = document.getElementById("Oscar_WT_date").value.substring(0, 10);
+			document.FormName.HT_date.value = document.getElementById("Oscar_HT_date").value.substring(0, 10);
+			document.FormName.BMI_date.value = document.getElementById("Oscar_BMI_date").value.substring(0, 10);
+			document.FormName.HB_date.value = document.getElementById("Oscar_HB_date").value.substring(0, 10);
+			document.FormName.A1c_date.value = document.getElementById("Oscar_A1c_date").value.substring(0, 10);
+			document.FormName.EGFR_date.value = document.getElementById("Oscar_EGFR_date").value.substring(0, 10);
+			document.FormName.FRAI_date.value = document.getElementById("Oscar_FRAI_date").value.substring(0, 10);
+
+			//optimize window size/width
+			top.window.resizeTo(950, screen.availHeight);
+
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById("current_user_name").value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.CurrentProviderDoctor.value = First_Last_Name ;
+			document.FormName.CurrentProviderDoctor2.value = First_Last_Name ;
+			}
+			// on Reload do this
+				document.getElementById("NewDateSet").checked = false;
+				document.getElementById("NewDate").value = '';
+		}
+
+		function NewDateSet_add() {
+			document.FormName.subject.value = document.FormName.CurrentProviderDoctor.value + ' ' + document.FormName.NewDate.value;
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// remove placeholders if no input in fields
+			document.getElementById("IntroComments").placeholder = '';
+			document.getElementById("Physician_Private").placeholder = '';
+			document.getElementById("MoreLabs").placeholder = '';
+			document.getElementById("OtherMeds").placeholder = '';
+			document.getElementById("MOST_date").placeholder = '';
+			document.getElementById("FRAI_date").placeholder = '';
+			
+			// hide private line if no input
+				if (document.getElementById("Physician_Private").value != '') {
+					// Show field if input in place
+					document.getElementById('PhysicianPrivate').className = 'Show';
+				}
+				else {
+					document.getElementById('PhysicianPrivate').className = 'hide';
+				}
+			
+			// hide More Labs if no input
+			if (document.getElementById("MoreLabs").value != '') {
+					// Show field if input in place
+					document.getElementById('MoreLabs').className = 'Show formtext';
+				}
+				else {
+					document.getElementById('MoreLabs').className = 'hide';
+				}
+
+			// Hide blank textareas not named above
+			findBlanks();
+
+			// hide MOST/FRAI
+			if (document.getElementById("MOST").value != '' || document.getElementById("FRAI").value != '') {
+					// Show field if input in place
+					document.getElementById('MOSTFRAISwitch_Detail').className = 'Show';
+				}
+				else {
+					document.getElementById('MOSTFRAISwitch_Detail').className = 'hide';
+				}
+
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		//Script to show and hide sections
+		function ChangeClass(i,c) { // i  = id name, c = class name
+			document.getElementById(i).className = c;
+		}
+		function SwitchView(i,checked) {
+			var j = i + '_Detail';
+			if(document.getElementById(j).className == 'Hide') {
+				document.getElementById(i).style.background = 'lightgreen';
+				document.getElementById(i).title = 'Click to HIDE';
+				ChangeClass(j,'Show');
+				document.getElementById(i + '_Hidden').value = 'false';
+			}
+			else if (document.getElementById(j).className == 'Show') {
+				document.getElementById(i).style.background = 'pink';
+				document.getElementById(i).title = 'Click to SHOW';
+				ChangeClass(j,'Hide');
+				document.getElementById(i + '_Hidden').value = 'true';
+			}	
+		}
+
+		/****************************
+			Open all Fields
+		****************************/
+		function ShowAll() {
+			if (document.getElementById('IntroCommentsSwitch_Detail').className == 'Hide') {
+			document.getElementById('IntroCommentsSwitch').click();
+			}
+			if (document.getElementById('MOSTFRAI_Detail').className == 'Hide') {
+			document.getElementById('MOSTFRAISwitch').click();
+			}
+			if (document.getElementById('PastMedicalHxSwitch_Detail').className == 'Hide') {
+			document.getElementById('PastMedicalHxSwitch').click();
+			}
+			if (document.getElementById('LastVisitSwitch_Detail').className == 'Hide') {
+			document.getElementById('LastVisitSwitch').click();
+			}
+			if (document.getElementById('LabResultsSwitch_Detail').className == 'Hide') {
+			document.getElementById('LabResultsSwitch').click();
+			}
+			if (document.getElementById('MedicationsSwitch_Detail').className == 'Hide') {
+			document.getElementById('MedicationsSwitch').click();
+			}
+			if (document.getElementById('SocialSwitch_Detail').className == 'Hide') {
+			document.getElementById('SocialSwitch').click();
+			}
+			if (document.getElementById('RisksSwitch_Detail').className == 'Hide') {
+			document.getElementById('RisksSwitch').click();
+			}
+			if (document.getElementById('FamilySwitch_Detail').className == 'Hide') {
+			document.getElementById('FamilySwitch').click();
+			}
+			if (document.getElementById('RemindersSwitch_Detail').className == 'Hide') {
+			document.getElementById('RemindersSwitch').click();
+			}
+			// Show private physician phone textarea
+			document.getElementById('PhysicianPrivate').className = 'Show';
+		}
+
+		/****************************
+			Hide all Fields
+		****************************/
+		function HideAll() {
+			if (document.getElementById('IntroCommentsSwitch_Detail').className == 'Show') {
+			document.getElementById('IntroCommentsSwitch').click();
+			}
+			if (document.getElementById('MOSTFRAI_Detail').className == 'Show') {
+			document.getElementById('MOSTFRAISwitch').click();
+			}
+			if (document.getElementById('PastMedicalHxSwitch_Detail').className == 'Show') {
+			document.getElementById('PastMedicalHxSwitch').click();
+			}
+			if (document.getElementById('LastVisitSwitch_Detail').className == 'Show') {
+			document.getElementById('LastVisitSwitch').click();
+			}
+			if (document.getElementById('LabResultsSwitch_Detail').className == 'Show') {
+			document.getElementById('LabResultsSwitch').click();
+			}
+			if (document.getElementById('MedicationsSwitch_Detail').className == 'Show') {
+			document.getElementById('MedicationsSwitch').click();
+			}
+			if (document.getElementById('SocialSwitch_Detail').className == 'Show') {
+			document.getElementById('SocialSwitch').click();
+			}
+			if (document.getElementById('RisksSwitch_Detail').className == 'Show') {
+			document.getElementById('RisksSwitch').click();
+			}
+			if (document.getElementById('FamilySwitch_Detail').className == 'Show') {
+			document.getElementById('FamilySwitch').click();
+			}
+			if (document.getElementById('RemindersSwitch_Detail').className == 'Show') {
+			document.getElementById('RemindersSwitch').click();
+			}
+		}
+		
+		/****************************
+			Script to allow for auto-expanding textarea; needs to be active onload
+		****************************/
+		function addAutoResize() {
+			document.addEventListener('input', function (event) {
+				if (event.target.nodeName.toLowerCase() !== 'textarea') {
+					return;
+				}
+
+				event.target.style.height = 'auto';
+				event.target.style.height = event.target.scrollHeight + 15 + 'px';
+			});
+		}
+
+		function resizeAllTextAreas() {
+			document.querySelectorAll('textarea').forEach(function (el) {
+				el.style.height = el.scrollHeight + 15 + 'px';
+			})
+		}
+
+		/****************************
+			Script to allow for saving hide/show states, and reloading in the SAME state, as per K Yap
+		****************************/
+		function loadHidden() {
+			divs = document.getElementsByClassName('HiddenDivs')
+			for (i = 0; i < divs.length; i++) {
+				var div = divs[i];
+				if (div.value === 'true') {
+					var name = divs[i].name.split('_')[0];
+					ChangeClass(name + '_Detail', 'Hide');
+				}
+			}
+		}
+
+		/****************************
+			Script to find blank care plans/goals and hide from print
+		****************************/
+		function findBlanks() {
+			divs = document.getElementsByClassName('FindBlank') // e.g. Social_Hidden
+			for (i = 0; i < divs.length; i++) {
+				var div = divs[i];
+				var name = div.name.split('_')[0];
+				var switchdetail = name + 'Switch_Detail';
+				if (document.getElementById(name).value =='' && document.getElementById(switchdetail).className == 'Show') {
+				  	document.getElementById(name + 'Switch').click();
+				}
+			}
+		}
+</script>
+
+</head>
+
+<body onload="loadHidden(); startUp(); addAutoResize(); resizeAllTextAreas();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for subject update -->
+<input type="hidden" name="CurrentProviderDoctor" id="CurrentProviderDoctor" value="">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctorX" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<!-- Hidden input for adding MedicalHx items  -->
+<textarea name="PMHx_Hx" id="PMHx_Hx" class="hide"  oscarDB=medical_history></textarea>
+<textarea name="ongoingconcerns" id="ongoingconcerns" class="hide" oscarDB=ongoingconcerns></textarea>
+
+<!-- Hidden inputs for saving whether textareas are shown or hidden; retained on reload -->
+<input type="hidden" name="IntroCommentsSwitch_Hidden" id="IntroCommentsSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="PastMedicalHxSwitch_Hidden" id="PastMedicalHxSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="LastVisitSwitch_Hidden" id="LastVisitSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="LabResultsSwitch_Hidden" id="LabResultsSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="MedicationsSwitch_Hidden" id="MedicationsSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="SocialSwitch_Hidden" id="SocialSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="RisksSwitch_Hidden" id="RisksSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="FamilySwitch_Hidden" id="FamilySwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="RemindersSwitch_Hidden" id="RemindersSwitch_Hidden" class="HiddenDivs" value="false">
+
+<!-- Hidden input to remove time stamp from lab date, leaving yyyy-mm-dd only -->
+<input type="hidden" name="Oscar_MOST_date" id="Oscar_MOST_date" oscarDB=m$MOST#dateObserved>
+<input type="hidden" name="Oscar_BP_date" id="Oscar_BP_date" oscarDB=m$BP#dateObserved>
+<input type="hidden" name="Oscar_WT_date" id="Oscar_WT_date" oscarDB=m$WT#dateObserved>
+<input type="hidden" name="Oscar_HT_date" id="Oscar_HT_date" oscarDB=m$HT#dateObserved>
+<input type="hidden" name="Oscar_BMI_date" id="Oscar_BMI_date" oscarDB=m$BMI#dateObserved>
+<input type="hidden" name="Oscar_HB_date" id="Oscar_HB_date" oscarDB=m$HB#dateObserved>
+<input type="hidden" name="Oscar_A1c_date" id="Oscar_A1c_date" oscarDB=m$A1C#dateObserved>
+<input type="hidden" name="Oscar_EGFR_date" id="Oscar_EGFR_date" oscarDB=m$eGFR#dateObserved>
+<input type="hidden" name="Oscar_FRAI_date" id="Oscar_FRAI_date" oscarDB=m$FRAI#dateObserved>
+
+<!-- Hidden inputs for finding blank care plans/goals -->
+<textarea type="hidden" name="IntroComments_Hidden" id="IntroComments_Hidden" class="FindBlank Hide" value=""></textarea>
+<textarea type="hidden" name="Social_Hidden" id="Social_Hidden" class="FindBlank Hide" value=""></textarea>
+<textarea type="hidden" name="Risks_Hidden" id="Risks_Hidden" class="FindBlank Hide" value=""></textarea>
+<textarea type="hidden" name="Family_Hidden" id="Family_Hidden" class="FindBlank Hide" value=""></textarea>
+<textarea type="hidden" name="Reminders_Hidden" id="Reminders_Hidden" class="FindBlank Hide" value=""></textarea>
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<p class="title">Primary Care Provider Patient Summary</p>
+
+<div>
+<table width=100%>
+	<tr>
+		<td style="width:30px;" class="heading2">Date: </td>
+		<td class="normaltext"><input class="formtext noborder" name="Date" id="Date" type="text" oscarDB=today></td>
+	</tr>
+</table>
+<!-- Physician Identification -->
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Physician Information:</td>
+	</tr>
+	<tr>
+		<td class="normaltext"><input name="CurrentProviderDoctor2" id="CurrentProviderDoctor2" class="formtext" type="text" value=""></td>
+	</tr>
+	<tr>
+		<td class="normaltext"><textarea name="clinic_label" id="clinic_label" class="formtext" type="text" rows="5" oscarDB=clinic_label></textarea></td>
+	</tr>
+</table>
+</div>
+
+<!-- Physician Private Contact -->
+<div id="PhysicianPrivate" class="show">
+<table width=100%>
+	<tr>
+		<td class="heading1">Physician Private Line:</td>
+	</tr>
+	<tr>
+		<td class="normaltext"><input name="Physician_Private" id="Physician_Private" class="formtext" type="text" value="" placeholder="Add private line if available"></td>
+	</tr>
+</table>
+</div>
+
+<!-- Patient Identification -->
+<div>
+<table width=100%>
+	<tr>
+		<td class="heading1">Patient Information:</td>
+	</tr>
+	<tr>
+		<td class="normaltext"><textarea name="Demographics" id="Demographics" class="formtext" rows="4" oscarDB=label></textarea></td>
+	</tr>
+</table>
+</div>
+
+<!-- Thank you... -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Comments" name="IntroCommentsSwitch" id="IntroCommentsSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+
+<div id="IntroCommentsSwitch_Detail" class="Show">
+<table width=100%>
+	<tr><td class="normaltext"><span>Thank you for looking after this patient. Here are some details you may find helpful:</span></td></tr>
+</table>
+
+<table width=100%>
+	<tr><td class="normaltext"><textarea name="IntroComments" id="IntroComments" class="formtext" rows="3" value="" placeholder="Add comments such as current supports, difficulties, substitute decision makers, advance care plans, immunizations, other pertinent information"></textarea>
+	</td></tr>
+</table>
+
+<table width=100%>
+	<tr><td align="right">
+		<input class="DoNotPrint" style="font-size:10px; cursor:pointer; color:green;" name="ConsultReports_link" onclick="onBodyLoad(); documents_all();" value="To Documents" type="button" title="link to document library">
+		<input class="DoNotPrint" style="font-size:10px; cursor:pointer; color:green;" name="prevention_link" onclick="onBodyLoad(); prevention();" value="To Preventions" type="button" title="link to Prevention/Immunizations">
+	</td></tr>
+</table>
+</div>
+
+<!-- MOST and FRAI -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="MOST + FRAI" name="MOSTFRAISwitch" id="MOSTFRAISwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="MOSTFRAISwitch_Detail" class="Show">
+<table width=100%>
+	<tr><td class="normaltext"><b>MOST:</b> <input name="MOST" id="MOST" class="normaltext" type="text" style="width:70px; font-weight:bold; text-align:center;" oscarDB=m$MOST#value>
+		 (<input name="MOST_date" id="MOST_date" class="normaltext" type="text" style="width:75px; text-align:center; font-weight:bold;" oscarDB=m$MOST#dateObserved placeholder="date">)
+		</td>
+		<td class="normaltext"><b>Frailty Score:</b> <input name="FRAI" id="FRAI" class="normaltext" type="text" style="width:30px; font-weight:bold; text-align:center;" oscarDB=m$FRAI#value>
+		 (<input name="FRAI_date" id="FRAI_date" class="normaltext" type="text" style="width:75px; text-align:center; font-weight:bold;" oscarDB=m$FRAI#dateObserved placeholder="date">)
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- Relevant Medical Hx -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="PMHx" name="PastMedicalHxSwitch" id="PastMedicalHxSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="PastMedicalHxSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Ongoing Concerns and Medical History:</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="MedicalHx" id="MedicalHx" class="formtext" rows="5" value=""></textarea>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- Last Visit information -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Last Visit Info" name="LastVisitSwitch" id="LastVisitSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="LastVisitSwitch_Detail" class="Show">
+<table width=100%>
+	<tr><td class="heading1">Last Visit information:</td></tr>
+	<tr><td class="normaltext">Last visit date: 
+		<input name="LastVisitDate" id="LastVisitDate" class="normaltext" type="text" style="width:75px; text-align:center;" value="">
+		<span class="DoNotPrint" style="font-size:12px; color:green;">&larr; Date must be added manually. Click field to left for date</span>
+	</td></tr>
+	<tr><td class="normaltext">Last BP: 
+		<input name="BP" id="BP" class="normaltext" type="text" style="width:60px; text-align:center;" oscarDB=m$BP#value>
+		 (<input name="BP_date" id="BP_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$BP#dateObserved>)
+	</td></tr>
+	<tr><td class="normaltext">Last weight: 
+		<input name="WT" id="WT" class="normaltext" type="text" style="width:40px; text-align:center;" oscarDB=m$WT#value> kg
+		(<input name="WT_date" id="WT_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$WT#dateObserved>)
+	</td></tr>
+	<tr><td class="normaltext">Last height: 
+		<input name="HT" id="HT" class="normaltext" type="text" style="width:40px; text-align:center;" oscarDB=m$HT#value> cm 
+		(<input name="HT_date" id="HT_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$HT#dateObserved>)
+	</td></tr>
+	<tr><td class="normaltext">Last BMI: 
+		<input name="BMI" id="BMI" class="normaltext" type="text" style="width:40px; text-align:center;" oscarDB=m$BMI#value> 
+		(<input name="BMI_date" id="BMI_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$BMI#dateObserved>)
+	</td></tr>
+</table>
+</div>
+
+<!-- Recent Lab Results -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Lab Results" name="LabResultsSwitch" id="LabResultsSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>	
+</table>
+</div>
+<div id="LabResultsSwitch_Detail" class="Show">
+<table width=100%>
+	<tr><td class="heading1">Relevant Lab Results:</td></tr>
+	<tr><td class="normaltext">Last Hgb: <input name="Hgb" id="Hgb" class="normaltext" type="text" style="width:60px; text-align:center;" oscarDB=m$HB#value>
+		 (<input name="HB_date" id="HB_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$HB#dateObserved>)</td></tr>
+	<tr><td class="normaltext">Last A1c: <input name="A1C" id="A1C" class="normaltext" type="text" style="width:60px; text-align:center;" oscarDB=m$A1C#value>
+		(<input name="A1c_date" id="A1c_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$A1C#dateObserved>)</td></tr>
+	<tr><td class="normaltext">Last eGFR: <input name="eGFR" id="eGFR" class="normaltext" type="text" style="width:60px; text-align:center;" oscarDB=m$EGFR#value>
+		(<input name="EGFR_date" id="EGFR_date" class="normaltext" type="text" style="width:75px; text-align:center;" oscarDB=m$EGFR#dateObserved>)</td></tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="MoreLabs" id="MoreLabs" class="formtext" rows="2" value="" placeholder="Additional Labs"></textarea>
+		</td>
+	</tr>
+</table>
+
+<table width=100%>
+	<tr><td align="right">
+		<input class="DoNotPrint" style="position:relative; left:0px; top:0px; color:green;" name="LabSummary" onclick="onBodyLoad(); labRow();" value="Lab Row Display" type="button">
+		<input class="DoNotPrint" style="position:relative; left:0px; top:0px; color:green;" name="LabSummary" onclick="onBodyLoad(); labGrid();" value="Lab Grid Display" type="button">
+	</td></tr>
+</table>
+</div>
+
+<!-- Current Medications -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Medications + Allergies" name="MedicationsSwitch" id="MedicationsSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+
+<div id="MedicationsSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Current Medications:</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="Meds" id="Meds" class="formtext" rows="4" oscarDB=druglist_line></textarea>
+		</td>
+	</tr>
+</table>
+
+<!-- Other Medications -->
+<table width=100%>
+	<tr>
+		<td class="heading1">Other Medications:</td>
+	<tr>
+	<tr>
+		<td class="normaltext"><textarea name="OtherMeds" id="OtherMeds" class="formtext" rows="2" oscarDB=other_medications_history placeholder="OTC, vitamins, supplements, etc"></textarea></td> 
+	</tr>
+</table>
+
+<table width=100%>
+	<tr>
+		<td width=11% class="heading2">Allergies:<br>(note reaction)</td>
+		<td><textarea name="Allergies" id="Allergies" class="formtext" rows="2" oscarDB=allergies_des_no_archived></textarea></td>
+	</tr>
+</table>
+</div>
+
+<!-- Social History -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Social Hx" name="SocialSwitch" id="SocialSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div>
+<div id="SocialSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Social History</td>
+	</tr>
+	<tr> 
+		<td width=19% class="heading3">Substitute Decision Maker:</td>
+		<td class="normaltext"><input name="SDMName" id="SDMName" type="text" class="formtext" oscarDB=e$last#SDMName></td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2"><textarea name="SocialHx" id="Social" class="formtext" rows="3" oscarDB="social_family_history"></textarea></td> 
+	</tr>
+</table>
+</div>
+
+<!-- Risk Factors -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Risk Factors" name="RisksSwitch" id="RisksSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="RisksSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Risk Factors</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="RisksHx" id="Risks" class="formtext FindAndReplaceJson" rows="2" oscarDB=risk_factors_json></textarea>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- Family History -->
+<div>
+<table>
+	<td width=100%></td>
+	<td><input value="Family Hx" name="FamilySwitch" id="FamilySwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="FamilySwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Family History</td>
+	<tr>
+	<tr>
+		<td class="normaltext"><textarea name="FamilyHx" id="Family" class="formtext FindAndReplaceJson" rows="4" oscarDB=family_history_json></textarea></td> 
+	</tr>
+</table>
+</div>
+
+<!-- Reminders -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Reminders" name="RemindersSwitch" id="RemindersSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="RemindersSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Reminders</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="RemindersHx" id="Reminders" class="formtext" rows="2" oscarDB=reminders></textarea>
+		</td>
+	</tr>
+</table>
+</div>
+<br>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons">
+	<table width=100%><tr style="background:#e5f2ff;"><td class="subjectline">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="80" type="text"><br>
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onclick="history.go(0);">
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();">
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onclick="printSubmit();">
+		<input name="NewDate" id="NewDate" type="text" style="width:145px; font-size:12px" placeholder="Click to choose date" value="">
+		<input name="NewDateSet" id="NewDateSet" type="checkbox" onclick="NewDateSet_add();" title="check to update subject line"><br>
+		<input value="Show All" name="ShowAll_Button" type="button" style="color:green;" onclick="ShowAll();">
+		<input value="Hide All" name="HideAll_Button" type="button" style="color:green;" onclick="HideAll();">
+	</td></tr></table>
+</div>
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField:"Date", ifFormat: "%Y-%m-%d", showsTime:false, button:"Date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"NewDate", ifFormat: "%Y-%m-%d", showsTime:false, button:"NewDate", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"LastVisitDate", ifFormat: "%Y-%m-%d", showsTime:false, button:"LastVisitDate", singleClick:true, step:1 } );
+</script> 
+
+</body></html>

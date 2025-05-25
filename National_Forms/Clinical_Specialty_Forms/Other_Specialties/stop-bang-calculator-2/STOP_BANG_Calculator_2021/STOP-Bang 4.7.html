@@ -1,0 +1,741 @@
+<html>
+<head>
+
+<!-- Calculates STOP-Bang and saves as subject; background colours; /PHC -->
+<!-- V1_Feb21_2019 initial version /PHC -->
+<!-- V2_Feb22_2019 initial edits /PHC -->
+<!-- V3_Feb23_2019 removed unused boilerplate, added auto checking /PHC -->
+<!-- V3.1_Feb23_2019 some minor cosmetic changes and added cursor hover effect /gk -->
+<!-- V3.2_Feb23_2019 dropped border around database values /PHC -->
+<!-- V3.3_Feb23_2019 expanded slightly on the auto checking /jr -->
+<!-- V3.4_Feb24_2019 checking for documented HTN /PHC-->
+<!-- V3.5_Feb24_2019 spelling errors and encoding HTML /PHC-->
+<!-- V3.6_Feb26_2019 BMI /PHC -->
+<!-- V3.7_Feb26_2019 More consistent stats and another reference /PHC -->
+<!-- V3.7.1_Feb26_2019 adjusted fonts, tweaked printout, added Creative Commons license /gk -->
+<!-- v3.8_Mar_2_2019 sizing to 65% window width to optimize for OSCAR running in tabs /gk -->
+<!-- v3.9_Mar_3_2019 additional references and made the statistics more uniform, and a caution for use in non obese pts /PHC -->
+<!-- v4.0 Mar_3_2019 added BMI button to confirm autopopulated Ht and Wt values /gk -->
+<!-- v4.1 Feb_26_2021 updates to CSS /gk -->
+<!-- v4.2 Feb_27_2021 updates to CSS /gk -->
+<!-- v4.3 Feb_28_2021 updates to CSS /gk -->
+<!-- v4.6 Mar_21_2021 further de-cluttering, show/hide notes section /gk -->
+<!-- v4.7 Mar_21_2021 fixed issue with date field sliding out of the view on window resizing/gk -->
+
+<style type="text/css">
+.noborder {
+	 background: transparent;
+ }
+.Show{
+	visibility: visible;
+	display: inline;
+}
+.Hide{
+	visibility: hidden;
+	display: none;
+}
+p.title{
+	text-transform: uppercase;
+ 	font: bolder 28px/32px Arial, sans-serif;
+	text-align: center;
+	color: #444;
+	margin: 10px;
+}
+p.heading{
+	font-weight: bolder;
+	text-decoration: underline;
+}
+.smalltext{
+	 	font: normal 15px Arial, sans-serif;
+		text-align: left;
+		vertical-align: middle;
+		color:  #444;
+		border-width: 0;
+}
+.footnote{
+	 	font: normal 12px Arial, sans-serif;
+		text-align: left;
+		vertical-align: middle;
+		color:  #444;
+		border-width: 0;
+}
+
+td.heading{
+ 	font: bold 14px/20px Arial, sans-serif;
+	text-align: left;
+	vertical-align: middle;
+	padding: 2px 5px;
+	color: #444;
+	background: #D8D8D8;
+}
+
+td.question{
+ 	font: normal 14px/20px Arial, sans-serif;
+	text-align: left;
+	vertical-align: top;
+	padding: 2px 5px;
+	color: #444;
+}
+td.answer{
+ 	font: normal 14px/20px Arial, sans-serif;
+	text-align: center;
+	vertical-align: middle;
+	padding: 2px 5px;;
+	color: #444;
+}
+td.result{
+ 	font: normal 13px/20px Arial, sans-serif;
+	text-align: center;
+	vertical-align: middle;
+	color: black;
+}
+
+td.result2{
+ 	font: normal 13px/20px Arial, sans-serif;
+	text-align: left;
+	vertical-align: middle;
+	color: black;
+}
+
+td.normaltext{
+ 	font: bold 14px/20px Arial, sans-serif;
+	text-align: left;
+	vertical-align: middle;
+	padding: 2px 5px;
+	color: black;
+	border-width: 0;
+}
+
+
+
+/* styling the table row borders */
+
+table {
+	border-collapse: collapse;
+}
+td.left{
+	border-top: 0.5px solid #444;
+	border-bottom: 0.5px solid #444;
+	border-left: 0.5px solid #444;
+}
+td.right{
+	border-top: 0.5px solid #444;
+	border-right: 0.5px solid #444;
+	border-bottom: 0.5px solid #444;
+}
+td.above{
+	border-top: 0.5px solid #444;
+	border-right: 0.5px solid #444;
+	border-left: 0.5px solid #444;
+}
+td.below{
+	border-right: 0.5px solid #444;
+	border-bottom: 0.5px solid #444;
+	border-left: 0.5px solid #444;
+}
+td.inside{
+	border-top: 0.5px solid #444;
+	border-bottom: 0.5px solid #444;
+}
+td.outside{
+	border-top: 0.5px solid #444;
+	border-right: 0.5px solid #444;
+	border-bottom: 0.5px solid #444;
+	border-left: 0.5px solid #444;
+}
+
+
+tr:hover{background: #DCDCDC;}
+/*
+#instructions tr:nth-child(even){background-color: #F0F0F0;}
+
+#questionnaire tr:nth-child(even){background-color: #F0F0F0;}
+*/
+
+input.formtext{
+ 	font: bold 15px/20px Arial, sans-serif;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	padding: 3px 5px;
+	color: black;
+	background: transparent;
+	border-width: 0;
+}
+
+li {padding: 3px;}
+
+#ShowNotes {
+		width: 100%;
+	 	font: bold 14px/20px Arial, sans-serif;
+		text-align: left;
+		vertical-align: middle;
+		padding: 2px 5px;
+		color: #444;
+		background: #D8D8D8;
+		border: 0.5px solid #444;
+		}
+	#ShowNotes:hover {
+		color: red;
+}
+
+input[type="radio"]{cursor: pointer;}
+
+input[type="button"]{cursor: pointer;}
+
+.center {
+	margin: auto;
+	margin-top: 3%;
+	width: 60%;
+	background-color: #F8F8F8;	
+  	border: 3px solid #A0A0A0;
+	padding: 40px;
+}
+
+</style>
+
+
+<!-- CSS Script that removes textarea and textbox borders when printing - (put this inbetween <header></header>) -->
+<style type="text/css" media="print">
+div.DoNotPrint {display: none;}
+.DoNotPrint {display: none;}
+input.noborder {
+	border: 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	//scrollbar : none;
+	border: 0px;
+}
+.center {
+	margin: auto;
+	margin-top: 3%;
+	width: 90%;
+	background-color: #F8F8F8;	
+  	border: 3px solid #A0A0A0;
+	padding: 30px;
+}
+</style>
+
+<!-- Script that allows eForm to work outside of Oscar -->
+<script language="javascript" type="text/javascript">
+
+		function HasHTN(){
+			// check history and disease registry entries for hypertension
+			var all=document.getElementById('history2').value + document.getElementById('dxlist').value;
+			var FreeText = /HBP|Hypertension|Elevated BP|\sBP\s|\sHTN\s/i;
+			var match = all.search(FreeText);
+			if(match != -1){ 
+				return true;
+			}
+			return false;
+		}
+
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {			
+			// new off-line architecture as per K Yap
+			setDocumentTitle('STOP-BANG',document.getElementById('PatientNameL').value);
+
+			// optimize window size/width
+			top.window.resizeTo(1200, screen.availHeight);
+
+			// check boxes based on input values
+			if ( HasHTN() ){
+				document.FormName.Q4[1].checked=true;
+			}			
+			if (document.getElementById("BMI").value > 35){
+				document.FormName.Q5[1].checked=true;
+			}
+			if(document.getElementById("BMI").value <= 35 && document.getElementById("BMI").value > 0){
+				document.FormName.Q5[0].checked=true;
+			}
+			if (document.getElementById("age").value > 50){
+				document.FormName.Q6[1].checked=true;
+			}
+			if (document.getElementById("age").value <= 50 && document.getElementById("age").value > 0){
+				document.FormName.Q6[0].checked=true;
+			}
+			if (document.getElementById("sex").value == "M"){
+				document.FormName.Q8[1].checked=true;
+			}
+			if (document.getElementById("sex").value == "F"){
+				document.FormName.Q8[0].checked=true;
+			}
+		}
+
+		
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;					
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			window.print();
+			submission();
+		}
+
+		function printLetter() {
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+			// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+		scripts to confirm closing of window if it has not been saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = false;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+		window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+			return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+</script>
+
+<script type="text/javascript" language="javascript">
+	function isNumeric(sText){
+	   var validNumChars = "0123456789.";
+	   var isNumber=true;
+	   var chara;
+	   for (i = 0; i < sText.length && isNumber == true; i++) {
+		  chara = sText.charAt(i);
+		  if (validNumChars.indexOf(chara) == -1) {
+			 isNumber = false;
+		  }
+	   }
+	   return isNumber;
+	}
+
+    function isNumber(ss){
+		var s = ss.value;
+        var i;
+        for (i = 0; i < s.length; i++){
+            // Check that current character is number.
+            var c = s.charAt(i);
+			if (c == '.') {
+				continue;
+			} else if (((c < "0") || (c > "9"))) {
+                alert('Invalid '+s+' in field ' + ss.name);
+                ss.focus();
+                return false;
+			}
+        }
+        // All characters are numbers.
+        return true;
+    }
+    function wtEnglish2Metric(obj) {
+		if(isNumber(obj) ) {
+			weight = obj.value;
+			weightM = Math.round(weight * 10 * 0.4536) / 10 ;
+			if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
+				obj.value = weightM;
+			}
+		}
+    }
+
+    function htEnglish2Metric(obj) {
+		height = obj.value;
+		if(height.length > 1 && height.indexOf("'") > 0 ) {
+			feet = height.substring(0, height.indexOf("'"));
+			inch = height.substring(height.indexOf("'"));
+			if(inch.length == 1) {
+				inch = 0;
+			} else {
+				inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+				inch = inch.substring(1);
+			}
+			height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
+			if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+				obj.value = height;
+			}
+		}
+    }
+
+    function calcBMI() {
+    	if (isNumeric(document.getElementsByName("WT")[0].value) && isNumeric(document.getElementsByName("HT")[0].value) && document.getElementById("WT").value!=="" && document.getElementById("HT").value!=="" ) {
+    		if (document.getElementsByName("HT")[0].value > 0) {
+    			document.getElementsByName("BMI")[0].value = (document.getElementsByName("WT")[0].value/Math.pow(document.getElementsByName("HT")[0].value/100,2)).toFixed(1);
+			if (document.getElementById("BMI").value > 35){
+				document.FormName.Q5[1].checked=true;
+			}
+			if(document.getElementById("BMI").value <= 35 && document.getElementById("BMI").value > 0){
+				document.FormName.Q5[0].checked=true;
+			}
+    		}
+    	}
+    }
+	function getCheckedValue(radioObj) {
+		// Returns the value of the selected radio button,
+		// or null if no radio buttons are checked.
+
+		var radioLength = radioObj.length;
+		if(radioLength == undefined)
+			if (radioObj.checked)
+				return parseInt(radioObj.value);
+			else
+				return parseInt(value);
+
+		for (var i = 0; i < radioLength; i++) {
+			if (radioObj[i].checked) {
+				return parseInt(radioObj[i].value);
+			}
+		}
+		return null;
+	}
+
+	function sumOfCheckedValues(array) {
+		// Returns the sum of the checked values in array
+		var sum = 0;
+
+		for (var n = 0; n < array.length; n++) {
+			sum += getCheckedValue(array[n]);
+		}
+
+		return sum;
+	}
+
+	function checkedValuesGreaterThan(n, array) {
+		// Returns the number of checked values in array greater than n
+		var count = 0;
+
+		for (var i = 0; i < array.length; i++) {
+			if (getCheckedValue(array[i]) > n)
+				count += 1;
+		}
+
+		return count;
+	}
+
+	function totalScore(){
+		var stop_bang_questions = [
+			document.FormName.Q1,
+			document.FormName.Q2,
+			document.FormName.Q3,
+			document.FormName.Q4,
+			document.FormName.Q5,
+			document.FormName.Q6,
+			document.FormName.Q7,
+			document.FormName.Q8,
+		]
+
+
+
+		// Highlight all questions that are NOT answered
+		for (var i = 0; i < 8; i++) {
+			var question_id_s = "Q" + (i+1).toString();
+
+			if (getCheckedValue(stop_bang_questions[i]) == null) {
+				document.getElementById(question_id_s).style.background ='lightyellow';
+			} else {
+				document.getElementById(question_id_s).style.background = null;
+			}
+		}
+
+		// Check that all questions ARE answered
+		if (!stop_bang_questions.every(q => (getCheckedValue(q) != null))) {
+			alert("Some answers not complete.");
+			return;
+		}
+
+		// Add scores
+		i = sumOfCheckedValues(stop_bang_questions);
+
+		document.FormName.score.value = i;
+
+		document.FormName.subject.value = 'score = ' + i ;
+
+		// evaluation
+
+		if (i<=2) {
+			document.getElementById("none").style.background='#dff0d8';
+			document.getElementById("none").style.outline='1px solid darkgreen';
+			document.getElementById("mild").style.background=null;
+			document.getElementById("mild").style.outline=null;
+			document.getElementById("moderate").style.background=null;
+			document.getElementById("moderate").style.outline=null;
+			document.getElementById("severe").style.background=null;
+			document.getElementById("severe").style.outline=null;			
+			document.FormName.score.style.color='green';
+		}
+		else if (i>=3 && i<=3) {
+			document.getElementById("none").style.background=null;
+			document.getElementById("none").style.outline=null;
+			document.getElementById("mild").style.background='lightyellow';
+			document.getElementById("mild").style.outline='1px solid gold';
+			document.getElementById("moderate").style.background=null;
+			document.getElementById("moderate").style.outline=null;
+			document.getElementById("severe").style.background=null;
+			document.getElementById("severe").style.outline=null;			
+			document.FormName.score.style.color='darkorange';
+		}
+		else if (i>=4 && i<=5) {
+			document.getElementById("none").style.background=null;
+			document.getElementById("none").style.outline=null;
+			document.getElementById("mild").style.background=null;
+			document.getElementById("mild").style.outline=null;
+			document.getElementById("moderate").style.background='PapayaWhip';
+			document.getElementById("moderate").style.outline='1px solid darkorange';
+			document.getElementById("severe").style.background=null;
+			document.getElementById("severe").style.outline=null;	
+			document.FormName.score.style.color='darkorange';
+		}
+		else if (i>5)  {
+			document.getElementById("none").style.background=null;
+			document.getElementById("none").style.outline=null;
+			document.getElementById("mild").style.background=null;
+			document.getElementById("mild").style.outline=null;
+			document.getElementById("moderate").style.background=null;
+			document.getElementById("moderate").style.outline=null;
+			document.getElementById("severe").style.background='mistyRose';
+			document.getElementById("severe").style.outline='1px solid darkred';
+			document.FormName.score.style.color='red';
+		}
+		if (document.FormName.Q5[0].checked){
+			document.getElementById("thin").style.background='PapayaWhip';
+			document.getElementById("thin").style.font='normal 15px Arial, sans-serif';
+			document.getElementById("thin").style.padding='2px 5px';
+			document.getElementById("warning").className='Show';
+			
+		} else {
+			document.getElementById("thin").style.background=null;
+			document.getElementById("thin").style.outline=null;
+			document.getElementById("thin").style.font=null;
+			document.getElementById("thin").style.padding=null;
+			document.getElementById("warning").className='Hide';
+		}
+	}
+</script>
+</head>
+
+<body onload="startUp();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden Inputs -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+<input type="hidden" name="history2" id="history2"  oscarDB=Medical_History>
+<input type="hidden" name="dxlist" id="dxlist"  oscarDB=dxregistry>
+
+<!-- background container division -->
+<div name="backgroundcontainer" style="page-break-after:always;" class="center">
+
+<p class="title" title="STOP-Bang Screen for Obstructive Sleep Apnea">STOP - BANG</p>
+
+<div name="demographics">
+
+		<table>
+			<tr width="100%">
+			<td class="heading above" width="110px">Patient name</td>
+			<td width="350px" style="padding-left:10px"><input class="formtext" name="PatientName" id="PatientName" type="text" oscarDB=patient_name></td>		
+			</tr>
+			<tr>
+			<td class="heading below" width="110px">Date</td>
+			<td width="80px" style="padding-left:10px"><input class="formtext" name="TodaysDate" type="text" oscarDB=today></td>
+			</tr>
+		</table>
+	</div>
+
+<br>
+<div name="Questionnaire">
+	<table id="questionnaire" width="100%" cellpadding="5">
+		<tr><td class="heading left" width=50%>A. Please answer the following questions below to determine if you might be at risk of Sleep Apnea</td>
+			<td class="heading inside" width=5% style="text-align:center;">No (0)</td>
+			<td class="heading right" width=5% style="text-align:center;">Yes (1)</td> 
+		</tr>
+		<tr class="odd"><td class="question" id="Q1"><b><font size="4" style="color:darkred;">S</font>noring ?</b><br>Do you <b>Snore Loudly</b> (loud enough to be heard through closed doors or your bed-partner elbows you for snoring at night)?</td>
+		<td class="answer"><input type="radio" name="Q1" value="0"></td>
+		<td class="answer"><input type="radio" name="Q1" value="1"></td>
+		</tr>
+		<tr class="even"><td class="question" id="Q2"><b><font size="4" style="color:darkred;">T</font>ired ?</b><br>Do you often feel <b>Tired, Fatigued, or Sleepy</b> during the daytime (such as falling asleep during driving or talking to someone)?</td>
+			<td class="answer"><input type="radio" name="Q2" value="0"> </td>
+			<td class="answer"><input type="radio" name="Q2" value="1"> </td>
+		</tr>
+		<tr class="odd"><td class="question" id="Q3"><b><font size="4" style="color:darkred;">O</font>bserved ?</b><br>Has anyone <b>Observed</b> you <b>Stop Breathing</b> or <b>Choking/Gasping</b> during your sleep ?</td>
+			<td class="answer"><input type="radio" name="Q3" value="0"></td>
+			<td class="answer"><input type="radio" name="Q3" value="1"></td>
+		</tr>
+		<tr class="even"><td class="question" id="Q4"><b><font size="4" style="color:darkred;">P</font>ressure ?</b><br>Do you have or are being treated for <b>High Blood Pressure</b> ?
+			</td>
+			<td class="answer"><input type="radio" name="Q4" value="0"></td>
+			<td class="answer"><input type="radio" name="Q4" value="1"></td>
+		</tr>
+		<tr class="odd"><td class="question" id="Q5"><b><font size="4" style="color:darkred;">B</font>ody Mass Index more than 35 kg/m<sup>2 </sup>? &nbsp;</b>
+        <input name="BMI" id="BMI" type="text" style="width:40px; height:21px; font-size:12; font-weight:bold; color:green; background-color:transparent; border:0px;" oscarDB=m$BMI#value> <b>Weight&#58;</b> 
+	<input type="text" id="WT" name="WT" style="width:40px; height:21px; font-size:12; font-weight:bold; background-color:white;" border="2" onchange="calcBMI();" onkeyup="calcBMI();" title="Double click to automatically convert from lbs to kg" onDblClick="wtEnglish2Metric(this); calcBMI();" oscarDB=m$WT#value > kg &nbsp; &nbsp;<b>Height&#58;</b> 
+	<input type="text" id="HT" name="HT" style="width:40px; height:21px; font-size:12; font-weight:bold; background-color:white;" border="2" onchange="calcBMI();" onkeyup="calcBMI();" title="Double click to automatically convert from feet and inches to cm" onDblClick="htEnglish2Metric(this); calcBMI();" oscarDB=m$HT#value> cm  &nbsp; &nbsp;
+<input value="BMI" name="CalculateBMI" id="CalculateBMI" type="button" class="DoNotPrint" style="font-family:sans-serif; font-size:12px; color:green;" onclick="calcBMI();">  
+				<span id="warning" class="Hide" style="background:PapayaWhip;"><br>This patient has BMI &lt; 35. The STOP-BANG score may not be valid.  &nbsp;See Notes below.</span>                	
+			</td>
+			<td class="answer"><input type="radio" name="Q5" value="0"></td>
+			<td class="answer"><input type="radio" name="Q5" value="1"></td>
+		</tr>
+		<tr class="even">
+			<td class="question" id="Q6"><b><font size="4" style="color:darkred;">A</font>ge older than 50 ?</b>
+	<input name="age" id="age" type="text" class=" noborder" style="width:80px; height:21px; font-size:12; font-weight:bold; color:green; background-color:transparent; border:0px"  oscarDB=age>
+			</td>
+			<td class="answer"><input type="radio" name="Q6" value="0"></td>
+			<td class="answer"><input type="radio" name="Q6" value="1"></td>
+		</tr>
+		<tr class="odd">
+			<td class="question" id="Q7"><b><font size="4" style="color:darkred;">N</font>eck size large ? (Measured around Adams apple)</b><br>For male, is your shirt collar 17 inches / 43cm or larger?<br/>For female, is your shirt collar 16 inches / 41cm or larger?</td>
+			<td class="answer"><input type="radio" name="Q7" value="0"></td>
+			<td class="answer"><input type="radio" name="Q7" value="1"></td>
+		</tr>
+		<tr class="even">
+			<td class="question" id="Q8"><b><font size="4" style="color:darkred;">G</font>ender = Male ? 
+<input name="sex" id="sex"  type="text" style="width:80px; height:21px; border:0px; background-color:transparent; font-size:12; font-weight:bold; color:green;" oscarDB=sex><br><br></td>
+			<td class="answer"><input type="radio" name="Q8" value="0"></td>
+			<td class="answer"><input type="radio" name="Q8" value="1"></td>
+
+		</tr>
+		<tr class="odd">
+			<td class="question"><font size="4"><b><font size="4" style="color:darkred;">STOP-Bang Score:</b></font>
+	<input type="text" name="score" class="formtext" style="font-weight:bold; text-align:center; font-size:20px; width:30px" value="">
+			</td>
+			<td class="answer" colspan="2">
+	<input type="button" style="color:green;" class="DoNotPrint" onclick="totalScore()" value="Calculate Score">
+			</td>
+		</tr>		
+	</table>
+</div>
+
+<div name="Instructions">
+
+<br>
+
+	<table id="instructions" width="100%" cellpadding="3" style="font-family: Arial;" >
+	<tr>
+		<td class="heading left" width="10%" style="text-align:center;">Score</td>
+		<td class="heading inside" style="text-align:left;" >Risk Category</td>
+		<td class="heading inside" style="text-align:center;" >Peri-operative Event &percnt; (OR)</td>
+		<td class="heading right" style="text-align:left;">Risk of Obstructive Sleep Apnea (OSA) in Obese Pre-Op Patients</td>
+	</tr>
+	
+	<tr id="none">
+		<td class="result">0 - 2</td>
+		<td class="result2">Normal Risk</td>
+		<td class="result">6&percnt; (1)</td>
+		<td class="result2">100&percnt; Negative Predictive Value for severe OSA</td>
+	</tr>
+	<tr id="mild">
+		<td class="result">3</td>
+		<td class="result2">Increased Risk</td>
+		<td class="result">20&percnt; (4)</td>
+		<td class="result2">Half of obese patients have moderate or severe OSA</td>
+	</tr>
+	<tr  id="moderate">
+		<td class="result">4 - 5</td>
+		<td class="result2">Likely OSA</td>
+		<td class="result">30&percnt; (5)</td>
+		<td class="result2">About 2/3 of obese patients in this range have moderate or severe OSA</td>
+	</tr>
+	<tr id="severe">
+		<td class="result">&ge; 6</td>
+		<td class="result2">Likely severe OSA</td>
+		<td class="result">40&percnt; (6)</td>
+		<td class="result2">Half of obese patients in this range have severe OSA</td>
+	</tr>
+	</table>
+<br>
+</div>
+
+	<input value="Notes" name="ShowNotes" id="ShowNotes" type="button" class="DoNotPrint" title="Click to Show" 
+		onclick="
+		document.getElementById('Notes').className = 'Show';
+		">
+
+	<div Id="Notes" class="Hide">
+	<br>
+	<br>
+	<input value="Close Notes" name="HideNotes" id="HideNotes" type="button" class="DoNotPrint" style="color:darkred" title="Click to Hide" 
+		onclick="
+		document.getElementById('Notes').className = 'Hide';
+		">
+
+		<p class="smalltext">
+		Some considerations for appropriate patient selection and results interpretation&#58;
+		</p>
+
+		<ul class="smalltext">
+	<li><span id="thin">Caution: The STOP-Bang has low specificity (30&percnt;) and low positive predictive values (10&percnt;) in the general population, when BMI under 35.</span></li>
+	<li>A score of 3 or higher is highly sensitive (90&percnt;) for OSA in obese pre-operative patients (68&percnt; prevalence) and sleep study patients (85&percnt; prevalence) but is not specific (50&percnt;).</li>
+	<li>Scores in pre-operative patients correlate with increased unexpected intra-operative and early post-operative adverse events. Study rates above may not reflect your population.</li>
+	<li>Neither STOP-Bang nor nocturnal oximetry are diagnostic for OSA. Avoid changing management with discordant results.</li>
+	<li>If the STOP-Bang is high in an obese patient a negative nocturnal oximetry will not reliably reassure.</li>
+	<li>Similarly a low risk patient should not get nocturnal oximetry as false positives are likely.</li>
+		</ul>
+
+		<ol class="smalltext">
+	<li>Reference: Chung F, Yang Y, Liao P. Predictive Performance of the STOP-Bang Score for Identifying Obstructive Sleep Apnea in Obese Patients OBES SURG (2013) 23:2050-2057  DOI 10.1007/s11695-013-1006-z</li>
+	<li>Reference: Nagappa M, Liao P, Wong J, et al. Validation of the STOP-Bang Questionnaire as a Screening Tool for Obstructive Sleep Apnea among Different Populations: A Systematic Review and Meta-Analysis. PLoS One. 2015;10(12):e0143697. Published 2015 Dec 14. doi:10.1371/journal.pone.0143697</li>
+	<li>Reference: Seet E, Chua M, Liaw CM. High STOP-BANG questionnaire scores predict intraoperative and early postoperative adverse events. Singapore Med J. 2015;56(4):212-6.</li>
+		</ol>
+
+</div>
+<br>
+<br>
+
+<!-- The submit/print/reset buttons -->
+	<div class="DoNotPrint" id="BottomButtons" >
+	<table ><tr><td class="answer"> 
+		<input type="hidden" id="newForm" name="newForm" value="True" />				
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onclick="history.go(0);">
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="printSubmit();"> 
+	</td></tr></table>
+	</div>
+	
+<div  class="footnote DoNotPrint" id="Licenseparagraph">
+<br><br>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">
+<img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /> 
+</a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">
+This E-form</span>
+<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"></span> is licensed under a 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>
+<span>Please consider supporting </span><a href="http://oscarbc.ca/" target="_blank">oscarbc.ca</a> | <a id="emailLnk1" style="cursor: pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">info@oscarbc.ca</a> 
+<br>
+</div>
+
+</div><!-- end of container division -->
+
+</form></body></html>
+

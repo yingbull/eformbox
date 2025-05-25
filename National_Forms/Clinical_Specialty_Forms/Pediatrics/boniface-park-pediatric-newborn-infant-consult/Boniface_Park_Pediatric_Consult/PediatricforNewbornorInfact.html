@@ -1,0 +1,302 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<!-- 2022/12/24/ 09:43 update to write to the encounter pane
+1) Javascript/jQuery added to the header to allow for writing to the "transferbox" to move information to the encounter pane
+2) added hidden input transfer box 
+3) wrote js file to accumulate input data in a recognizable format PeadsCreateNote.js
+4) referenced PeadsCreateNote.js in the header (will run createPeadsNote).
+5) triggered createPeadsNote() and copyToEncounter() in the submit button.
+
+ -->
+<style type="text/css" media="screen" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+    /* Drawing the 'gripper' for touch-enabled devices */
+    html.touch #content {
+        float:left;
+        width:92%;
+    }
+    html.touch #scrollgrabber {
+        float:right;
+        width:4%;
+        margin-right:2%;
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+    }
+    html.borderradius #scrollgrabber {
+        border-radius: 1em;
+    }
+ </style>
+
+<style type="text/css" media="print">
+
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+.sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+<script type="text/javascript">
+if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:111, width:264, top:215, left:438});});}</script>
+
+
+	<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<!-- Script to use transferbox to write to the encounter pane -->
+
+ <script type="text/javascript">
+     function Form(ElementId) {
+          return document.getElementById(ElementId);
+     }
+     /* function to update encounter note */
+     function copyToEncounter() {
+          try {
+               if (window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+                    window.parent.opener.document.getElementById("newNoteImg").onclick();
+                    TextAreaId = window.parent.opener.document.getElementsByName("caseNote_note")[0];
+                    window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.document.getElementById(TextAreaId.id).value + Form("transferBox").value;
+                    window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+               } else if (window.parent.opener.window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+                    window.parent.opener.window.parent.opener.document.getElementById("newNoteImg").onclick();
+                    TextAreaId = window.parent.opener.window.parent.opener.document.getElementsByName("caseNote_note")[0];
+                    window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value + Form("transferBox").value;
+                    window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+               }
+          } catch(e) {
+               alert("The note could not be copied to the encounter note.");
+          }
+     }
+  </script>
+
+<script language="javascript" type="text/javascript" src="${oscar_image_path}PeadsCreateNote.js"></script>
+
+
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").click();
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").click();
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="checkGender();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<!-- Hidden Inputs -->
+
+<textarea name="transferBox" style="display:none;" id="transferBox" ></textarea>
+<input name="ageComplex" id="ageComplex"  type="hidden"  oscarDB=ageComplex />
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+<!-- end Hidden Inputs -->
+
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+
+<img id="BGImage1" src="${oscar_image_path}Pediatric for Newborn.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="Male" id="Male" type="checkbox" style="position:absolute; left:97px; top:236px; ">
+
+<input name="Female" id="Female" type="checkbox" style="position:absolute; left:155px; top:236px; ">
+
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:80px; top:133px; width:100px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+<input name="patient_name" id="patient_name" type="text" class="noborder" style="position:absolute; left:132px; top:172px; width:274px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+
+<input name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:101px; top:195px; width:306px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=addressline>
+
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:91px; top:216px; width:75px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:221px; top:216px; width:130px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob>
+
+<input name="hin" id="hin" type="text" class="noborder" style="position:absolute; left:311px; top:239px; width:100px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+
+<input name="ReferringDr" id="ReferringDr" type="text" class="noborder" style="position:absolute; left:160px; top:266px; width:245px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="ReferrringReason" id="ReferrringReason" type="text" class="noborder" style="position:absolute; left:160px; top:298px; width:253px; height:31px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="PerinatalHis" id="PerinatalHis" type="text" class="noborder" style="position:absolute; left:145px; top:337px; width:269px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:501px; top:172px; width:190px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+
+<input name="Mage" id="Mage" type="text" class="noborder" style="position:absolute; left:127px; top:364px; width:83px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Gravida" id="Gravida" type="text" class="noborder" style="position:absolute; left:272px; top:364px; width:73px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Para" id="Para" type="text" class="noborder" style="position:absolute; left:384px; top:363px; width:45px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Abortion" id="Abortion" type="text" class="noborder" style="position:absolute; left:498px; top:363px; width:199px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="MSerology" id="MSerology" type="text" class="noborder" style="position:absolute; left:153px; top:387px; width:58px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="MBG" id="MBG" type="text" class="noborder" style="position:absolute; left:296px; top:386px; width:49px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="DAT" id="DAT" type="text" class="noborder" style="position:absolute; left:385px; top:387px; width:48px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="BabyBG" id="BabyBG" type="text" class="noborder" style="position:absolute; left:498px; top:387px; width:65px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Bilirubin" id="Bilirubin" type="text" class="noborder" style="position:absolute; left:625px; top:387px; width:70px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="GBS" id="GBS" type="text" class="noborder" style="position:absolute; left:117px; top:408px; width:92px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="PUS" id="PUS" type="text" class="noborder" style="position:absolute; left:296px; top:409px; width:271px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Pcomplication" id="Pcomplication" type="text" class="noborder" style="position:absolute; left:185px; top:427px; width:500px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="MOD" id="MOD" type="text" class="noborder" style="position:absolute; left:145px; top:450px; width:230px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="SVD" id="SVD" type="text" class="noborder" style="position:absolute; left:80px; top:468px; width:130px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="CS" id="CS" type="text" class="noborder" style="position:absolute; left:248px; top:468px; width:90px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Reason" id="Reason" type="text" class="noborder" style="position:absolute; left:405px; top:468px; width:290px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="BWT" id="BWT" type="text" class="noborder" style="position:absolute; left:81px; top:490px; width:129px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="DisWt" id="DisWt" type="text" class="noborder" style="position:absolute; left:349px; top:492px; width:163px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Apgar" id="Apgar" type="text" class="noborder" style="position:absolute; left:122px; top:512px; width:388px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="CDelivery" id="CDelivery" type="text" class="noborder" style="position:absolute; left:213px; top:533px; width:298px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Feeding" id="Feeding" type="text" class="noborder" style="position:absolute; left:96px; top:554px; width:151px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="WetD" id="WetD" type="text" class="noborder" style="position:absolute; left:345px; top:554px; width:125px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="StColour" id="StColour" type="text" class="noborder" style="position:absolute; left:571px; top:554px; width:120px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Hearing" id="Hearing" type="text" class="noborder" style="position:absolute; left:125px; top:576px; width:538px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="VitD" id="VitD" type="text" class="noborder" style="position:absolute; left:108px; top:597px; width:554px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="Concern" id="Concern" class="noborder" style="position:absolute; left:102px; top:620px; width:596px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="PhysicalEx" id="PhysicalEx" type="text" class="noborder" style="position:absolute; left:172px; top:669px; width:179px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Font" id="Font" type="text" class="noborder" style="position:absolute; left:117px; top:686px; width:233px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Red" id="Red" type="text" class="noborder" style="position:absolute; left:117px; top:704px; width:233px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Palate" id="Palate" type="text" class="noborder" style="position:absolute; left:93px; top:723px; width:256px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Chest" id="Chest" type="text" class="noborder" style="position:absolute; left:93px; top:743px; width:255px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="GUS" id="GUS" type="text" class="noborder" style="position:absolute; left:93px; top:767px; width:254px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Hip" id="Hip" type="text" class="noborder" style="position:absolute; left:93px; top:789px; width:254px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Pallor" id="Pallor" type="text" class="noborder" style="position:absolute; left:422px; top:678px; width:263px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Jaun" id="Jaun" type="text" class="noborder" style="position:absolute; left:436px; top:699px; width:249px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="CVS" id="CVS" type="text" class="noborder" style="position:absolute; left:436px; top:723px; width:248px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Abdomen" id="Abdomen" type="text" class="noborder" style="position:absolute; left:436px; top:745px; width:249px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="Spine" id="Spine" type="text" class="noborder" style="position:absolute; left:436px; top:766px; width:248px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="CNS" id="CNS" type="text" class="noborder" style="position:absolute; left:436px; top:787px; width:248px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="Impression" id="Impression" class="noborder" style="position:absolute; left:111px; top:816px; width:586px; height:41px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="Plan" id="Plan" class="noborder" style="position:absolute; left:80px; top:863px; width:617px; height:43px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+
+</div>
+<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="" ></input>
+
+
+ <div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" createPeadsNote();copyToEncounter();releaseDirtyFlag();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+ </form>
+
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+</body>
+</html>

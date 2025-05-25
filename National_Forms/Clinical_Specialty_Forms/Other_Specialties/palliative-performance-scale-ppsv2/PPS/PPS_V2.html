@@ -1,0 +1,279 @@
+<html>
+<head>
+
+<!-- PPS: Palliative Performance Scale - for End of Life Care PSP -->
+<!-- Created May 2014, Dr. John Yap; for Oscar V12.1, X-box. -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217;  -->
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border: 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+  
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp()
+		{			
+			// shows the forms on development machine from notepad ++ - saves you from uploading to the server to input alignments
+			var strLoc = window.location.href.toLowerCase();
+			if(strLoc.indexOf("https") == -1)
+			{
+				//page1
+				var src = document.getElementById('BGImage').src;				
+				document.getElementById('BGImage').src = src.replace('$%7Boscar_image_path%7D','');
+				// page2 Definitions
+				var src2 = document.getElementById('BGImage2').href;
+				document.getElementById('BGImage2').href = src2.replace('$%7Boscar_image_path%7D','');
+					
+			}
+			setDocumentTitle('Palliative Performance Scale (PPSv2)',document.getElementById('PatientName').value);
+			setDefaults();			
+		}
+		
+		function setDocumentTitle(Title,PatientName)
+		{
+			// set document title
+			document.title = Title + ' - ' + PatientName;					
+		}
+		
+		function setDefaults()
+		{	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True')
+			{
+				//document.getElementById("").value = 'X';	
+			}   
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit()
+		{
+			printLetter();
+			releaseDirtyFlag();			
+			submission();
+		}
+
+		function printLetter()
+		{
+			// hide the bottom buttons
+			if (document.getElementById('BottomButtons').style.display == '')
+				document.getElementById('BottomButtons').style.display = 'none';
+			// print the letter
+			window.print();
+		} 
+
+		function submission()
+		{
+			setFlag();
+			setTimeout('document.FormName.submit()',1000);			
+		}
+
+		function setFlag()
+		{
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		function showButtons()
+		{
+			//show the bottom buttons if they are hidden
+			if (document.getElementById('BottomButtons').style.display == 'none')
+				document.getElementById('BottomButtons').style.display = '';
+		}
+
+		/****************************
+			checkbox functions 
+		****************************/
+		function changeValue(x)
+		{
+			if (document.getElementById(x).value == '')
+				document.getElementById(x).value = 'X';
+			else
+				document.getElementById(x).value = '';
+		}
+
+		function displayKeyCode(evt,x)
+		{
+			var charCode = (evt.which) ? evt.which :event.keyCode
+			// any key press except tab will constitute a value change to the checkbox
+			if (charCode != 9)
+			{
+				changeValue(x);
+				return false;
+			}
+		}
+</script>
+		
+<!-- Script to optimize window on loading -->
+<script language="JavaScript">
+
+top.window.moveTo(0,0);
+if (document.all) {
+top.window.resizeTo(screen.availWidth,screen.availHeight);
+}
+else if (document.layers||document.getElementById) {
+if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+top.window.outerHeight = screen.availHeight;
+top.window.outerWidth = 950;
+}
+}
+</script>
+<!-- End optimize window script -->
+
+<!-- scripts to confirm closing of window if it had not been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if does not require an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getCheckedValue(radioObj) {
+
+	if(!radioObj)
+		return parseInt(0);
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return parseInt(radioObj.value);
+		else
+			return parseInt(value);
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return parseInt(radioObj[i].value);
+		}
+	}
+	
+	return parseInt(0);
+}
+
+function totalScore(){
+	var i = 0;
+	i += getCheckedValue(document.FormName.Score);
+	
+	document.FormName.Current_PPS.value = i;
+	document.getElementById("PPSa").value = i;
+	document.FormName.subject.value = "PPS " +i+"%" ;
+}
+</script>
+
+</head>
+
+<body onload="startUp();" onMouseDown="showButtons();">
+
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;">
+<img id="BGImage" src="${oscar_image_path}PPS_PSP_Version.png" style="position:absolute; left:0px; top:0px;">
+
+<span style="position:absolute; left:25px; top:10px; font-family:Arial; font-size:14px; font-weight:bold;">Date:</span>
+<input name="Today" id="Today" type="text" class="noborder" style="position:absolute; left:65px; top:9px; width:100px; font-family:Arial; font-size:14px; font-weight:bold;" oscarDB=Today >
+<span style="position:absolute; left:180px; top:10px; font-family:Arial; font-size:14px; font-weight:bold;">Patient:</span>
+<input name="PatientName" id="PatientName" type="text" class="noborder" style="position:absolute; left:240px; top:9px; width:350px; font-family:Arial; font-size:14px; font-weight:bold;" oscarDB=patient_name>
+
+<a id="BGImage2" class="DoNotPrint" style="position:absolute; left:220px; top:43px; font-size:10px; font-family:Arial; font-style:italic;" href="${oscar_image_path}PPS_reference.png" target="_blank">DEFINITIONS</a>
+
+<input name="Score" type="radio" value="100" style="position:absolute; left:95px; top:99px;" onclick="totalScore();">
+<input name="Score" type="radio" value="90" style="position:absolute; left:95px; top:127px;" onclick="totalScore();">
+<input name="Score" type="radio" value="80" style="position:absolute; left:95px; top:156px;" onclick="totalScore();">
+<input name="Score" type="radio" value="70" style="position:absolute; left:95px; top:185px;" onclick="totalScore();">
+<input name="Score" type="radio" value="60" style="position:absolute; left:95px; top:213px;" onclick="totalScore();">
+<input name="Score" type="radio" value="50" style="position:absolute; left:95px; top:242px;" onclick="totalScore();">
+<input name="Score" type="radio" value="40" style="position:absolute; left:95px; top:271px;" onclick="totalScore();">
+<input name="Score" type="radio" value="30" style="position:absolute; left:95px; top:300px;" onclick="totalScore();">
+<input name="Score" type="radio" value="20" style="position:absolute; left:95px; top:329px;" onclick="totalScore();">
+<input name="Score" type="radio" value="10" style="position:absolute; left:95px; top:358px;" onclick="totalScore();">
+<input name="Score" type="radio" value="0" style="position:absolute; left:95px; top:385px;" onclick="totalScore();">
+
+<!-- PPS Scores -->
+<span style="position:absolute; left:25px; top:40px; font-family:Arial; font-size:14px;"><b>Current PPS: </b></span>
+<input name="Current_PPS" id="Current_PPS" type="text" class="noborder" style="position:absolute; left:115px; top:39px; width:35px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;" value="">
+<input class="nodisplay" type="hidden" name="m$PPS#value" id="PPSa">
+
+<span style="position:absolute; left:601px; top:40px; font-family:Arial; font-size:14px;"><b>Previous PPS: </b></span>
+<input name="Previous_PPS" type="text" class="noborder" style="position:absolute; left:700px; top:39px; width:35px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;" oscardb=m$PPS#value>
+<span style="position:absolute; left:598px; top:10px; font-family:Arial; font-size:14px;"><b>Previous Date: </b></span>
+<input name="PreviousDate_PPS" type="text" class="noborder" style="position:absolute; left:700px; top:9px; width:80px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;" oscardb=m$PPS#dateObserved></td>
+</div>
+<!-- End of Inputs -->
+
+<a class="DoNotPrint" style="position:absolute; left:700px; top:1023px; font-size:12px; font-family:san serif; font-style:normal; background:white;" href="http://www.victoriahospice.org/" target="_blank">www.victoriahospice.org</a>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:50px; top:1050px;" border="0" cellpadding="0" cellspacing="0">
+	<table><tr><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />				
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();">
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="printSubmit();"> 
+	</td></tr></table>
+<!-- End of submit/print/reset buttons -->
+<br>
+<!-- Measurement Instructions -->
+
+<table style="font-size:12px; font-family:Arial; font-style:italic;" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+	<tr><td>To capture the results of this eform you must add <b>PPS</b> as a measurement.</td>
+	<td></td>
+	</tr>
+	<tr><td>Go to Admin - oscarEncounter - Customize oscarMeasurements - Add Measurement type.</td>
+	<td></td>
+	</tr>
+	<tr><td> Type=PPS ;  Type Description=PPS ; Display Name=Palliative Performance Scale ;</td>
+	</tr>
+	<tr><td> Measuring Instruction=Score from 0 to 100   ; Validation=  Numeric Value: 0 to 100</td>
+	</tr>
+	</tbody>
+</table>		
+</div>
+
+</form></body></html>

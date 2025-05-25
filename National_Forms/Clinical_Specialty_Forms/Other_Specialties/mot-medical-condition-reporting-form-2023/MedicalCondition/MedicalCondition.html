@@ -1,0 +1,315 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- E-form built by Peter Hutten Czapski c 2019 -->
+<title>MedicalCondition</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+<script src='../eform/displayImage.do?imagefile=stamps.js'>
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="416-235-3400"',1000);
+} 
+</script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").click();
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").click();
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="416-235-3400"',1000);
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+<script language ='javascript'>
+        function signForm(){      
+	        //first look for the current users stamp
+	        for (i=0; i<ImgArray.length;i++){
+		        var ListItemArr =  ImgArray[i].split("|");
+		        var UserName = ListItemArr[0];
+		        var FileName = ListItemArr[1];
+		        if ($('#CurrentUserName').val().indexOf(UserName)>0){
+		            $(".stamps").children("img").attr("src","../eform/displayImage.do?imagefile="+FileName);
+                    break;		     
+			        //document.getElementById("md").value=document.getElementById("CurrentUserName").value;
+			        if ($('#DoctorName').val()!=$('#CurrentUserName').val()){
+				        //document.getElementById("cc").value="CC: "+document.getElementById("DoctorName").value;
+			        }
+		        }
+	        }
+
+	        //hmm not found so lets try the MRPs stamp
+	        if($(".stamps").children("img").attr("src").indexOf("BNK.png")>0){
+	            for (i=0; i<ImgArray.length;i++){
+			        var ListItemArr =  ImgArray[i].split("|");
+			        var UserName = ListItemArr[0];
+			        var FileName = ListItemArr[1];
+			        if ($('#DoctorName').val().indexOf(UserName)>0){
+				         $(".stamps").children("img").attr("src","../eform/displayImage.do?imagefile="+FileName);
+                        break;
+				        //document.getElementById("md").value=document.getElementById("DoctorName").value;
+			        }
+		        }
+	        }
+		    //toggle function to clear image
+    		$(".stamps").children("img").click(function(){
+                if($(this).attr("src").indexOf("BNK.png")>0){
+		            signForm();
+	            } else {
+		            $(this).attr("src","../eform/displayImage.do?imagefile=BNK.png");
+	            }
+            })
+        }
+
+	</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="checkGender();setFaxNo();signForm();">
+<form method="post" action="" name="FormName" id="FormName" >
+<input name="DoctorName" id="DoctorName" oscardb="doctor" type="hidden">
+<input name="CurrentUserName" id="CurrentUserName" oscardb="current_user" type="hidden">
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}MCR2018a.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="Male" id="Male" type="text" class="Xbox" style="position:absolute; left:437px; top:321px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="Female" id="Female" type="text" class="Xbox" style="position:absolute; left:437px; top:335px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="patient_nameL" id="patient_nameL" type="text" class=" noborder" style="position:absolute; left:26px; top:250px; width:250px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class=" noborder" style="position:absolute; left:283px; top:250px; width:213px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="page1_3" id="page1_3" type="text" class=" noborder" style="position:absolute; left:502px; top:250px; width:63px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="dobc2" id="dobc2" type="text" class=" noborder" style="position:absolute; left:571px; top:250px; width:154px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc2>
+<input name="address_street_number_and_name" id="address_street_number_and_name" type="text" class=" noborder" style="position:absolute; left:180px; top:297px; width:368px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address_street_number_and_name>
+<input name="page1_4" id="page1_4" type="text" class=" noborder" style="position:absolute; left:25px; top:297px; width:104px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_5" id="page1_5" type="text" class=" noborder" style="position:absolute; left:554px; top:297px; width:105px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:665px; top:297px; width:59px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=province>
+<input name="city" id="city" type="text" class=" noborder" style="position:absolute; left:26px; top:332px; width:320px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=city>
+<input name="postal" id="postal" type="text" class=" noborder" style="position:absolute; left:351px; top:332px; width:80px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=postal>
+<input name="page1_6" id="page1_6" type="text" class=" noborder" style="position:absolute; left:514px; top:332px; width:211px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="doctor_last_name" id="doctor_last_name" type="text" class=" noborder" style="position:absolute; left:25px; top:390px; width:346px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=doctor_last_name>
+<input name="doctor_first_name" id="doctor_first_name" type="text" class=" noborder" style="position:absolute; left:380px; top:390px; width:346px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=doctor_first_name>
+<input name="page1_7" id="page1_7" type="text" class=" noborder" style="position:absolute; left:26px; top:441px; width:102px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="clinic_addressLine" id="clinic_addressLine" type="text" class=" noborder" style="position:absolute; left:149px; top:441px; width:573px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_addressLine>
+<input name="clinic_city" id="clinic_city" type="text" class=" noborder" style="position:absolute; left:28px; top:474px; width:345px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_city>
+<input name="clinic_province" id="clinic_province" type="text" class=" noborder" style="position:absolute; left:379px; top:474px; width:235px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_province>
+<input name="clinic_postal" id="clinic_postal" type="text" class=" noborder" style="position:absolute; left:621px; top:474px; width:105px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_postal>
+<input name="page1_8" id="page1_8" type="text" class="Xbox" style="position:absolute; left:130px; top:498px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_9" id="page1_9" type="text" class="Xbox" style="position:absolute; left:298px; top:498px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_10" id="page1_10" type="text" class="Xbox" style="position:absolute; left:398px; top:498px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_11" id="page1_11" type="text" class="Xbox" style="position:absolute; left:522px; top:498px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_12" id="page1_12" type="text" class="Xbox" style="position:absolute; left:130px; top:516px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_13" id="page1_13" type="text" class="Xbox" style="position:absolute; left:362px; top:516px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_14" id="page1_14" type="text" class=" noborder" style="position:absolute; left:426px; top:516px; width:231px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_15" id="page1_15" type="text" class="Xbox" style="position:absolute; left:625px; top:534px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_16" id="page1_16" type="text" class="Xbox" style="position:absolute; left:674px; top:534px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_17" id="page1_17" type="text" class="Xbox" style="position:absolute; left:625px; top:552px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_18" id="page1_18" type="text" class="Xbox" style="position:absolute; left:674px; top:552px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_19" id="page1_19" type="text" class="Xbox" style="position:absolute; left:625px; top:569px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_20" id="page1_20" type="text" class="Xbox" style="position:absolute; left:674px; top:569px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<div id="gen_widgetId1" class="stamps" style="width: 300px; height: 50px; z-index: 9; top: 600px; left: 150px; position: absolute;">
+<img src="${oscar_image_path}BNK.png" style="width: 100%; height: 100%;">
+</div>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:473px; top:610px; width:253px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="page1_22" id="page1_22" type="text" class="Xbox" style="position:absolute; left:76px; top:729px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_23" id="page1_23" type="text" class="Xbox" style="position:absolute; left:164px; top:729px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_24" id="page1_24" type="text" class="Xbox" style="position:absolute; left:261px; top:729px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_25" id="page1_25" type="text" class="Xbox" style="position:absolute; left:349px; top:729px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_26" id="page1_26" type="text" class=" noborder" style="position:absolute; left:459px; top:729px; width:232px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_27" id="page1_27" type="text" class="Xbox" style="position:absolute; left:24px; top:817px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_28" id="page1_28" type="text" class="Xbox" style="position:absolute; left:24px; top:836px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_29" id="page1_29" type="text" class="Xbox" style="position:absolute; left:24px; top:854px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_30" id="page1_30" type="text" class="Xbox" style="position:absolute; left:24px; top:871px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_31" id="page1_31" type="text" class="Xbox" style="position:absolute; left:24px; top:892px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+</div>
+
+<div id="page2" style="page-break-after:always;position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}MCR2018b.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="patient_nameL1" id="patient_nameL1" type="text" class=" noborder" style="position:absolute; left:93px; top:54px; width:179px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="patient_nameF1" id="patient_nameF1" type="text" class=" noborder" style="position:absolute; left:346px; top:55px; width:150px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="page2_32" id="page2_32" type="text" class=" noborder" style="position:absolute; left:500px; top:61px; width:65px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="dobc21" id="dobc21" type="text" class=" noborder" style="position:absolute; left:577px; top:61px; width:135px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc2>
+<input name="page2_33" id="page2_33" type="text" class="Xbox" style="position:absolute; left:26px; top:81px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_34" id="page2_34" type="text" class="Xbox" style="position:absolute; left:44px; top:99px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_35" id="page2_35" type="text" class="Xbox" style="position:absolute; left:44px; top:117px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_36" id="page2_36" type="text" class="Xbox" style="position:absolute; left:183px; top:99px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_37" id="page2_37" type="text" class="Xbox" style="position:absolute; left:270px; top:99px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_38" id="page2_38" type="text" class="Xbox" style="position:absolute; left:379px; top:99px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_39" id="page2_39" type="text" class="Xbox" style="position:absolute; left:459px; top:99px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_40" id="page2_40" type="text" class="Xbox" style="position:absolute; left:524px; top:99px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_41" id="page2_41" type="text" class=" noborder" style="position:absolute; left:155px; top:112px; width:565px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_42" id="page2_42" type="text" class="Xbox" style="position:absolute; left:25px; top:133px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_43" id="page2_43" type="text" class="Xbox" style="position:absolute; left:24px; top:152px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_44" id="page2_44" type="text" class="Xbox" style="position:absolute; left:45px; top:170px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_45" id="page2_45" type="text" class="Xbox" style="position:absolute; left:182px; top:169px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_46" id="page2_46" type="text" class="Xbox" style="position:absolute; left:333px; top:169px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_47" id="page2_47" type="text" class="Xbox" style="position:absolute; left:24px; top:188px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_48" id="page2_48" type="text" class=" noborder" style="position:absolute; left:135px; top:183px; width:588px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_49" id="page2_49" type="text" class="Xbox" style="position:absolute; left:24px; top:275px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_50" id="page2_50" type="text" class="Xbox" style="position:absolute; left:44px; top:293px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_51" id="page2_51" type="text" class="Xbox" style="position:absolute; left:96px; top:293px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_52" id="page2_52" type="text" class="Xbox" style="position:absolute; left:235px; top:293px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_53" id="page2_53" type="text" class="Xbox" style="position:absolute; left:357px; top:293px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_54" id="page2_54" type="text" class="Xbox" style="position:absolute; left:484px; top:293px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_55" id="page2_55" type="text" class=" noborder" style="position:absolute; left:591px; top:287px; width:131px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_56" id="page2_56" type="text" class="Xbox" style="position:absolute; left:26px; top:310px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_57" id="page2_57" type="text" class="Xbox" style="position:absolute; left:44px; top:328px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_58" id="page2_58" type="text" class="Xbox" style="position:absolute; left:114px; top:328px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_59" id="page2_59" type="text" class="Xbox" style="position:absolute; left:229px; top:328px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_60" id="page2_60" type="text" class="Xbox" style="position:absolute; left:361px; top:328px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_61" id="page2_61" type="text" class=" noborder" style="position:absolute; left:472px; top:322px; width:250px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_62" id="page2_62" type="text" class="Xbox" style="position:absolute; left:24px; top:346px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_63" id="page2_63" type="text" class=" noborder" style="position:absolute; left:149px; top:342px; width:578px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_64" id="page2_64" type="text" class="Xbox" style="position:absolute; left:25px; top:406px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_65" id="page2_65" type="text" class="Xbox" style="position:absolute; left:25px; top:439px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_66" id="page2_66" type="text" class="Xbox" style="position:absolute; left:25px; top:500px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_67" id="page2_67" type="text" class="Xbox" style="position:absolute; left:598px; top:446px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_68" id="page2_68" type="text" class="Xbox" style="position:absolute; left:598px; top:470px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_69" id="page2_69" type="text" class="Xbox" style="position:absolute; left:598px; top:492px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_70" id="page2_70" type="text" class="Xbox" style="position:absolute; left:650px; top:446px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_71" id="page2_71" type="text" class="Xbox" style="position:absolute; left:650px; top:470px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_72" id="page2_72" type="text" class="Xbox" style="position:absolute; left:650px; top:494px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_73" id="page2_73" type="text" class="Xbox" style="position:absolute; left:25px; top:563px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_74" id="page2_74" type="text" class="Xbox" style="position:absolute; left:170px; top:562px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_75" id="page2_75" type="text" class="Xbox" style="position:absolute; left:258px; top:564px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_76" id="page2_76" type="text" class="Xbox" style="position:absolute; left:405px; top:564px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_77" id="page2_77" type="text" class="Xbox" style="position:absolute; left:462px; top:563px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_78" id="page2_78" type="text" class="Xbox" style="position:absolute; left:607px; top:563px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_79" id="page2_79" type="text" class="Xbox" style="position:absolute; left:25px; top:582px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_80" id="page2_80" type="text" class=" noborder" style="position:absolute; left:134px; top:576px; width:587px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_81" id="page2_81" type="text" class="Xbox" style="position:absolute; left:25px; top:658px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_82" id="page2_82" type="text" class="Xbox" style="position:absolute; left:100px; top:657px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_83" id="page2_83" type="text" class=" noborder" style="position:absolute; left:278px; top:654px; width:447px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_84" id="page2_84" type="text" class="Xbox" style="position:absolute; left:229px; top:674px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_85" id="page2_85" type="text" class="Xbox" style="position:absolute; left:368px; top:675px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_86" id="page2_86" type="text" class="Xbox" style="position:absolute; left:75px; top:753px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_87" id="page2_87" type="text" class="Xbox" style="position:absolute; left:25px; top:771px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_88" id="page2_88" type="text" class="Xbox" style="position:absolute; left:251px; top:752px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_89" id="page2_89" type="text" class="Xbox" style="position:absolute; left:371px; top:754px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_90" id="page2_90" type="text" class="Xbox" style="position:absolute; left:488px; top:755px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_91" id="page2_91" type="text" class="Xbox" style="position:absolute; left:298px; top:771px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_92" id="page2_92" type="text" class=" noborder" style="position:absolute; left:410px; top:769px; width:313px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+</body>
+</html>

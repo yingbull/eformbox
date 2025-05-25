@@ -1,0 +1,166 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+<script type="text/javascript">
+if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:23, width:397, top:757, left:223});});}</script>
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}OkanaMed Referral form Vernon.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:127px; top:280px; width:516px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="patient_name" id="patient_name" type="text" class=" noborder" style="position:absolute; left:181px; top:302px; width:459px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+<input name="dob" id="dob" type="text" class=" noborder" style="position:absolute; left:157px; top:323px; width:186px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob>
+<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:395px; top:323px; width:253px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hinc>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:177px; top:344px; width:162px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:429px; top:344px; width:224px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="referral_reason" id="referral_reason" type="text" class=" noborder" style="position:absolute; left:90px; top:425px; width:558px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="nocturnal" id="nocturnal" type="text" class="Xbox" style="position:absolute; left:147px; top:471px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="level_iii" id="level_iii" type="text" class="Xbox" style="position:absolute; left:147px; top:492px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="cpap" id="cpap" type="text" class="Xbox" style="position:absolute; left:147px; top:512px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="rx_asfollows" id="rx_asfollows" type="text" class="Xbox" style="position:absolute; left:147px; top:532px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="rx" id="rx" type="text" class=" noborder" style="position:absolute; left:179px; top:559px; width:472px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="cpap_followup" id="cpap_followup" type="text" class="Xbox" style="position:absolute; left:147px; top:595px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<textarea name="comments" id="comments" type="text" class=" noborder" style="position:absolute; left:92px; top:673px; width:568px; height:57px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:216px; top:744px; width:435px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+<input name="signature" id="signature" type="text" class=" noborder" style="position:absolute; left:219px; top:776px; width:439px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+</body>
+</html>

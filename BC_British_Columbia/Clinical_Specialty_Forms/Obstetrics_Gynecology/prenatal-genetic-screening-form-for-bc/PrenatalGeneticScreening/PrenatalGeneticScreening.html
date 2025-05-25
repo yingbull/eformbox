@@ -1,0 +1,926 @@
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- Prenatal Genetic Screening Laboratory Requisition -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<!-- Update initiated by Dr. John Yap, April 3, 2014, using new 2014 background; best dates noted; use of ParseFloat instead of ParseInt allows for more exact date calculation.  
+Dates can be easily adjusted in hidden values.  References to Perinatal services added,  X-boxes with colour, of course! -->
+
+<!-- V4 Mar6_2016: updated link to PGS guidelines:  Dr. J. Yap -->
+<!-- V5_Oct24_2017: push FAQ notes to image library to allow for zip; hive of DateCalender.js scripts:  Dr. J. Yap -->
+<!-- V6_Feb1_2018: updated Jun2017 background, updated links, updated SIPS2 date, YouTube FYI for pt:  Dr. J. Yap -->
+<!-- V7_Feb17_2018: updated with CheckComplete function; K Yap/Dr. J. Yap -->
+<!-- V8_Mar30_2018: remove CRL/LMP/EDC push back to measurement function; pull data only.  J. Yap -->
+<!-- V9_Sep9_2018 add more date pickers  J. Yap -->
+<!-- V10_Jan19_2019 return to standard measurement EDC, instead of EDD; debug missing type="text" for Oscar V12 users;  J. Yap -->
+<!-- V11_Jun18_2021 upgrade to 2021 standards, and account for Windows vs Mac OS; John Yap -->
+<!-- V12_Dec16_2021 add additional cues for GDM screen in First Nations and Thalassemia screening - update to PGS_2021_Notes_Dec16_2021.js; John Yap -->
+<!-- V13_Mar27_2022 fix background shift due to FF update.   Div and Img must have the same style parameters; John Yap -->
+<!-- V14_Mar15_2024 fix broken link to NIPT reference; John Yap -->
+<!-- V15_May9_2025 Roll back to V11 because of problems saving in Open OSP Then built up to latest code for Xbox, Radio Xbox etc; Dr. John Robertson -->
+<!-- V16_May13_2025 Fixed broken links to PGS sites Herb Chang  -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}PrenatalBiochemistryLabReq2017.png"
+</script>
+
+<!-- OSCAR image library file date calculation - also used in FHA Imaging eForm -->
+<script language="javascript" type="text/javascript" src="${oscar_image_path}DateCalender.js"></script>
+<script language="javascript" type="text/javascript" src="DateCalender.js"></script>
+
+<!-- OSCAR image library file: additional notes -->
+<script language="javascript" type="text/javascript" src="${oscar_image_path}PGS_2021_Notes.js"></script>
+<script language="javascript" type="text/javascript" src="PGS_2021_Notes.js"></script>
+
+<!-- jQuery for greater functionality -->
+<script src="../library/jquery/jquery-3.6.4.min.js" ></script>
+<script> window.jQuery || document.write('<script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous">< \/script>') </script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+input#SubmitButton { 
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background: #229ece;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+	background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+	background: -o-linear-gradient(top, #6bb5d2, #229ece);
+	background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+
+input#SubmitButton:hover {
+	color: #333333;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #a0dbc4;
+	background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#6bb5d2));
+	background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+	background: -o-linear-gradient(top, #229ece, #6bb5d2);
+	background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+
+a {text-decoration: none;} 
+a:hover {border: 1px solid #000000; border-style: outset; background: pink; opacity: 0.6;}
+a:active {border: 3px solid #000000; border-style: inset;}
+
+.Show{
+	visibility: visible;
+	display: inline;
+}
+.Hide{
+	visibility: hidden;
+	display: none;
+}
+
+::placeholder {
+  color: rebeccapurple;
+  font-style: italic;
+  opacity: 1;
+}
+
+textarea{resize: none;}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+.DoNotPrint {display: none;}
+.noborder {
+	 border:0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 overflow:hidden;
+}
+</style>
+
+<!-- Xbox/Show/Hide/FontChange styling -->
+<style type="text/css">
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		font-family: Arial;
+		border: 1px solid black;
+		cursor: pointer;
+		font-weight: bolder;
+		text-align: center;
+		background: aquamarine;
+	}
+	input[class*='box']:hover {
+		color: #87c7c8;
+		border: 1px solid #a4a4a4;
+		border-top: 2px solid #b2b2b2;
+		background-color: rebeccapurple;
+		background: -webkit-gradient(linear, left top, left bottom, from(rebeccapurple), to(aquamarine));
+		background: -moz-linear-gradient(top, rebeccapurple, aquamarine);
+		background: -o-linear-gradient(top, rebeccapurple, aquamarine);
+		background: -ms-linear-gradient(top, rebeccapurple, aquamarine);
+		}
+.box1 {
+		font-size: 14px;
+		width:14px;
+		height:14px;
+		}
+.box2 {
+		font-size: 10px;
+		width:10px;
+		height:10px;
+		}
+
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+			startup functions 
+		****************************/
+		function startUp() {
+			// new off-line architecture as per K Yap
+			setDocumentTitle('Prenatal_Genetic_Screening_Req',document.getElementById('PatientNameL').value);
+			changeImage("PrenatalBiochemistryLabReq2017.png", "BGImage1");
+			setDefaults();
+
+			// Optimize window size/width
+			top.window.resizeTo(1250, screen.availHeight);
+		}
+		
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PatientName) {
+			// set document title
+			document.title = Title + '_' + PatientName;
+		}
+
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				document.getElementById("AmnioCVS_1").value = 'X';
+				document.getElementById("NIPT_1").value = 'X';
+				document.getElementById("NT_1").value = 'X';
+				document.getElementById("Chromosome_1").value = 'X';
+				document.getElementById("IVF_1").value = 'X';
+				document.getElementById("Twin_1").value = 'X';
+
+				parseName("current_user");
+				parseMeasurementDate("CRL_dateObserved");
+			}
+		}
+
+		/****************************
+			Create name in proper order 
+		****************************/
+		function parseName(id) {
+			// Get the name
+			var fullName = document.getElementById(id).value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.getElementById(id).value = First_Last_Name;
+		}
+
+		/****************************
+			Remove time stamp from measurement
+			Oscar default is yyyy-mm-dd hh:mm:ss
+		****************************/
+		function parseMeasurementDate(id) {
+			// Change date field to dd/mmm/yyyy format
+			// Function expects an array of date components in yyyy/mm/dd format
+			// Get the date
+			var FullMeasurementDate = document.getElementById(id).value;
+			var delimiter = ' ';
+
+			// Split the value
+			var MeasurementDate = FullMeasurementDate.split(delimiter)[0];
+
+			var DateOnly = MeasurementDate;
+
+			// Show the fields on the page
+			document.getElementById(id).value = DateOnly;
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printLetter() {
+			// Save reminder; allows for validity testing
+			// ensure all inputs completed before printLetter
+			if (CheckComplete()) {
+				document.getElementById('ResetButton').style.color = 'black';
+				document.getElementById('SubmitButton').style.border = '2px solid red';
+				alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+				window.print();
+			}
+		} 
+
+		function submission() { // requires type="submit" in submit button input to allow for validity testing
+			// ensure all inputs completed
+			if (!CheckComplete()) {
+				return;
+			}
+			setFlag();
+			releaseDirtyFlag();
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+			Check form completeness 
+		****************************/
+		function CheckComplete() {
+			var complete = true;
+
+			// Check that all questions are answered before print
+			if (document.getElementById('LMPSure_1').value =='' && document.getElementById('LMPSure_2').value =='') {
+				document.getElementById('LMPSure_1').style.background = 'red';
+				document.getElementById('LMPSure_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('LMPSure_1').style.background = 'aquamarine';
+				document.getElementById('LMPSure_2').style.background = 'aquamarine';
+			}
+
+			if (document.getElementById('CycleRegular_1').value =='' && document.getElementById('CycleRegular_2').value =='') {
+				document.getElementById('CycleRegular_1').style.background = 'red';
+				document.getElementById('CycleRegular_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('CycleRegular_1').style.background = 'aquamarine';
+				document.getElementById('CycleRegular_2').style.background = 'aquamarine';
+			}
+
+			if (document.getElementById('EDCUS_1').value =='' && document.getElementById('EDCUS_2').value =='') {
+				document.getElementById('EDCUS_1').style.background = 'red';
+				document.getElementById('EDCUS_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('EDCUS_1').style.background = 'aquamarine';
+				document.getElementById('EDCUS_2').style.background = 'aquamarine';
+			}
+		
+			if (document.getElementById('Twin_1').value =='' && document.getElementById('Twin_2').value =='' ) {
+				document.getElementById('Twin_1').style.background = 'red';
+				document.getElementById('Twin_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('Twin_1').style.background = 'aquamarine';
+				document.getElementById('Twin_2').style.background = 'aquamarine';
+			}
+
+			if (document.getElementById('Race_1').value =='' && 
+					document.getElementById('Race_2').value =='' && 
+					document.getElementById('Race_3').value =='' && 
+					document.getElementById('Race_4').value =='' && 
+					document.getElementById('Race_5').value =='' && 
+					document.getElementById('Race_6').value =='') {
+				document.getElementById('Race_1').style.background = 'red';
+				document.getElementById('Race_2').style.background = 'red';
+				document.getElementById('Race_3').style.background = 'red';
+				document.getElementById('Race_4').style.background = 'red';
+				document.getElementById('Race_5').style.background = 'red';
+				document.getElementById('Race_6').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('Race_1').style.background = 'aquamarine';
+				document.getElementById('Race_2').style.background = 'aquamarine';
+				document.getElementById('Race_3').style.background = 'aquamarine';
+				document.getElementById('Race_4').style.background = 'aquamarine';
+				document.getElementById('Race_5').style.background = 'aquamarine';
+				document.getElementById('Race_6').style.background = 'aquamarine';
+			}
+
+			if (document.getElementById('DM_1').value =='' && document.getElementById('DM_2').value =='' ) {
+				document.getElementById('DM_1').style.background = 'red';
+				document.getElementById('DM_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('DM_1').style.background = 'aquamarine';
+				document.getElementById('DM_2').style.background = 'aquamarine';
+			}
+
+			if (document.getElementById('Smoking_1').value =='' && document.getElementById('Smoking_2').value =='' ) {
+				document.getElementById('Smoking_1').style.background = 'red';
+				document.getElementById('Smoking_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('Smoking_1').style.background = 'aquamarine';
+				document.getElementById('Smoking_2').style.background = 'aquamarine';
+			}
+
+			if (document.getElementById('Steroid_1').value =='' && document.getElementById('Steroid_2').value =='' ) {
+				document.getElementById('Steroid_1').style.background = 'red';
+				document.getElementById('Steroid_2').style.background = 'red';
+				complete = false;
+			} else {
+				document.getElementById('Steroid_1').style.background = 'aquamarine';
+				document.getElementById('Steroid_2').style.background = 'aquamarine';
+			}
+
+			if (!complete) {
+				alert("Form incomplete. Please provide highlighted details before proceeding");
+				return false;
+			}
+			return true;
+		}
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		/****************************
+			Scripts to calculate OBS US dates
+			SIPS 1
+		****************************/
+		function orderUS1() {
+			document.getElementById('SIPS_Part1').value="";
+			document.getElementById('Best_Part1').value="";
+			document.getElementById('Quad').value="";
+			document.getElementById('AFPonly').value="";
+			document.getElementById('AFPonly_date').value="";
+			var EDC = Date.parse(document.getElementById('EDC').value);
+			var GA1 = parseFloat(document.getElementById('GA1').value);
+			var GA2 = parseFloat(document.getElementById('GA2').value);
+			var GABest1Start = parseFloat(document.getElementById('GABest1Start').value);
+			var GABest1End = parseFloat(document.getElementById('GABest1End').value);
+
+			if (GA1){
+				var EDC1 = EDC.clone();
+				var USDate1 = EDC1.addWeeks(-40).addWeeks(GA1).toString('MMM dd, yyyy');
+				var Text1 = "Do BW after " +  USDate1;
+				document.getElementById('SIPS_Part1').value += Text1;
+				document.FormName.Part1.value='X';
+			}
+			if (GA2){
+				var EDC2 = EDC.clone();
+				var USDate2 = EDC2.addWeeks(-40).addWeeks(GA2).toString('MMM dd, yyyy');
+				var Text2 = " and before " + USDate2 + ".";
+				document.getElementById('SIPS_Part1').value += Text2;
+			}
+			if (GABest1Start){
+				var EDC1 = EDC.clone();
+				var USDateBest1 = EDC1.addWeeks(-40).addWeeks(GABest1Start).toString('MMM dd, yyyy');
+				var TextBest1 = "After " +  USDateBest1;
+				document.getElementById('Best_Part1').value += TextBest1;
+			}
+			if (GABest1End){
+				var EDC1 = EDC.clone();
+				var USDateBest2 = EDC1.addWeeks(-40).addWeeks(GABest1End).toString('MMM dd, yyyy');
+				var TextBest2 = " and before " +  USDateBest2;
+				document.getElementById('Best_Part1').value += TextBest2;
+			}
+		}
+
+		/****************************
+			SIPS 2
+		****************************/
+		function orderUS2() {
+			document.getElementById('SIPS_Part2').value="";
+			document.getElementById('Best_Part2').value="";
+			document.getElementById('Quad').value="";
+			document.getElementById('AFPonly').value="";
+			document.getElementById('AFPonly_date').value="";
+			var EDC = Date.parse(document.getElementById('EDC').value);
+			var GA3 = parseFloat(document.getElementById('GA3').value);
+			var GA4 = parseFloat(document.getElementById('GA4').value);
+			var GABest2Start = parseFloat(document.getElementById('GABest2Start').value);
+			var GABest2End = parseFloat(document.getElementById('GABest2End').value);
+
+			if (GA3){
+				var EDC3 = EDC.clone();
+				var USDate3 = EDC3.addWeeks(-40).addWeeks(GA3).toString('MMM dd, yyyy');
+				var Text3 = "Do BW after " + USDate3;
+				document.getElementById('SIPS_Part2').value += Text3;
+				document.FormName.Part2.value='X';
+			}
+			if (GA4){
+				var EDC4 = EDC.clone();
+				var USDate4 = EDC4.addWeeks(-40).addWeeks(GA4).toString('MMM dd, yyyy');
+				var Text4 = " and before " + USDate4 + ".";
+				document.getElementById('SIPS_Part2').value += Text4;
+			}
+			if (GABest2Start){
+				var EDC1 = EDC.clone();
+				var USDateBest3 = EDC1.addWeeks(-40).addWeeks(GABest2Start).toString('MMM dd, yyyy');
+				var TextBest3 = "After " +  USDateBest3;
+				document.getElementById('Best_Part2').value += TextBest3;		
+			}
+			if (GABest2End){
+				var EDC1 = EDC.clone();
+				var USDateBest4 = EDC1.addWeeks(-40).addWeeks(GABest2End).toString('MMM dd, yyyy');
+				var TextBest4 = " and before " +  USDateBest4;
+				document.getElementById('Best_Part2').value += TextBest4;
+			}
+		}
+
+		/****************************
+			Quad Screen ONLY
+		****************************/
+		function orderUS3() {
+			document.getElementById('SIPS_Part1').value="";
+			document.getElementById('Best_Part1').value="";
+			document.getElementById('SIPS_Part2').value="";
+			document.getElementById('Best_Part2').value="";
+			document.getElementById('AFPonly_date').value="";
+			document.getElementById('Part1').value="";
+			document.getElementById('Part2').value="";
+			document.getElementById('AFPonly').value="";
+			var EDC = Date.parse(document.getElementById('EDC').value);
+			var GA5 = parseFloat(document.getElementById('GA5').value);
+			var GA6 = parseFloat(document.getElementById('GA6').value);
+			var GABest2Start = parseFloat(document.getElementById('GABest2Start').value);
+			var GABest2End = parseFloat(document.getElementById('GABest2End').value);
+
+			if (GA5){
+				var EDC5 = EDC.clone();
+				var USDate5 = EDC5.addWeeks(-40).addWeeks(GA5).toString('MMM dd, yyyy');
+				var Text5 = "Do BW after " + USDate5;
+				document.getElementById('SIPS_Part2').value += Text5;
+				document.FormName.Quad.value='X';
+			}
+			if (GA6){
+				var EDC6 = EDC.clone();
+				var USDate6 = EDC6.addWeeks(-40).addWeeks(GA6).toString('MMM dd, yyyy');
+				var Text6 = " and before " + USDate6 + ".";
+				document.getElementById('SIPS_Part2').value += Text6;
+			}
+			if (GABest2Start){
+				var EDC1 = EDC.clone();
+				var USDateBest3 = EDC1.addWeeks(-40).addWeeks(GABest2Start).toString('MMM dd, yyyy');
+				var TextBest3 = "After " +  USDateBest3;
+				document.getElementById('Best_Part2').value += TextBest3;		
+			}
+			if (GABest2End){
+				var EDC1 = EDC.clone();
+				var USDateBest4 = EDC1.addWeeks(-40).addWeeks(GABest2End).toString('MMM dd, yyyy');
+				var TextBest4 = " and before " +  USDateBest4;
+				document.getElementById('Best_Part2').value += TextBest4;
+			}
+		}
+
+		/****************************
+			Maternal Serum AFP ONLY
+		****************************/
+		function orderUS4() {
+			document.getElementById('SIPS_Part1').value="";
+			document.getElementById('Best_Part1').value="";
+			document.getElementById('SIPS_Part2').value="";
+			document.getElementById('Best_Part2').value="";
+			document.getElementById('AFPonly_date').value="";
+			document.getElementById('Part1').value="";
+			document.getElementById('Part2').value="";
+			document.getElementById('Quad').value="";
+			var EDC = Date.parse(document.getElementById('EDC').value);
+			var GA7 = parseFloat(document.getElementById('GA7').value);
+			var GA8 = parseFloat(document.getElementById('GA8').value);
+			var GABest2Start = parseFloat(document.getElementById('GABest2Start').value);
+			var GABest2End = parseFloat(document.getElementById('GABest2End').value);
+
+			if (GA7){
+				var EDC7 = EDC.clone();
+				var USDate7 = EDC7.addWeeks(-40).addWeeks(GA7).toString('MMM dd, yyyy');
+				var Text7 = "Do BW after " + USDate7;
+				document.getElementById('AFPonly_date').value += Text7;
+				document.FormName.AFPonly.value='X';
+			}
+			if (GA8){
+				var EDC8 = EDC.clone();
+				var USDate8 = EDC8.addWeeks(-40).addWeeks(GA8).toString('MMM dd, yyyy');
+				var Text8 = " and before " + USDate8 + ".";
+				document.getElementById('AFPonly_date').value += Text8;
+			}
+		}
+</script>
+</head>
+
+<body onload="startUp();" onbeforeprint="document.forms['FormName'].reportValidity();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<div id="page1" class="pagebreak">
+<img id="BGImage1" src="" style="position:relative; left:0px; top:0px; width:850px;">
+
+<!-- Hidden input for eForm title -->
+<input name="PatientNameL" id="PatientNameL" type="hidden" oscarDB=patient_nameL>
+
+<input name="PatientName" id="PatientName" type="hidden" oscarDB=patient_name>
+<input name="GA1" id="GA1" type="hidden" value="9"> <!-- Earliest date for SIPS 1 -->
+<input name="GA2" id="GA2" type="hidden" value="13.86"> <!-- Latest date for SIPS 1 -->
+<input name="GA3" id="GA3" type="hidden" value="14"> <!-- Earliest date for SIPS 2 -->
+<input name="GA4" id="GA4" type="hidden" value="20.86"> <!-- Latest date for SIPS 2 -->
+<input name="GA5" id="GA5" type="hidden" value="14"> <!-- Earliest date for Quad Screen -->
+<input name="GA6" id="GA6" type="hidden" value="20.86"> <!-- Latest date for Quad Screen -->
+<input name="GA7" id="GA7" type="hidden" value="15"> <!-- Earliest date for maternal serum AFP -->
+<input name="GA8" id="GA8" type="hidden" value="20.86"> <!-- Latest date for maternal serum AFP -->
+<input name="GABest1Start" id="GABest1Start" type="hidden" value="10"> <!-- Best start date for SIPS 1 -->
+<input name="GABest1End" id="GABest1End" type="hidden" value="11.86"> <!-- Best end date for SIPS 1 -->
+<input name="GABest2Start" id="GABest2Start" type="hidden" value="15"> <!-- Best start date for SIPS 2 -->
+<input name="GABest2End" id="GABest2End" type="hidden" value="16"> <!-- Best end date for SIPS 2 -->
+
+<a class="DoNotPrint" style="position:absolute; left:43px; top:5px; width:160px; height:30px; font-size:14px; color:red;" href="https://cms.psbchealthhub.ca/sites/default/files/2025-02/FundedNIPT_PositiveScreen.pdf" target="_blank" title="Description of NIPT">Pt with POS IPS, SIPS or QUAD are eligible for funded NIPT</a>
+<a class="DoNotPrint" style="position:absolute; left:40px; top:36px; width:294px; height:57px;" href="hhttps://www.psbchealthhub.ca/screening-programs/60" target="_blank" title="WebLink to Perinatal Services BC"></a>
+
+<!-- Patient Info -->
+<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position:absolute; left:45px; top:162px; width:375px; font-size:16px; background:transparent;" oscarDB=patient_nameF>
+<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position:absolute; left:45px; top:193px; width:375px; font-size:16px; background:transparent;" oscarDB=patient_nameL>
+<input name="hin" id="hin" type="text" class="noborder" style="position:absolute; left:45px; top:223px; width:375px; font-size:16px; background:transparent;" oscarDB=hin>
+<input name="dobc2" id="dobc2" type="text" class="noborder" style="position:absolute; left:130px; top:260px; width:175px; font-size:18px; text-align:center; background:transparent;" oscarDB=dobc2>
+	
+<!-- Screen Requested -->
+<input name="Part1" id="Part1" type="text" class="Xbox box1" style="left:75px; top:633px;">
+<input name="Part2" id="Part2" type="text" class="Xbox box1" style="left:75px; top:651px;">
+<input name="Quad" id="Quad" type="text" class="Xbox box1" style="left:75px; top:670px;">
+<input name="AFPonly" id="AFPonly" type="text" class="Xbox box1" style="left:75px; top:689px;">
+
+<a class="DoNotPrint" style="position:absolute; left:100px; top:703px; width:178px; height:24px;" href="https://cms.psbchealthhub.ca/sites/default/files/2023-11/PGSOBGuideline.pdf" target="_blank" title="Prenatal Genetic Screening Guideline 2025"></a>
+
+<input name="AFPonly_date" id="AFPonly_date" class="noborder" type="text" style="position:absolute; left:45px; top:727px; width:375px; font-size:14px; background:transparent;">
+
+<!-- Ordering Doctor/Midwife/NP -->
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:45px; top:754px; width:290px; font-size:16px; background:transparent;" oscarDB=current_user>
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position:absolute; left:340px; top:754px; width:80px; font-size:16px; text-align:center; background:transparent;" oscarDB=current_user_ohip_no>
+
+<input name="clinic_city" type="text" class="noborder" style="position:absolute; left:45px; top:788px; width:270px; font-size:14px; background:transparent;" oscarDB=clinic_city>
+<input name="clinic_phone" type="text" class="noborder" style="position:absolute; left:320px; top:788px; width:100px; font-size:14px; text-align:right; background:transparent;" oscarDB=clinic_phone>
+
+<span style="position:absolute; left:45px; top:818px; font-size:16px; background:transparent;"><b><i>"Electronically Signed"</i></b></span>
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:310px; top:817px; width:110px; font-size:16px; text-align:right; background:transparent;" oscarDB=today>
+
+<!-- Copy Results to -->
+<input name="CopyTo1" type="text" class="noborder" style="position:absolute; left:45px; top:877px; width:290px; font-size:14px; background:transparent;">
+<input name="CopyTo1_MSP" type="text" class="noborder" style="position:absolute; left:340px; top:877px; width:80px; font-size:14px; text-align:center; background:transparent;">
+
+<input name="CopyTo1_address" type="text" class="noborder" style="position:absolute; left:45px; top:907px; width:270px; font-size:14px; background:transparent;">
+<input name="CopyTo1_phone" type="text" class="noborder" style="position:absolute; left:320px; top:907px; width:100px; font-size:14px; text-align:right; background:transparent;">
+
+<input name="CopyTo2" type="text" class="noborder" style="position:absolute; left:45px; top:938px; width:290px; font-size:14px; background:transparent;">
+<input name="CopyTo2_MSP" type="text" class="noborder" style="position:absolute; left:340px; top:938px; width:80px; font-size:14px; text-align:center; background:transparent;">
+
+<input name="CopyTo2_address" type="text" class="noborder" style="position:absolute; left:45px; top:968px; width:270px; font-size:14px; background:transparent;">
+<input name="CopyTo2_phone" type="text" class="noborder" style="position:absolute; left:320px; top:968px; width:100px; font-size:14px; text-align:right; background:transparent;">
+
+<!-- Patient Instructions -->
+<span style="position:absolute; left:324px; top:0px; font-size:14px;">Best date for Part 1:</span>
+<input name="Best_Part1" id="Best_Part1" type="text" class="noborder" style="position:absolute; left:450px; top:0px; width:375px; font-size:14px; background:transparent;">
+
+<span style="position:absolute; left:324px; top:20px; font-size:14px;">Best date for Part 2:</span>
+<input name="Best_Part2" id="Best_Part2" type="text" class="noborder" style="position:absolute; left:450px; top:20px; width:375px; font-size:14px; background:transparent;">
+
+<a class="DoNotPrint" style="position:absolute; left:450px; top:98px; width:130px; height:18px;" href="http://www.perinatalservicesbc.ca/our-services/screening-programs/prenatal-genetic-screening-program/pregnancy-dating-tool" target="_blank" title="Calculate ideal timing for blood tests"></a>
+
+<input name="SIPS_Part1" id="SIPS_Part1" type="text" class="noborder" style="position:absolute; left:450px; top:121px; width:375px; font-size:14px; background:transparent;">
+
+<input name="SIPS_Part2" id="SIPS_Part2" type="text" class="noborder" style="position:absolute; left:450px; top:160px; width:375px; font-size:14px; background:transparent;">
+
+<!-- Testing Done -->
+<a class="DoNotPrint" style="position:absolute; left:458px; top:306px; width:260px; height:13px;" href="https://www.psbchealthhub.ca/screening-programs/91" target="_blank" title="Description of amniocentesis/CVS"></a>
+<input name="AmnioCVS_No" id="AmnioCVS_1" type="text" class="Radio box1" style="left:740px; top:303px;"/>
+<input name="AmnioCVS_Yes" id="AmnioCVS_2" type="text" class="Radio box1" style="left:782px; top:303px;"/>
+
+<a class="DoNotPrint" style="position:absolute; left:458px; top:324px; width:260px; height:13px;" href="https://www.psbchealthhub.ca/screening-programs/81" target="_blank" title="Description of NIPT"></a>
+
+<input name="NIPT_No" id="NIPT_1" type="text" class="Radio box1" style="left:740px; top:322px;"/>
+<input name="NIPT_Yes" id="NIPT_2" type="text" class="Radio box1" style="left:782px; top:322px;"/>
+
+<a class="DoNotPrint" style="position:absolute; left:458px; top:344px; width:130px; height:13px;" href="https://www.psbchealthhub.ca/screening-programs/67" target="_blank" title="NT done along with SIPS 1+2, as part of 
+Integrated Prenatal Screening (IPS). 
+To Web reference."></a>
+
+<a class="DoNotPrint" style="position:absolute; left:645px; top:344px; width:75px; height:13px;" href="https://www.psbchealthhub.ca/screening-programs/70" target="_blank" title="NT ultrasound locations"></a>
+
+<input name="NT_No" id="NT_1" type="text" class="Radio box1" style="left:740px; top:342px;"/>
+<input name="NT_Yes" id="NT_2" type="text" class="Radio box1" style="left:782px; top:342px;"/>
+
+<input name="NTDate" id="NTDate" type="text" class="noborder" style="position:absolute; left:528px; top:364px; width:105px; font-size:16px; text-align:center; background:transparent;">
+<textarea name="NTPlace" type="text" class="noborder" style="position:absolute; left:695px; top:368px; min-width:80px; min-height:43px; max-width:80px; max-height:43px; font-size:12px; background:transparent;"></textarea>
+
+<!-- Dating Information -->
+<input name="CRL_dateObserved" id="CRL_dateObserved" type="text" class="noborder" style="position:absolute; left:560px; top:446px; width:145px; font-size:16px; text-align:center; background:transparent;" title="Date from CRL value of dating US" oscarDB=m$CRL#dateObserved>
+
+<input name="GA_wks" type="text" class="noborder" style="position:absolute; left:640px; top:476px; width:30px; font-size:16px; text-align:center; background:transparent;"> 
+<input name="GA_days" type="text" class="noborder" style="position:absolute; left:732px; top:476px; width:30px; font-size:16px; text-align:center; background:transparent;"> 
+
+<input name="CRL_value" id="CRL_value" type="text" class="noborder" style="position:absolute; left:595px; top:495px; width:35px; font-size:16px; text-align:center; background:transparent;" title="Pushed from Maternity Calendar eFORM" oscarDB=m$CRL#value> 
+
+<input name="LMP_value" id="LMP_value" type="text" class="noborder" style="position:absolute; left:495px; top:518px; width:145px; font-size:16px; text-align:center; background:transparent;" oscarDB=m$LMP#value>
+<input name="LMPSure_Yes" id="LMPSure_1" type="text" class="Radio box1" style="left:662px; top:524px;"/>
+<input name="LMPSure_No" id="LMPSure_2" type="text" class="Radio box1" style="left:734px; top:524px;"/>
+
+<input name="CycleLength" type="text" class="noborder" style="position:absolute; left:527px; top:547px; width:50px; font-size:16px; text-align:center; background:transparent;">
+<input name="CycleRegular_Yes" id="CycleRegular_1" type="text" class="Radio box1" style="left:662px; top:553px;"/>
+<input name="CycleRegular_No" id="CycleRegular_2" type="text" class="Radio box1" style="left:734px; top:553px;"/>
+
+<input name="EDC_value" id="EDC_value" type="text" class="noborder" style="position:absolute; left:495px; top:570px; width:145px; font-size:16px; text-align:center; background:transparent;" oscarDB=m$EDC#value>
+
+<input name="EDCUS_Yes" id="EDCUS_1" type="text" class="Radio box1" style="left:662px; top:577px;"/>
+<input name="EDCUS_No" id="EDCUS_2" type="text" class="Radio box1" style="left:734px; top:577px;"/>
+
+<!-- Pregnancy Details -->
+<a class="DoNotPrint" style="position:absolute; left:575px; top:617px; font-size:12px; color:blue;" href="https://www.psbchealthhub.ca/screening-programs/60" target="_blank" title="Perinatal Services WebLink">(Provider FAQ)</a>
+
+<input name="IVF_No" id="IVF_1" type="text" class="Radio box1" style="left:740px; top:637px;" 
+	onmouseup="
+		document.FormName.EggOwn_Yes.style.background='aquamarine';
+		document.FormName.EggOwn_No.style.background='aquamarine';
+		document.FormName.EmbryoFresh_Yes.style.background='aquamarine';
+		document.FormName.EmbryoFresh_No.style.background='aquamarine';
+		document.FormName.EggOwn_Yes.value='';
+		document.FormName.EggOwn_No.value='';
+		document.FormName.EmbryoFresh_Yes.value='';
+		document.FormName.EmbryoFresh_No.value='';
+		 ">
+<input name="IVF_Yes" id="IVF_2" type="text" class="Radio box1" style="left:782px; top:637px;" 
+	onmouseup="
+		document.FormName.EggOwn_Yes.style.background='yellow';
+		document.FormName.EggOwn_No.style.background='yellow';
+		document.FormName.EmbryoFresh_Yes.style.background='yellow';
+		document.FormName.EmbryoFresh_No.style.background='yellow';
+		">
+
+<input name="EggOwn_Yes" id="EggOwn_1" type="text" class="Radio box1" style="left:514px; top:657px;"/>
+<input name="EggOwn_No" id="EggOwn_2" type="text" class="Radio box1" style="left:562px; top:657px;"/>
+<input name="Egg_donor_DOB" id="Egg_donor_DOB" type="text" class="noborder" style="position:absolute; left:737px; top:654px; width:85px; font-size:14px; text-align:center; background:transparent;">
+
+<input name="EmbryoFresh_Yes" id="EmbryoFresh_1" type="text" class="Radio box1" style="left:516px; top:688px;"/>
+<input name="EmbryoFresh_No" id="EmbryoFresh_2" type="text" class="Radio box1" style="left:562px; top:688px;"/>
+<input name="Embryo_Frozen_date" id="Embryo_Frozen_date" type="text" class="noborder" style="position:absolute; left:737px; top:683px; width:85px; font-size:14px; text-align:center; background:transparent;">
+
+<input name="Twin_No" id="Twin_1" type="text" class="Radio box1" style="left:541px; top:719px;"/>
+<input name="Twin_Yes" id="Twin_2" type="text" class="Radio box1" style="left:575px; top:719px;"/>
+
+<input name="Monochorionic_Yes" id="Monochorionic_1" type="text" class="Radio box1" style="left:660px; top:719px;"/>
+<input name="Monochorionic_No" id="Monochorionic_2" type="text" class="Radio box1" style="left:751px; top:719px;"/>
+
+<!-- Patient Details -->
+<a class="DoNotPrint" style="position:absolute; left:550px; top:750px; font-size:12px; color:blue;" href="https://www.youtube.com/watch?v=z39_COwX-H4" target="_blank" title="YouTube: BC Prenatal Genetic Screen Program: It's Your Choice">(Patient info)</a>
+<a class="DoNotPrint" style="position:absolute; left:630px; top:750px; font-size:12px; color:blue;" href="https://www.psbchealthhub.ca/screening-programs/94" target="_blank" title="Perinatal Services WebLink">(Patient FAQ)</a>
+
+<input name="WtLb" type="text" class="noborder" style="position:absolute; left:658px; top:766px; width:45px; font-size:16px; text-align:center; background:transparent;" title="Need to contact pt closer to date of SIPS">
+<input name="WtKg" type="text" class="noborder" style="position:absolute; left:741px; top:766px; width:45px; font-size:16px; text-align:center; background:transparent;" title="Need to contact pt closer to date of SIPS">
+
+<input name="Race_Caucasian" id="Race_1" type="text" class="Radio box1" style="left:456px; top:814px;" 
+	onmouseup="
+		document.getElementById('Other_Race_text').style.background = 'transparent'; 
+		document.getElementById('Other_Race_text').required = false;
+		">
+<input name="Race_FirstNations" id="Race_2" type="text" class="Radio box1" style="left:541px; top:814px;" 
+	onmouseup="
+		document.getElementById('Other_Race_text').style.background = 'transparent'; 
+		document.getElementById('Other_Race_text').required = false;
+		">
+<input name="Race_Black" id="Race_3" type="text" class="Radio box1" style="left:636px; top:814px;" 
+	onmouseup="
+		document.getElementById('Other_Race_text').style.background = 'transparent'; 
+		document.getElementById('Other_Race_text').required = false;
+		">
+<input name="Race_EastAsian" id="Race_4" type="text" class="Radio box1" style="left:456px; top:834px;" 
+	onmouseup="
+		document.getElementById('Other_Race_text').style.background = 'transparent'; 
+		document.getElementById('Other_Race_text').required = false;
+		">
+<input name="Race_SouthAsian" id="Race_5" type="text" class="Radio box1" style="left:456px; top:853px;" 
+	onmouseup="
+		document.getElementById('Other_Race_text').style.background = 'transparent'; 
+		document.getElementById('Other_Race_text').required = false;
+		">
+<input name="Race_Other" id="Race_6" type="text" class="Radio box1" style="left:456px; top:873px;"
+	onmouseup="
+		if (Race_6.value = 'X') {
+		document.getElementById('Other_Race_text').required = true; document.getElementById('Other_Race_text').reportValidity();
+		getElementById('Other_Race_text').style.background = 'yellow';
+		} else {
+		document.getElementById('Other_Race_text').required = false;
+		document.getElementById('Other_Race_text').style.background = 'transparent';
+		document.FormName.Other_Race_text.value = '';}
+		">
+
+<input name="Other_Race_text" id="Other_Race_text" type="text" class="noborder" style="position:absolute; left:610px; top:867px; width:210px; font-size:16px; background:transparent;">
+
+<input name="DM_No" id="DM_1" type="text" class="Radio box1" style="left:740px; top:896px;"/>
+<input name="DM_Yes" id="DM_2" type="text" class="Radio box1" style="left:782px; top:896px;"/>
+
+<input name="Smoking_No" id="Smoking_1" type="text" class="Radio box1" style="left:740px; top:919px;"/>
+<input name="Smoking_Yes" id="Smoking_2" type="text" class="Radio box1" style="left:782px; top:919px;"/>
+
+<input name="Steroid_No" id="Steroid_1" type="text" class="Radio box1" style="left:740px; top:942px;"/>
+<input name="Steroid_Yes" id="Steroid_2" type="text" class="Radio box1" style="left:782px; top:942px;"/>
+
+<input name="Chromosome_None" id="Chromosome_1" type="text" class="Radio box1" style="left:456px; top:985px;"/>
+<input name="Chromosome_Down" id="Chromosome_2" type="text" class="Radio box1" style="left:527px; top:985px;"/>
+<input name="Chromosome_Trisomy18" id="Chromosome_3" type="text" class="Radio box1" style="left:650px; top:985px;"/>
+<input name="Chromosome_Trisomy13" id="Chromosome_4" type="text" class="Radio box1" style="left:747px; top:985px;"/>
+
+<!-- Right Margin Panel -->
+<div class="DoNotPrint" style="position:absolute; left:870px; top:40px; width:300px; height:240px; padding:4px; outline:black solid thin;">
+Calculate patient instructions:<br>
+
+<input name="GAEnter" id="GAEnter" type="button" style="width:55px; background:lightgreen;" value="SIPS 1" onclick="orderUS1();">
+<span style="font-size:12px;"> &nbsp; 9 &#45; 13&#43;6 weeks</span>
+<br>
+<input name="GAEnter2" id="GAEnter2" type="button" style="width:55px; background:lightgreen;" value="SIPS 2" onclick="orderUS2();">
+<span style="font-size:12px;"> 14 &#45; 20&#43;6 weeks</span>
+<br>
+<input name="GAEnter3" id="GAEnter3" type="button" style="width:55px; background:yellow;" value="QUAD" onclick="orderUS3();" title="Quad screen should ONLY be offered to women who present LATE for prenatal care (2nd trimester) as SIPS and IPS have better screening performance with lower false positive rates">
+<span style="font-size:12px;"> 14 &#45; 20&#43;6 weeks</span>
+<br>
+<input name="GAEnter4" id="GAEnter4" type="button" style="width:55px; background:yellow;" value="AFP" onclick="orderUS4();" title="Maternal serum AFP ONLY screening for an ONTD should be limited to women with a BMI &ge;40, or those with limited access to a quality 18-20 weeks ultrasound">
+<span style="font-size:12px;"> 15 &#45; 20&#43;6 weeks</span>
+<br><br>
+Based on EDC of:
+<input name="EDC" id="EDC" type="text" style="width:90px; color:green;" oscarDB=m$EDC#value><br>
+<span style="font-size:12px;"> &#40;yyyy-mm-dd&#41;</span>
+<br><br>
+<u>Reference websites:</u>
+	<li><a href="https://cms.psbchealthhub.ca/sites/default/files/2023-11/PGSOBGuideline.pdf" target="_blank" title="April 2025">Prenatal Genetic Screening Guideline</a></li>
+	<li><a href="https://www.psbchealthhub.ca/screening-programs/60">Provider FAQ</a></li>
+<br>
+<input name="ViewNotes" id="ViewNotes" type="button" style="color:green; font-size:14px;" onclick="View();" ondblclick="unView();" value="View notes" title="click or double click to toggle">
+</div>
+
+<textarea name="FAQNotes" id="FAQNotes" class="DoNotPrint" style="position:absolute; left:868px; top:320px; width:310px; height:620px; padding:4px; resize:horizontal; font-size:12px;"></textarea>
+<!--  End form inputs -->
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:40px; top:1105px; width:790px; font-size:13px;">
+	<table><tr style="background:#e5f2ff;"><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" style="color:red;" onclick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color:green;" onclick="printLetter();"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();">
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="licence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> Prenatal Genetic Screening eFORM, V16_May13_2025, updated by Dr. Herb Chang (based on previous versions by Dr. John Robertson and Dr. John Yap), is licensed under a</span> 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br>
+<span style="color:forestgreen;">Please consider supporting </span><a href="http://oscarbc.ca/" target="_blank">oscarbc.ca</a>.
+<a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> |
+<a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | 
+<a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | 
+<a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> |
+<br><br>
+</div>
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"today", ifFormat : "%Y-%m-%d", showsTime:false, button : "today" } );
+	Calendar.setup( { inputField :"dobc2", ifFormat : "%Y-%m-%d", showsTime:false, button : "dobc2" } );
+	Calendar.setup( { inputField :"NTDate", ifFormat : "%Y-%m-%d", showsTime:false, button : "NTDate" } );
+	Calendar.setup( { inputField :"Egg_donor_DOB", ifFormat : "%Y-%m-%d", showsTime:false, button : "Egg_donor_DOB" } );
+	Calendar.setup( { inputField :"Embryo_Frozen_date", ifFormat : "%Y-%m-%d", showsTime:false, button : "Embryo_Frozen_date" } );
+	Calendar.setup( { inputField :"CRL_dateObserved", ifFormat : "%Y-%m-%d", showsTime:false, button : "CRL_dateObserved" } );
+	Calendar.setup( { inputField :"LMP_value", ifFormat : "%Y-%m-%d", showsTime:false, button : "LMP_value" } );
+	Calendar.setup( { inputField :"EDC_value", ifFormat : "%Y-%m-%d", showsTime:false, button : "EDC_value" } );
+	Calendar.setup( { inputField :"EDC", ifFormat : "%Y-%m-%d", showsTime:false, button : "EDC" } );
+</script>
+<!-- Xbox and Radio scripts -->
+<script>
+var b = document.getElementsByClassName("Xbox");
+// console.log("Xboxes: "+b.length);
+for(var i=0; i<b.length; i++){ 
+ b[i].onclick = function(){ 
+   //console.log("click on " + this.id); 
+// large black box is '\u2B1B' does not render or save properly on all systems
+  if (document.getElementById(this.id).value.length < 1) {
+	document.getElementById(this.id).value = 'X' ;
+	} else {
+	document.getElementById(this.id).value ='';
+	}
+  return false;
+}
+ } 
+
+var r = document.getElementsByClassName("Radio");
+//console.log("Radio array length is "+r.length);
+for(var i=0; i<r.length; i++){
+
+ r[i].onclick = function(){ 
+	let x = this.id;
+
+   var partA = x.substring(0, x.indexOf("_"));
+   let items = document.querySelectorAll("[id^='"+partA+"_']");
+   //console.log("click on " + x + " in a group of " +items.length); 
+     for(let item of items){
+    if (x != item.id) { 
+		item.value = ''; 
+	} else {
+		document.getElementById(x).value ='X';
+	}
+  }
+
+ } 
+} 
+
+</script>
+</body></html>

@@ -1,0 +1,484 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border:0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 background:transparent;
+	 overflow:hidden;
+ }
+</style>
+
+<!-- -->
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp()
+		{			
+			// shows the forms on development machine from notepad ++ - saves you from uploading to the server to input alignments
+			var strLoc = window.location.href.toLowerCase();
+			if(strLoc.indexOf("https") == -1)
+			{
+				//page1
+				var src = document.getElementById('BGImage').src;				
+				document.getElementById('BGImage').src = src.replace('$%7Boscar_image_path%7D','');
+			}
+			setDocumentTitle('',document.getElementById('patient_nameL').value);
+			setDefaults();			
+		}
+		
+		function setDocumentTitle(Title,patient_nameL)
+		{
+			// set document title
+			document.title = Title + ' - ' + patient_nameL;					
+							
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit()
+		{
+			printLetter();
+			releaseDirtyFlag();			
+			submission();
+		}
+
+		function printLetter()
+		{
+			// hide the bottom buttons
+			if (document.getElementById('BottomButtons').style.display == '')
+				document.getElementById('BottomButtons').style.display = 'none';
+			// print the letter
+			window.print();
+		} 
+
+		function submission()
+		{
+			setFlag();
+			setTimeout('document.FormName.submit()',1000);			
+		}
+
+		function setFlag()
+		{
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		function showButtons()
+		{
+			//show the bottom buttons if they are hidden
+			if (document.getElementById('BottomButtons').style.display == 'none')
+				document.getElementById('BottomButtons').style.display = '';
+		}
+		
+		
+</script>
+
+<!-- Script to optimize window on loading -->
+<script language="JavaScript">
+top.window.moveTo(0,0);
+if (document.all) {
+top.window.resizeTo(screen.availWidth,screen.availHeight);
+}
+else if (document.layers||document.getElementById) {
+if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+top.window.outerHeight = screen.availHeight;
+top.window.outerWidth = 900;
+}
+}
+</script>
+<!-- End optimize window script -->
+
+<!-- scripts to confirm closing of window if it had not been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById('PatientGender').value == 'M'){
+	 document.getElementById('Male').value = 'X';
+	 }else if (document.getElementById('PatientGender').value == 'F'){
+	 document.getElementById('Female').value = 'X';
+	}
+ }
+</script>
+
+	<!-- Xbox styling -->
+
+	<style type="text/css">
+
+		.box1 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: white;
+			font-size: 14px;
+			width:14px;
+			height:14px;
+		}
+		
+		.box2 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: yellow;
+			font-size: 14px;
+			width:14px;
+			height:14px;
+		}
+	</style>
+
+	<!-- XBox styling -->
+
+	
+<!-- scripts for Xbox functions -->
+
+	<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+	<script language="javascript" type="text/javascript">
+
+$(document).ready(function() {
+	  $( ".Xbox" ).click(function() {
+		  var st = $( this ).val();
+		  if (st=="X") {
+			  $( this ).val("");
+		  } else {
+			  $( this ).val("X");
+		  }
+	});
+
+$( ".Xbox" ).keypress(function(event) {
+	  // any key press except tab will constitute a value change to the checkbox
+	  if (event.which != 0){
+		  $( this ).click();
+		  return false;
+		  }
+	});
+
+});
+</script>
+<!-- end XBox function script -->
+
+</head>
+
+
+<body onLoad="checkGender(); startUp();" onMouseDown="showButtons();">
+
+
+<form method="post" action="" name="FormName">
+
+
+<!-- PAGE 1 ################################################################## -->
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:750px;" class="pagebreak">
+	<img id=u201CBGImage"  src="${oscar_image_path}VCH_Richmond_CYMH.png" width="750">
+
+
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:156px; top:155px; width:275px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+
+<input name="clinic_name" id="clinic_name" type="text" class="noborder" style="position:absolute; left:140px; top:186px; width:292px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=clinic_name>
+
+<input name="clinic_phone" id="clinic_phone" type="text" class="noborder" style="position:absolute; left:500px; top:154px; width:230px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+
+<input name="clinic_fax" id="clinic_fax" type="text" class="noborder" style="position:absolute; left:486px; top:184px; width:245px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+
+<textarea name="AutoName100" id="AutoName100" type="text" class="noborder" style="position:absolute; left:394px; top:211px; width:339px; height:32px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="patient_name" id="patient_name" type="text" class="noborder" style="position:absolute; left:20px; top:272px; width:270px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+
+<input name="Male" id="Male" type="text" class="XBox box1" style="position:absolute; left:307px; top:250px;" >
+
+<input name="Female" id="Female" type="text" class="XBox box1" style="position:absolute; left:307px; top:266px;" >
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:428px; top:251px; width:136px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=dob>
+
+<input name="age" id="age" type="text" class="noborder" style="position:absolute; left:506px; top:276px; width:59px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=age>
+
+<input name="hin" id="hin" type="text" class="noborder" style="position:absolute; left:576px; top:272px; width:161px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=hin>
+
+<input name="AutoName01" id="AutoName01" type="text" class="noborder" style="position:absolute; left:20px; top:322px; width:362px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:20px; top:367px; width:362px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=addressline>
+
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:489px; top:331px; width:170px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=phone>
+
+<input name="XBox1" id="XBox1" type="text" class="XBox box2" style="position:absolute; left:681px; top:331px;" >
+
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:525px; top:358px; width:136px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=cell>
+
+<input name="XBox2" id="XBox2" type="text" class="XBox box2" style="position:absolute; left:681px; top:360px;" >
+
+<input name="XBox3" id="XBox3" type="text" class="XBox box2" style="position:absolute; left:255px; top:394px;" >
+
+<input name="XBox5" id="XBox5" type="text" class="XBox box2" style="position:absolute; left:301px; top:393px;" >
+
+<input name="XBox4" id="XBox4" type="text" class="XBox box2" style="position:absolute; left:255px; top:409px;" >
+
+<input name="XBox6" id="XBox6" type="text" class="XBox box2" style="position:absolute; left:301px; top:408px;" >
+
+<input name="XBox7" id="XBox7" type="text" class="XBox box2" style="position:absolute; left:301px; top:423px;" >
+
+<input name="XBox8" id="XBox8" type="text" class="XBox box2" style="position:absolute; left:395px; top:423px;" >
+
+<input name="XBox9" id="XBox9" type="text" class="XBox box2" style="position:absolute; left:489px; top:423px;" >
+
+<input name="AutoName02" id="AutoName02" type="text" class="noborder" style="position:absolute; left:549px; top:422px; width:183px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox10" id="XBox10" type="text" class="XBox box2" style="position:absolute; left:395px; top:438px;" >
+
+<input name="XBox11" id="XBox11" type="text" class="XBox box2" style="position:absolute; left:489px; top:438px;" >
+
+<input name="AutoName03" id="AutoName03" type="text" class="noborder" style="position:absolute; left:292px; top:453px; width:441px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName101" id="AutoName101" type="text" class="noborder" style="position:absolute; left:20px; top:497px; width:712px; height:78px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="AutoName102" id="AutoName102" type="text" class="noborder" style="position:absolute; left:20px; top:608px; width:712px; height:93px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="XBox12" id="XBox12" type="text" class="XBox box2" style="position:absolute; left:443px; top:732px;" >
+
+<input name="XBox13" id="XBox13" type="text" class="XBox box2" style="position:absolute; left:493px; top:732px;" >
+
+<textarea name="AutoName103" id="AutoName103" type="text" class="noborder" style="position:absolute; left:20px; top:758px; width:712px; height:71px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="AutoName104" id="AutoName104" type="text" class="noborder" style="position:absolute; left:20px; top:856px; width:712px; height:55px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" ></textarea>
+
+
+</div >
+
+
+<!-- PAGE 2 ################################################################## -->
+
+<div id="page2" style="position:relative; left:0px; top:0px; width:750px;" class="pagebreak">
+	<img id="BGImage"  src="${oscar_image_path}VCH_Richmond_CYMH_P2.png" width="750">
+
+<input name="AutoName04" id="AutoName04" type="text" class="noborder" style="position:absolute; left:20px; top:54px; width:234px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName05" id="AutoName05" type="text" class="noborder" style="position:absolute; left:262px; top:54px; width:118px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName06" id="AutoName06" type="text" class="noborder" style="position:absolute; left:393px; top:55px; width:223px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName07" id="AutoName07" type="text" class="noborder" style="position:absolute; left:626px; top:56px; width:105px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName08" id="AutoName08" type="text" class="noborder" style="position:absolute; left:20px; top:74px; width:234px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName09" id="AutoName09" type="text" class="noborder" style="position:absolute; left:262px; top:74px; width:118px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName10" id="AutoName10" type="text" class="noborder" style="position:absolute; left:393px; top:74px; width:223px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="AutoName11" id="AutoName11" type="text" class="noborder" style="position:absolute; left:626px; top:74px; width:105px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox14" id="XBox14" type="text" class="XBox box2" style="position:absolute; left:111px; top:99px;" >
+
+<input name="allergies" id="allergies" type="text" class="noborder" style="position:absolute; left:20px; top:123px; width:707px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=allergies_des>
+
+<textarea name="AutoName105" id="AutoName105" type="text" class="noborder" style="position:absolute; left:20px; top:181px; width:712px; height:116px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="XBox15" id="XBox15" type="text" class="XBox box2" style="position:absolute; left:252px; top:309px;" >
+
+<input name="XBox18" id="XBox18" type="text" class="XBox box2" style="position:absolute; left:345px; top:309px;" >
+
+<input name="XBox22" id="XBox22" type="text" class="XBox box2" style="position:absolute; left:439px; top:309px;" >
+
+<input name="XBox25" id="XBox25" type="text" class="XBox box2" style="position:absolute; left:532px; top:309px;" >
+
+<input name="XBox16" id="XBox16" type="text" class="XBox box2" style="position:absolute; left:252px; top:329px;" >
+
+<input name="XBox19" id="XBox19" type="text" class="XBox box2" style="position:absolute; left:345px; top:329px;" >
+
+<input name="XBox17" id="XBox17" type="text" class="XBox box2" style="position:absolute; left:252px; top:349px;" >
+
+<input name="XBox20" id="XBox20" type="text" class="XBox box2" style="position:absolute; left:345px; top:349px;" >
+
+<input name="XBox23" id="XBox23" type="text" class="XBox box2" style="position:absolute; left:439px; top:349px;" >
+
+<input name="XBox26" id="XBox26" type="text" class="XBox box2" style="position:absolute; left:532px; top:349px;" >
+
+<input name="XBox21" id="XBox21" type="text" class="XBox box2" style="position:absolute; left:345px; top:369px;" >
+
+<input name="XBox24" id="XBox24" type="text" class="XBox box2" style="position:absolute; left:439px; top:369px;" >
+
+<input name="XBox27" id="XBox27" type="text" class="XBox box2" style="position:absolute; left:114px; top:413px;" >
+
+<input name="XBox30" id="XBox30" type="text" class="XBox box2" style="position:absolute; left:205px; top:413px;" >
+
+<input name="XBox33" id="XBox33" type="text" class="XBox box2" style="position:absolute; left:298px; top:411px;" >
+
+<input name="XBox36" id="XBox36" type="text" class="XBox box2" style="position:absolute; left:393px; top:411px;" >
+
+<input name="XBox39" id="XBox39" type="text" class="XBox box2" style="position:absolute; left:504px; top:411px;" >
+
+<input name="XBox42" id="XBox42" type="text" class="XBox box2" style="position:absolute; left:587px; top:411px;" >
+
+<input name="XBox28" id="XBox28" type="text" class="XBox box2" style="position:absolute; left:114px; top:432px;" >
+
+<input name="XBox31" id="XBox31" type="text" class="XBox box2" style="position:absolute; left:205px; top:432px;" >
+
+<input name="XBox34" id="XBox34" type="text" class="XBox box2" style="position:absolute; left:298px; top:432px;" >
+
+<input name="XBox37" id="XBox37" type="text" class="XBox box2" style="position:absolute; left:393px; top:432px;" >
+
+<input name="XBox40" id="XBox40" type="text" class="XBox box2" style="position:absolute; left:504px; top:432px;" >
+
+<input name="XBox43" id="XBox43" type="text" class="XBox box2" style="position:absolute; left:587px; top:432px;" >
+
+<input name="XBox29" id="XBox29" type="text" class="XBox box2" style="position:absolute; left:114px; top:451px;" >
+
+<input name="XBox32" id="XBox32" type="text" class="XBox box2" style="position:absolute; left:205px; top:451px;" >
+
+<input name="XBox35" id="XBox35" type="text" class="XBox box2" style="position:absolute; left:298px; top:451px;" >
+
+<input name="XBox38" id="XBox38" type="text" class="XBox box2" style="position:absolute; left:393px; top:451px;" >
+
+<input name="XBox41" id="XBox41" type="text" class="XBox box2" style="position:absolute; left:504px; top:451px;" >
+
+<input name="XBox44" id="XBox44" type="text" class="XBox box2" style="position:absolute; left:587px; top:451px;" >
+
+<input name="XBox45" id="XBox45" type="text" class="XBox box2" style="position:absolute; left:344px; top:479px;" >
+
+<input name="XBox46" id="XBox46" type="text" class="XBox box2" style="position:absolute; left:393px; top:480px;" >
+
+<input name="AutoName12" id="AutoName12" type="text" class="noborder" style="position:absolute; left:559px; top:479px; width:89px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox47" id="XBox47" type="text" class="XBox box2" style="position:absolute; left:657px; top:480px;" >
+
+<input name="XBox48" id="XBox48" type="text" class="XBox box2" style="position:absolute; left:344px; top:498px;" >
+
+<input name="XBox49" id="XBox49" type="text" class="XBox box2" style="position:absolute; left:393px; top:498px;" >
+
+<input name="AutoName13" id="AutoName13" type="text" class="noborder" style="position:absolute; left:559px; top:497px; width:89px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox50" id="XBox50" type="text" class="XBox box2" style="position:absolute; left:657px; top:498px;" >
+
+<input name="XBox51" id="XBox51" type="text" class="XBox box2" style="position:absolute; left:344px; top:526px;" >
+
+<input name="XBox53" id="XBox53" type="text" class="XBox box2" style="position:absolute; left:393px; top:526px;" >
+
+<input name="XBox55" id="XBox55" type="text" class="XBox box2" style="position:absolute; left:442px; top:526px;" >
+
+<input name="XBox52" id="XBox52" type="text" class="XBox box2" style="position:absolute; left:344px; top:541px;" >
+
+<input name="XBox54" id="XBox54" type="text" class="XBox box2" style="position:absolute; left:393px; top:541px;" >
+
+<input name="XBox56" id="XBox56" type="text" class="XBox box2" style="position:absolute; left:442px; top:541px;" >
+
+<input name="XBox57" id="XBox57" type="text" class="XBox box2" style="position:absolute; left:442px; top:574px;" >
+
+<input name="XBox59" id="XBox59" type="text" class="XBox box2" style="position:absolute; left:535px; top:574px;" >
+
+<input name="XBox61" id="XBox61" type="text" class="XBox box2" style="position:absolute; left:629px; top:574px;" >
+
+<input name="XBox58" id="XBox58" type="text" class="XBox box2" style="position:absolute; left:442px; top:589px;" >
+
+<input name="XBox60" id="XBox60" type="text" class="XBox box2" style="position:absolute; left:535px; top:589px;" >
+
+<input name="XBox62" id="XBox62" type="text" class="XBox box2" style="position:absolute; left:629px; top:589px;" >
+
+<input name="AutoName14" id="AutoName14" type="text" class="noborder" style="position:absolute; left:153px; top:716px; width:237px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox63" id="XBox63" type="text" class="XBox box2" style="position:absolute; left:505px; top:714px;" >
+
+<input name="XBox64" id="XBox64" type="text" class="XBox box2" style="position:absolute; left:609px; top:714px;" >
+
+<input name="XBox65" id="XBox65" type="text" class="XBox box2" style="position:absolute; left:677px; top:714px;" >
+
+<input name="AutoName15" id="AutoName15" type="text" class="noborder" style="position:absolute; left:151px; top:745px; width:237px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox66" id="XBox66" type="text" class="XBox box2" style="position:absolute; left:505px; top:743px;" >
+
+<input name="XBox67" id="XBox67" type="text" class="XBox box2" style="position:absolute; left:609px; top:743px;" >
+
+<input name="XBox68" id="XBox68" type="text" class="XBox box2" style="position:absolute; left:677px; top:743px;" >
+
+<input name="AutoName16" id="AutoName16" type="text" class="noborder" style="position:absolute; left:151px; top:774px; width:237px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox69" id="XBox69" type="text" class="XBox box2" style="position:absolute; left:505px; top:772px;" >
+
+<input name="XBox70" id="XBox70" type="text" class="XBox box2" style="position:absolute; left:609px; top:772px;" >
+
+<input name="XBox71" id="XBox71" type="text" class="XBox box2" style="position:absolute; left:677px; top:772px;" >
+
+<input name="AutoName17" id="AutoName17" type="text" class="noborder" style="position:absolute; left:151px; top:803px; width:237px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" value="">
+
+<input name="XBox72" id="XBox72" type="text" class="XBox box2" style="position:absolute; left:505px; top:801px;" >
+
+<input name="XBox73" id="XBox73" type="text" class="XBox box2" style="position:absolute; left:609px; top:801px;" >
+
+<input name="XBox74" id="XBox74" type="text" class="XBox box2" style="position:absolute; left:677px; top:801px;" >
+
+<span style="position:absolute; left:87px; top:857px; font-family:sans-serif; font-size:14px;" ><b><i>&quot;Electronically Signed&quot;</i></b></span>
+
+ <input name="today" id="today" type="text" class="noborder" style="position:absolute; left:68px; top:895px; width:274px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+<input name="XBox75" id="XBox75" type="text" class="XBox box2" style="position:absolute; left:354px; top:849px;" >
+
+<input name="XBox76" id="XBox76" type="text" class="XBox box2" style="position:absolute; left:354px; top:864px;" >
+
+<input name="XBox77" id="XBox77" type="text" class="XBox box2" style="position:absolute; left:354px; top:879px;" >
+
+<input name="XBox78" id="XBox78" type="text" class="XBox box2" style="position:absolute; left:354px; top:894px;" >
+
+</div >
+
+
+<!-- MAIN HTML CODE FINISH -->
+
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+<div class="DoNotPrint" style="position: absolute; top: 1899px; left: 458px;">
+	<table>
+		<tr>
+			<td>
+				<input value="Submit" name="SubmitButton" type="submit">
+				<input value="Reset" name="ResetButton" type="reset">
+				<input value="Print" name="PrintButton" type="button" onClick="window.print()">
+				<input value="Print and Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onClick="window.print();releaseDirtyFlag();setTimeout('FormName.submit()',1000);">
+			</td>
+		</tr>
+	</table>
+</div>
+
+</form>
+
+
+</body>
+</html>

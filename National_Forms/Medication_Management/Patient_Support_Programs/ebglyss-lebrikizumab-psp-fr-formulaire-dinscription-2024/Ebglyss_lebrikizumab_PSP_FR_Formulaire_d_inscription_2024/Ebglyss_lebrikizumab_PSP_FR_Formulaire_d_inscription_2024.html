@@ -1,0 +1,343 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Ebglyss_lebrikizumab_PSP_FR_Formulaire_d_inscription_2024</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	$("#CanvasSignature2").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+	var $sig=$("#CanvasSignature2");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature2").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+	$("#CanvasSignature2").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+	var $sig=$("#CanvasSignature2");
+	var data
+	data=document.getElementById("StoreSignature2").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	let patientGenderVal = document.getElementById("PatientGender").value;
+	if (patientGenderVal == "M" || patientGenderVal == "F") {
+		let inputCheckEle = document.getElementById(patientGenderVal == "M" ? "Male" : "Female");
+		if (inputCheckEle.classList.contains("Xbox")) {
+		// xbox
+		inputCheckEle.value = "X";
+		} else {
+		// checkbox
+		inputCheckEle.checked = true;
+		}
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="844-344-3546"',1000);
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="checkGender();loadSig();setFaxNo();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}Ebglyss_lebrikizumab_PSP_FR_Formulaire_d_inscription_2024-1.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="patient_nameL" id="patient_nameL" type="text" class=" noborder" style="position:absolute; left:30px; top:143px; width:150px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class=" noborder" style="position:absolute; left:218px; top:143px; width:145px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:29px; top:179px; width:145px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:217px; top:179px; width:125px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc>
+<input name="Male" id="Male" class="only-one-gender" type="checkbox" style="position:absolute; left:349px; top:175px; ">
+<input name="Female" id="Female" class="only-one-gender" type="checkbox" style="position:absolute; left:376px; top:175px; ">
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:228px; top:200px; width:160px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="address_street_number_and_name" id="address_street_number_and_name" type="text" class=" noborder" style="position:absolute; left:30px; top:230px; width:307px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address_street_number_and_name>
+<input name="city" id="city" type="text" class=" noborder" style="position:absolute; left:29px; top:256px; width:141px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=city>
+<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:217px; top:256px; width:93px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=province>
+<input name="postal" id="postal" type="text" class=" noborder" style="position:absolute; left:321px; top:256px; width:80px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=postal>
+<input name="email" id="email" type="text" class=" noborder" style="position:absolute; left:30px; top:283px; width:270px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=email>
+<input name="page1_3" id="page1_3" class="" type="checkbox" style="position:absolute; left:23px; top:303px; ">
+<input name="page1_4" id="page1_4" class="" type="checkbox" style="position:absolute; left:235px; top:314px; ">
+<input name="page1_5" id="page1_5" class="" type="checkbox" style="position:absolute; left:262px; top:314px; ">
+<input name="page1_6" id="page1_6" class="" type="checkbox" style="position:absolute; left:286px; top:314px; ">
+<input name="page1_7" id="page1_7" type="text" class=" noborder" style="position:absolute; left:338px; top:313px; width:60px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_8" id="page1_8" class="" type="checkbox" style="position:absolute; left:24px; top:387px; ">
+<input name="page1_9" id="page1_9" type="text" class=" noborder" style="position:absolute; left:70px; top:386px; width:72px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_10" id="page1_10" class="" type="checkbox" style="position:absolute; left:144px; top:387px; ">
+<input name="page1_11" id="page1_11" type="text" class=" noborder" style="position:absolute; left:196px; top:386px; width:71px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_12" id="page1_12" class="" type="checkbox" style="position:absolute; left:269px; top:387px; ">
+<input name="page1_13" id="page1_13" type="text" class=" noborder" style="position:absolute; left:322px; top:386px; width:74px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_14" id="page1_14" class="" type="checkbox" style="position:absolute; left:24px; top:403px; ">
+<input name="page1_15" id="page1_15" type="text" class=" noborder" style="position:absolute; left:112px; top:402px; width:122px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_16" id="page1_16" class="" type="checkbox" style="position:absolute; left:233px; top:403px; ">
+<input name="page1_17" id="page1_17" type="text" class=" noborder" style="position:absolute; left:283px; top:402px; width:114px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_18" id="page1_18" class="" type="checkbox" style="position:absolute; left:24px; top:441px; ">
+<input name="page1_19" id="page1_19" type="text" class=" noborder" style="position:absolute; left:174px; top:440px; width:223px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_20" id="page1_20" class="" type="checkbox" style="position:absolute; left:24px; top:463px; ">
+<input name="page1_21" id="page1_21" class="" type="checkbox" style="position:absolute; left:39px; top:486px; ">
+<input name="page1_22" id="page1_22" type="text" class=" noborder" style="position:absolute; left:116px; top:485px; width:42px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_23" id="page1_23" type="text" class=" noborder" style="position:absolute; left:267px; top:484px; width:130px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_24" id="page1_24" class="" type="checkbox" style="position:absolute; left:39px; top:508px; ">
+<input name="page1_25" id="page1_25" type="text" class=" noborder" style="position:absolute; left:128px; top:507px; width:29px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_26" id="page1_26" type="text" class=" noborder" style="position:absolute; left:266px; top:506px; width:130px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_27" id="page1_27" class="" type="checkbox" style="position:absolute; left:24px; top:530px; ">
+<input name="page1_28" id="page1_28" type="text" class=" noborder" style="position:absolute; left:214px; top:528px; width:31px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_29" id="page1_29" type="text" class=" noborder" style="position:absolute; left:351px; top:527px; width:47px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_30" id="page1_30" class="" type="checkbox" style="position:absolute; left:24px; top:552px; ">
+<input name="page1_31" id="page1_31" class="" type="checkbox" style="position:absolute; left:39px; top:573px; ">
+<input name="page1_32" id="page1_32" type="text" class=" noborder" style="position:absolute; left:129px; top:571px; width:268px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_33" id="page1_33" class="" type="checkbox" style="position:absolute; left:39px; top:595px; ">
+<input name="page1_34" id="page1_34" type="text" class=" noborder" style="position:absolute; left:175px; top:594px; width:221px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_35" id="page1_35" class="" type="checkbox" style="position:absolute; left:39px; top:618px; ">
+<input name="page1_36" id="page1_36" type="text" class=" noborder" style="position:absolute; left:127px; top:616px; width:270px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_37" id="page1_37" class="" type="checkbox" style="position:absolute; left:39px; top:640px; ">
+<input name="page1_38" id="page1_38" type="text" class=" noborder" style="position:absolute; left:126px; top:638px; width:271px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_39" id="page1_39" type="text" class=" noborder" style="position:absolute; left:29px; top:690px; width:369px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_40" id="page1_40" class="" type="checkbox" style="position:absolute; left:24px; top:712px; ">
+<input name="page1_41" id="page1_41" type="text" class=" noborder" style="position:absolute; left:249px; top:711px; width:147px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_42" id="page1_42" class="" type="checkbox" style="position:absolute; left:24px; top:734px; ">
+<input name="page1_43" id="page1_43" type="text" class=" noborder" style="position:absolute; left:114px; top:734px; width:19px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:11px; text-align:left; background-color:transparent;" >
+<input name="page1_44" id="page1_44" type="text" class=" noborder" style="position:absolute; left:249px; top:733px; width:21px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:11px; text-align:left; background-color:transparent;" >
+<input name="page1_45" id="page1_45" class="" type="checkbox" style="position:absolute; left:313px; top:734px; ">
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:138px; top:900px; width:160px; height:40; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+<input name="page1_47" id="page1_47" type="text" class=" noborder" style="position:absolute; left:27px; top:959px; width:161px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_48" id="page1_48" type="text" class=" noborder" style="position:absolute; left:197px; top:959px; width:105px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:314px; top:959px; width:82px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="current_user_fname_lname" id="current_user_fname_lname" type="text" class=" noborder" style="position:absolute; left:426px; top:155px; width:253px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_fname_lname>
+<input name="page1_49" id="page1_49" class="" type="checkbox" style="position:absolute; left:417px; top:186px; ">
+<input name="page1_50" id="page1_50" class="" type="checkbox" style="position:absolute; left:503px; top:186px; ">
+<input name="page1_51" id="page1_51" class="" type="checkbox" style="position:absolute; left:581px; top:186px; ">
+<input name="page1_52" id="page1_52" class="" type="checkbox" style="position:absolute; left:640px; top:186px; ">
+<input name="page1_53" id="page1_53" class="" type="checkbox" style="position:absolute; left:417px; top:212px; ">
+<input name="clinic_addressLine" id="clinic_addressLine" type="text" class=" noborder" style="position:absolute; left:423px; top:245px; width:266px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_addressLine>
+<input name="clinic_city" id="clinic_city" type="text" class=" noborder" style="position:absolute; left:424px; top:271px; width:147px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_city>
+<input name="clinic_province" id="clinic_province" type="text" class=" noborder" style="position:absolute; left:595px; top:271px; width:110px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_province>
+<input name="clinic_postal" id="clinic_postal" type="text" class=" noborder" style="position:absolute; left:720px; top:271px; width:76px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_postal>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:423px; top:298px; width:150px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:595px; top:298px; width:150px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<input name="current_user_email" id="current_user_email" type="text" class=" noborder" style="position:absolute; left:423px; top:325px; width:250px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_email>
+<input name="page1_54" id="page1_54" type="text" class=" noborder" style="position:absolute; left:516px; top:357px; width:86px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<input name="page1_55" id="page1_55" class="" type="checkbox" style="position:absolute; left:605px; top:357px; ">
+<input name="page1_56" id="page1_56" class="" type="checkbox" style="position:absolute; left:671px; top:357px; ">
+<input name="page1_57" id="page1_57" class="" type="checkbox" style="position:absolute; left:741px; top:357px; ">
+<input name="page1_58" id="page1_58" class="only-one-Ebglyss" type="checkbox" style="position:absolute; left:417px; top:438px; ">
+<input name="page1_59" id="page1_59" class="only-one-Ebglyss" type="checkbox" style="position:absolute; left:452px; top:438px; ">
+<input name="page1_60" id="page1_60" class="only-one-Ebglyss" type="checkbox" style="position:absolute; left:618px; top:438px; ">
+<textarea name="page1_61" id="page1_61" type="text" class=" noborder" style="position:absolute; left:423px; top:459px; width:370px; height:34px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page1_62" id="page1_62" class="only-one-Rx" type="checkbox" style="position:absolute; left:417px; top:560px; ">
+<input name="page1_63" id="page1_63" class="only-one-Rx" type="checkbox" style="position:absolute; left:417px; top:576px; ">
+<input name="page1_64" id="page1_64" class="only-one-Device" type="checkbox" style="position:absolute; left:417px; top:609px; ">
+<input name="page1_65" id="page1_65" class="only-one-Device" type="checkbox" style="position:absolute; left:513px; top:609px; ">
+<input name="page1_66" id="page1_66" class="" type="checkbox" style="position:absolute; left:417px; top:641px; ">
+<input name="page1_67" id="page1_67" class="" type="checkbox" style="position:absolute; left:417px; top:658px; ">
+<input name="page1_68" id="page1_68" class="" type="checkbox" style="position:absolute; left:417px; top:674px; ">
+<input name="page1_69" id="page1_69" class="" type="checkbox" style="position:absolute; left:417px; top:690px; ">
+<input name="page1_70" id="page1_70" type="text" class=" noborder" style="position:absolute; left:472px; top:690px; width:43px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+	<div id="CanvasSignature2" class="sig" style="position:absolute; left:527px; top:869px; width:140px; height:35; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+<input name="current_user_cpsid" id="current_user_cpsid" type="text" class=" noborder" style="position:absolute; left:423px; top:921px; width:174px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_cpsid>
+<input name="today1" id="today1" type="text" class=" noborder" style="position:absolute; left:613px; top:921px; width:116px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="page1_72" id="page1_72" class="" type="checkbox" style="position:absolute; left:417px; top:938px; ">
+</div>
+
+<div id="page2" style="position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}Ebglyss_lebrikizumab_PSP_FR_Formulaire_d_inscription_2024-2.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1068px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+	Calendar.setup( { inputField : "today1", ifFormat : "%Y-%m-%d",  button : "today1" } );
+</script>
+
+</body>
+</html>

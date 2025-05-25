@@ -1,0 +1,521 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style type="text/css" media="screen" >
+ .input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+	input#SubmitButton {
+		color: #444444;
+		text-shadow: 0px 1px 1px #ffffff;
+		border-bottom: 2px solid #b2b2b2;
+		background-color: #b9e4e3;
+		background: -webkit-gradient(linear, left top, left bottom, from(#98f0c5), to(#008b46));
+		background: -moz-linear-gradient(top, #98f0c5, #008b46);
+		background: -o-linear-gradient(top, #98f0c5, #008b46);
+		background: -ms-linear-gradient(top, #98f0c5, #008b46);}
+	input#SubmitButton:hover {
+		color: #333333;
+		border: 1px solid #a4a4a4;
+		border-top: 2px solid #b2b2b2;
+		background-color: #a0dbc4;
+		background: -webkit-gradient(linear, left top, left bottom, from(#008b46), to(#98f0c5));
+		background: -moz-linear-gradient(top, #008b46, #98f0c5);
+		background: -o-linear-gradient(top, #008b46, #98f0c5);
+		background: -ms-linear-gradient(top, #008b46, #98f0c5);}
+ 
+	input#PrintSubmitButton {
+		color: white;
+		text-shadow: 0px 1px 1px #ffffff;
+		border-bottom: 2px solid #b2b2b2;
+		background-color: rebeccapurple;
+		background: -webkit-gradient(linear, left top, left bottom, from(rebeccapurple), to(#ea18d4));
+		background: -moz-linear-gradient(top, rebeccapurple, #ea18d4);
+		background: -o-linear-gradient(top, rebeccapurple, #ea18d4);
+		background: -ms-linear-gradient(top, rebeccapurple, #ea18d4);}
+	input#PrintSubmitButton:hover {
+		color: fcf4fc;
+		border: 1px solid #a4a4a4;
+		border-top: 2px solid #b2b2b2;
+		background-color: #ea18d4;
+		background: -webkit-gradient(linear, left top, left bottom, from(#ea18d4), to(rebeccapurple));
+		background: -moz-linear-gradient(top, #ea18d4, rebeccapurple);
+		background: -o-linear-gradient(top, #ea18d4, rebeccapurple);
+		background: -ms-linear-gradient(top, #ea18d4, rebeccapurple);}
+ 
+ .sig {
+	border: 2px dotted blue;
+	color: black;
+	background: transparent;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+ a {text-decoration: none;}
+ a:hover { border: 1px solid #000000; border-style:outset;}
+ a:active { border: 3px solid #000000; border-style: inset;}
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: black;
+	background: transparent;
+ }
+ </style>
+
+	<!-- Xbox styling -->
+	<style type="text/css">
+		.box1 {
+			position:absolute;
+			width:12px;
+			height:12px;
+			font-size:12px;
+			font-family:Arial;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aqua;
+		}
+
+		.box2 {
+			position:absolute;
+			width:14px;
+			height:14px;
+			font-size:14px;
+			font-family:Arial;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aqua;
+		}
+
+		[class^="only-one-radio_"] {
+			position:absolute;
+			width:14px;
+			height:14px;
+			font-size:14px;
+			font-family:Arial;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aqua;
+}
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+});
+</script>
+
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+
+<!-- Freeform Signatures -->
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+<script type="text/javascript" src="SignHere.js"></script>
+<script type="text/javascript" src="${oscar_image_path}SignHere.js"></script>
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender() {
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").click();
+	 } else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").click();
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint() {
+	document.FormName.ReasonForReferral.placeholder = '';
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		var src2 = document.getElementById("BGImage2").href;
+		document.getElementById("BGImage2").href = src2.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+<script>
+function onBodyLoad() {
+var re = new RegExp( "[?&]" + 'demographic_no' + "=([^&$]*)", "i" );
+var offset=window.opener.location.search.search(re);
+if(offset==-1){ 
+re = new RegExp( "[?&]" + 'demographicNo' + "=([^&$]*)", "i" );
+offset=window.opener.location.search.search(re);
+}
+
+var pathArray=window.opener.location.pathname.split('/');
+    //var theIFrame;
+    theIFrame = document.createElement("IFRAME");
+    theIFrame.setAttribute("id", "dynamicIFrame");
+    theIFrame.setAttribute("src", '/'+pathArray[1]+'/eform/efmformslistadd.jsp?demographic_no='+RegExp.$1+'&curProvider=&intment=&parentAjaxId=eforms');
+    theIFrame.setAttribute("onload","doIFrameOnLoad();");
+    theIFrame.style.width = 0+"px";
+    theIFrame.style.height = 0+"px";
+    document.body.appendChild(theIFrame);
+}
+
+function doIFrameOnLoad() {
+var re = new RegExp( "[?&]" + 'demographic_no' + "=([^&$]*)", "i" );
+var offset=window.opener.location.search.search(re);
+if(offset==-1){ 
+re = new RegExp( "[?&]" + 'demographicNo' + "=([^&$]*)", "i" );
+offset=window.opener.location.search.search(re);
+}
+var demographic=RegExp.$1;
+
+//alert(demographic);
+}
+
+function consult() {
+window.open("../dms/documentReport.jsp?function=demographic&functionid="+RegExp.$1+"&view=consult");
+}
+
+function labGrid() {
+window.open("../lab/CumulativeLabValues3.jsp?demographic_no="+RegExp.$1+"");
+}
+
+function labs() {
+window.open("../lab/DemographicLab.jsp?demographicNo="+RegExp.$1+"");
+}
+</script>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {
+			setDocumentTitle('FHA Cardiac Rehab Referral',document.getElementById('patient_name').value);
+			setDefaults();
+			//optimize window size/width
+			top.window.resizeTo(1150, screen.availHeight);
+		}
+
+		function setDocumentTitle(Title,patient_name) {
+			// set document title
+			document.title = Title + '_' + patient_name;					
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				document.getElementById('MSP').value = 'X';	
+				document.getElementById('OK_To_Call').value = 'X';	
+				document.getElementById('InterpreterNo').value = 'X';	
+			}   
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+		document.getElementById("newForm").value = 'False';
+		}
+	
+</script>
+</head>
+
+<body onload="checkGender(); reImg(); startUp(); loadSig(); onBodyLoad();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;">
+<img id="BGImage1" src="${oscar_image_path}CardiacRehabReferral-1.png" style="position:relative; left:0px; top:0px; width:750px;">
+
+<!-- Hidden Inputs -->
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<!-- Label -->
+<textarea name="label" id="label" type="text" class="noborder" style="position:absolute; left:445px; top:65px; width:295px; height:120px; resize:none; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=label></textarea>
+
+<!-- Referral Site -->
+<input name="ARHCC" id="ARHCC" type="text" class="only-one-radio_Centre" style="left:30px; top:195px;">
+<span name="ARHCC_ph" style="position:absolute; left:485px; top:195px; font-family:sans-serif; font-size:14px; background:white;">(604)-854-2161&nbsp;</span>
+<input name="JPOCSC" id="JPOCSC" type="text" class="only-one-radio_Centre" style="left:30px; top:214px;">
+
+<!-- Demographics -->
+<input name="patient_name" id="patient_name" type="text" class="noborder" style="position:absolute; left:180px; top:233px; width:550px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=patient_name>
+<input name="Male" id="Male" type="text" class="Xbox box2" style="left:664px; top:265px;">
+<input name="Female" id="Female" type="text" class="Xbox box2" style="left:704px; top:265px;">
+
+<input name="hinc" id="hinc" type="text" class="noborder" style="position:absolute; left:170px; top:262px; width:197px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=hinc>
+<input name="dobc" id="dobc" type="text" class="noborder" style="position:absolute; left:480px; top:262px; width:102px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=dobc>
+
+<input name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:76px; top:288px; width:651px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=addressline>
+
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:120px; top:320px; width:177px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=phone>
+<input name="OK_To_Call" id="OK_To_Call" type="text" class="Xbox box2" style="left:310px; top:325px;">
+<input name="MessagePhNum" id="MessagePhNum" type="tel" class="noborder" style="position:absolute; left:537px; top:320px; width:195px; font-family:sans-serif; font-size:14px; background:transparent;">
+
+<!-- Insurance -->
+<input name="MSP" id="MSP" type="text" class="only-one-radio_Insurance" style="position:absolute; left:116px; top:346px;">
+<input name="WCB" id="WCB" type="text" class="only-one-radio_Insurance" style="position:absolute; left:169px; top:346px;">
+<input name="OOP" id="OOP" type="text" class="only-one-radio_Insurance" style="position:absolute; left:226px; top:346px;">
+<input name="Self" id="Self" type="text" class="only-one-radio_Insurance" style="position:absolute; left:336px; top:346px;">
+
+<input name="OtherInsurance" id="OtherInsurance" type="text" class="noborder" style="position:absolute; left:442px; top:344px; width:79px; font-family:sans-serif; font-size:14px; background:transparent;">
+<input name="RCMP" id="RCMP" type="text" class="noborder" style="position:absolute; left:671px; top:344px; width:70px; font-family:sans-serif; font-size:14px; background:transparent;">
+
+<!-- Language -->
+<input name="InterpreterNo" id="InterpreterNo" type="text" class="only-one-radio_Interpreter" style="position:absolute; left:167px; top:371px;">
+<input name="InterpreterYes" id="InterpreterYes" type="text" class="only-one-radio_Interpreter" style="position:absolute; left:211px; top:371px;">
+<input name="Language" id="Language" type="text" class="noborder" style="position:absolute; left:336px; top:368px; width:175px; font-family:sans-serif; font-size:14px; background:transparent;">
+
+<textarea name="ReasonForReferral" id="ReasonForReferral" type="text" class="noborder" style="position:absolute; left:30px; top:412px; width:700px; height:55px; resize:none; font-family:sans-serif; font-size:16px; background:transparent;" placeholder="Look at conditions to the right"></textarea>
+
+<!-- Links -->
+<input  value="Medical Summary" class="DoNotPrint" type="button" style="position:absolute; left:590px; top:580px; font-family: Arial; font-size:14px;background-color:#8DEEEE;border-width: 3;border-style: solid;border-color:#ACF3F3;" name="MedicalSummary" oscarOPEN="8.Patient Summary" >
+<input value="Lab Grid Display" class="DoNotPrint" type="button" style="position:absolute; left:590px; top:610px; font-family: Arial; font-size:14px;background-color:#8DEEEE;border-width: 3;border-style: solid;border-color:#ACF3F3;" name="LabSummary"  onclick="onBodyLoad();labGrid();">
+<input value="Scanned Docs" class="DoNotPrint" type="button" style="position:absolute; left:590px; top:640px; font-family: Arial; font-size:14px;background-color:#8DEEEE;border-width: 3;border-style: solid;border-color:#ACF3F3;" name="ConsultSummary"  onclick="onBodyLoad();consult();">
+<input value="Excelleris" class="DoNotPrint" type="button" style="position:absolute; left:590px; top:670px; font-family: Arial; font-size:14px;background-color:#8DEEEE;border-width: 3;border-style: solid;border-color:#ACF3F3;" name="Excelleris"  onclick="onBodyLoad();labs();">
+
+<!-- Other Conditions -->
+<input name="HTN" id="HTN" type="text" class="Xbox box2" style="left:50px; top:744px;">
+<input name="dyslipidemia" id="dyslipidemia" type="text" class="Xbox box2" style="left:50px; top:768px;">
+<input name="KD" id="KD" type="text" class="Xbox box2" style="left:50px; top:792px;">
+
+<input name="Depression" id="Depression" type="text" class="Xbox box2" style="left:275px; top:744px;">
+<input name="RD" id="RD" type="text" class="Xbox box2" style="left:275px; top:768px;">
+<input name="SD" id="SD" type="text" class="Xbox box2" style="left:275px; top:792px;">
+
+<input name="DM" id="DM" type="text" class="Xbox box2" style="left:560px; top:744px;">
+<input name="GI" id="GI" type="text" class="Xbox box2" style="left:560px; top:768px;">
+<input name="OtherDisease" id="OtherDisease" type="text" class="Xbox box2" style="left:560px; top:792px;">
+
+<!-- Care Providers -->
+<input name="referral_name" id="referral_name" type="text" class="noborder" style="position:absolute; left:60px; top:849px; width:310px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=referral_name>
+<input name="bc_referral_no" id="bc_referral_no" type="text" class="noborder" style="position:absolute; left:65px; top:874px; width:305px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=bc_referral_no>
+<input name="referral_phone" id="referral_phone" type="text" class="noborder" style="position:absolute; left:62px; top:897px; width:147px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=referral_phone>
+<input name="referral_fax" id="referral_fax" type="text" class="noborder" style="position:absolute; left:238px; top:897px; width:133px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=referral_fax>
+<input name="NoGP" id="NoGP" type="text" class="Xbox box2" style="position:absolute; left:27px; top:922px;">
+
+<input name="doctor" id="doctor" type="text" class="noborder" style="position:absolute; left:428px; top:849px; width:305px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=doctor>
+<input name="doctor_ohip_no" id="doctor_ohip_no" type="text" class="noborder" style="position:absolute; left:430px; top:873px; width:304px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=doctor_ohip_no>
+<input name="clinic_phone" id="clinic_phone" type="text" class="noborder" style="position:absolute; left:431px; top:897px; width:127px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class="noborder" style="position:absolute; left:603px; top:897px; width:133px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_fax>
+
+<input name="GP" id="GP" type="text" class="only-one-radio_HCP" style="left:391px; top:920px;">
+<input name="Specialist" id="Specialist" type="text" class="only-one-radio_HCP" style="left:434px; top:920px;">
+<input name="NP" id="NP" type="text" class="only-one-radio_HCP" style="left:510px; top:920px;">
+<input name="Hospitalist" id="Hospitalist" type="text" class="only-one-radio_HCP" style="left:550px; top:920px;">
+<input name="ER" id="ER" type="text" class="only-one-radio_HCP" style="left:630px; top:920px;">
+<input name="OtherHCP" id="OtherHCP" type="text" class="only-one-radio_HCP" style="left:674px; top:920px;">
+
+<div id="CanvasSignature1" class="sig" style="position:absolute; left:235px; top:939px; width:250px; height:39; z-index:10;"></div>
+
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:20px; top:980px; width:750px;">
+	<table><tr><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag(); setFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setFlag();setTimeout('SubmitButton.click()',2000);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+ <a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank">
+ 	<img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+ 	<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> created October 27<sup>th</sup> 2018 by <a href="https://imgs.xkcd.com/comics/tasks.png" target="_blank" >Dr. John Robertson</a>, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. 
+ 	Updated Feb17_2020 by John Yap. 
+ 	<span style="color:forestgreen;">Please consider supporting  </span> <a href="http://oscarbc.ca/" target="_blank" >OSCAR BC</a>.<br><br>
+</div>
+
+</div>
+ 
+<div id="BackPage" class="DoNotPrint" style="position:absolute; left:760px; top:0px; width:700px; border-style:solid; border-color:black; border-width:1px; font-family:sans-serif; font-size:14;">
+<b>Cardiac Rehabilitation Exercise Program: Features bi-weekly monitored exercise programs that benefit the following conditions in a supportive medically monitored environment:</b> <br /><br />
+
+Acute Coronary Syndromes<br>
+Primary PTCA<br>
+Heart Failure<br>
+Coronary Artery Bypass Graft and Valve Surgeries<br>
+Peripheral Vascular Disease<br>
+Arrhythmias<br>
+Recent Pacemakers and Internal Cardiac Defibrillator or Resynchronization therapy<br>
+Cardiovascular Disease with Diabetes and / or Chronic Kidney Disease<br>
+<br>
+In the <b>Exercise portion of the rehab program</b>, clients will be monitored within the <b>high risk classes at the
+JPOCSC site</b>. For <b>Low to Intermediate risk</b> they will enter the <b>Community Program</b> at Guildford Recreational
+Centre or Abbotsford Recreational Centre. A <b>Home Based Cardiac Rehab program</b> is also available.
+<br><br>
+<b>JPOCSC and ARHCC</b> also provide comprehensive <b><u>Cardiac Rehab Education Self-Management Support Classes</u></b>
+focusing on lifestyle management topics that promote heart health after a cardiac event.
+<br><br>
+An interdisciplinary team of health professionals are present each week to educate and assist clients towards healthy
+lifestyle changes.
+<br><br>
+<b>These education sessions can be accessed immediately post discharge without referral or cost.</b>
+<br><br>
+Call the clinic for class times and schedules.<br><br>
+<a id="BGImage2" href="${oscar_image_path}CDXX104703B_CardiacRehabReferral_sample_2019_May30_Pg2.png" style="width:200px; font-family:Arial; font-size:15px; color:green;" target="_blank">Print Back Page - Ctrl-P</a>
+<br><br>
+</div>
+
+</form>
+</body>
+</html>

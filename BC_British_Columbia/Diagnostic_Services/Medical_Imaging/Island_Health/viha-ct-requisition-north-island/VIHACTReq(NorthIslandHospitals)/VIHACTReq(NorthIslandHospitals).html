@@ -1,0 +1,533 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CT Req North Island Hospitals</title>
+
+
+	<!-- 15-Nov-2021 v21.11.2 update adds signature options, fixes x-box radiobox functions, tweaks to CSS to optimize printouts /gk -->
+
+	<!-- E-FORM DISCLAIMER: 
+		Licensing: This eForm was shared by John Robertson and Gunther Klein, and is distributed under the Creative Commons, Attribution-ShareAlike 3.0 Unported Licensse (CC BY-SA 3.0)
+		As is: eForms are shared as-is, free of charge on a share-alike basis 
+		with absolutely no guarantee or warranty. 
+		No Quality Control: The author does not vet any eForms 
+		and does not purport to apply any manner of quality control. 
+		Responsibility: The responsibility for the clinical and medical-legal consequences 
+		of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. 
+		This applies to both eForms shared by others, and those created by users themselves. 
+		Attribution: eForms are shared freely among the user community, 
+		with attribution to the original author of the eForm. 
+		Free: eForms so shared may not be sold or purchased. 
+		Provincial validation:  eForms are optional and non-essential add-ons, 
+		separate from OSCAR, and with their own license terms.
+		eForms are not part of the OSCAR core program functionality and code base. 
+		For this reason eForms are not subject to provincial validation testing and conformance criteria.
+		eForms are also not subject to the ISO production process for OSCAR. -->
+
+<style type="text/css" media="screen" >
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+	 input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	 }
+	/* Drawing the 'gripper' for touch-enabled devices */
+	 html.touch #content {
+		float:left;
+		width:92%;
+	}
+	 html.touch #scrollgrabber {
+		float:right;
+		width:4%;
+		margin-right:2%;
+		background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+	 }
+	 html.borderradius #scrollgrabber {
+		border-radius: 1em;
+	 }
+	 .noborder {
+		border : 0px solid black;
+		background-color: transparent;
+		padding: 3px;
+		overflow: hidden;
+		resize: none;
+		font-style:normal; 
+		font-weight:normal; 
+		font-size:12px; 
+		text-align:left;
+		cursor: pointer;
+	 }
+	 .border {
+		border : 1px solid lightgray;
+		background-color: #e6f2ff;
+		padding: 2px;
+		overflow: hidden;
+		resize: none;
+		font-style:normal; 
+		font-weight:normal; 
+		font-size:12px; 
+		text-align:left;
+	 }
+	 .sig {
+		border: 2px dotted blue;
+		color: Black;
+		background-color: white;
+		cursor: crosshair;
+	 }
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 9px;
+		height: 9px;
+		font-size: 9px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		cursor: pointer;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+</style>
+
+<style type="text/css" media="print">
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+ 	.DoNotPrint {
+		display: none;
+	 }
+	.noborder {
+		border : 0px;
+		background: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font-style:normal; 
+		font-weight:normal; 
+		font-size:12px; 
+		text-align:left;
+ 	}	
+	 .border {
+		border : 0px;
+		background-color: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font-style:normal; 
+		font-weight:normal; 
+		font-size:12px; 
+		text-align:left;
+ 	}
+	 .sig {
+		border-style: solid;
+		border-color: transparent;
+		color: Black;
+		background-color: transparent;
+	 }	
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		font-weight: bolder;
+		text-align: center;
+		background: white;
+	}
+</style>
+
+
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").click();
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").click();
+	}
+ }
+</script>
+
+<!-- jQuery for parent-child and radio fields -->
+		<script>
+		$(document).ready(function() {
+			$('[class^="child-"]').hide();
+			$('.parent-field').click(function() {
+				$('[class^="child-"]').hide();
+				$('.parent-field').each(function() {
+					if ( $(this).is('input:checkbox') ){
+						if(this.checked){
+							$('.child-' +  $(this).prop('id')).show();
+						}else{
+						$('.child-' + $(this).val()).show();
+						}
+					}
+					if ( $(this).is('input:text') ){
+						if($(this).val()=='X'){
+							$('.child-' +  $(this).prop('id')).show();
+						}else{
+						$('.child-' + $(this).val()).show();
+						}
+					}
+				});
+			});
+			$('[class^="only-one-"]').click(function() {
+				if ( $(this).is('input:checkbox') ){
+					$('.'+$(this).attr('class')).prop('checked', false);
+					$(this).prop('checked', true);
+				}
+
+				if ( $(this).is('input:text') ){
+					$('.'+$(this).attr('class')).val('');
+					$( this ).val('X');
+				}
+			});
+		});
+		</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+	<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+	<script type="text/javascript">
+	if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:0, width:0, top:154, left:100});});}</script>
+
+	<!-- Freeform Signatures -->
+
+
+	<!-- jSignature file for local testing outside of OSCAR -->
+	<script type="text/javascript" src="jSignature.min.js"></script>
+
+	<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+	<![endif]-->
+
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+		var pdf = jQuery("input[name='pdfButton']");
+		if (pdf.size() != 0) {
+			pdf.attr('onclick', '').unbind('click');
+			pdf.attr('value', 'PDF');
+			pdf.click(function(){saveSig();submitPrintButton(false);});
+			}
+		var pdfSave = jQuery("input[name='pdfSaveButton']");
+		if (pdfSave.size() != 0) {
+			pdfSave.attr('onclick', '').unbind('click');
+			pdfSave.attr('value', 'Submit & PDF');
+			pdfSave.click(function(){saveSig();submitPrintButton(true);});
+			}
+	})
+	</script>
+
+	<script type="text/javascript">
+	function saveSig(){
+		var $sig=$("#CanvasSignature1");
+		var datapair=new Array();
+		datapair=$sig.jSignature("getData","base30");
+		document.getElementById("StoreSignature1").value=datapair.join(",");
+	}
+	function clearSig(){
+		$("#CanvasSignature1").jSignature("reset");
+	}
+	function loadSig(){
+		var $sig=$("#CanvasSignature1");
+		var data
+		data=document.getElementById("StoreSignature1").value;
+		$sig.jSignature("setData","data:"+ data) ;
+	}
+	</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+	<!-- to run the toggle buttons for height and weight units -->
+	<script language="javascript">
+		function toggleWTunits() {
+	  var x = document.getElementById('weight_units');
+	  if (x.value === "kg") {
+	    x.value = "lbs";
+	  } else {
+	    x.value = "kg";
+	  }
+	}
+	</script>
+
+	<script type="text/javascript">
+	function reImg(){
+	// for stand alone development without uploading to OSCAR
+		var strLoc = window.location.href.toLowerCase();
+		if(strLoc.indexOf("https") == -1) {
+			var src1 = document.getElementById("BGImage1").src;
+			document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		}
+	}
+	</script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="checkGender(); reImg(); loadSig(); document.FormName.history22.focus();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}CT Requisition Sept 12-17-5.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+<input name="eGFR" id="eGFR" type="text" class=" border" style="position:absolute; left:110px; top:154px; width:58px; height:16px;"  oscarDB=m$EGFR#value>
+<input name="eGFRdate" id="eGFRdate" type="text" class=" border" style="position:absolute; left:191px; top:154px; width:111px; height:16px;"  oscarDB=m$EGFR#dateObserved>
+
+<input name="diabetic_y" id="diabetic_y" type="text" class="only-one-DMbox" style="position:absolute; left:82px; top:185px;">
+<input name="diabetic_n" id="diabetic_n" type="text" class="only-one-DMbox" style="position:absolute; left:126px; top:185px;">
+
+<input name="metformin_y" id="metformin_y" type="text" class="only-one-Metforminbox" style="position:absolute; left:304px; top:185px;">
+<input name="metformin_n" id="metformin_n" type="text" class="only-one-Metforminbox" style="position:absolute; left:349px; top:185px;">
+
+<input name="allergic_y" id="allergic_y" type="text" class="only-one-allergybox" style="position:absolute; left:299px; top:220px;">
+<input name="allergic_n" id="allergic_n" type="text" class="only-one-allergybox" style="position:absolute; left:344px; top:220px;">
+
+<input name="allergic7" id="allergic7" type="text" class=" border" style="position:absolute; left:111px; top:234px; width:267px; height:16px; background-color: #ebf2f9;" >
+
+<input name="contrast_y" id="contrast_y" type="text" class="only-one-contrastbox" style="position:absolute; left:299px; top:254px;">
+<input name="contrast_n" id="contrast_n" type="text" class="only-one-contrastbox" style="position:absolute; left:345px; top:254px;">
+
+<input name="preg10" id="preg10" type="text" class="only-one-pregbox" style="position:absolute; left:299px; top:277px;">
+<input name="preg11" id="preg11" type="text" class="only-one-pregbox" style="position:absolute; left:345px; top:277px;">
+
+<input name="isolation12" id="isolation12" type="text" class="only-one-isolationbox" 	style="position:absolute; left:86px; top:299px;"
+		onFocus="			
+			document.getElementById('isolation14').style.outline = '2px solid gold';
+			document.getElementById('isolation15').style.outline = '2px solid gold';
+			document.getElementById('isolation16').style.outline = '2px solid gold';
+		">
+<input name="isolation13" id="isolation13" type="text" class="only-one-isolationbox" style="position:absolute; left:127px; top:299px;"
+		onFocus="
+			document.getElementById('isolation14').value = '';
+			document.getElementById('isolation15').value = '';
+			document.getElementById('isolation16').value = '';
+			document.getElementById('isolation14').style.outline = '0px';
+			document.getElementById('isolation15').style.outline = '0px';
+			document.getElementById('isolation16').style.outline = '0px';
+		">
+
+<input name="isolation14" id="isolation14" type="text" class="only-one-isolationtypebox" style="position:absolute; left:184px; top:299px;"
+		onFocus="
+			document.getElementById('isolation14').style.outline = '0px';
+			document.getElementById('isolation15').style.outline = '0px';
+			document.getElementById('isolation16').style.outline = '0px';
+		">
+<input name="isolation15" id="isolation15" type="text" class="only-one-isolationtypebox" style="position:absolute; left:242px; top:299px;"
+		onFocus="
+			document.getElementById('isolation14').style.outline = '0px';
+			document.getElementById('isolation15').style.outline = '0px';
+			document.getElementById('isolation16').style.outline = '0px';
+		">
+<input name="isolation16" id="isolation16" type="text" class="only-one-isolationtypebox" style="position:absolute; left:308px; top:299px;"
+		onFocus="
+			document.getElementById('isolation14').style.outline = '0px';
+			document.getElementById('isolation15').style.outline = '0px';
+			document.getElementById('isolation16').style.outline = '0px';
+		">
+
+<input name="weight16" id="weight16" type="text" class=" noborder" style="position:absolute; left:200px; top:330px; width:30px; height:16px; text-align:right;" oscarDB=m$WT#value >
+<input name="weight_units" id="weight_units" type="text" class="noborder" style="position:absolute; left:240px; top:330px; width:20px; height:16px; background:white; padding-left:0px;" value="kg">
+<input name="WT_toggle" id="WT_toggle" type="button" class="DoNotPrint" style="position:absolute; color:green; font-size:10px; left:260px;top:333px;" value="set units" onClick="toggleWTunits()">
+
+<input name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:473px; top:153px; width:248px; height:16px; font-weight:bold;"  oscarDB=first_last_name>
+<textarea name="address" id="address" type="text" class=" noborder" style="position:absolute; left:473px; top:172px; width:150px; height:70px;"  oscarDB=address></textarea>
+<textarea name="dobc2" id="dobc2" type="text" class=" noborder" style="position:absolute; left:473px; top:242px; width:122px; height:16px;"  oscarDB=dobc2></textarea>
+
+<input name="Male" id="Male" type="text" class="Xbox" style="position:absolute; left:479px; top:268px; width:20px;">
+<input name="Female" id="Female" type="text" class="Xbox" style="position:absolute; left:550px; top:268px; width:20px;">
+
+<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:440px; top:287px; width:230px; height:16px; font-weight:normal;"  oscarDB=hinc>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:440px; top:312px; width:102px; height:16px; font-weight:bold;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" border" style="position:absolute; left:558px; top:312px; width:146px; height:16px; font-weight:bold;" oscarDB=cell>
+
+<input name="18" id="18" type="text" class="only-one-urgencybox" style="position:absolute; left:454px; top:374px; ">
+<input name="19" id="19" type="text" class="only-one-urgencybox" style="position:absolute; left:454px; top:388px; ">
+<input name="20" id="20" type="text" class="only-one-urgencybox" style="position:absolute; left:584px; top:374px; ">
+<input name="21" id="21" type="text" class="only-one-urgencybox" style="position:absolute; left:584px; top:388px; ">
+
+<textarea name="history22" id="history22" type="text" class=" border" style="position:absolute; left:24px; top:437px; width:369px; height:122px;" ></textarea>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:30px; top:377px; width:80px; height:20px; text-align:center;"  oscarDB=today>
+<input name="time" id="time" type="text" class=" noborder" style="position:absolute; left:120px; top:377px; width:31px; height:20px;"  oscarDB=time>
+<input name="current_user" id="current_user" type="text" class=" border" style="position:absolute; left:24px; top:563px; width:179px; height:16px; font-weight:bold;"  oscarDB=current_user>
+<input name="contactno23" id="contactno23" type="text" class=" border" style="position:absolute; left:398px; top:563px; width:161px; height:16px;" >
+<input name="referral_name" id="referral_name" type="text" class=" border" style="position:absolute; left:565px; top:563px; width:161px; height:16px;" oscarDB=referral_name>
+
+<input name="noncon25" id="noncon25" type="text" class="Xbox" style="position:absolute; left:28px; top:664px;">
+<input name="noncon26" id="noncon26" type="text" class="Xbox" style="position:absolute; left:28px; top:677px;">
+<input name="noncon27" id="noncon27" type="text" class="Xbox" style="position:absolute; left:28px; top:690px;">
+<input name="noncon28" id="noncon28" type="text" class="Xbox" style="position:absolute; left:28px; top:712px;">
+<input name="noncon29" id="noncon29" type="text" class="Xbox" style="position:absolute; left:28px; top:733px;">
+<input name="noncon30" id="noncon30" type="text" class="Xbox" style="position:absolute; left:28px; top:745px;">
+<input name="noncon31" id="noncon31" type="text" class="Xbox" style="position:absolute; left:28px; top:756px;">
+<input name="noncon32" id="noncon32" type="text" class="Xbox" style="position:absolute; left:28px; top:768px;">
+<input name="noncon33" id="noncon33" type="text" class="Xbox" style="position:absolute; left:28px; top:779px;">
+<input name="noncon34" id="noncon34" type="text" class="Xbox" style="position:absolute; left:28px; top:790px;">
+<input name="noncon35" id="noncon35" type="text" class="Xbox" style="position:absolute; left:28px; top:824px;">
+
+<input name="con36" id="con36" type="text" class="Xbox" style="position:absolute; left:257px; top:665px;">
+<input name="con37" id="con37" type="text" class="Xbox" style="position:absolute; left:257px; top:711px;">
+<input name="con38" id="con38" type="text" class="Xbox" style="position:absolute; left:257px; top:723px;">
+<input name="con39" id="con39" type="text" class="Xbox" style="position:absolute; left:257px; top:734px; ">
+<input name="con40" id="con40" type="text" class="Xbox" style="position:absolute; left:257px; top:755px; ">
+<input name="con41" id="con41" type="text" class="Xbox" style="position:absolute; left:257px; top:768px; ">
+<input name="con42" id="con42" type="text" class="Xbox" style="position:absolute; left:257px; top:779px; ">
+<input name="con43" id="con43" type="text" class="Xbox" style="position:absolute; left:257px; top:791px; ">
+<input name="con44" id="con44" type="text" class="Xbox" style="position:absolute; left:257px; top:823px; ">
+
+<input name="conright45" id="conright45" type="text" class="Xbox" style="position:absolute; left:468px; top:665px; ">
+<input name="conright46" id="conright46" type="text" class="Xbox" style="position:absolute; left:468px; top:678px; ">
+<input name="conright47" id="conright47" type="text" class="Xbox" style="position:absolute; left:468px; top:756px; ">
+<input name="conright48" id="conright48" type="text" class="Xbox" style="position:absolute; left:468px; top:778px; ">
+<input name="conright49" id="conright49" type="text" class="Xbox" style="position:absolute; left:468px; top:790px; ">
+<input name="conright50" id="conright50" type="text" class="Xbox" style="position:absolute; left:468px; top:801px; ">
+<input name="conright51" id="conright51" type="text" class="Xbox" style="position:absolute; left:468px; top:813px; ">
+
+<textarea name="other52" id="other52" type="text" class=" border" style="position:absolute; left:24px; top:884px; width:223px; height:53px;" ></textarea>
+<input name="extremety53" id="extremety53" type="text" class=" border" style="position:absolute; left:42px; top:803px; width:117px; height:16px;" >
+<input name="extremety54" id="extremety54" type="text" class=" border" style="position:absolute; left:272px; top:838px; width:184px; height:16px;" >
+
+<!-- signature elements -->
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute;left:210px; top:563px; width:182px; height:45px; z-index:10;">
+		</div>
+		<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+	<!-- E-signed text stamp buttons -->
+
+		<textarea name="eSigned" id="eSigned" type="text" class="Hide" style="position:absolute; left:210px; top:565px; width:180px; height:20px;  font-style:italic; font-weight:bold; font-size:12px; text-align:center; background-color:#ccffff; border-width:0; resize:none;" >&quot;e-signed&quot;</textarea>
+
+		<input value="eSign" name="eSigButton" id="eSigButton" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:10px; left:310px; top:620; z-index:10" 
+		onclick="
+				document.getElementById('CanvasSignature1').className = 'Hide';
+				document.getElementById('eSigned').className = 'noborder';
+				">  
+
+		<input value="Clear Sig" name="ClearButton2" id="ClearButton" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:10px; left:250px; top:620; z-index:10" 
+		onclick="
+				document.getElementById('CanvasSignature1').className = 'sig';
+				document.getElementById('eSigned').className = 'Hide';
+				clearSig();
+				">
+	<!-- end of E-signed text stamp buttons -->
+
+
+	<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="" ></input>
+
+<!-- end of signature elements -->
+
+	<div class="DoNotPrint" id="BottomButtons" style="position:relative;">
+	 <table><tr><td>
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); submission();">
+			<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+			<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+			<input value="Reset Form" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();setTimeout('SubmitButton.click()',1800);"> 		 
+			<!-- old print and submit buttons --
+			<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0)"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+			-->	
+			<br>Subject: <input name="subject" size="40" type="text"> 
+
+	 </td></tr></table>
+	</div>
+
+	
+	<!-- Creative Commons License -->
+	<div  class="DoNotPrint" id="Licenseparagraph" style="position:relative; font-size:8px;">
+		<br><br>
+			<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">
+			<img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /> 
+			<br>
+			</a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">This E-form</span>
+			<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"></span> is licensed under a 
+			<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.oscarcanada.org/" rel="cc:morePermissions">http://www.oscarcanada.org/</a>.
+	</div>
+
+	
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%d-%b-%Y",  button : "today" } );
+	Calendar.setup( { inputField : "eGFRdate", ifFormat : "%d-%b-%Y",  button : "eGFRdate" } );
+</script>
+
+</body>
+</html>
+	

@@ -1,0 +1,434 @@
+<html>
+<head>
+
+<!-- Pain BC Coaching for Health Referral form -->
+
+<!--- V1_Feb25_2018, John Yap -->
+
+<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, inside double quotations, and to the right of the double slashes
+// "${oscar_image_path}PainBC_CoachingForHealth_ReferralForm.png"
+</script>
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- Freeform Signatures -->
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<style>
+// hides signature borders on print
+input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+.sig {
+	 border: 2px dotted blue;
+	 background: lightgrey;
+}
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {display: none;}
+ .noborder {
+	 border:0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 background:transparent;
+	 overflow:hidden;
+ }
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background: transparent;
+}
+</style>
+
+<style type="text/css">
+.noborder {background:transparent;}
+.Show {
+	visibility:visible;
+	display:inline;
+ }
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<!-- Xbox styling -->
+	<style type="text/css">
+		.box1 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: aquamarine;
+			font-size: 16px;
+			width:16px;
+			height:16px;
+		}
+		
+		.box2 {
+			position: absolute;
+			border: 0px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: transparent;
+			font-size: 24px;
+			width:24px;
+			height:24px;
+		}
+	</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {			
+			setDocumentTitle('PainBC Coaching For Health',document.getElementById('PatientNameL').value);
+			changeImage("PainBC_CoachingForHealth_ReferralForm.png", "BGImage1");
+			setDefaults();
+
+			//optimize window size/width
+			top.window.resizeTo(900, screen.availHeight);
+		}
+		
+		function changeImage(img,imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				//document.getElementById('').value = 'X';
+
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById('current_user_name').value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.CurrentProviderDoctor.value = First_Last_Name ;
+			}
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// Change yellow fields back to transparent for print
+			document.getElementById("StablePainDx").style.background = 'transparent';
+			document.getElementById("MedsStable").style.background = 'transparent';
+			document.getElementById("NoSubstance").style.background = 'transparent';
+			document.getElementById("MentalStable").style.background = 'transparent';
+			document.getElementById("Willing").style.background = 'transparent';
+			document.getElementById("ContactMD").style.background = 'transparent';
+			document.getElementById("Inform").style.background = 'transparent';
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			saveSig(); 
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+			// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+		Signature functions 
+		****************************/
+		jQuery(document).ready(function() {
+			$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+		})
+
+		function saveSig() {
+			var $sig=$("#CanvasSignature1");
+			var datapair=new Array();
+			datapair=$sig.jSignature("getData","base30");
+			document.getElementById("StoreSignature1").value=datapair.join(",");
+		}
+
+		function clearSig1() {
+			$("#CanvasSignature1").jSignature("reset");
+		}
+
+		function loadSig() {
+			var $sig=$("#CanvasSignature1");
+			var data
+			data=document.getElementById("StoreSignature1").value;
+			$sig.jSignature("setData","data:"+ data) ;
+		}
+		
+		/****************************
+			checkbox functions 
+		****************************/
+			$( document ).ready(function() {
+				$('.XBox').prop("readonly","true");
+				$('.XBox').mousedown(function(evt) {
+					changeValue(evt.target);
+					});
+				$('.XBox').keydown(function(evt) {
+					displayKeyCode(evt);
+				});	
+			});
+	
+			function changeValue(element) {
+				if (element.val == undefined) {
+				element = $(element); // Convert to jquery element
+			}
+				if (element.val() == '') {
+				element.val('X');
+				}
+				else {element.val('');}
+			}
+	
+			function displayKeyCode(evt) {
+				var charCode = evt.which || evt.keyCode;
+				// any key press except tab will constitute a value change to the checkbox
+				if (charCode != 9) {
+					changeValue(evt.target);
+					return false;
+				}
+			}
+	
+			/****************************
+				scripts to confirm closing of window if it has not been saved yet
+			****************************/
+				//keypress events trigger dirty flag
+				var needToConfirm = false;
+				document.onkeyup=setDirtyFlag;
+			function setDirtyFlag() {
+			needToConfirm = true;
+			}
+	
+			function releaseDirtyFlag() {
+				needToConfirm = false; //Call this function if does not require an alert.
+				//this could be called when save button is clicked
+			}
+				window.onbeforeunload = confirmExit;
+	
+			function confirmExit() {
+				if (needToConfirm) {
+				return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, 	your changes will be lost. Are you sure you want to exit this page?";
+				}
+			}
+</script>
+
+<script>
+		/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x and is named in the convention name_X where X appears in the string defined in scales
+		****************************/
+		function Radio_Box1(x) {
+			var scales = ["Yes", "No"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+</script>
+
+</head>
+
+<body onLoad="startUp(); loadSig();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for title name -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctor" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<!-- Hidden input for storing Signature data -->
+<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<img id="BGImage1" src="">
+
+<a name="Weblink" class="DoNotPrint" style="position:absolute; left:50px; top:972px; width:250px; height:25px;" href="https://www.painbc.ca/coaching" target="_blank" title="Weblink reference"></a>
+
+<span style="position:absolute; left:50px; top:131px; font-family:sans-serif; font-size:16px;">DATE: </span>
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:105px; top:130px; width:110px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=today>
+
+<!-- Patient Contact Info -->
+<input name="patient_name" id="patient_name" type="text" class="noborder" style="position:absolute; left:90px; top:201px; width:320px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=patient_name>
+
+<input name="PhoneHm_Box" id="PhoneHm_Box" type="text" class="XBox box1" style="left:445px; top:207px;">
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:560px; top:205px; width:235px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=phone>
+
+<input name="PhoneCell_Box" id="PhoneCell_Box" type="text" class="XBox box1" style="left:445px; top:241px;">
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:560px; top:239px; width:235px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=cell>
+
+<input name="Message_Yes" id="Message_Yes" type="text" class="XBox box1" style="left:559px; top:279px;" onclick="Radio_Box1(this.id);">
+<input name="Message_No" id="Message_No" type="text" class="XBox box1" style="left:620px; top:279px;" onclick="Radio_Box1(this.id);">
+
+<input name="eMail_Box" id="eMail_Box" type="text" class="XBox box1" style="left:445px; top:320px;">
+<input name="eMail" id="eMail" type="text" class="noborder" style="position:absolute; left:520px; top:318px; width:275px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=eMail>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:135px; top:240px; width:160px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" oscarDB=dob>
+<input name="PatientGender" id="PatientGender" type="text" class="noborder" style="position:absolute; left:360px; top:240px; width:35px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" oscarDB=sex>
+
+<textarea name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:50px; top:305px; min-width:365px; min-height:60px; max-width:365px; max-height:60px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=addressline></textarea>
+
+<!-- Safety Checklist -->
+<input name="StablePainDx_Yes" id="StablePainDx_Yes" type="text" class="XBox box2" style="left:386px; top:432px;" onclick="Radio_Box1(this.id); document.FormName.StablePainDx.style.background ='transparent';">
+<input name="StablePainDx_No" id="StablePainDx_No" type="text" class="XBox box2" style="left:434px; top:432px;" onclick="Radio_Box1(this.id); document.FormName.StablePainDx.style.background ='yellow';">
+<textarea name="StablePainDx" id="StablePainDx" type="text" class="noborder" style="position:absolute; left:470px; top:425px; min-width:330px; min-height:43px; max-width:330px; max-height:43px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<input name="MedsStable_Yes" id="MedsStable_Yes" type="text" class="XBox box2" style="left:386px; top:476px;" onclick="Radio_Box1(this.id); document.FormName.MedsStable.style.background ='transparent';">
+<input name="MedsStable_No" id="MedsStable_No" type="text" class="XBox box2" style="left:434px; top:476px;" onclick="Radio_Box1(this.id); document.FormName.MedsStable.style.background ='yellow';">
+<textarea name="MedsStable" id="MedsStable" type="text" class="noborder" style="position:absolute; left:470px; top:466px; min-width:330px; min-height:43px; max-width:330px; max-height:43px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<input name="NoSubstance_Yes" id="NoSubstance_Yes" type="text" class="XBox box2" style="left:386px; top:516px;" onclick="Radio_Box1(this.id); document.FormName.NoSubstance.style.background ='transparent';">
+<input name="NoSubstance_No" id="NoSubstance_No" type="text" class="XBox box2" style="left:434px; top:516px;" onclick="Radio_Box1(this.id); document.FormName.NoSubstance.style.background ='yellow';">
+<textarea name="NoSubstance" id="NoSubstance" type="text" class="noborder" style="position:absolute; left:470px; top:509px; min-width:330px; min-height:38px; max-width:330px; max-height:38px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<input name="MentalStable_Yes" id="MentalStable_Yes" type="text" class="XBox box2" style="left:386px; top:561px;" onclick="Radio_Box1(this.id); document.FormName.MentalStable.style.background ='transparent';">
+<input name="MentalStable_No" id="MentalStable_No" type="text" class="XBox box2" style="left:434px; top:561px;" onclick="Radio_Box1(this.id); document.FormName.MentalStable.style.background ='yellow';">
+<textarea name="MentalStable" id="MentalStable" type="text" class="noborder" style="position:absolute; left:470px; top:547px; min-width:330px; min-height:52px; max-width:330px; max-height:52px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<input name="Willing_Yes" id="Willing_Yes" type="text" class="XBox box2" style="left:386px; top:615px;" onclick="Radio_Box1(this.id); document.FormName.Willing.style.background ='transparent';">
+<input name="Willing_No" id="Willing_No" type="text" class="XBox box2" style="left:434px; top:615px;" onclick="Radio_Box1(this.id); document.FormName.Willing.style.background ='yellow';">
+<textarea name="Willing" id="Willing" type="text" class="noborder" style="position:absolute; left:470px; top:599px; min-width:330px; min-height:52px; max-width:330px; max-height:52px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<input name="ContactMD_Yes" id="ContactMD_Yes" type="text" class="XBox box2" style="left:386px; top:664px;" onclick="Radio_Box1(this.id); document.FormName.ContactMD.style.background ='transparent';">
+<input name="ContactMD_No" id="ContactMD_No" type="text" class="XBox box2" style="left:434px; top:664px;" onclick="Radio_Box1(this.id); document.FormName.ContactMD.style.background ='yellow';">
+<textarea name="ContactMD" id="ContactMD" type="text" class="noborder" style="position:absolute; left:470px; top:653px; min-width:330px; min-height:43px; max-width:330px; max-height:43px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<input name="Inform_Yes" id="Inform_Yes" type="text" class="XBox box2" style="left:386px; top:706px;" onclick="Radio_Box1(this.id); document.FormName.Inform.style.background ='transparent';">
+<input name="Inform_No" id="Inform_No" type="text" class="XBox box2" style="left:434px; top:706px;" onclick="Radio_Box1(this.id); document.FormName.Inform.style.background ='yellow';">
+<textarea name="Inform" id="Inform" type="text" class="noborder" style="position:absolute; left:470px; top:695px; min-width:330px; min-height:43px; max-width:330px; max-height:43px; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<!-- Reason for Referral -->
+<textarea name="Reason" id="Reason" type="text" class="noborder" style="position:absolute; left:50px; top:770px; min-width:750px; min-height:52px; max-width:750px; max-height:52px; font-family:sans-serif; font-size:15px; background:transparent;" value=""></textarea>
+
+<!-- Referring Doctor -->
+<input name="CurrentProviderDoctor" id="CurrentProviderDoctor" type="text" class="noborder" style="position:absolute; left:430px; top:862px; width:365px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+<textarea name="clinic_addressLineFull" id="clinic_addressLineFull" type="text" class="noborder" style="position:absolute; left:430px; top:880px; min-width:365px; min-height:36px; max-width:365px; max-height:36px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_addressLineFull></textarea>
+<span style="position:absolute; left:430px; top:919px; font-family:sans-serif; font-size:13px;">Phone: </span>
+<input name="clinic_phone" id="clinic_phone" type="text" class="noborder" style="position:absolute; left:475px; top:919px; width:140px; font-family:sans-serif; font-size:13px; background:transparent;" oscarDB=clinic_phone>
+<span style="position:absolute; left:625px; top:919px; font-family:sans-serif; font-size:13px;">Fax: </span>
+<input name="clinic_fax" id="clinic_fax" type="text" class="noborder" style="position:absolute; left:655px; top:919px; width:140px; font-family:sans-serif; font-size:13px; background:transparent;" oscarDB=clinic_fax>
+
+<!-- Signature script -->
+<div id="CanvasSignature1" class="sig" style="position:absolute; left:430px; top:935px; width:365px; height:55px; background:transparent;">
+<input value="Clear Sig" name="ClearButton1" id="ClearButton1" type="button" class="DoNotPrint" style="position:absolute; left:385px; top:4px; color:green;" onclick="clearSig1();">
+</div>
+</div>
+
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:30px; top:1070px;">
+	<table><tr><td style="background:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" id="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);">
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();">
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="printSubmit();">
+	 </td></tr></table>
+</div>
+
+</form>
+
+</body>
+</html>

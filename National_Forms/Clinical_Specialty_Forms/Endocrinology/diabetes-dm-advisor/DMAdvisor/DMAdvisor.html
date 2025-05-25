@@ -1,0 +1,996 @@
+<html>
+<head>
+
+<!-- V1_Dec25_2019: DM care tracking eForm. John Yap -->
+<!-- V2_Apr28_2021: add SADMAN eForm link. John Yap -->
+<!-- V3_May2_2021: add checkWarnings for stale measurement results. John Yap -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR.-->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, inside double quotations, and to the right of the double slashes
+// "${oscar_image_path}DM_Assessment_Pg1.png"
+// "${oscar_image_path}DM_Assessment_Pg2.png"
+// "${oscar_image_path}CPG_guide_Hypoglycemia.png"
+// "${oscar_image_path}CPG_guide_Dehydration.png"
+// "${oscar_image_path}CPG_guide_Women.png"
+// "${oscar_image_path}CPG_guide_A1c.png"
+// "${oscar_image_path}CPG_guide_DM_Med_Algorithm.png"
+// "${oscar_image_path}CPG_guide_Goals.png"
+</script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+<script type="text/javascript" src='jquery-1.12.0.min.js'></script>
+
+<!-- Scripts to enable links to other areas of Oscar -->
+<script type="text/javascript" src="${oscar_image_path}onBodyLoad_Dec2019.js"></script>
+<script type="text/javascript" src="onBodyLoad_Dec2019.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+	*{font-family: Helvetica, Arial, sans-serif;}
+	input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	}
+
+	input#SubmitButton { 
+		color: white;
+		text-shadow: 0px 1px 1px #ffffff;
+		border-bottom: 2px solid #b2b2b2;
+		background: #229ece;
+		background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+		background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+		background: -o-linear-gradient(top, #6bb5d2, #229ece);
+		background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+	input#SubmitButton:hover {
+		color: #333333;
+		border: 1px solid #a4a4a4;
+		border-top: 2px solid #b2b2b2;
+		background-color: #a0dbc4;
+		background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#6bb5d2));
+		background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+		background: -o-linear-gradient(top, #229ece, #6bb5d2);
+		background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+
+	.sig {
+		border: 2px dotted blue;
+		background: transparent;
+	}
+
+	/* Drawing the 'gripper' for touch-enabled devices */
+	html.touch #content {
+		float:left;
+		width:92%;
+	}
+	html.touch #scrollgrabber {
+		float:right;
+		width:4%;
+		margin-right:2%;
+		background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/	DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+	}
+	html.borderradius #scrollgrabber {
+		border-radius: 1em;
+	}
+
+	a {text-decoration: none;}
+	a:hover { border: 1px solid #000000; border-style:outset; background:pink; opacity:0.9;}
+	a:active { border: 3px solid #000000; border-style: inset;}
+
+	::placeholder {
+		color: rebeccapurple;
+		font-style: italic;
+		opacity: 1;
+	}
+	
+	textarea{resize: none;}
+</style><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"</script>><script> window.jQuery || document.write("<script src = "../js/jquery-1.7.1.min.js" > <  / script > ") </script><script> window.jQuery || document.write("<script src = "jquery-1.7.1.min.js" > <  / script > ") </script><script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<style type="text/css" media="print">
+	*{font-family: Helvetica, Arial, sans-serif;}
+	/* creates WYSIWYG */
+	input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	}
+
+	.DoNotPrint {display: none;}
+	.noborder {
+		border: 0px;
+		background: transparent;
+		scrollbar-3dlight-color: transparent;
+		scrollbar-arrow-color: transparent;
+		scrollbar-base-color: transparent;
+		scrollbar-darkshadow-color: transparent;
+		scrollbar-face-color: transparent;
+		scrollbar-highlight-color: blue;
+		scrollbar-shadow-color: transparent;
+		scrollbar-track-color: transparent;
+		overflow: hidden;
+	}
+	.sig {
+		border-style: solid;
+		border-color: transparent;
+		background: transparent;
+	}
+	.Show {
+		visibility:visible;
+		display:inline;
+	}
+	.Hide {
+		visibility:hidden;
+	}
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+	.box1 {
+		position: absolute;
+		width:13px;
+		height:13px;
+		font-size: 13px;
+		font-family: Arial;
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		font-family: sans-serif;
+		text-align: center;
+		background: aquamarine;
+	}
+	.box2 {
+		position: absolute;
+		width:10px;
+		height:10px;
+		font-size: 10px;
+		font-family: Arial;
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		font-family: sans-serif;
+		text-align: center;
+		background: aquamarine;
+	}
+	.Show {
+		visibility:visible;
+		display:inline;
+	}
+	.Hide {
+		visibility:hidden;
+		display:none;
+	}
+	.FontSizeChange {
+		position:absolute;
+		width:16px;
+		height:15px;
+		font-size:13px;
+		cursor:pointer;
+		background:yellow;
+		text-align:center;
+		border: 1px solid #000000;
+	}
+</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+			startup functions
+		****************************/
+		function startUp() {
+			// new off-line architecture as per K Yap
+			setDocumentTitle("DM_ care_FlowSheet",document.getElementById('PatientNameL').value);
+			changeImage("DM_Assessment_Pg1.png", "BGImage1");
+			changeImage("DM_Assessment_Pg2.png", "BGImage2");
+			changeImage("CPG_guide_Hypoglycemia.png", "BGImage3");
+			changeImage("CPG_guide_Dehydration.png", "BGImage4");
+			changeImage("CPG_guide_Women.png", "BGImage5");
+			changeImage("CPG_guide_A1c.png", "BGImage6");
+			changeImage("CPG_guide_DM_Med_Algorithm.png", "BGImage7");
+			changeImage("CPG_guide_Goals.png", "BGImage8");
+
+			setDefaults();
+
+			//optimize window size/width
+			top.window.resizeTo(1150, screen.availHeight);
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+			return prefix + resource + extension;
+		}
+
+		function changeImage(img,imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form 
+			if (document.getElementById("newForm").value == 'True') {
+				// document.getElementById('').value = '';
+				checkWarnings("LDLDate1");
+				checkWarnings("A1cDate1");
+				checkWarnings("ACRDate1");
+
+				parseName("patient_name");
+
+				parseMeasurementDate("LDLDate1");
+				parseMeasurementDate("ACRDate1");
+
+				parseMeasurementDate("PreviousDatePHQ9");
+				parseMeasurementDate("PreviousDateGAD7");
+			}
+			// actions if eForm is reopened
+		}
+
+
+		/****************************
+			Check for stale date warnings   i = xxxxxDate1; hidden value xxxxx_DateOnly; comparator xxxxx_Date2; warning xxxxx_warning
+		****************************/
+		function checkWarnings(i) {
+			// Change date field to dd/mmm/yyyy format
+			// Function expects an array of date components in yyyy/mm/dd format
+			// Get the date
+			var FullMeasurementDate = document.getElementById(i).value;
+			var delimiter = ' ';
+
+			// remove last character in i
+			 var j = i.substring(0, i.length -1);
+
+			 // Split the value
+			 var MeasurementDate = FullMeasurementDate.split(delimiter)[0];
+
+			 var DateOnly = MeasurementDate;
+
+			// Show the fields on the page
+			document.getElementById(j + "_DateOnly").value = DateOnly;
+
+			if (document.getElementById(j + "2").value == DateOnly) {
+				 document.getElementById(j + "_warning").className = "Show";
+			 } else {
+				 document.getElementById(j + "_warning").className = "Hide";
+			}
+		}
+
+		/****************************
+			Create name in proper order 
+		****************************/
+		function parseName(id) {
+			// Get the name
+		
+			var fullName = document.getElementById(id).value;
+
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+
+			// Show the fields on the page
+			document.getElementById(id).value = First_Last_Name;
+		}
+
+		/****************************
+			Remove time stamp from measurement
+			Oscar default is yyyy-mm-dd hh:mm:ss
+		****************************/
+		function parseMeasurementDate(id) {
+			// Change date field to dd/mmm/yyyy format
+			// Function expects an array of date components in yyyy/mm/dd format
+			// Get the date
+			var FullMeasurementDate = document.getElementById(id).value;
+			var delimiter = ' ';
+
+			// Split the value
+			var MeasurementDate = FullMeasurementDate.split(delimiter)[0];
+
+			var DateOnly = MeasurementDate;
+
+			// Show the fields on the page
+			document.getElementById(id).value = DateOnly;
+		}
+
+		/****************************
+			submit and print functions
+		****************************/
+		function printLetter() {
+		// Save reminder; allows for validity testing
+		document.getElementById('ResetButton').style.color = 'black';
+		document.getElementById('SubmitButton').style.border = '2px solid red';
+		alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+		window.print();
+		}
+
+		function submission() {  // requires type="submit" in submit button input to allow for validity testing
+		setFlag();
+		releaseDirtyFlag();
+		document.FormName.subject.value += document.FormName.Date1.value;
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+			Checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+				$( this ).click();
+				return false;
+				}
+			});
+		});
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		/****************************
+			Radio-XBox functions 
+			Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x and is 
+			named in the convention name_X where X appears in the string defined in scales
+		****************************/
+		function Radio_Box1(x) {
+			var scales = ["1", "2", "3"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+	}
+</script>
+
+</head>
+
+<body onload="startUp();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px; page-break-after:always;" class="pagebreak">
+<img id="BGImage1" src="">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden inputs to find stale result dates - for checkWarnings() -->
+<input name="LDLDate_DateOnly"a id="LDLDate_DateOnly" type="hidden">
+<input name="A1cDate_DateOnly" id="A1cDate_DateOnly" type="hidden">
+<input name="ACRDate_DateOnly" id="ACRDate_DateOnly" type="hidden">
+
+ <a id="CPG_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/docs/CPG-quick-reference-guide-web-EN.pdf
+" target="_blank" style="position:absolute; left:865px; top:0px; width:280px; font-size:18px; color:green;" title="Physician web reference">2018 Clinical Practice Guidelines</a>
+<a id="PatientCPG_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/docs/patient-resources/my-diabetes-care-not-just-about-blood-sugar.pdf" target="_blank" style="position:absolute; left:865px; top:30px; width:280px; font-size:16px; color:green;" title="Web reference; print in landscape orientation">Patient Treatment Guidelines</a>
+
+<!-- Diabetic Type -->
+<input name="Type1" id="DM_1" type="text" class="Xbox box1" style="left:128px; top:7px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DM_1>
+<input name="Type2" id="DM_2" type="text" class="Xbox box1" style="left:197px; top:7px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DM_2>
+<input name="Type_other" id="DM_3" type="text" class="Xbox box1" style="left:268px; top:7px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DM_3>
+<input name="DateDx" id="DateDx" type="text" class="noborder" style="position:absolute; left:455px; top:6px; width:75px; font-size:15px; background:transparent;" oscarDB=e$last#DateDx>
+
+<!-- Patient Info -->
+<input name="patient_name" id="patient_name" type="text" class="noborder" style="position:absolute; left:540px; top:25px; width:300px; font-size:16px; background:transparent;" oscarDB=patient_name>
+<input name="dobc2" id="dobc2" type="text" class="noborder" style="position:absolute; left:540px; top:73px; width:300px; font-size:16px; background:transparent;" oscarDB=dobc2>
+
+<!-- Comorbidities -->
+<input name="HTN" id="HTN" type="text" class="Xbox box2" style="left:5px; top:47px;" oscarDB=e$last#HTN>
+<input name="CAD" id="CAD" type="text" class="Xbox box2" style="left:144px; top:47px;" oscarDB=e$last#CAD>
+<input name="HTN" id="HTN" type="text" class="Xbox box2" style="left:345px; top:47px;" oscarDB=e$last#HTN>
+
+<input name="Dyslipidemia" id="Dyslipidemia" type="text" class="Xbox box2" style="left:5px; top:62px;" oscarDB=e$last#Dyslipidemia>
+<input name="PAD" id="PAD" type="text" class="Xbox box2" style="left:144px; top:62px;" oscarDB=e$last#PAD>
+<input name="Depression" id="Depression" type="text" class="Xbox box2" style="left:345px; top:62px;" oscarDB=e$last#Depression>
+<input name="Comorbid_other" id="Comorbid_other" type="text" class="Xbox box2" style="left:345px; top:77px;" oscarDB=e$last#Comorbid_other>
+<input name="Comorbid_other_text" id="Comorbid_other_text" type="text" class="noborder" style="position:absolute; left:425px; top:75px; width:105px; font-size:16px; background:transparent;" oscarDB=e$last#Comorbid_other_text>
+
+<input name="CKD" id="CKD" type="text" class="Xbox box2" style="left:5px; top:77px;" oscarDB=e$last#CKD>
+<input name="CKD_stage" id="CKD_stage" type="text" class="noborder" style="position:absolute; left:105px; top:72px; width:75px; font-size:16px; background:transparent;" oscarDB=e$last#CKD_stage>
+
+<!-- Lifestyle and Measurements -->
+<textarea name="Nutrition_comment" id="Nutrition_comment" type="text" class="noborder" style="position:absolute; left:130px; top:165px; width:250px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#Nutrition_comment></textarea>
+<textarea name="Smoking_comment" id="Smoking_comment" type="text" class="noborder" style="position:absolute; left:140px; top:240px; width:240px; height:50px;font-size:14px; background:transparent;" oscarDB=e$last#Smoking_comment></textarea>
+<input name="SMKLink" id="SMKLink" type="button" class="DoNotPrint" style="position:absolute; left:865px; top:245px; color:olive;" onclick="onBodyLoad(); SMK();" value="Smoking Summary" title="Click for measurements">
+
+<span name="warning" class="DoNotPrint" style="position:absolute; left:20px; top:101px; font-size:14px; color:red;">Are measurements are up to date? Remeasure if needed.</span>
+
+<input name="Date1" id="Date1" type="text" class="noborder" style="position:absolute; left:435px; top:97px; width:95px; font-size:16px; background:transparent;" onblur="document.FormName.Date1_pg2.value=document.FormName.Date1.value;" oscardb=today>
+<input name="Weight1" id="Weight1" type="text" class="noborder" style="position:absolute; left:415px; top:116px; width:40px; font-size:16px; text-align:center; background:transparent;">
+<input name="Height1" id="Height1" type="text" class="noborder" style="position:absolute; left:485px; top:116px; width:45px; font-size:16px; text-align:center; background:transparent;">
+<input name="BMI1" id="BMI1" type="text" class="noborder" style="position:absolute; left:415px; top:137px; width:40px; font-size:16px; text-align:center; background:transparent;">
+<input name="WC1" id="WC1" type="text" class="noborder" style="position:absolute; left:490px; top:137px; width:40px; font-size:16px; text-align:center; background:transparent;">
+<textarea name="Nutrition1" id="Nutrition1" type="text" class="noborder" style="position:absolute; left:383px; top:165px; width:154px; height:36px;font-size:14px; background:transparent;"></textarea>
+<textarea name="Exercise1" id="Exercise1" type="text" class="noborder" style="position:absolute; left:383px; top:202px; width:154px; height:36px;font-size:14px; background:transparent;"></textarea>
+<input name="NonSmoker1" id="SmokerStatus1_1" type="text" class="Xbox box2" style="left:388px; top:247px;" onclick="Radio_Box1(this.id);">
+<input name="ExSmoker1" id="SmokerStatus1_2" type="text" class="Xbox box2" style="left:388px; top:261px;" onclick="Radio_Box1(this.id);">
+<input name="ActiveSmoker1" id="SmokerStatus1_3" type="text" class="Xbox box2" style="left:388px; top:275px;" onclick="Radio_Box1(this.id);">
+
+<input name="Date2" id="Date2" type="text" class="noborder" style="position:absolute; left:590px; top:97px; width:95px; font-size:16px; background:transparent;" oscarDB=e$last#Date1>
+<input name="Weight2" id="Weight2" type="text" class="noborder" style="position:absolute; left:570px; top:116px; width:40px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#Weight1>
+<input name="Height2" id="Height2" type="text" class="noborder" style="position:absolute; left:640px; top:116px; width:45px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#Height1>
+<input name="BMI2" id="BMI2" type="text" class="noborder" style="position:absolute; left:570px; top:137px; width:40px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#BMI1>
+<input name="WC2" id="WC2" type="text" class="noborder" style="position:absolute; left:645px; top:137px; width:40px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#WC1>
+<textarea name="Nutrition2" id="Nutrition2" type="text" class="noborder" style="position:absolute; left:538px; top:165px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#Nutrition1></textarea>
+<textarea name="Exercise2" id="Exercise2" type="text" class="noborder" style="position:absolute; left:538px; top:202px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#Exercise1></textarea>
+<input name="NonSmoker2" id="SmokerStatus2_1" type="text" class="Xbox box2" style="left:543px; top:247px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#NonSmoker1>
+<input name="ExSmoker2" id="SmokerStatus2_2" type="text" class="Xbox box2" style="left:543px; top:261px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ExSmoker1>
+<input name="ActiveSmoker2" id="SmokerStatus2_3" type="text" class="Xbox box2" style="left:543px; top:275px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ActiveSmoker1>
+
+<input name="Date3" id="Date3" type="text" class="noborder" style="position:absolute; left:745px; top:97px; width:95px; font-size:16px; background:transparent;" oscarDB=e$last#Date2>
+<input name="Weight3" id="Weight3" type="text" class="noborder" style="position:absolute; left:725px; top:116px; width:40px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#Weight2>
+<input name="Height3" id="Height3" type="text" class="noborder" style="position:absolute; left:795px; top:116px; width:45px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#Height2>
+<input name="BMI3" id="BMI3" type="text" class="noborder" style="position:absolute; left:725px; top:137px; width:40px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#BMI2>
+<input name="WC3" id="WC3" type="text" class="noborder" style="position:absolute; left:800px; top:137px; width:40px; font-size:16px; text-align:center; background:transparent;" oscarDB=e$last#WC2>
+<textarea name="Nutrition3" id="Nutrition3" type="text" class="noborder" style="position:absolute; left:693px; top:165px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#Nutrition2></textarea>
+<textarea name="Exercise3" id="Exercise3" type="text" class="noborder" style="position:absolute; left:693px; top:202px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#Exercise2></textarea>
+<input name="NonSmoker3" id="SmokerStatus3_1" type="text" class="Xbox box2" style="left:698px; top:247px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#NonSmoker2>
+<input name="ExSmoker3" id="SmokerStatus3_2" type="text" class="Xbox box2" style="left:698px; top:261px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ExSmoker2>
+<input name="ActiveSmoker3" id="SmokerStatus3_3" type="text" class="Xbox box2" style="left:698px; top:275px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ActiveSmoker2>
+
+<!-- Additional Links -->
+<div class="DoNotPrint" id="AdditionalLinks" style="position:absolute; left:865px; top:119px; width:100px;">
+<input name="WeightLink" id="WeightLink" type="button" style="position:absolute; top:-15px; color:olive;" onclick="onBodyLoad(); Weight();" value="Weight Summary" title="Click for measurements">
+<input name="HeightLink" id="HeightLink" type="button" style="position:absolute; top:0px; color:olive;" onclick="onBodyLoad(); Height();" value="Height Summary" title="Click for measurements">
+<input name="BMILink" id="BMILink" type="button" style="position:absolute; top:15px; color:olive;" onclick="onBodyLoad(); BMI();" value="BMI Summary" title="Click for measurements">
+<input name="WCLink" id="WCLink" type="button" style="position:absolute; top:30px; color:olive;" onclick="onBodyLoad(); WAIS();" value="Waist Circumference Summary" title="Click for measurements">
+<a id="Nutrition_Reference" href="http://www.guidelines.diabetes.ca/docs/patient-resources/glycemic-index-food-guide.pdf" target="_blank" style="position:absolute; top:55px; width:280px; font-size:16px; color:green;" title="Web reference">Nutrition tool</a>
+<a id="PhysicalActivity_Reference" href="http://guidelines.diabetes.ca/reduce-complications/pa-tool
+" target="_blank" style="position:absolute; top:95px; width:280px; font-size:16px; color:green;" title="Web reference">Physical Activity Decision tool</a>
+</div>
+
+<!-- Glycemic Control -->
+<input name="A1C_target" id="A1C_target" type="text" class="noborder" style="position:absolute; left:165px; top:291px; width:50px; font-size:18px; background:transparent;" oscarDB=e$last#A1C_target>
+
+<div id="A1cDate_warning" class="Hide" style="position:absolute; left:295px; top:295px; width:85px; font-size:12px; color:red;">
+	<span name="warning" class="DoNotPrint">A1c result appears old. Consider updating before proceeding.</span>
+</div>
+	
+<input name="A1CLink" id="A1CLink" type="button" class="DoNotPrint" style="position:absolute; left:865px; top:294px; color:olive;" onclick="onBodyLoad(); HgbA1C();" value="A1c Summary" title="Click for measurements">
+<a id="A1c_Reference" class="DoNotPrint" href="https://www.diabetes.ca/managing-my-diabetes/tools---resources/individualizing-your-patient%E2%80%99s-a1c-target" target="_blank" style="position:absolute; left:865px; top:314px; width:135px; font-size:16px; color:green;" title="to web tool">A1c target tool</a>
+<a id="BGImage6" name="A1cMD_Reference" class="DoNotPrint" src="" target="_blank" style="position:absolute; left:1005px; top:314px; width:140px; font-size:16px; color:green;" title="MD reference">A1c Reference</a>
+
+<input name="A1cDate1" id="A1cDate1" type="text" class="noborder" style="position:absolute; left:455px; top:297px; width:75px; text-align:center; font-size:14px; background:transparent;">
+<input name="A1c_1" id="A1c_1" type="text" class="noborder" style="position:absolute; left:383px; top:327px; width:148px; height:27px; font-size:20px; text-align:center; background:transparent;">
+<textarea name="DMMedList1" id="DMMedList1" type="text" class="noborder" style="position:absolute; left:383px; top:360px; width:154px; height:73px;font-size:14px; background:transparent;"></textarea>
+<textarea name="RxAdherence1" id="RxAdherence1" type="text" class="noborder" style="position:absolute; left:383px; top:433px; width:154px; height:36px;font-size:14px; background:transparent;"></textarea>
+
+<input name="A1cDate2" id="A1cDate2" type="text" class="noborder" style="position:absolute; left:610px; top:297px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#A1cDate1>
+<input name="A1c_2" id="A1c_2" type="text" class="noborder" style="position:absolute; left:538px; top:327px; width:148px; height:27px; font-size:20px; text-align:center; background:transparent;" oscarDB=e$last#A1c_1>
+<textarea name="DMMedList2" id="DMMedList2" type="text" class="noborder" style="position:absolute; left:538px; top:360px; width:154px; height:73px;font-size:14px; background:transparent;" oscarDB=e$last#DMMedList1></textarea>
+<textarea name="RxAdherence2" id="RxAdherence2" type="text" class="noborder" style="position:absolute; left:538px; top:433px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#RxAdherence1></textarea>
+
+<input name="A1cDate3" id="A1cDate3" type="text" class="noborder" style="position:absolute; left:765px; top:297px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#A1cDate2>
+<input name="A1c_3" id="A1c_3" type="text" class="noborder" style="position:absolute; left:693px; top:327px; width:148px; height:27px; font-size:20px; text-align:center; background:transparent;" oscarDB=e$last#A1c_2>
+<textarea name="DMMedList3" id="DMMedList3" type="text" class="noborder" style="position:absolute; left:693px; top:360px; width:154px; height:73px;font-size:14px; background:transparent;" oscarDB=e$last#DMMedList2></textarea>
+<textarea name="RxAdherence3" id="RxAdherence3" type="text" class="noborder" style="position:absolute; left:693px; top:433px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#RxAdherence2></textarea>
+
+<!-- Display Meds -->
+<a name="Medication_Reference" id="BGImage7" class="DoNotPrint" src="" target="_blank" style="position:absolute; left:865px; top:344px; width:280px; font-size:16px; color:green;" title="type-2 DM medication reference">Medication List</a>
+
+<textarea name="MedicationList" id="MedicationList" type="text" class="DoNotPrint" style="position:absolute; left:865px; top:360px; width:285px; height:73px; resize:horizontal; font-size:14px; background:transparent;" oscarDB=druglist_line></textarea>
+
+<a id="MedicationInfo_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/reduce-complications/medication-sheets
+" target="_blank" style="position:absolute; left:865px; top:440px; width:280px; font-size:16px; color:green;" title="Info on specific DM meds">Medication Info</a>
+
+<input name="acBG_target" id="acBG_target" type="text" class="noborder" style="position:absolute; left:255px; top:486px; width:55px; font-size:14px; font-weight:bold; text-align:center; background:transparent;" oscarDB=e$last#acBG_target>
+<input name="pcBG_target" id="pcBG_target" type="text" class="noborder" style="position:absolute; left:255px; top:502px; width:55px; font-size:14px; font-weight:bold; text-align:center; background:transparent;" oscarDB=e$last#pcBG_target>
+
+<a id="SMBG_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/self-management/smbg-tool" target="_blank" style="position:absolute; left:865px; top:485px; width:280px; font-size:16px; color:green;" title="Web reference">Glucose Monitoring Tools</a>
+<a id="HypoglycemiaPatient_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/docs/patient-resources/hypoglycemia-low-blood-sugar-in-adults.pdf" target="_blank" style="position:absolute; left:865px; top:565px; width:280px; font-size:16px; color:green;" title="Patient reference">Patient Hypoglycemia Guide</a>
+<a id="BGImage3" name="HypoglycemiaMD_Reference" class="DoNotPrint" src="" target="_blank" style="position:absolute; left:865px; top:585px; width:280px; font-size:16px; color:green;" title="MD reference">Hypoglycemia Tool</a>
+
+<textarea name="BGDiary1" id="BGDiary1" type="text" class="noborder" style="position:absolute; left:383px; top:469px; width:154px; height:71px;font-size:14px; background:transparent;"></textarea>
+<input name="GlucCalibrate1" id="GlucCalibrate1" type="text" class="noborder" style="position:absolute; left:457px; top:543px; width:75px; text-align:center; font-size:15px; background:transparent;">
+<textarea name="HypoGlycemia1" id="HypoGlycemia1" type="text" class="noborder" style="position:absolute; left:383px; top:565px; width:154px; height:38px;font-size:14px; background:transparent;"></textarea>
+
+<textarea name="BGDiary2" id="BGDiary2" type="text" class="noborder" style="position:absolute; left:538px; top:469px; width:154px; height:71px;font-size:14px; background:transparent;" oscarDB=e$last#BGDiary1></textarea>
+<input name="GlucCalibrate2" id="GlucCalibrate2" type="text" class="noborder" style="position:absolute; left:612px; top:543px; width:75px; text-align:center; font-size:15px; background:transparent;" oscarDB=e$last#GlucCalibrate1>
+<textarea name="HypoGlycemia2" id="HypoGlycemia2" type="text" class="noborder" style="position:absolute; left:538px; top:565px; width:154px; height:38px;font-size:14px; background:transparent;" oscarDB=e$last#HypoGlycemia1></textarea>
+
+<textarea name="BGDiary3" id="BGDiary3" type="text" class="noborder" style="position:absolute; left:693px; top:469px; width:154px; height:71px;font-size:14px; background:transparent;" oscarDB=e$last#BGDiary2></textarea>
+<input name="GlucCalibrate3" id="GlucCalibrate3" type="text" class="noborder" style="position:absolute; left:767px; top:543px; width:75px; text-align:center; font-size:15px; background:transparent;" oscarDB=e$last#GlucCalibrate2>
+<textarea name="HypoGlycemia3" id="HypoGlycemia3" type="text" class="noborder" style="position:absolute; left:693px; top:565px; width:154px; height:38px;font-size:14px; background:transparent;" oscarDB=e$last#HypoGlycemia2></textarea>
+
+<!-- CV Risk -->
+<input name="Pulse_comment" id="Pulse_comment" type="text" class="noborder" style="position:absolute; left:80px; top:638px; width:300px; font-size:13px; background:transparent;" placeholder="rhythm" oscarDB=e$last#Pulse_comment>
+
+<a id="CVD_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/reduce-complications/risk-assessment" target="_blank" style="position:absolute; left:865px; top:755px; width:280px; font-size:16px; color:green;" title="Web reference">CVD Risk Tools</a>
+<a id="CVDMed_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/docs/resources/prescription-for-cardiovascular-protection-with-diabetes.pdf" target="_blank" style="position:absolute; left:865px; top:847px; width:280px; font-size:16px; color:green;" title="Web reference">CVD Medication Tools</a>
+
+<!-- Blood Pressure -->
+<input name="BP1_1" id="BP1_1" type="text" class="noborder" style="position:absolute; left:383px; top:613px; width:41px; font-size:13px; text-align:center; background:transparent;">
+<input name="BP2_1" id="BP2_1" type="text" class="noborder" style="position:absolute; left:432px; top:613px; width:46px; font-size:13px; text-align:center; background:transparent;">
+<input name="BP3_1" id="BP3_1" type="text" class="noborder" style="position:absolute; left:485px; top:613px; width:46px; font-size:13px; text-align:center; background:transparent;">
+<input name="Pulse1_1" id="Pulse1_1" type="text" class="noborder" style="position:absolute; left:383px; top:638px; width:41px; font-size:13px; text-align:center; background:transparent;">
+<input name="Pulse2_1" id="Pulse2_1" type="text" class="noborder" style="position:absolute; left:432px; top:638px; width:46px; font-size:13px; text-align:center; background:transparent;">
+<input name="Pulse3_1" id="Pulse3_1" type="text" class="noborder" style="position:absolute; left:485px; top:638px; width:46px; font-size:13px; text-align:center; background:transparent;">
+<textarea name="BPMedList1" id="BPMedList1" type="text" class="noborder" style="position:absolute; left:383px; top:658px; width:154px; height:73px;font-size:14px; background:transparent;"></textarea>
+
+<input name="CVDSymptomNo_1" id="CVDSymptom1_1" type="text" class="Xbox box2" style="left:388px; top:739px;" onclick="Radio_Box1(this.id);">
+<input name="CVDSymptomYes_1" id="CVDSymptom1_2" type="text" class="Xbox box2" style="left:388px; top:753px;" onclick="Radio_Box1(this.id);">
+<textarea name="CVD_Symptoms1" id="CVD_Symptoms1" type="text" class="noborder" style="position:absolute; left:443px; top:732px; width:94px; height:58px;font-size:14px; background:transparent;"></textarea>
+
+<input name="BP1_2" id="BP1_2" type="text" class="noborder" style="position:absolute; left:538px; top:613px; width:42px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#BP1_1>
+<input name="BP2_2" id="BP2_2" type="text" class="noborder" style="position:absolute; left:588px; top:613px; width:46px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#BP2_1>
+<input name="BP3_2" id="BP3_2" type="text" class="noborder" style="position:absolute; left:641px; top:613px; width:46px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#BP3_1>
+<input name="Pulse1_2" id="Pulse1_2" type="text" class="noborder" style="position:absolute; left:538px; top:638px; width:42px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#Pulse1_1>
+<input name="Pulse2_2" id="Pulse2_2" type="text" class="noborder" style="position:absolute; left:588px; top:638px; width:46px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#Pulse2_1>
+<input name="Pulse3_2" id="Pulse3_2" type="text" class="noborder" style="position:absolute; left:641px; top:638px; width:46px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#Pulse3_1>
+<textarea name="BPMedList2" id="BPMedList2" type="text" class="noborder" style="position:absolute; left:538px; top:658px; width:154px; height:73px;font-size:14px; background:transparent;" oscarDB=e$last#BPMedList1></textarea>
+
+<input name="CVDSymptomNo_2" id="CVDSymptom2_1" type="text" class="Xbox box2" style="left:543px; top:739px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CVDSymptomNo_1>
+<input name="CVDSymptomYes_2" id="CVDSymptom2_2" type="text" class="Xbox box2" style="left:543px; top:753px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CVDSymptomYes_1>
+<textarea name="CVD_Symptoms2" id="CVD_Symptoms2" type="text" class="noborder" style="position:absolute; left:598px; top:732px; width:94px; height:58px;font-size:14px; background:transparent;" oscarDB=e$last#CVD_Symptoms1></textarea>
+
+<input name="BP1_3" id="BP1_3" type="text" class="noborder" style="position:absolute; left:694px; top:613px; width:43px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#BP1_2>
+<input name="BP2_3" id="BP2_3" type="text" class="noborder" style="position:absolute; left:744px; top:613px; width:46px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#BP2_2>
+<input name="BP3_3" id="BP3_3" type="text" class="noborder" style="position:absolute; left:798px; top:613px; width:44px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#BP3_2>
+<input name="Pulse1_3" id="Pulse1_3" type="text" class="noborder" style="position:absolute; left:694px; top:638px; width:43px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#Pulse1_2>
+<input name="Pulse2_3" id="Pulse2_3" type="text" class="noborder" style="position:absolute; left:744px; top:638px; width:46px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#Pulse2_2>
+<input name="Pulse3_3" id="Pulse3_3" type="text" class="noborder" style="position:absolute; left:798px; top:638px; width:44px; font-size:13px; text-align:center; background:transparent;" oscarDB=e$last#Pulse3_2>
+<textarea name="BPMedList3" id="BPMedList3" type="text" class="noborder" style="position:absolute; left:693px; top:658px; width:154px; height:73px;font-size:14px; background:transparent;" oscarDB=e$last#BPMedList2></textarea>
+
+<input name="CVDSymptomNo_3" id="CVDSymptom3_1" type="text" class="Xbox box2" style="left:698px; top:739px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CVDSymptomNo_2>
+<input name="CVDSymptomYes_3" id="CVDSymptom3_2" type="text" class="Xbox box2" style="left:698px; top:753px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CVDSymptomYes_2>
+<textarea name="CVD_Symptoms3" id="CVD_Symptoms3" type="text" class="noborder" style="position:absolute; left:753px; top:732px; width:94px; height:58px;font-size:14px; background:transparent;" oscarDB=e$last#CVD_Symptoms2></textarea>
+
+<!-- ECG screen -->
+<input name="ECGDate1" id="ECGDate1" type="text" class="noborder" style="position:absolute; left:425px; top:794px; width:105px; text-align:center; font-size:14px; background:transparent;">
+<input name="ECG_1" id="ECG_1" type="text" class="noborder" style="position:absolute; left:383px; top:825px; width:147px; font-size:14px; background:transparent;">
+
+<input name="ECGDate2" id="ECGDate2" type="text" class="noborder" style="position:absolute; left:580px; top:794px; width:105px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#ECGDate1>
+<input name="ECG_2" id="ECG_2" type="text" class="noborder" style="position:absolute; left:538px; top:825px; width:147px; font-size:14px; text-align:center; background:transparent;" oscarDB=e$last#ECG_1>
+
+<input name="ECGDate3" id="ECGDate3" type="text" class="noborder" style="position:absolute; left:735px; top:794px; width:105px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#ECGDate2>
+<input name="ECG_3" id="ECG_3" type="text" class="noborder" style="position:absolute; left:693px; top:825px; width:147px; font-size:14px; text-align:center; background:transparent;" oscarDB=e$last#ECG_2>
+
+<!-- Lipids -->
+<div id="LDLDate_warning" class="Hide" style="position:absolute; left:80px; top:845px; width:300px; color:red; font-size:12px;">
+<span name="warning" class="DoNotPrint">LDL result appears old. Consider updating before proceeding.</span>
+</div>
+
+<input name="LDL_1" id="LDL_1" type="text" class="noborder" style="position:absolute; left:443px; top:848px; width:87px; font-size:16px; background:transparent;" oscarDB=m$LDL#value>
+<input name="nonHDL_1" id="nonHDL_1" type="text" class="noborder" style="position:absolute; left:468px; top:864px; width:62px; font-size:16px; background:transparent;">
+<input name="LDLDate1" id="LDLDate1" type="text" class="noborder" style="position:absolute; left:455px; top:887px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=m$LDL#dateObserved>
+
+<input name="LipidRxContinue_1" id="LipidRx1_1" type="text" class="Xbox box2" style="left:388px; top:911px;" onclick="Radio_Box1(this.id);">
+<input name="LipidRxStart_1" id="LipidRx1_3" type="text" class="Xbox box2" style="left:478px; top:911px;" onclick="Radio_Box1(this.id);">
+<input name="LipidRxNo_1" id="LipidRx1_2" type="text" class="Xbox box2" style="left:388px; top:925px;" onclick="Radio_Box1(this.id);">
+<textarea name="Lipid_Rx1" id="Lipid_Rx1" type="text" class="noborder" style="position:absolute; left:383px; top:945px; width:154px; height:72px;font-size:14px; background:transparent;"></textarea>
+
+<input name="LDL_2" id="LDL_2" type="text" class="noborder" style="position:absolute; left:598px; top:848px; width:87px; font-size:16px; background:transparent;" oscarDB=e$last#LDL_1>
+<input name="nonHDL_2" id="nonHDL_2" type="text" class="noborder" style="position:absolute; left:623px; top:864px; width:62px; font-size:16px; background:transparent;" oscarDB=e$last#nonHDL_1>
+<input name="LDLDate2" id="LDLDate2" type="text" class="noborder" style="position:absolute; left:610px; top:887px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#LDLDate1>
+
+<input name="LipidRxContinue_2" id="LipidRx2_1" type="text" class="Xbox box2" style="left:543px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#LipidRxContinue_1>
+<input name="LipidRxStart_2" id="LipidRx2_3" type="text" class="Xbox box2" style="left:633px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#LipidRxStart_1>
+<input name="LipidRxNo_2" id="LipidRx2_2" type="text" class="Xbox box2" style="left:543px; top:925px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#LipidRxNo_1>
+<textarea name="Lipid_Rx2" id="Lipid_Rx2" type="text" class="noborder" style="position:absolute; left:538px; top:945px; width:154px; height:72px;font-size:14px; background:transparent;" oscarDB=e$last#Lipid_Rx1></textarea>
+
+<input name="LDL_3" id="LDL_3" type="text" class="noborder" style="position:absolute; left:753px; top:848px; width:87px; font-size:16px; background:transparent;" oscarDB=e$last#LDL_2>
+<input name="nonHDL_3" id="nonHDL_3" type="text" class="noborder" style="position:absolute; left:778px; top:864px; width:62px; font-size:16px; background:transparent;" oscarDB=e$last#nonHDL_2>
+<input name="LDLDate3" id="LDLDate3" type="text" class="noborder" style="position:absolute; left:765px; top:887px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#LDLDate2>
+
+<input name="LipidRxContinue_3" id="LipidRx3_1" type="text" class="Xbox box2" style="left:698px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#LipidRxContinue_2>
+<input name="LipidRxStart_3" id="LipidRx3_3" type="text" class="Xbox box2" style="left:788px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#LipidRxStart_2>
+<input name="LipidRxNo_3" id="LipidRx3_2" type="text" class="Xbox box2" style="left:698px; top:925px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#LipidRxNo_2>
+<textarea name="Lipid_Rx3" id="Lipid_Rx3" type="text" class="noborder" style="position:absolute; left:693px; top:945px; width:154px; height:72px;font-size:14px; background:transparent;" oscarDB=e$last#Lipid_Rx2></textarea>
+
+<!-- ACEI/ARB Rx -->
+<div id="ACEI_ARB" style="position:absolute; top:115px;">
+<input name="ACEIARBContinue_1" id="ACEIARB1_1" type="text" class="Xbox box2" style="left:388px; top:911px;" onclick="Radio_Box1(this.id);">
+<input name="ACEIARBStart_1" id="ACEIARB1_3" type="text" class="Xbox box2" style="left:478px; top:911px;" onclick="Radio_Box1(this.id);">
+<input name="ACEIARBNo_1" id="ACEIARB1_2" type="text" class="Xbox box2" style="left:388px; top:925px;" onclick="Radio_Box1(this.id);">
+<textarea name="ACEI_ARB_Rx1" id="ACEI_ARB_Rx1" type="text" class="noborder" style="position:absolute; left:383px; top:945px; width:154px; height:37px;font-size:14px; background:transparent;"></textarea>
+
+<input name="ACEIARBContinue_2" id="ACEIARB2_1" type="text" class="Xbox box2" style="left:543px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ACEIARBContinue_1>
+<input name="ACEIARBStart_2" id="ACEIARB2_3" type="text" class="Xbox box2" style="left:633px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ACEIARBStart_1>
+<input name="ACEIARBNo_2" id="ACEIARB2_2" type="text" class="Xbox box2" style="left:543px; top:925px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ACEIARBNo_1>
+<textarea name="ACEI_ARB_Rx2" id="ACEI_ARB_Rx2" type="text" class="noborder" style="position:absolute; left:538px; top:945px; width:154px; height:37px;font-size:14px; background:transparent;" oscarDB=e$last#ACEI_ARB_Rx1></textarea>
+
+<input name="ACEIARBContinue_3" id="ACEIARB3_1" type="text" class="Xbox box2" style="left:698px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ACEIARBContinue_2>
+<input name="ACEIARBStart_3" id="ACEIARB3_3" type="text" class="Xbox box2" style="left:788px; top:911px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ACEIARBStart_2>
+<input name="ACEIARBNo_3" id="ACEIARB3_2" type="text" class="Xbox box2" style="left:698px; top:925px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#ACEIARBNo_2>
+<textarea name="ACEI_ARB_Rx3" id="ACEI_ARB_Rx3" type="text" class="noborder" style="position:absolute; left:693px; top:945px; width:154px; height:37px;font-size:14px; background:transparent;" oscarDB=e$last#ACEI_ARB_Rx2></textarea>
+</div>
+<br>
+<!-- end of page 1 -->
+</div>
+
+<div id="page2" style="position:relative; page-break-after:always;">
+<img id="BGImage2" src="">
+
+<input name="Date1_pg2" id="Date1_pg2" type="text" class="noborder" style="position:absolute; left:435px; top:0px; width:100px; font-size:16px; background:transparent;" oscardb=today>
+<input name="Date2_pg2" id="Date2_pg2" type="text" class="noborder" style="position:absolute; left:590px; top:0px; width:100px; font-size:16px; background:transparent;" oscarDB=e$last#Date1>
+<input name="Date3_pg2" id="Date3_pg2" type="text" class="noborder" style="position:absolute; left:745px; top:0px; width:100px; font-size:16px; background:transparent;" oscarDB=e$last#Date2>
+
+<!-- DM Rx for CV protection-->
+<div id="DM_meds" style="position:absolute; top:27px;">
+<input name="DMMedsContinue_1" id="DMMeds1_1" type="text" class="Xbox box2" style="left:388px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="DMMedsStart_1" id="DMMeds1_3" type="text" class="Xbox box2" style="left:478px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="DMMedsNo_1" id="DMMeds1_2" type="text" class="Xbox box2" style="left:388px; top:14px;" onclick="Radio_Box1(this.id);">
+<textarea name="DM_Meds_Rx1" id="DM_Meds_Rx1" type="text" class="noborder" style="position:absolute; left:383px; top:30px; width:154px; height:48px;font-size:14px; background:transparent;"></textarea>
+
+<input name="DMMedsContinue_2" id="DMMeds2_1" type="text" class="Xbox box2" style="left:543px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DMMedsContinue_1>
+<input name="DMMedsStart_2" id="DMMeds2_3" type="text" class="Xbox box2" style="left:633px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DMMedsStart_1>
+<input name="DMMedsNo_2" id="DMMeds2_2" type="text" class="Xbox box2" style="left:543px; top:14px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DMMedsNo_1>
+<textarea name="DM_Meds_Rx2" id="DM_Meds_Rx2" type="text" class="noborder" style="position:absolute; left:538px; top:30px; width:154px; height:48px;font-size:14px; background:transparent;" oscarDB=e$last#DM_Meds_Rx1></textarea>
+
+<input name="DMMedsContinue_3" id="DMMeds3_1" type="text" class="Xbox box2" style="left:698px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DMMedsContinue_2>
+<input name="DMMedsStart_3" id="DMMeds3_3" type="text" class="Xbox box2" style="left:788px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DMMedsStart_2>
+<input name="DMMedsNo_3" id="DMMeds3_2" type="text" class="Xbox box2" style="left:698px; top:14px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#DMMedsNo_2>
+<textarea name="DM_Meds_Rx3" id="DM_Meds_Rx3" type="text" class="noborder" style="position:absolute; left:693px; top:30px; width:154px; height:48px;font-size:14px; background:transparent;" oscarDB=e$last#DM_Meds_Rx2></textarea>
+</div>
+
+<!-- AntiPlatelet Rx -->
+<div id="AntiPlatelet_meds" style="position:absolute; top:111px;">
+<input name="AntiPlateletNo_1" id="AntiPlatelet1_1" type="text" class="Xbox box2" style="left:388px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="AntiPlateletYes_1" id="AntiPlatelet1_2" type="text" class="Xbox box2" style="left:388px; top:14px;" onclick="Radio_Box1(this.id);">
+<textarea name="AntiPlatelet_Rx1" id="AntiPlatelet_Rx1" type="text" class="noborder" style="position:absolute; left:383px; top:30px; width:154px; height:36px;font-size:14px; background:transparent;"></textarea>
+
+<input name="AntiPlateletNo_2" id="AntiPlatelet2_1" type="text" class="Xbox box2" style="left:543px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#AntiPlateletNo_1>
+<input name="AntiPlateletYes_2" id="AntiPlatelet2_2" type="text" class="Xbox box2" style="left:543px; top:14px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#AntiPlateletYes_1>
+<textarea name="AntiPlatelet_Rx2" id="AntiPlatelet_Rx2" type="text" class="noborder" style="position:absolute; left:538px; top:30px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#AntiPlatelet_Rx1></textarea>
+
+<input name="AntiPlateletNo_3" id="AntiPlatelet3_1" type="text" class="Xbox box2" style="left:698px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#AntiPlateletNo_2>
+<input name="AntiPlateletYes_3" id="AntiPlatelet3_2" type="text" class="Xbox box2" style="left:698px; top:14px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#AntiPlateletYes_2>
+<textarea name="AntiPlatelet_Rx3" id="AntiPlatelet_Rx3" type="text" class="noborder" style="position:absolute; left:693px; top:30px; width:154px; height:36px;font-size:14px; background:transparent;" oscarDB=e$last#AntiPlatelet_Rx2></textarea>
+</div>
+
+<!-- ACR results -->
+<div id="ACR_result" style="position:absolute; top:181px;">
+
+<div id="ACRDate_warning" class="Hide" style="position:absolute; left:35px; top:22px; width:345px; font-size:12px; color:red;">
+	<span name="warning" class="DoNotPrint">ACR result appears old. Consider updating before proceeding.</span>
+</div>
+	
+<input name="ACRLink" id="ACRLink" type="button" class="DoNotPrint" style="position:absolute; left:865px; top:0px; color:olive;" onclick="onBodyLoad(); ACR();" value="ACR Summary" title="Click for measurements">
+
+<input name="ACRDate1" id="ACRDate1" type="text" class="noborder" style="position:absolute; left:455px; top:0px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=m$ACR#dateObserved>
+<input name="ACR_1" id="ACR_1" type="text" class="noborder" style="position:absolute; left:440px; top:17px; width:90px; font-size:14px; background:transparent;" oscarDB=m$ACR#value>
+
+<input name="ACRDate2" id="ACRDate2" type="text" class="noborder" style="position:absolute; left:610px; top:0px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#ACRDate1>
+<input name="ACR_2" id="ACR_2" type="text" class="noborder" style="position:absolute; left:595px; top:17px; width:90px; font-size:14px; background:transparent;" oscarDB=e$last#ACR_1>
+
+<input name="ACRDate3" id="ACRDate3" type="text" class="noborder" style="position:absolute; left:765px; top:0px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#ACRDate2>
+<input name="ACR_3" id="ACR_3" type="text" class="noborder" style="position:absolute; left:750px; top:17px; width:90px; font-size:14px; background:transparent;" oscarDB=e$last#ACR_2>
+</div>
+
+<!-- eGFR results -->
+<div id="GFR_result" style="position:absolute; top:223px;">
+<span class="DoNotPrint" style="position:absolute; left:70px; top:48px; width:175px; font-size:14px; color:green;">(Consider 14033 fee, D585)</span>
+<input name="GFRLink" id="GFRLink" type="button" class="DoNotPrint" style="position:absolute; left:865px; top:0px; color:olive;" onclick="onBodyLoad(); eGFR();" value="GFR Summary" title="Click for measurements">
+
+<a id="CKD_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/docs/cpg/Appendix-7.pdf" target="_blank" style="position:absolute; left:865px; top:48px; width:280px; font-size:16px; color:green;" title="Web reference">CKD Considerations</a>
+
+<input name="GFRDate1" id="GFRDate1" type="text" class="noborder" style="position:absolute; left:455px; top:0px; width:75px; text-align:center; font-size:14px; background:transparent;" oscardb=m$GFR#dateObserved>
+<input name="GFR_1" id="GFR_1" type="text" class="noborder" style="position:absolute; left:440px; top:17px; width:90px; font-size:14px; background:transparent;" oscardb=m$GFR#value>
+<input name="CKD1Yes" id="CKD1_1" type="text" class="Xbox box2" style="left:388px; top:46px;" onclick="Radio_Box1(this.id);">
+<input name="CKD1No" id="CKD1_2" type="text" class="Xbox box2" style="left:454px; top:46px;" onclick="Radio_Box1(this.id);">
+
+<input name="GFRDate2" id="GFRDate2" type="text" class="noborder" style="position:absolute; left:610px; top:0px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#GFRDate1>
+<input name="GFR_2" id="GFR_2" type="text" class="noborder" style="position:absolute; left:595px; top:17px; width:90px; font-size:14px; background:transparent;" oscarDB=e$last#GFR_1>
+<input name="CKD2Yes" id="CKD2_1" type="text" class="Xbox box2" style="left:543px; top:46px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CKD1Yes>
+<input name="CKD2No" id="CKD2_2" type="text" class="Xbox box2" style="left:609px; top:46px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CKD1No>
+
+<input name="GFRDate3" id="GFRDate3" type="text" class="noborder" style="position:absolute; left:765px; top:0px; width:75px; text-align:center; font-size:14px; background:transparent;" oscarDB=e$last#GFRDate2>
+<input name="GFR_3" id="GFR_3" type="text" class="noborder" style="position:absolute; left:750px; top:17px; width:90px; font-size:14px; background:transparent;" oscarDB=e$last#GFR_2>
+<input name="CKD3Yes" id="CKD3_1" type="text" class="Xbox box2" style="left:698px; top:46px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CKD2Yes>
+<input name="CKD3No" id="CKD3_2" type="text" class="Xbox box2" style="left:764px; top:46px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#CKD2No></div>
+
+<!-- Retinopathy -->
+<div id="Eye_exam" style="position:absolute; top:295px;">
+<!-- Eye Exam 1 -->
+<input name="EyeExamDate_1" id="EyeExam1_1" type="text" class="Xbox box2" style="left:388px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="EyeExamReminder_1" id="EyeExam1_2" type="text" class="Xbox box2" style="left:388px; top:14px;" onclick="Radio_Box1(this.id);">
+<input name="EyeExamComment1" id="EyeExamComment1" type="text" class="noborder" style="position:absolute; left:383px; top:30px; width:147px; font-size:14px; background:transparent;">
+<input name="Retinopathy1Yes" id="Retinopathy1_1" type="text" class="Xbox box2" style="left:388px; top:52px;" onclick="Radio_Box1(this.id);">
+<input name="Retinopathy1No" id="Retinopathy1_2" type="text" class="Xbox box2" style="left:454px; top:52px;" onclick="Radio_Box1(this.id);">
+<input name="RetinopathyRx_1" id="RetinopathyRx_1" type="text" class="noborder" style="position:absolute; left:383px; top:76px; width:147px; font-size:14px; background:transparent;">
+
+<!-- Eye Exam 2 -->
+<input name="EyeExamDate_2" id="EyeExam2_1" type="text" class="Xbox box2" style="left:543px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#EyeExamDate_1>
+<input name="EyeExamReminder_2" id="EyeExam2_2" type="text" class="Xbox box2" style="left:543px; top:14px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#EyeExamReminder_1>
+<input name="EyeExamComment2" id="EyeExamComment2" type="text" class="noborder" style="position:absolute; left:538px; top:30px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#EyeExamComment1>
+<input name="Retinopathy2Yes" id="Retinopathy2_1" type="text" class="Xbox box2" style="left:543px; top:52px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Retinopathy1Yes>
+<input name="Retinopathy2No" id="Retinopathy2_2" type="text" class="Xbox box2" style="left:609px; top:52px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Retinopathy1No>
+<input name="RetinopathyRx_2" id="RetinopathyRx_2" type="text" class="noborder" style="position:absolute; left:538px; top:76px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#RetinopathyRx_1>
+
+<!-- Eye Exam 3 -->
+<input name="EyeExamDate_3" id="EyeExam3_1" type="text" class="Xbox box2" style="left:698px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#EyeExamDate_2>
+<input name="EyeExamReminder_3" id="EyeExam3_2" type="text" class="Xbox box2" style="left:698px; top:14px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#EyeExamReminder_2>
+<input name="EyeExamComment3" id="EyeExamComment3" type="text" class="noborder" style="position:absolute; left:693px; top:30px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#EyeExamComment2>
+<input name="Retinopathy3Yes" id="Retinopathy3_1" type="text" class="Xbox box2" style="left:698px; top:52px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Retinopathy2Yes>
+<input name="Retinopathy3No" id="Retinopathy3_2" type="text" class="Xbox box2" style="left:764px; top:52px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Retinopathy2No>
+<input name="RetinopathyRx_3" id="RetinopathyRx_3" type="text" class="noborder" style="position:absolute; left:693px; top:76px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#RetinopathyRx_2>
+</div>
+
+<!-- Neuropathy -->
+<div id="Neuropathy_exam" style="position:absolute; top:399px;">
+	<a id="Appendix11a_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/docs/cpg/Appendix-11a.pdf" target="_blank" style="position:absolute; left:865px; top:51px; width:280px;" title="Web reference">Appendix 11A</a>
+	<a id="Appendix11a_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/docs/cpg/Appendix-11B.pdf" target="_blank" style="position:absolute; left:865px; top:71px; width:280px;" title="Web reference">Appendix 11B</a>
+	<a id="Appendix11a_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/docs/cpg/Appendix-12.pdf" target="_blank" style="position:absolute; left:865px; top:91px; width:280px;" title="Web reference">Appendix 12</a>
+
+<!-- Neuropathy 1 -->
+<input name="NeuropathicSx1Yes" id="NeuropathicSx1_1" type="text" class="Xbox box2" style="left:388px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="NeuropathicSx1No" id="NeuropathicSx1_2" type="text" class="Xbox box2" style="left:454px; top:0px;" onclick="Radio_Box1(this.id);">
+<textarea name="NeuropathicSxRx_1" id="NeuropathicSxRx_1" type="text" class="noborder" style="position:absolute; left:383px; top:16px; width:154px; height:32px; font-size:14px; background:transparent;"></textarea>
+
+<input name="Sensation_1" id="Sensation_1" type="text" class="noborder" style="position:absolute; left:455px; top:49px; width:75px; font-size:14px; background:transparent;">
+<input name="Pulses_1" id="Pulses_1" type="text" class="noborder" style="position:absolute; left:435px; top:63px; width:95px; font-size:14px; background:transparent;">
+<input name="Skin_1" id="Skin_1" type="text" class="noborder" style="position:absolute; left:420px; top:78px; width:110px; font-size:14px; background:transparent;">
+<textarea name="NeuroOther_1" id="NeuroOther_1" type="text" class="noborder" style="position:absolute; left:430px; top:93px; width:106px; height:34px; font-size:14px; background:transparent;"></textarea>
+
+<input name="Neuropathy1Yes" id="Neuropathy1_1" type="text" class="Xbox box2" style="left:388px; top:140px;" onclick="Radio_Box1(this.id);">
+<input name="Neuropathy1No" id="Neuropathy1_2" type="text" class="Xbox box2" style="left:454px; top:140px;" onclick="Radio_Box1(this.id);">
+
+<!-- Neuropathy 2 -->
+<input name="NeuropathicSx2Yes" id="NeuropathicSx2_1" type="text" class="Xbox box2" style="left:543px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#NeuropathicSx1Yes>
+<input name="NeuropathicSx2No" id="NeuropathicSx2_2" type="text" class="Xbox box2" style="left:609px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#NeuropathicSx1No>
+<textarea name="NeuropathicSxRx_2" id="NeuropathicSxRx_2" type="text" class="noborder" style="position:absolute; left:538px; top:16px; width:154px; height:32px; font-size:14px; background:transparent;" oscarDB=e$last#NeuropathicSxRx_1></textarea>
+
+<input name="Sensation_2" id="Sensation_2" type="text" class="noborder" style="position:absolute; left:610px; top:49px; width:75px; font-size:14px; background:transparent;" oscarDB=e$last#Sensation_1>
+<input name="Pulses_2" id="Pulses_2" type="text" class="noborder" style="position:absolute; left:590px; top:63px; width:95px; font-size:14px; background:transparent;" oscarDB=e$last#Pulses_1>
+<input name="Skin_2" id="Skin_2" type="text" class="noborder" style="position:absolute; left:575px; top:78px; width:110px; font-size:14px; background:transparent;" oscarDB=e$last#Skin_1>
+<textarea name="NeuroOther_2" id="NeuroOther_2" type="text" class="noborder" style="position:absolute; left:585px; top:93px; width:106px; height:34px; font-size:14px; background:transparent;" oscarDB=e$last#NeuroOther_1></textarea>
+
+<input name="Neuropathy2Yes" id="Neuropathy2_1" type="text" class="Xbox box2" style="left:543px; top:140px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Neuropathy1Yes>
+<input name="Neuropathy2No" id="Neuropathy2_2" type="text" class="Xbox box2" style="left:609px; top:140px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Neuropathy1No>
+
+<!-- Neuropathy 3 -->
+<input name="NeuropathicSx3Yes" id="NeuropathicSx3_1" type="text" class="Xbox box2" style="left:698px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#NeuropathicSx2Yes>
+<input name="NeuropathicSx3No" id="NeuropathicSx3_2" type="text" class="Xbox box2" style="left:764px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#NeuropathicSx2No>
+<textarea name="NeuropathicSxRx_3" id="NeuropathicSxRx_3" type="text" class="noborder" style="position:absolute; left:693px; top:16px; width:154px; height:32px; font-size:14px; background:transparent;" oscarDB=e$last#NeuropathicSxRx_2></textarea>
+
+<input name="Sensation_3" id="Sensation_3" type="text" class="noborder" style="position:absolute; left:765px; top:49px; width:75px; font-size:14px; background:transparent;" oscarDB=e$last#Sensation_2>
+<input name="Pulses_3" id="Pulses_3" type="text" class="noborder" style="position:absolute; left:745px; top:63px; width:95px; font-size:14px; background:transparent;" oscarDB=e$last#Pulses_2>
+<input name="Skin_3" id="Skin_3" type="text" class="noborder" style="position:absolute; left:730px; top:78px; width:110px; font-size:14px; background:transparent;" oscarDB=e$last#Skin_2>
+<textarea name="NeuroOther_3" id="NeuroOther_3" type="text" class="noborder" style="position:absolute; left:740px; top:93px; width:106px; height:34px; font-size:14px; background:transparent;" oscarDB=e$last#NeuroOther_2></textarea>
+
+<input name="Neuropathy3Yes" id="Neuropathy3_1" type="text" class="Xbox box2" style="left:698px; top:140px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Neuropathy2Yes>
+<input name="Neuropathy3No" id="Neuropathy3_2" type="text" class="Xbox box2" style="left:764px; top:140px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Neuropathy2No>
+</div>
+
+<!-- Mental Health -->
+<div id="MentalHealth_exam" style="position:absolute; top:578px;">
+<input name="PHQ9_GAD7Link" id="PHQ9_GAD7Link" type="button" class="DoNotPrint" style="position:absolute; left:255px; top:0px; color:green;" oscarOPEN="PHQ9_GAD7 Combined" value="PHQ9 GAD7" title="to eFORM">
+	<span class="DoNotPrint" style="position:absolute; left:35px; top:20px; font-size:13px; color:green;"><b>PHQ9</b></span>
+	<input name="PHQ9ScorePrevious" id="PHQ9ScorePrevious" type="text" class="DoNotPrint noborder" style="position:absolute; left:75px; top:15px; width:25px; font-size:13px; text-align:center; color:green;" oscardb=m$PHQ9#value> 
+	<input type="text" name="PreviousDatePHQ9" id="PreviousDatePHQ9" class="DoNotPrint noborder" style="position:absolute; left:105px; top:15px; width:78px; font-size:13px; color:green;" oscardb=m$PHQ9#dateObserved>
+
+	<span class="DoNotPrint" style="position:absolute; left:35px; top:35px; font-size:13px; color:green;"><b>GAD7</b></span>
+	<input type="text" name="GAD7ScorePrevious" id="GAD7ScorePrevious" class="DoNotPrint noborder" style="position:absolute; left:75px; top:30px; width:25px; font-size:13px; text-align:center; color:green;" oscardb=m$GAD7#value> 
+	<input type="text" name="PreviousDateGAD7" id="PreviousDateGAD7" class="DoNotPrint noborder" style="position:absolute; left:105px; top:30px; width:78px; font-size:13px; color:green" oscardb=m$GAD7#dateObserved>
+
+<!-- Mental Health 1 -->
+<textarea name="MentalHealth1" id="MentalHealth1" type="text" class="noborder" style="position:absolute; left:383px; top:0px; width:154px; height:51px;font-size:14px; background:transparent;"></textarea>
+<textarea name="MentalHealth2" id="MentalHealth2" type="text" class="noborder" style="position:absolute; left:538px; top:0px; width:154px; height:51px;font-size:14px; background:transparent;" oscarDB=e$last#MentalHealth1></textarea>
+<textarea name="MentalHealth3" id="MentalHealth3" type="text" class="noborder" style="position:absolute; left:693px; top:0px; width:154px; height:51px;font-size:14px; background:transparent;" oscarDB=e$last#MentalHealth2></textarea>
+</div>
+
+<!-- Vaccinations -->
+<div id="Vaccinations" style="position:absolute; top:637px;">
+<input name="PreventionLink" id="PreventionLink" type="button" class="DoNotPrint" style="position:absolute; left:865px; top:0px; color:olive;" onclick="onBodyLoad(); prevention();" value="Preventions" title="Click for measurements">
+
+<input name="Influenza1No" id="Influenza1_1" type="text" class="Xbox box2" style="left:388px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="Influenza1Yes" id="Influenza1_2" type="text" class="Xbox box2" style="left:454px; top:0px;" onclick="Radio_Box1(this.id);">
+<input name="InfluenzaReasonDate_1" id="InfluenzaReasonDate_1" type="text" class="noborder" style="position:absolute; left:383px; top:23px; width:147px; font-size:13px; background:transparent;">
+
+<input name="Influenza2No" id="Influenza2_1" type="text" class="Xbox box2" style="left:543px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Influenza1No>
+<input name="Influenza2Yes" id="Influenza2_2" type="text" class="Xbox box2" style="left:609px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Influenza1Yes>
+<input name="InfluenzaReasonDate_2" id="InfluenzaReasonDate_2" type="text" class="noborder" style="position:absolute; left:538px; top:23px; width:147px; font-size:13px; background:transparent;" oscarDB=e$last#InfluenzaReasonDate_1>
+
+<input name="Influenza3No" id="Influenza3_1" type="text" class="Xbox box2" style="left:698px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Influenza2No>
+<input name="Influenza3Yes" id="Influenza3_2" type="text" class="Xbox box2" style="left:764px; top:0px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#Influenza2Yes>
+<input name="InfluenzaReasonDate_3" id="InfluenzaReasonDate_3" type="text" class="noborder" style="position:absolute; left:693px; top:23px; width:147px; font-size:13px; background:transparent;" oscarDB=e$last#InfluenzaReasonDate_2>
+
+<input name="PneumococcalYes" id="Pneumococcal_1" type="text" class="Xbox box2" style="left:388px; top:47px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#PneumococcalYes>
+<input name="Pneumococcal_date" id="Pneumococcal_date" type="text" class="noborder" style="position:absolute; left:480px; top:45px; width:95px; font-size:14px; background:transparent;" oscarDB=e$last#Pneumococcal_date>
+<input name="PneumococcalNo" id="Pneumococcal_2" type="text" class="Xbox box2" style="left:609px; top:47px;" onclick="Radio_Box1(this.id);" oscarDB=e$last#PneumococcalNo>
+<input name="Pneumococcal_reason" id="Pneumococcal_reason" type="text" class="noborder" style="position:absolute; left:715px; top:45px; width:125px; font-size:14px; background:transparent;" oscarDB=e$last#Pneumococcal_reason>
+</div>
+
+<!-- Management Plans -->
+<div id="Management" style="position:absolute; top:706px;">
+	<textarea name="Management_comment" id="Management_comment" type="text" class="noborder" style="position:absolute; left:35px; top:50px; width:345px; height:52px;font-size:14px; background:transparent;" oscarDB=e$last#Management_comment></textarea>
+<a name="Goals_Reference" id="BGImage8" class="DoNotPrint" src="" target="_blank" style="position:absolute; left:865px; top:10px; width:280px; font-size:16px; color:green;" title="Examples of Goals">Goal Setting</a>
+
+<textarea name="PatientGoals1" id="PatientGoals1" type="text" class="noborder" style="position:absolute; left:383px; top:0px; width:154px; height:102px;font-size:14px; background:transparent;"></textarea>
+<textarea name="PatientGoals2" id="PatientGoals2" type="text" class="noborder" style="position:absolute; left:538px; top:0px; width:154px; height:102px;font-size:14px; background:transparent;" oscarDB=e$last#PatientGoals1></textarea>
+<textarea name="PatientGoals3" id="PatientGoals3" type="text" class="noborder" style="position:absolute; left:693px; top:0px; width:154px; height:102px;font-size:14px; background:transparent;" oscarDB=e$last#PatientGoals2></textarea>
+
+<!-- Women's Rx -->
+<a id="BGImage5" name="WomenMD_Reference" class="DoNotPrint" src="" target="_blank" style="position:absolute; left:865px; top:107px; width:280px; font-size:16px; color:green;" title="MD reference">Pregnancy Guide</a>
+
+<input name="Contraception_1" id="Contraception_1" type="text" class="noborder" style="position:absolute; left:383px; top:107px; width:147px; font-size:14px; background:transparent;">
+<input name="Contraception_2" id="Contraception_2" type="text" class="noborder" style="position:absolute; left:538px; top:107px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#Contraception_1>
+<input name="Contraception_3" id="Contraception_3" type="text" class="noborder" style="position:absolute; left:693px; top:107px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#Contraception_2>
+
+<!-- Driving -->
+<a id="Driving_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/cpg/chapter21" target="_blank" style="position:absolute; left:32px; top:133px; width:200px; height:22px; opacity:0.4;" title="Web reference"></a>
+<a id="DrivingPatient_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/docs/patient-resources/drive-safe-with-diabetes.pdf" target="_blank" style="position:absolute; left:865px; top:135px; width:280px; color:green;" title="Web reference">Patient Driving Guide</a>
+
+<input name="Driving_1" id="Driving_1" type="text" class="noborder" style="position:absolute; left:383px; top:133px; width:147px; font-size:14px; background:transparent;">
+<input name="Driving_2" id="Driving_2" type="text" class="noborder" style="position:absolute; left:538px; top:133px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#Driving_1>
+<input name="Driving_3" id="Driving_3" type="text" class="noborder" style="position:absolute; left:693px; top:133px; width:147px; font-size:14px; background:transparent;" oscarDB=e$last#Driving_2>
+
+<!-- Sick day management -->
+<a id="Sick_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/keep-patients-safe
+" target="_blank" style="position:absolute; left:32px; top:156px; width:155px; height:22px; opacity:0.4;" title="Web reference"></a>
+<a id="SickPatient_Reference" class="DoNotPrint" href="http://guidelines.diabetes.ca/docs/patient-resources/stay-safe-when-you-have-diabetes-and-sick-or-at-risk-of-dehydration.pdf" target="_blank" style="position:absolute; left:865px; top:160px; width:175px; color:green;" title="Web reference">Patient Sickness Guide</a>
+<a id="Appendix8_Reference" class="DoNotPrint" href="https://www.canadianjournalofdiabetes.com/action/showPdf?pii=S1499-2671%2817%2930865-1" target="_blank" style="position:absolute; left:1045px; top:160px; width:100px;" title="Web reference">Appendix 8</a>
+
+<input name="SADMANS_Link" id="SADMANS_Link" type="button" class="DoNotPrint" style="position:absolute; left:865px; top:180px; color:green;" oscarOPEN="SADMANS" value="SADMANS eFORM" title="to eFORM">
+
+<a id="BGImage4" name="DehydrationMD_Reference" class="DoNotPrint" src="" target="_blank" style="position:absolute; left:865px; top:200px; width:280px; font-size:16px; color:green;" title="MD reference">Dehydration Risk Guide</a>
+
+<textarea name="SickManagement1" id="SickManagement1" type="text" class="noborder" style="position:absolute; left:383px; top:156px; width:154px; height:58px;font-size:14px; background:transparent;"></textarea>
+<textarea name="SickManagement2" id="SickManagement2" type="text" class="noborder" style="position:absolute; left:538px; top:156px; width:154px; height:58px;font-size:14px; background:transparent;" oscarDB=e$last#SickManagement1></textarea>
+<textarea name="SickManagement3" id="SickManagement3" type="text" class="noborder" style="position:absolute; left:693px; top:156px; width:154px; height:58px;font-size:14px; background:transparent;" oscarDB=e$last#SickManagement2></textarea>
+
+<!-- Referrals -->
+<textarea name="Referral_comment" id="Referral_comment" type="text" class="noborder" style="position:absolute; left:35px; top:50px; width:345px; height:52px;font-size:14px; background:transparent;" oscarDB=e$last#Referral_comment></textarea>
+<textarea name="Referral1" id="Referral1" type="text" class="noborder" style="position:absolute; left:383px; top:215px; width:154px; height:33px;font-size:14px; background:transparent;"></textarea>
+<textarea name="Referral2" id="Referral2" type="text" class="noborder" style="position:absolute; left:538px; top:215px; width:154px; height:33px;font-size:14px; background:transparent;" oscarDB=e$last#Referral1></textarea>
+<textarea name="Referral3" id="Referral3" type="text" class="noborder" style="position:absolute; left:693px; top:215px; width:154px; height:33px;font-size:14px; background:transparent;" oscarDB=e$last#Referral2></textarea>
+
+<!-- Changes -->
+<textarea name="Changes1" id="Changes1" type="text" class="noborder" style="position:absolute; left:383px; top:248px; width:154px; height:33px;font-size:14px; background:transparent;"></textarea>
+<textarea name="Changes2" id="Changes2" type="text" class="noborder" style="position:absolute; left:538px; top:248px; width:154px; height:33px;font-size:14px; background:transparent;" oscarDB=e$last#Changes1></textarea>
+<textarea name="Changes3" id="Changes3" type="text" class="noborder" style="position:absolute; left:693px; top:248px; width:154px; height:33px;font-size:14px; background:transparent;" oscarDB=e$last#Changes2></textarea>
+
+<!-- Resources -->
+<textarea name="Resources1" id="Resources1" type="text" class="noborder" style="position:absolute; left:383px; top:281px; width:154px; height:33px;font-size:14px; background:transparent;"></textarea>
+<textarea name="Resources2" id="Resources2" type="text" class="noborder" style="position:absolute; left:538px; top:281px; width:154px; height:33px;font-size:14px; background:transparent;" oscarDB=e$last#Resources1></textarea>
+<textarea name="Resources3" id="Resources3" type="text" class="noborder" style="position:absolute; left:693px; top:281px; width:154px; height:33px;font-size:14px; background:transparent;" oscarDB=e$last#Resources2></textarea>
+
+<!-- Recall -->
+<input name="Recall_comment" id="Recall_comment" type="text" class="noborder" style="position:absolute; left:35px; top:334px; width:340px; font-size:16px; background:transparent;" oscarDB=e$last#Recall_comment></input>
+<input name="ApptGiven_1" id="Recall1_1" type="text" class="Xbox box2" style="left:388px; top:320px;">
+<input name="RecallSet_1" id="Recall1_2" type="text" class="Xbox box2" style="left:388px; top:334px;">
+
+<input name="ApptGiven_2" id="Recall2_1" type="text" class="Xbox box2" style="left:543px; top:320px;" oscarDB=e$last#ApptGiven_1>
+<input name="RecallSet_2" id="Recall2_2" type="text" class="Xbox box2" style="left:543px; top:334px;" oscarDB=e$last#RecallSet_1>
+
+<input name="ApptGiven_3" id="Recall3_1" type="text" class="Xbox box2" style="left:698px; top:320px;" oscarDB=e$last#ApptGiven_2>
+<input name="RecallSet_3" id="Recall3_2" type="text" class="Xbox box2" style="left:698px; top:334px;" oscarDB=e$last#RecallSet_2>
+</div>
+
+<a id="CDA_Reference" class="DoNotPrint" href="http://www.guidelines.diabetes.ca/" target="_blank" style="position:absolute; left:495px; top:1071px; width:200px; height:22px; opacity:0.4;" title="Web reference"></a>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:5px; top:1120px; width:845px; font-size:13px;">
+	<table><tr><td style="background:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" id="subject" size="40" type="text">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" style="color:red;" onclick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color:green;" onclick="printLetter();"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();">
+	</td></tr></table>
+<br>
+
+<!-- Copy Left -->
+<a rel="licence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> DM Care Advisor eForm eFORM, V3_May2_2021, by Dr. John Yap, is licensed under a </span> 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br>
+<span style="color:forestgreen;">Please consider supporting </span><a href="http://oscarbc.ca/" target="_blank">oscarbc.ca.</a> and
+<a href="https://diabetes.ca/donate" target="_blank">Diabetes Canada.</a> |
+<a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> |
+<a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | 
+<a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | 
+<a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> |
+<br><br>
+</div>
+
+</form>
+
+<script type="text/javascript">
+	Calendar.setup( { inputField :"DateDx", ifFormat : "%Y-%m-%d", showsTime:false, button : "DateDx" } );
+	Calendar.setup( { inputField :"Date1", ifFormat : "%Y-%m-%d", showsTime:false, button : "Date1" } );
+	Calendar.setup( { inputField :"Date2", ifFormat : "%Y-%m-%d", showsTime:false, button : "Date2" } );
+	Calendar.setup( { inputField :"Date3", ifFormat : "%Y-%m-%d", showsTime:false, button : "Date3" } );
+	Calendar.setup( { inputField :"A1cDate1", ifFormat : "%Y-%m-%d", showsTime:false, button : "A1cDate1" } );
+	Calendar.setup( { inputField :"A1cDate2", ifFormat : "%Y-%m-%d", showsTime:false, button : "A1cDate2" } );
+	Calendar.setup( { inputField :"A1cDate3", ifFormat : "%Y-%m-%d", showsTime:false, button : "A1cDate3" } );
+	Calendar.setup( { inputField :"ECGDate1", ifFormat : "%Y-%m-%d", showsTime:false, button : "ECGDate1" } );
+	Calendar.setup( { inputField :"ECGDate2", ifFormat : "%Y-%m-%d", showsTime:false, button : "ECGDate2" } );
+	Calendar.setup( { inputField :"ECGDate3", ifFormat : "%Y-%m-%d", showsTime:false, button : "ECGDate3" } );
+	Calendar.setup( { inputField :"LDLDate1", ifFormat : "%Y-%m-%d", showsTime:false, button : "LDLDate1" } );
+	Calendar.setup( { inputField :"LDLDate2", ifFormat : "%Y-%m-%d", showsTime:false, button : "LDLDate2" } );
+	Calendar.setup( { inputField :"LDLDate3", ifFormat : "%Y-%m-%d", showsTime:false, button : "LDLDate3" } );
+	Calendar.setup( { inputField :"ACRDate1", ifFormat : "%Y-%m-%d", showsTime:false, button : "ACRDate1" } );
+	Calendar.setup( { inputField :"ACRDate2", ifFormat : "%Y-%m-%d", showsTime:false, button : "ACRDate2" } );
+	Calendar.setup( { inputField :"ACRDate3", ifFormat : "%Y-%m-%d", showsTime:false, button : "ACRDate3" } );
+	Calendar.setup( { inputField :"GFRDate1", ifFormat : "%Y-%m-%d", showsTime:false, button : "GFRDate1" } );
+	Calendar.setup( { inputField :"GFRDate2", ifFormat : "%Y-%m-%d", showsTime:false, button : "GFRDate2" } );
+	Calendar.setup( { inputField :"GFRDate3", ifFormat : "%Y-%m-%d", showsTime:false, button : "GFRDate3" } );
+	Calendar.setup( { inputField :"Pneumococcal_date", ifFormat : "%Y-%m-%d", showsTime:false, button : "Pneumococcal_date" } );
+</script>
+
+</body></html>

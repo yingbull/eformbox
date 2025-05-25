@@ -1,0 +1,433 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>HHC Breast</title>
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<!-- js graphics scripts Drawing/Signature Scripts -->
+<script type="text/javascript" src="jsgraphics.js"></script>
+<script type="text/javascript" src="${oscar_image_path}jsgraphics.js"></script>
+<script type="text/javascript" src="mouse.js"></script>
+<script type="text/javascript" src="${oscar_image_path}mouse.js"></script>
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.7.1.min.js'></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+<script type='text/javascript' src='${oscar_image_path}jquery-1.7.1.min.js'></script>
+
+<!-- Freeform Signatures -->
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+    /* Drawing the 'gripper' for touch-enabled devices */
+    html.touch #content {
+        float:left;
+        width:92%;
+    }
+    html.touch #scrollgrabber {
+        float:right;
+        width:4%;
+        margin-right:2%;
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+    }
+    html.borderradius #scrollgrabber {
+        border-radius: 1em;
+    }
+ </style>
+
+<style type="text/css" media="print">
+
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+.sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+<style type="text/css">
+.noborder {background:transparent;}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {			
+			setDocumentTitle('HHS Breast',document.getElementById('PtName').value);
+			changeImage("HHS-Breast-Imaging.png", "BGImage1");
+			setDefaults();
+			//optimize window size/width
+			top.window.resizeTo(950, screen.availHeight);
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PtName) {
+			// set document title
+			document.title = Title + ' - ' + PtName;					
+							
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				//document.getElementById("").value = 'X';	
+			}   
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			releaseDirtyFlag();			
+			submission();
+		}
+
+		function printLetter() {
+			// hide the bottom buttons
+			if (document.getElementById('BottomButtons').style.display == '')
+				document.getElementById('BottomButtons').style.display = 'none';
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			setTimeout('document.FormName.submit()',1000);			
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		function showButtons() {
+			//show the bottom buttons if they are hidden
+			if (document.getElementById('BottomButtons').style.display == 'none')
+				document.getElementById('BottomButtons').style.display = '';
+		}
+		
+		/****************************
+		Checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+			$( this ).click();
+			return false;
+			}
+		});
+	});
+
+		/****************************
+			Yes-No functions 
+		****************************/
+		function changeYes_No(x) {
+			if (document.getElementById(x).value == 'N')
+				document.getElementById(x).value = 'Y';
+			else
+				document.getElementById(x).value = 'N';
+		}
+
+		/****************************
+			Circle function 
+		****************************/
+		function changeValueO(x) {
+			if (document.getElementById(x).value == '')
+				document.getElementById(x).value = 'O';
+			else
+				document.getElementById(x).value = '';
+		}
+
+		function displayKeyCode(evt,x) {
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			// any key press except tab will constitute a value change to the checkbox
+			if (charCode != 9)
+			{
+				changeValue(x);
+				return false;
+			}
+		}
+
+		//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+		//this could be called when save button is clicked
+		}
+		window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+</script>
+
+
+
+
+<!-- Stamped Signatures -->
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+<script language="javascript">
+function SignForm() {
+        var provNum = $('#current_user_id').val();
+        document.getElementById('signature').src = "../eform/displayImage.do?imagefile=consult_sig_"+provNum+".png";
+$('#signature').error(function() {
+  $(this).hide();
+ });
+}
+</script>
+<script type="text/javascript">if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:40, width:200, top:865, left:570});});}</script>
+
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="905-873-4593"',1000);
+} 
+</script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="init(); ReloadImage(); SetSwitchOn('Freehand'); SignForm(); setFaxNo(); ">
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}HHS-Breast-Imaging.png" style="position: relative; left: 0px; top: 0px; width:750px">
+<div id="chkCanvas" style="position:absolute; left:0px; top:0px; width:850px;" onmouseover="putInBack();">
+
+<form method="post" action="" name="FormName" id="FormName" >
+
+<!-- Hidden input for storing Image data -->
+<input type="hidden" name="TempData" id="TempData">
+<input type="hidden" name="DrawData" id="DrawData">
+<input type="hidden" name="SubmitData" id="SubmitData">
+
+<input name="Male" id="Male" class="only-one-gender" type="checkbox" class="largerCheckbox" style="position:absolute; left:692px; top:21px; ">
+<input name="Female" id="Female" class="only-one-gender" type="checkbox" class="largerCheckbox" style="position:absolute; left:707px; top:21px; ">
+
+
+<input name="patient_name" id="patient_name" type="text" class=" noborder" style="position:absolute; left:435px; top:24px; width:258px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+<textarea name="address" id="address" type="text" class=" noborder" style="position:absolute; left:441px; top:47px; width:288px; height:47px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:white;"  oscarDB=address></textarea>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:449px; top:96px; width:142px; height:26px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:610px; top:96px; width:119px; height:26px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="dobc2" id="dobc2" type="text" class=" noborder" style="position:absolute; left:434px; top:124px; width:102px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc2>
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:594px; top:124px; width:135px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="page1_4" id="page1_4" type="text" class=" noborder" style="position:absolute; left:434px; top:148px; width:295px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_5" id="page1_5" type="text" class=" noborder" style="position:absolute; left:96px; top:199px; width:174px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_6" id="page1_6" type="text" class=" noborder" style="position:absolute; left:97px; top:233px; width:55px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_7" id="page1_7" type="text" class=" noborder" style="position:absolute; left:185px; top:233px; width:55px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_8" id="page1_8" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:290px; top:202px; ">
+<input name="page1_9" id="page1_9" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:290px; top:222px; ">
+<input name="page1_10" id="page1_10" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:290px; top:242px; ">
+<input name="page1_11" id="page1_11" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:319px; ">
+<input name="page1_12" id="page1_12" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:342px; ">
+<input name="page1_13" id="page1_13" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:363px; ">
+<input name="mam_immunization_date" id="mam_immunization_date" type="text" class=" noborder" style="position:absolute; left:229px; top:315px; width:159px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=mam_immunization_date>
+<input name="page1_15" id="page1_15" type="text" class=" noborder" style="position:absolute; left:229px; top:337px; width:159px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="prev_mammo3" id="prev_mammo3" type="text" class=" noborder" style="position:absolute; left:152px; top:358px; width:236px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="no previous mammo" >
+<input name="page1_17" id="page1_17" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:404px; top:317px; ">
+<input name="cell1" id="cell1" type="text" class=" noborder" style="position:absolute; left:455px; top:346px; width:271px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="page1_18" id="page1_18" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:409px; ">
+<input name="page1_19" id="page1_19" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:425px; ">
+<input name="page1_20" id="page1_20" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:440px; ">
+<input name="page1_21" id="page1_21" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:455px; ">
+<input name="page1_22" id="page1_22" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:470px; ">
+<input name="page1_23" id="page1_23" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:484px; ">
+<input name="page1_24" id="page1_24" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:198px; top:514px; ">
+<input name="page1_25" id="page1_25" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:601px; ">
+<input name="page1_26" id="page1_26" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:615px; ">
+<input name="page1_27" id="page1_27" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:771px; ">
+<input name="page1_28" id="page1_28" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:788px; ">
+<input name="page1_29" id="page1_29" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:805px; ">
+<input name="page1_30" id="page1_30" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:822px; ">
+<input name="page1_31" id="page1_31" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:169px; top:822px; ">
+<input name="page1_32" id="page1_32" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:236px; top:822px; ">
+<input name="page1_33" id="page1_33" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:840px; ">
+<input name="page1_34" id="page1_34" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:242px; top:858px; ">
+<input name="page1_35" id="page1_35" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:298px; top:857px; ">
+<input name="page1_36" id="page1_36" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:242px; top:877px; ">
+<input name="page1_37" id="page1_37" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:298px; top:877px; ">
+<textarea name="page1_38" id="page1_38" type="text" class=" noborder" style="position:absolute; left:404px; top:421px; width:339px; height:167px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="current_user_signature" id="current_user_signature" type="text" class=" noborder" style="position:absolute; left:526px; top:778px; width:212px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_signature>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:571px; top:804px; width:167px; height:25px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="copy-to" id="copy-to" type="text" class=" noborder" style="position:absolute; left:499px; top:830px; width:239px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:444px; top:882px; width:294px; height:25px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+<input name="page1_consent" id="page1_consent" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:53px; top:924px; ">
+
+</div>
+
+</div>
+
+<!-- Drawing Edit Menu -->
+<div style="position:absolute; left:760px; top:680px" class="DoNotPrint">
+	<table><tr><td>
+		<span style="position:relative; top:2px; family:Arial; font-size:14px; color:green;">Edit Drawing</span><br>
+		<input id="UndoButton" type="button"  style="color:green; width:45px" value="Undo" onclick="Undo();"><br>
+		<input id="ClearButton" type="button"  style="color:green; width:55px" value="Restart" onclick="Clear();">
+
+	</td></tr></table>
+</div>
+
+<!--  Drawing code: start -->
+<div id="preview" style="position:absolute; left:400px; top:600px; width:365px; height:180px; background:grey; opacity:0.05"></div>
+
+<div id="myCanvas"
+	style="position:absolute;left:400px; top:600px; width:365px; height:180px; ;"
+	onmouseover="SetDrawOn();"
+	onmouseout="SetDrawOff();"
+	onmousedown="SetMouseDown(); SetStart();" 
+	onmouseup="SetMouseUp();  DrawMarker();"
+	onmousemove="DrawPreview();">
+</div>
+
+<!--  Drawing code: part 2 -->
+<script type="text/javascript" src="jsgraphics_part2.js"></script>
+<script type="text/javascript" src="${oscar_image_path}jsgraphics_part2.js"></script>
+
+<img id="signature" name="signature" src="${oscar_image_path}BNK.png" width="auto" height="auto"  style="position: absolute; left: 571px; top: 865px;max-height:35px;">
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+<input type="hidden" id="current_user_id" name="current_user_id" oscardb=current_user_id>
+<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="" ></input>
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:981px; left:10px;">
+
+<input name="subject" id="subject"  type="text">
+    <table><tr id=sig>
+    <td> <div id="signatureInput">&nbsp;</div></td></tr><tr>
+    <td> <div id="faxControl">&nbsp;</div></td>
+    </tr></table>
+    <table><tr><td>
+            <input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="releaseDirtyFlag();">
+            <input value="Reset" name="ResetButton" id="ResetButton" type="reset">
+            <input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();">
+            <input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();alert('Click OK to Finish Submitting');SubmitButton.click();"> <br>
+
+
+     </td></tr></table>
+ </div>
+ </form>
+
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,399 @@
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <title>Gam Diagnostic Imaging Requisition</title>
+    <!-- Created by Adrian Starzynski | From WorldOSCAR.org -->
+    <script language="JavaScript">
+      top.window.moveTo(0, 0);
+      top.window.resizeTo(screen.availWidth, screen.availHeight);
+    </script>
+    <style media="screen" type="text/css">
+      input {
+        -moz-box-sizing: content-box;
+        -webkit-print-color-adjust: exact;
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+      }
+      /* Drawing the 'gripper' for touch-enabled devices */
+      html.touch #content {
+        float: left;
+        width: 92%;
+      }
+      html.touch #scrollgrabber {
+        float: right;
+        width: 4%;
+        margin-right: 2%;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==);
+      }
+      html.borderradius #scrollgrabber {
+        border-radius: 1em;
+      }
+
+      textarea {
+        resize: none;
+      }
+      .noborder {
+        border: 1px solid #d2d2d2;
+      }
+    </style>
+    <style media="print" type="text/css">
+      .DoNotPrint {
+        display: none;
+      }
+      .noborder {
+        border: 0px;
+        background: transparent;
+        background: transparent;
+        overflow: hidden;
+      }
+    </style>
+
+    <!-- jQuery for greater functionality -->
+<script type="text/javascript" src="../library/jquery/jquery-3.6.4.min.js" ></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.12.3.js">< \/script>') </script>
+
+    <script language="javascript" type="text/javascript">
+      function checkGender() {
+        if (document.getElementById("PatientGender").value == "M") {
+          document.getElementById("Male").checked = true;
+        } else if (document.getElementById("PatientGender").value == "F") {
+          document.getElementById("Female").checked = true;
+        }
+      }
+
+      function SignForm() {
+        var provNum = $("#current_user_id").val();
+        document.getElementById("signature").src = "../eform/displayImage.do?imagefile=consult_sig_" + provNum + ".png";
+        $("#signature").attr(onerror, "this.style.display='none'");
+        document.getElementById("signature").alt = provNum;
+      }
+
+      function xBoxTransp() {
+        // Set initial border style for elements with class "Xbox"
+        $(".Xbox").css("border", "1px solid #d2d2d2");
+      }
+    </script>
+
+    <!-- scripts for Xbox functions -->
+    <script>
+      $(document).ready(function () {
+        // Set initial border style for elements with class "Xbox"
+        $(".Xbox").css("border", "1px solid #d2d2d2");
+
+        $(".Xbox").click(function () {
+          var bc = $(this).css("background-color");
+          if (bc == "rgb(65, 105, 225)") {
+            $(this).css("background-color", "transparent");
+            $(this).val("");
+          } else {
+            $(this).css("background-color", "rgb(65, 105, 225)");
+            $(this).val("X");
+          }
+        });
+
+        $(".Xbox").keypress(function (event) {
+          // any key press except tab will constitute a value change to the checkbox
+          if (event.which != 0) {
+            $(this).click();
+            return false;
+          }
+        });
+      });
+    </script>
+
+    <script src="${oscar_javascript_path}eforms/printControl.js" type="text/javascript"></script>
+    <script src="${oscar_javascript_path}eforms/faxControl.js" type="text/javascript"></script>
+    <script language="javascript">
+      function formPrint() {
+        window.print();
+      }
+    </script>
+
+    <!-- scripts to confirm closing of window if it hadnt been saved yet -->
+    <script language="javascript">
+      //keypress events trigger dirty flag
+      var needToConfirm = false;
+      document.onkeyup = setDirtyFlag;
+      function setDirtyFlag() {
+        needToConfirm = true;
+      }
+      function releaseDirtyFlag() {
+        needToConfirm = false; //Call this function to prevent an alert.
+        //this could be called when save button is clicked
+      }
+      window.onbeforeunload = confirmExit;
+      function confirmExit() {
+        if (needToConfirm) {
+          return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+        }
+      }
+    </script>
+    <!-- main calendar program -->
+    <script src="../share/calendar/calendar.js" type="text/javascript"></script>
+    <script src="../share/calendar/lang/calendar-en.js" type="text/javascript"></script>
+    <script src="../share/calendar/calendar-setup.js" type="text/javascript"></script>
+    <link href="../share/calendar/calendar.css" media="all" rel="stylesheet" title="win2k-cold-1" type="text/css" />
+  </head>
+  <body onload="checkGender();SignForm();xBoxTransp">
+    <form action="" id="FormName" method="post" name="FormName">
+      <div id="page1" style="page-break-after: always; position: relative">
+        <img id="BGImage1" src="${oscar_image_path}GamDiagnosticImaging_Req_202401-page-001.jpg" style="position: relative; left: 0px; top: 0px; width: 750px" />
+        <input id="current_user_id" name="current_user_id" oscardb="current_user_id" type="hidden" />
+        <input id="PatientGender" name="PatientGender" oscardb="sex" type="hidden" />
+        <input class="only-one-gender" id="Male" name="Male" style="position: absolute; left: 434px; top: 70px" type="checkbox" />
+        <input class="only-one-gender" id="Female" name="Female" style="position: absolute; left: 457px; top: 70px" type="checkbox" />
+        <input class="" id="page1_3" name="page1_3" style="position: absolute; left: 479px; top: 70px" type="checkbox" />
+        <input class="noborder" id="patient_nameL" name="patient_nameL" oscardb="patient_nameL" style="position: absolute; left: 365px; top: 29px; width: 174px; height: 16px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="patient_nameF" name="patient_nameF" oscardb="patient_nameF" style="position: absolute; left: 595px; top: 29px; width: 137px; height: 16px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="phone" name="phone" oscardb="phone" style="position: absolute; left: 330px; top: 48px; width: 129px; height: 15px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="address" name="address" oscardb="address" style="position: absolute; left: 501px; top: 48px; width: 230px; height: 16px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="today" name="today" oscardb="today" style="position: absolute; left: 546px; top: 67px; width: 94px; height: 17px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="hin" name="hin" oscardb="hin" style="position: absolute; left: 314px; top: 94px; width: 155px; height: 18px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="hinversion" name="hinversion" oscardb="hinversion" style="position: absolute; left: 539px; top: 94px; width: 53px; height: 18px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="dob" name="dob" oscardb="dob" style="position: absolute; left: 662px; top: 95px; width: 75px; height: 18px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="page1_4" name="page1_4" style="position: absolute; left: 344px; top: 120px; width: 383px; height: 17px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="" id="page1_5" name="page1_5" style="position: absolute; left: 6px; top: 856px" type="checkbox" />
+        <input class="" id="page1_6" name="page1_6" style="position: absolute; left: 6px; top: 872px" type="checkbox" />
+        <input class="" id="page1_7" name="page1_7" style="position: absolute; left: 6px; top: 886px" type="checkbox" />
+        <input class="" id="page1_8" name="page1_8" style="position: absolute; left: 6px; top: 901px" type="checkbox" />
+        <input class="" id="page1_9" name="page1_9" style="position: absolute; left: 94px; top: 920px" type="checkbox" />
+        <input class="" id="page1_10" name="page1_10" style="position: absolute; left: 136px; top: 920px" type="checkbox" />
+        <input class="noborder" id="page1_11" name="page1_11" style="position: absolute; left: 35px; top: 940px; width: 56px; height: 14px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="page1_12" name="page1_12" style="position: absolute; left: 126px; top: 940px; width: 76px; height: 14px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="" id="page1_13" name="page1_13" style="position: absolute; left: 211px; top: 181px" type="checkbox" />
+        <input class="" id="page1_14" name="page1_14" style="position: absolute; left: 211px; top: 195px" type="checkbox" />
+        <input class="" id="page1_15" name="page1_15" style="position: absolute; left: 210px; top: 228px" type="checkbox" />
+        <input class="" id="page1_16" name="page1_16" style="position: absolute; left: 210px; top: 242px" type="checkbox" />
+        <input class="" id="page1_17" name="page1_17" style="position: absolute; left: 210px; top: 256px" type="checkbox" />
+        <input class="" id="page1_18" name="page1_18" style="position: absolute; left: 210px; top: 270px" type="checkbox" />
+        <input class="" id="page1_19" name="page1_19" style="position: absolute; left: 210px; top: 283px" type="checkbox" />
+        <input class="" id="page1_20" name="page1_20" style="position: absolute; left: 210px; top: 297px" type="checkbox" />
+        <input class="" id="page1_21" name="page1_21" style="position: absolute; left: 210px; top: 311px" type="checkbox" />
+        <input class="" id="page1_22" name="page1_22" style="position: absolute; left: 210px; top: 325px" type="checkbox" />
+        <input class="" id="page1_23" name="page1_23" style="position: absolute; left: 211px; top: 339px" type="checkbox" />
+        <input class="" id="page1_24" name="page1_24" style="position: absolute; left: 211px; top: 353px" type="checkbox" />
+        <input class="" id="page1_25" name="page1_25" style="position: absolute; left: 211px; top: 366px" type="checkbox" />
+        <input class="" id="page1_26" name="page1_26" style="position: absolute; left: 211px; top: 380px" type="checkbox" />
+        <input class="" id="page1_27" name="page1_27" style="position: absolute; left: 211px; top: 414px" type="checkbox" />
+        <input class="" id="page1_28" name="page1_28" style="position: absolute; left: 211px; top: 427px" type="checkbox" />
+        <input class="" id="page1_29" name="page1_29" style="position: absolute; left: 211px; top: 441px" type="checkbox" />
+        <input class="" id="page1_30" name="page1_30" style="position: absolute; left: 419px; top: 180px" type="checkbox" />
+        <input class="" id="page1_31" name="page1_31" style="position: absolute; left: 419px; top: 193px" type="checkbox" />
+        <input class="Xbox" id="page1_32" name="page1_32" style="position: absolute; left: 421px; top: 208px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_33" name="page1_33" style="position: absolute; left: 436px; top: 208px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="" id="page1_34" name="page1_34" style="position: absolute; left: 419px; top: 219px" type="checkbox" />
+        <input class="" id="page1_35" name="page1_35" style="position: absolute; left: 419px; top: 231px" type="checkbox" />
+        <input class="" id="page1_36" name="page1_36" style="position: absolute; left: 419px; top: 243px" type="checkbox" />
+        <input class="" id="page1_37" name="page1_37" style="position: absolute; left: 419px; top: 278px" type="checkbox" />
+        <input class="" id="page1_38" name="page1_38" style="position: absolute; left: 419px; top: 291px" type="checkbox" />
+        <input class="" id="page1_39" name="page1_39" style="position: absolute; left: 419px; top: 303px" type="checkbox" />
+        <input class="" id="page1_40" name="page1_40" style="position: absolute; left: 419px; top: 316px" type="checkbox" />
+        <input class="" id="page1_41" name="page1_41" style="position: absolute; left: 419px; top: 328px" type="checkbox" />
+        <input class="" id="page1_42" name="page1_42" style="position: absolute; left: 419px; top: 340px" type="checkbox" />
+        <input class="" id="page1_43" name="page1_43" style="position: absolute; left: 419px; top: 352px" type="checkbox" />
+        <input class="" id="page1_44" name="page1_44" style="position: absolute; left: 419px; top: 364px" type="checkbox" />
+        <input class="Xbox" id="page1_45" name="page1_45" style="position: absolute; left: 498px; top: 368px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_46" name="page1_46" style="position: absolute; left: 513px; top: 368px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_47" name="page1_47" style="position: absolute; left: 527px; top: 368px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_48" name="page1_48" style="position: absolute; left: 578px; top: 184px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_49" name="page1_49" style="position: absolute; left: 593px; top: 184px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_50" name="page1_50" style="position: absolute; left: 577px; top: 198px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_51" name="page1_51" style="position: absolute; left: 592px; top: 198px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="" id="page1_52" name="page1_52" style="position: absolute; left: 589px; top: 208px" type="checkbox" />
+        <input class="Xbox" id="page1_53" name="page1_53" style="position: absolute; left: 577px; top: 221px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_54" name="page1_54" style="position: absolute; left: 592px; top: 222px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_55" name="page1_55" style="position: absolute; left: 577px; top: 236px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_56" name="page1_56" style="position: absolute; left: 592px; top: 236px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_57" name="page1_57" style="position: absolute; left: 577px; top: 248px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_58" name="page1_58" style="position: absolute; left: 592px; top: 248px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_59" name="page1_59" style="position: absolute; left: 577px; top: 259px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_60" name="page1_60" style="position: absolute; left: 592px; top: 259px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_61" name="page1_61" style="position: absolute; left: 577px; top: 272px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_62" name="page1_62" style="position: absolute; left: 592px; top: 272px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_63" name="page1_63" style="position: absolute; left: 577px; top: 285px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_64" name="page1_64" style="position: absolute; left: 592px; top: 285px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_65" name="page1_65" style="position: absolute; left: 577px; top: 298px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_66" name="page1_66" style="position: absolute; left: 592px; top: 298px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="noborder" id="page1_67" name="page1_67" style="position: absolute; left: 716px; top: 294px; width: 21px; height: 16px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_68" name="page1_68" style="position: absolute; left: 578px; top: 332px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_69" name="page1_69" style="position: absolute; left: 578px; top: 346px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_70" name="page1_70" style="position: absolute; left: 578px; top: 359px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_71" name="page1_71" style="position: absolute; left: 578px; top: 371px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_72" name="page1_72" style="position: absolute; left: 578px; top: 383px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_73" name="page1_73" style="position: absolute; left: 578px; top: 420px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_74" name="page1_74" style="position: absolute; left: 578px; top: 395px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_75" name="page1_75" style="position: absolute; left: 578px; top: 408px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_76" name="page1_76" style="position: absolute; left: 593px; top: 332px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_77" name="page1_77" style="position: absolute; left: 593px; top: 346px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_78" name="page1_78" style="position: absolute; left: 593px; top: 360px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_79" name="page1_79" style="position: absolute; left: 593px; top: 372px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_80" name="page1_80" style="position: absolute; left: 593px; top: 383px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_81" name="page1_81" style="position: absolute; left: 593px; top: 395px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_82" name="page1_82" style="position: absolute; left: 593px; top: 408px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_83" name="page1_83" style="position: absolute; left: 593px; top: 420px; width: 13px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 11px; text-align: center; background-color: transparent" type="text" />
+        <input class="noborder" id="page1_84" name="page1_84" style="position: absolute; left: 707px; top: 417px; width: 25px; height: 17px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: transparent" type="text" />
+        <input class="" id="page1_85" name="page1_85" style="position: absolute; left: 211px; top: 498px" type="checkbox" />
+        <input class="" id="page1_86" name="page1_86" style="position: absolute; left: 211px; top: 510px" type="checkbox" />
+        <input class="" id="page1_87" name="page1_87" style="position: absolute; left: 211px; top: 522px" type="checkbox" />
+        <input class="" id="page1_88" name="page1_88" style="position: absolute; left: 211px; top: 534px" type="checkbox" />
+        <input class="" id="page1_89" name="page1_89" style="position: absolute; left: 211px; top: 546px" type="checkbox" />
+        <input class="" id="page1_90" name="page1_90" style="position: absolute; left: 211px; top: 558px" type="checkbox" />
+        <input class="" id="page1_91" name="page1_91" style="position: absolute; left: 211px; top: 572px" type="checkbox" />
+        <input class="" id="page1_92" name="page1_92" style="position: absolute; left: 227px; top: 595px" type="checkbox" />
+        <input class="" id="page1_93" name="page1_93" style="position: absolute; left: 314px; top: 595px" type="checkbox" />
+        <input class="" id="page1_94" name="page1_94" style="position: absolute; left: 211px; top: 608px" type="checkbox" />
+        <input class="noborder" id="page1_95" name="page1_95" style="position: absolute; left: 315px; top: 506px; width: 65px; height: 18px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: transparent" type="text" />
+        <input class="" id="page1_96" name="page1_96" style="position: absolute; left: 418px; top: 500px" type="checkbox" />
+        <input class="" id="page1_97" name="page1_97" style="position: absolute; left: 418px; top: 512px" type="checkbox" />
+        <input class="" id="page1_98" name="page1_98" style="position: absolute; left: 418px; top: 524px" type="checkbox" />
+        <input class="" id="page1_99" name="page1_99" style="position: absolute; left: 418px; top: 536px" type="checkbox" />
+        <input class="" id="page1_100" name="page1_100" style="position: absolute; left: 418px; top: 549px" type="checkbox" />
+        <input class="" id="page1_101" name="page1_101" style="position: absolute; left: 418px; top: 562px" type="checkbox" />
+        <input class="" id="page1_102" name="page1_102" style="position: absolute; left: 418px; top: 574px" type="checkbox" />
+        <input class="" id="page1_103" name="page1_103" style="position: absolute; left: 418px; top: 586px" type="checkbox" />
+        <input class="" id="page1_104" name="page1_104" style="position: absolute; left: 418px; top: 598px" type="checkbox" />
+        <input class="" id="page1_105" name="page1_105" style="position: absolute; left: 418px; top: 622px" type="checkbox" />
+        <input class="" id="page1_106" name="page1_106" style="position: absolute; left: 418px; top: 635px" type="checkbox" />
+        <input class="" id="page1_107" name="page1_107" style="position: absolute; left: 418px; top: 648px" type="checkbox" />
+        <input class="" id="page1_108" name="page1_108" style="position: absolute; left: 418px; top: 660px" type="checkbox" />
+        <input class="" id="page1_109" name="page1_109" style="position: absolute; left: 418px; top: 672px" type="checkbox" />
+        <input class="" id="page1_110" name="page1_110" style="position: absolute; left: 418px; top: 684px" type="checkbox" />
+        <input class="Xbox" id="page1_115" name="page1_115" style="position: absolute; left: 523px; top: 505px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_116" name="page1_116" style="position: absolute; left: 534px; top: 505px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_117" name="page1_117" style="position: absolute; left: 545px; top: 505px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_118" name="page1_118" style="position: absolute; left: 523px; top: 516px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_119" name="page1_119" style="position: absolute; left: 534px; top: 516px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_120" name="page1_120" style="position: absolute; left: 545px; top: 516px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_121" name="page1_121" style="position: absolute; left: 523px; top: 528px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_122" name="page1_122" style="position: absolute; left: 534px; top: 528px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_123" name="page1_123" style="position: absolute; left: 545px; top: 528px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_124" name="page1_124" style="position: absolute; left: 523px; top: 540px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_125" name="page1_125" style="position: absolute; left: 534px; top: 540px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_126" name="page1_126" style="position: absolute; left: 545px; top: 540px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_127" name="page1_127" style="position: absolute; left: 523px; top: 553px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_128" name="page1_128" style="position: absolute; left: 534px; top: 553px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_129" name="page1_129" style="position: absolute; left: 545px; top: 553px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_130" name="page1_130" style="position: absolute; left: 523px; top: 565px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_131" name="page1_131" style="position: absolute; left: 534px; top: 565px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_132" name="page1_132" style="position: absolute; left: 545px; top: 565px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_134" name="page1_134" style="position: absolute; left: 523px; top: 578px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_135" name="page1_135" style="position: absolute; left: 534px; top: 578px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_136" name="page1_136" style="position: absolute; left: 545px; top: 578px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_137" name="page1_137" style="position: absolute; left: 523px; top: 602px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_138" name="page1_138" style="position: absolute; left: 534px; top: 602px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_139" name="page1_139" style="position: absolute; left: 545px; top: 602px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_140" name="page1_140" style="position: absolute; left: 523px; top: 627px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_141" name="page1_141" style="position: absolute; left: 534px; top: 627px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_142" name="page1_142" style="position: absolute; left: 545px; top: 627px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_143" name="page1_143" style="position: absolute; left: 523px; top: 640px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_144" name="page1_144" style="position: absolute; left: 534px; top: 640px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_145" name="page1_145" style="position: absolute; left: 545px; top: 640px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_146" name="page1_146" style="position: absolute; left: 523px; top: 652px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_147" name="page1_147" style="position: absolute; left: 534px; top: 652px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_148" name="page1_148" style="position: absolute; left: 545px; top: 652px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_149" name="page1_149" style="position: absolute; left: 523px; top: 665px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_150" name="page1_150" style="position: absolute; left: 534px; top: 665px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_151" name="page1_151" style="position: absolute; left: 545px; top: 665px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_152" name="page1_152" style="position: absolute; left: 523px; top: 678px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_153" name="page1_153" style="position: absolute; left: 534px; top: 678px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_154" name="page1_154" style="position: absolute; left: 545px; top: 678px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="noborder" id="page1_155" name="page1_155" style="position: absolute; left: 472px; top: 690px; width: 65px; height: 18px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="page1_156" name="page1_156" style="position: absolute; left: 675px; top: 588px; width: 56px; height: 13px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="page1_159" name="page1_159" style="position: absolute; left: 622px; top: 618px; width: 79px; height: 12px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="" id="page1_160" name="page1_160" style="position: absolute; left: 570px; top: 500px" type="checkbox" />
+        <input class="" id="page1_161" name="page1_161" style="position: absolute; left: 570px; top: 512px" type="checkbox" />
+        <input class="" id="page1_162" name="page1_162" style="position: absolute; left: 570px; top: 524px" type="checkbox" />
+        <input class="" id="page1_163" name="page1_163" style="position: absolute; left: 570px; top: 537px" type="checkbox" />
+        <input class="" id="page1_164" name="page1_164" style="position: absolute; left: 570px; top: 550px" type="checkbox" />
+        <input class="" id="page1_165" name="page1_165" style="position: absolute; left: 570px; top: 562px" type="checkbox" />
+        <input class="" id="page1_166" name="page1_166" style="position: absolute; left: 570px; top: 574px" type="checkbox" />
+        <input class="" id="page1_167" name="page1_167" style="position: absolute; left: 570px; top: 586px" type="checkbox" />
+        <input class="" id="page1_168" name="page1_168" style="position: absolute; left: 570px; top: 598px" type="checkbox" />
+        <input class="" id="page1_169" name="page1_169" style="position: absolute; left: 570px; top: 611px" type="checkbox" />
+        <input class="" id="page1_170" name="page1_170" style="position: absolute; left: 560px; top: 649px" type="checkbox" />
+        <input class="" id="page1_171" name="page1_171" style="position: absolute; left: 560px; top: 664px" type="checkbox" />
+        <input class="" id="page1_172" name="page1_172" style="position: absolute; left: 560px; top: 677px" type="checkbox" />
+        <input class="" id="page1_173" name="page1_173" style="position: absolute; left: 560px; top: 690px" type="checkbox" />
+        <input class="" id="page1_174" name="page1_174" style="position: absolute; left: 560px; top: 703px" type="checkbox" />
+        <input class="" id="page1_175" name="page1_175" style="position: absolute; left: 560px; top: 717px" type="checkbox" />
+        <input class="" id="page1_176" name="page1_176" style="position: absolute; left: 560px; top: 744px" type="checkbox" />
+        <input class="Xbox" id="page1_177" name="page1_177" style="position: absolute; left: 693px; top: 568px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_178" name="page1_178" style="position: absolute; left: 704px; top: 568px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_179" name="page1_179" style="position: absolute; left: 716px; top: 568px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_180" name="page1_180" style="position: absolute; left: 693px; top: 606px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_181" name="page1_181" style="position: absolute; left: 704px; top: 606px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_182" name="page1_182" style="position: absolute; left: 715px; top: 606px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_183" name="page1_183" style="position: absolute; left: 218px; top: 651px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_184" name="page1_184" style="position: absolute; left: 218px; top: 664px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_185" name="page1_185" style="position: absolute; left: 218px; top: 687px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_186" name="page1_186" style="position: absolute; left: 228px; top: 699px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_187" name="page1_187" style="position: absolute; left: 218px; top: 713px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_188" name="page1_188" style="position: absolute; left: 218px; top: 725px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_189" name="page1_189" style="position: absolute; left: 684px; top: 667px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_190" name="page1_190" style="position: absolute; left: 695px; top: 667px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_191" name="page1_191" style="position: absolute; left: 706px; top: 667px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_192" name="page1_192" style="position: absolute; left: 684px; top: 680px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_193" name="page1_193" style="position: absolute; left: 695px; top: 680px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_194" name="page1_194" style="position: absolute; left: 706px; top: 680px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_195" name="page1_195" style="position: absolute; left: 683px; top: 694px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_196" name="page1_196" style="position: absolute; left: 694px; top: 694px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_197" name="page1_197" style="position: absolute; left: 705px; top: 694px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_199" name="page1_199" style="position: absolute; left: 682px; top: 707px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_200" name="page1_200" style="position: absolute; left: 695px; top: 707px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_201" name="page1_201" style="position: absolute; left: 706px; top: 707px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_202" name="page1_202" style="position: absolute; left: 683px; top: 721px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_203" name="page1_203" style="position: absolute; left: 694px; top: 721px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_204" name="page1_204" style="position: absolute; left: 706px; top: 721px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="" id="page1_205" name="page1_205" style="position: absolute; left: 274px; top: 743px" type="checkbox" />
+        <input class="Xbox" id="page1_206" name="page1_206" style="position: absolute; left: 137px; top: 751px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_207" name="page1_207" style="position: absolute; left: 148px; top: 751px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_208" name="page1_208" style="position: absolute; left: 163px; top: 752px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_209" name="page1_209" style="position: absolute; left: 136px; top: 783px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_210" name="page1_210" style="position: absolute; left: 147px; top: 783px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="Xbox" id="page1_211" name="page1_211" style="position: absolute; left: 162px; top: 784px; width: 9px; height: 9px; font-family: sans-serif; font-style: normal; font-weight: bold; font-size: 7px; text-align: center; background-color: transparent" type="text" />
+        <input class="" id="page1_213" name="page1_213" style="position: absolute; left: 10px; top: 745px" type="checkbox" />
+        <input class="" id="page1_214" name="page1_214" style="position: absolute; left: 10px; top: 757px" type="checkbox" />
+        <input class="" id="page1_215" name="page1_215" style="position: absolute; left: 10px; top: 770px" type="checkbox" />
+        <input class="" id="page1_216" name="page1_216" style="position: absolute; left: 10px; top: 782px" type="checkbox" />
+        <input class="" id="page1_217" name="page1_217" style="position: absolute; left: 113px; top: 763px" type="checkbox" />
+        <input class="" id="page1_218" name="page1_218" style="position: absolute; left: 113px; top: 795px" type="checkbox" />
+        <input class="" id="page1_219" name="page1_219" style="position: absolute; left: 143px; top: 795px" type="checkbox" />
+        <input class="noborder" id="page1_220" name="page1_220" style="position: absolute; left: 38px; top: 810px; width: 54px; height: 11px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 10px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="page1_221" name="page1_221" style="position: absolute; left: 127px; top: 812px; width: 75px; height: 11px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 10px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="clinic_phone" name="clinic_phone" oscardb="clinic_phone" style="position: absolute; left: 246px; top: 759px; width: 134px; height: 15px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="clinic_fax" name="clinic_fax" oscardb="clinic_fax" style="position: absolute; left: 409px; top: 758px; width: 124px; height: 15px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <textarea class="noborder" id="page1_222" name="page1_222" style="position: absolute; left: 212px; top: 800px; width: 522px; height: 44px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text"></textarea>
+        <input class="noborder" id="current_user_fname_lname" name="current_user_fname_lname" oscardb="current_user_fname_lname" style="position: absolute; left: 237px; top: 853px; width: 148px; height: 17px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <img id="signature" name="signature" src="${oscar_image_path}BNK.png" style="position: absolute; left: 394px; top: 849px; z-index: 20" width="156" height="21"  />
+        <input class="noborder" id="current_user_ohip_no" name="current_user_ohip_no" oscardb="current_user_ohip_no" style="position: absolute; left: 246px; top: 894px; width: 136px; height: 17px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 12px; text-align: left; background-color: white" type="text" />
+        <input class="noborder" id="page1_224" name="page1_224" style="position: absolute; left: 403px; top: 893px; width: 143px; height: 18px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text" />
+        <textarea class="noborder" id="clinic_address" name="clinic_address" oscardb="clinic_address" style="position: absolute; left: 555px; top: 852px; width: 191px; height: 68px; font-family: sans-serif; font-style: normal; font-weight: normal; font-size: 11px; text-align: left; background-color: white" type="text"></textarea>
+      </div>
+      <div id="page2" style="position: relative">
+        <img id="BGImage2" src="${oscar_image_path}GamDiagnosticImaging_Req_202401-page-002.jpg" style="position: relative; left: 0px; top: 0px; width: 750px" />
+        <input class="" id="page2_225" name="page2_225" style="position: absolute; left: 30px; top: 81px" type="checkbox" />
+        <input class="" id="page2_226" name="page2_226" style="position: absolute; left: 30px; top: 145px" type="checkbox" />
+        <input class="" id="page2_227" name="page2_227" style="position: absolute; left: 30px; top: 202px" type="checkbox" />
+        <input class="" id="page2_228" name="page2_228" style="position: absolute; left: 30px; top: 292px" type="checkbox" />
+        <div class="DoNotPrint" id="BottomButtons" style="position: absolute; top: 971px; left: 0px">
+          <table>
+            <tr>
+              <td>
+                <input id="SubmitButton" name="SubmitButton" onclick=" releaseDirtyFlag();" type="submit" value="Submit" />
+                <input id="ResetButton" name="ResetButton" type="reset" value="Reset" />
+                <input id="PrintButton" name="PrintButton" onclick="formPrint();" type="button" value="Print" />
+                <input id="PrintSubmitButton" name="PrintSubmitButton" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);" type="button" value="Print &amp; Submit" />
+                <p>Need a custom eForm created? <a href="https://worldoscar.org/ordereform" target="_blank">Order yours here</a></p>
+                <p><a href="https://worldoscar.org/howtoemailthiseform" target="_blank">Learn how to easily email this eForm securely</a></p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </form>
+    <!-- Define Date Calendars -->
+    <script type="text/javascript">
+      Calendar.setup({ inputField: "today", ifFormat: "%Y-%m-%d", button: "today" });
+    </script>
+  </body>
+</html>

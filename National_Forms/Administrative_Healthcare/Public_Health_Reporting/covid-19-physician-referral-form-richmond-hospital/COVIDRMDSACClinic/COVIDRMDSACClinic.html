@@ -1,0 +1,742 @@
+<html>
+
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<title>COVID RMD SAC Clinic</title>
+<script src="${oscar_javascript_path}jquery/jquery-2.2.4.min.js">
+</script>
+<script>window.jQuery || document.write("\x3cscript src='https://code.jquery.com/jquery-2.2.4.min.js'\x3e\x3c\/script\x3e");</script>
+<link href="https://code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css" rel="stylesheet">
+<script>
+/*
+Calendar skins:  
+base black-tie blitzer cupertino dark-hive dot-luv eggplant 
+excite-bike flick hot-sneaks humanity le-frog mint-choc 
+overcast pepper-grinder redmond smoothness south-street 
+start sunny swanky-purse trontastic ui-darkness ui-lightness vader
+*/
+</script>
+<script src="https://code.jquery.com/jquery-1.12.4.js">
+</script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
+</script>
+<script src="${oscar_image_path}faxControl.js">
+</script>
+<style>
+.all-no-button2 {
+	display: inline-block;
+	text-align: left;
+	vertical-align: top; //;
+	background: transparent;
+//border: 10;
+	font-size: 12px;
+	width: 50px;
+}
+.all-no-button1 {
+	background: gray;
+	border: 5px solid #000000;
+	border-color: gray;
+	color: black;
+	padding-top: 1px;
+	padding-right: 40px;
+	padding-bottom: 10px;
+	padding-left: 1px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 12px; //;
+	width: 70px; //;
+	height: 20px;
+}
+[class^="only-one-radio"] {
+	height: 12px;
+	width: 12px;
+	font-size: 12px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: pink;
+}
+/* base style for pages */
+.page_container {
+	position: relative;
+	background: #ffffff;
+	float: left;
+	border: solid 0;
+	margin: 0;
+}
+/* div containing form input elements */
+.input_elements {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+/* base styling for input wrapper divs */
+.gen-widget {
+	display: inline-block;
+	text-align: left;
+	vertical-align: top;
+	background: transparent;
+	border: 0;
+}
+/* style wrapped input elements */
+.gen-widget input, textarea {
+	position: absolute;
+	display: inline-block;
+	text-align: left;
+	font-weight: normal;
+	font-size: 12px;
+	font-family: 'Helvetica', 'Arial', sans-serif;
+	background: transparent;
+	color: #000000;
+	border: 1px solid #d2d2d2;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	margin: 0;
+}
+/* remove firefox webkit so that checkboxes are resizable */
+.gen-widget input[type=checkbox] {
+	-moz-appearance: none;
+}
+/* define xbox styling */
+.gen-xBox input {
+	background: aquamarine;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+	border: 1px solid black;
+	cursor: pointer;
+}
+.gen-xBox input:focus {
+	outline: none;
+	color: transparent;
+	text-shadow: 0 0 0 #000;
+}
+.only-one-radio input {
+	background: pink;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+	border: 1px solid black;
+	cursor: pointer;
+/*Rounds- delete comment if preferred */
+                       /*-webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 10px;*/
+}
+.only-one-radio input:focus {
+	outline: none;
+	color: transparent;
+	text-shadow: 0 0 0 #000;
+}
+/* define other */
+.noborder {
+	border-color: transparent !important;
+}
+/* print only styling */
+@media print {
+.DoNotPrint {
+	display: none;
+}
+.noborderPrint {
+	border-color: transparent !important;
+}
+.page_container {
+	page-break-after: always;
+}
+}
+/* define label styling (only used by generated labels) */
+.label-style_1 {
+	color: #000000;
+	font-size: 12px;
+	font-weight: normal;
+	font-family: Verdana, Arial, sans-serif;
+}
+<!--
+Float Box -->	
+body {
+	font-family: "Lato", sans-serif;
+}
+.sidenav {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	background-color: #9ef3fa;
+	overflow-x: hidden;
+	transition: 0.5s;
+	padding-top: 60px;
+}
+.sidenav a {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 18px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+}
+.sidenav a:hover {
+	color: #011; //;
+	#f1f1f1;
+}
+.sidenav .closebtn {
+	position: absolute;
+	top: 0;
+	right: 25px;
+	font-size: 36px;
+	margin-left: 50px;
+}
+@media screen and (max-height: 450px) {
+.sidenav {
+	padding-top: 15px;
+}
+.sidenav a {
+	font-size: 18px;
+}
+<!--
+END Float Box -->
+</style>
+<script>
+	    	
+	
+		var needToConfirm = false;
+		/** call this to prevent closing the window without a confirmation */
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+		/** call this to prevent the exit confirmation popup when closing the window */
+		function releaseDirtyFlag() {
+			needToConfirm = false;
+		}
+		/** call this function on page load to prevent the window from closing
+		 * without confirmation when unsaved changes have been made */
+		function initConfirmClose() {
+			window.addEventListener("beforeunload", function (event) {
+				if (needToConfirm) {
+					var confirmationMessage = "You have attempted to leave this page. " +
+						"If you have made any changes to the fields without clicking the Submit button, " +
+						"your changes will be lost. Are you sure you want to exit this page?";
+					event.returnValue = confirmationMessage;
+					return confirmationMessage;
+				}
+			});
+			$("input").change(function (event) {
+				setDirtyFlag();
+			});
+		}
+		/** this function fixes images paths in the eform to allow image use outside of oscar.
+		 *  This is useful when developing the eform, but can be removed for final versions */
+		function replaceOscarImagePathsWhenLocal($selector) {
+			var strLoc = window.location.href.toLowerCase();
+			if (strLoc.indexOf("https") == -1) {
+				$selector.find("img").not(".signature_data").each(function () {
+					this.src = this.src.replace(/$\%7Boscar_image_path\%7D/, '');
+				});
+			}
+		}
+		/** initializes custom x-box input functionality.
+		 *  should be called once on eform load */
+		function initXBoxes($selector) {
+			$selector.find(".xBox").click(function () {
+				$(this).val($(this).val() === 'X' ? '' : 'X');
+			}).keypress(function (event) {
+				// any key press except tab will constitute a value change to the checkbox
+				if (event.which != 0) {
+					$(this).click();
+					return false;
+				}
+			});
+		}
+		/** pre-check checkboxes and xboxes based on patient gender */
+		function initPrecheckedCheckboxes($selector) {
+			var $patientGender = $("#PatientGender");
+			if ($patientGender) {
+				var filter = ".gender_precheck_" + $patientGender.val();
+				$selector.find("input[type=checkbox]").filter(filter).prop('checked', true);
+				$selector.find(".xBox").filter(filter).val('X');
+			}
+		}
+		/** This function is called when the eform has been loaded */
+		function onEformLoad() {
+			var $input_elements = $(".input_elements");
+			replaceOscarImagePathsWhenLocal($("#eform_container"));
+			initXBoxes($input_elements);
+			initPrecheckedCheckboxes($input_elements);
+			initConfirmClose();
+		}
+		/** This function is called when the print button is clicked */
+		function onEformPrint() {
+alert("The RMD Covid clinic only accepts submissions by email.  \nTo proceed, save this file as an Adobe pdf. \nClick on email button and drag your saved pdf file into the email")
+			window.print();
+		}
+		/** This function is called when the eform submit button is clicked */
+		function onEformSubmit() {
+			releaseDirtyFlag();
+			document.forms[0].submit();
+		}
+		/** This function is called when the eform print & submit button is clicked */
+		function onEformPrintSubmit() {
+			onEformPrint();
+			releaseDirtyFlag();
+			setTimeout('document.forms[0].submit()', 2000);
+		}
+
+				
+function allno(){ //this checks All No on click
+var x = document.getElementsByClassName("all-no");
+for (var i = 0; i < x.length; i++) {
+x[i].value="X"
+//x[i].style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box****************************
+}
+var x = document.getElementsByClassName("clear-yes");
+for (var i = 0; i < x.length; i++) {
+x[i].value=""
+x[i].style.boxShadow = "inset 0 0 0 1000px white"  
+}
+}
+
+
+function myinit(){ //this blacks out boxes that are checked on load and clicks hidden fields
+$('input[type=hidden]').click();
+var y = document.getElementsByClassName("cradio");
+for (var i = 0; i < y.length; i++) {
+/*
+y[i].addEventListener("click", function(){
+    myupdate(this)
+});
+*/
+if (y[i].value=="X"){
+//y[i].style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*******************************
+}
+}
+var z = document.getElementsByClassName("all-no-button2");
+//alert(z.length)
+for (var i = 0; i < z.length; i++) {
+z[i].addEventListener("click", function(){
+    allno()
+});
+}
+//update all dateclasses
+var x = document.getElementsByClassName('mydateclass');  //2019-Feb-13
+//alert(x.length)
+for(i=0;i<x.length;i++){
+x[i].focus()
+}
+}
+
+
+
+function myupdate(vid){ //only one box in the radio group will be checked
+var x = document.getElementsByClassName(vid.getAttribute("class"));
+var mygroup = $(x).attr("class").split(" ");
+for(i=0;i<mygroup.length;i++){
+if(mygroup[i].indexOf("only-one-radio")>-1){
+var getmyclass = mygroup[i]
+}
+}
+//alert(getmyclass)
+var x = document.getElementsByClassName(getmyclass);
+//alert(x.length)
+if (x.length==1 && x[0].value=="X"){ //if there is only one member of the radiogroup, then this will act as checkbox rather than radiobox
+x[0].style.boxShadow = "inset 0 0 0 1000px white"
+x[0].value=""
+//return
+}
+else
+{
+for (var i = 0; i < x.length; i++) {
+    x[i].style.boxShadow = "inset 0 0 0 1000px white"
+    x[i].value = "";
+    vid.value = "X"
+    //vid.style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*************************************
+}
+}
+}
+
+
+function SELECT_FUNCTION(){} //Start function list here and below
+
+function mydatepicker(myelement) {
+/*
+Calendar skins:  
+base black-tie blitzer cupertino dark-hive dot-luv eggplant 
+excite-bike flick hot-sneaks humanity le-frog mint-choc 
+overcast pepper-grinder redmond smoothness south-street 
+start sunny swanky-purse trontastic ui-darkness ui-lightness vader
+*/
+$( "#"+myelement.id).datepicker({ 
+dateFormat: 'yy-mm-dd (D)',
+changeMonth: true,
+changeYear: true,
+showButtonPanel: true,
+closeText: 'Clear'
+ });
+$("#"+myelement.id).css('z-index', 99999999999999); //make opaque
+};
+
+
+$.datepicker.setDefaults({
+//for documentation link to http://api.jqueryui.com/datepicker/		
+//showOn: "both",
+//buttonImageOnly: true,
+//buttonImage: "calendar.gif"
+//buttonText: "Calendar"
+});
+
+function myerror(myelement) {  
+//function to load image as standalone
+var newsrc = myelement.src.split('%7D')[1]
+myelement.src = newsrc 
+}
+
+function makehyperlink(myelement) {
+var values = $('#inputForm').serialize(); //get html field values
+//alert(values);
+alert("The RMD Covid clinic only accepts submissions by email.  \nTo proceed, save this file as an Adobe pdf. \nClick on email button and drag your saved pdf file into the email")
+var str = myelement.title
+document.getElementById(myelement.id).readOnly = true; 
+document.getElementById(myelement.id).style.color = "blue";
+// var result = str.link(str);
+window.open(str)
+}
+
+function removeLineFeeds(myelement) {
+  var str = myelement.value.replace(/(\r\n\t|\n|\r\t)/gm, '; ');
+  document.getElementById(myelement.id).value = str;
+  document.getElementById(myelement.id).style.fontSize = '12px';
+  $(document).click(function (e) {
+    if (e.shiftKey) {
+      document.getElementById(myelement.id).style.fontSize = '14px';
+    }
+  });
+}
+
+
+function dateReformat(mydate, drfString) {
+// yyyy-mmm-dd
+//alert(mydate.value)
+//alert(drfString)
+    var f_Str = new Array(5)
+    for (i = 0; i < 5; i++) {
+        f_Str[i] = ""
+    }
+
+    var count = 0
+    for (i = 0; i < drfString.length; i++) {
+
+        var x = drfString.charCodeAt(i)
+        var nextx = drfString.charCodeAt(i + 1)
+
+        var letter = x > 64 && x < 123
+        var nextletter = nextx > 64 && nextx < 123
+
+        switch (true) {
+            case letter:
+                f_Str[count] = f_Str[count] + drfString[i]
+                if (nextletter == false) {
+                    count = count + 1
+                }
+                break;
+
+
+            case !letter:
+                f_Str[count] = f_Str[count] + drfString[i]
+                if (nextletter == true) {
+                    count = count + 1
+                }
+                break;
+
+
+            default:
+                alert("Neither")
+
+        }
+
+    }
+    /*
+    alert(f_Str)
+    alert(f_Str.length)
+    for (i = 0; i < f_Str.length; i++) {
+        //alert(f_Str[i])
+    }
+    */
+    
+
+    //Today's date
+    var month = new Array(11);
+    month[0] = "Jan";
+    month[1] = "Feb";
+    month[2] = "Mar";
+    month[3] = "Apr";
+    month[4] = "May";
+    month[5] = "Jun";
+    month[6] = "Jul";
+    month[7] = "Aug";
+    month[8] = "Sep";
+    month[9] = "Oct";
+    month[10] = "Nov";
+    month[11] = "Dec";
+
+    var today = new Date(mydate.value);
+    today.setTime(today.getTime() + (today.getTimezoneOffset() * 60 * 1000))
+    if (isNaN(today)) {
+        return false
+    }
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var mmm = month[today.getMonth()]
+    var yy = today.getFullYear().toString().substr(-2);
+    var yyyy = today.getFullYear();
+    
+
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    var today = eval(f_Str[0]) + f_Str[1] + eval(f_Str[2]) + f_Str[3] + eval(f_Str[4]); //change this manually
+    //alert(today)
+     document.getElementById(mydate.id).value = today;
+     
+    return today
+}
+
+
+
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("gen_backgroundImage1").src;
+		document.getElementById("gen_backgroundImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+
+//---Start Float Box
+function openNav() {
+window.resizeTo(1100,900)
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById('mySidenav').style.width = '0';
+}
+
+function updateReq(myelement,mytype) {
+  //alert(myelement)
+    if (myelement == 'Clear All') {
+    for (i = 48; i < 51; i++) {
+      g = '#gen_inputId' + i 
+	  //alert(g)
+	  $(g).val('')
+    }
+  }
+  
+  for (i = 48; i < 51; i++) {
+    g = '#gen_inputId' + i
+     t = '#gen_inputId'+mytype
+      //alert(t)
+    if ($(g).val() == '' && myelement != 'Clear All') {
+      $(g).val(myelement)
+      $(t).click()
+      return
+    }
+  }
+}
+//---END Float Box
+
+function fixSin(elem,myexp,myexp2){
+
+ //      /(\d)(?=(\d\d\d)+(?!\d))/g, '$1-')       for SIN number
+ //      /(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'   for Phone number
+
+         //alert(myexp)
+         //alert(myexp2)
+	var e = document.getElementById(elem.id).value
+	//alert(e)
+	if(e.indexOf('-')>-1 || e.indexOf(' ')>-1){
+	//alert(e)
+	return
+	}
+	//**convert string of numbers to 999-999-999 format
+	//myRe = "/(\\d)(?=(\\d\\d\\d)+(?!\\d))/g, '$1-'"	
+	var myRe = new RegExp(myexp)
+	var myRe2 = myexp2
+	//var newsin = e.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1-');
+	var newsin = e.replace(myRe, myRe2);
+		document.getElementById(elem.id).value = newsin
+  	//document.getElementById(elem.id).disabled = true;	
+}
+
+function focusAll(){
+  $('.gen_input').each(function(){
+    //alert($(this).attr("onblur"))
+    var x = $(this).attr("onblur")
+    if(x.indexOf("fixSin(this)">-1)){
+        $(this).css('background-color', 'lightyellow'); 
+        $(this).blur()    }
+    if(x.indexOf("dateReformat(this)">-1)){
+        $(this).css('background-color', 'lightyellow'); 
+        $(this).blur()    }
+  });
+}
+
+		/****************************
+			Script to show/hide page 2 - TogglePg2()
+		****************************/
+		function TogglePg2() {
+			// check True/False setting to enable toggling
+			if (document.getElementById("ToggleCheck").value == 'True') {
+			$('#page_2').hide();
+			document.getElementById("ToggleCheck").value = 'False';
+			} else {
+			$('#page_2').show();
+			document.getElementById("ToggleCheck").value = 'True';
+			}
+		}
+
+</script>
+</head>
+
+<body onload="onEformLoad(); myinit();focusAll();">
+
+<div id="eform_container" style="max-width: 800px">
+	<form id="inputForm" action="">
+		<div id="page_1" class="page_container ui-droppable" style="width: 800px; height: 1000px;">
+			<img id="gen_backgroundImage1" class="gen-layer1" onerror="myerror(this)" src="${oscar_image_path}SAC-Clinic.png" style="width: auto; height: 100%; z-index: 0;">
+			<div class="input_elements">
+				<div id="gen_widgetId1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 223px; height: 16px; position: absolute; z-index: 40; top: 58.2333px; left: 244.867px;">
+					<input id="gen_inputId1" class="gen_input noborderPrint" name="gen_inputId1" oscardb="patient_name" title="patient_name" type="text">
+				</div>
+				<div id="gen_widgetId2" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 41; top: 85.2333px; left: 283.867px;">
+					<input id="gen_inputId2" class="gen_input noborderPrint" name="gen_inputId2" oscardb="dob" title="dob" type="text">
+				</div>
+				<div id="gen_widgetId3" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 42; top: 112.233px; left: 241.867px;">
+					<input id="gen_inputId3" class="gen_input noborderPrint" name="gen_inputId3" oscardb="hin" title="hin" type="text">
+				</div>
+				<div id="gen_widgetId4" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 271px; height: 16px; position: absolute; z-index: 13; top: 664.233px; left: 90.8667px;">
+					<input id="gen_inputId4" class="gen_input noborderPrint" name="gen_inputId4" oscardb="current_user_fname_lname" title="current_user_fname_lname" type="text">
+				</div>
+				<div id="gen_widgetId5" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 96px; height: 19px; position: absolute; z-index: 14; top: 663.233px; left: 452.867px;">
+					<input id="gen_inputId5" class="gen_input noborderPrint" name="gen_inputId5" oscardb="current_user_ohip_no" title="current_user_ohip_no" type="text">
+				</div>
+				<div id="gen_widgetId6" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 273px; height: 102px; position: absolute; z-index: 15; top: 719.117px; left: 85px;">
+					<textarea id="gen_inputId6" class="gen_input noborderPrint" name="gen_inputId6" oscardb="clinic_label" style="resize: none;" title="clinic_label">
+</textarea> </div>
+				<div id="gen_widgetId20" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 16; top: 300.033px; left: 85px;">
+					<input id="gen_inputId20" autocomplete="off" class="gen_input xBox" name="gen_inputId20" type="text">
+				</div>
+				<div id="gen_widgetId21" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 19; top: 324px; left: 85px;">
+					<input id="gen_inputId21" autocomplete="off" class="gen_input xBox" name="gen_inputId21" type="text">
+				</div>
+				<div id="gen_widgetId22" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 20; top: 350px; left: 85px;">
+					<input id="gen_inputId22" autocomplete="off" class="gen_input xBox" name="gen_inputId22" type="text">
+				</div>
+				<div id="gen_widgetId23" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 21; top: 376px; left: 85px;">
+					<input id="gen_inputId23" autocomplete="off" class="gen_input xBox" name="gen_inputId23" type="text">
+				</div>
+				<div id="gen_widgetId24" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 22; top: 402px; left: 85px;">
+					<input id="gen_inputId24" autocomplete="off" class="gen_input xBox" name="gen_inputId24" type="text">
+				</div>
+				<div id="gen_widgetId25" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 23; top: 427px; left: 85px;">
+					<input id="gen_inputId25" autocomplete="off" class="gen_input xBox" name="gen_inputId25" type="text">
+				</div>
+				<div id="gen_widgetId26" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 24; top: 452px; left: 85px;">
+					<input id="gen_inputId26" autocomplete="off" class="gen_input xBox" name="gen_inputId26" type="text">
+				</div>
+				<div id="gen_widgetId27" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 25; top: 478px; left: 85px;">
+					<input id="gen_inputId27" autocomplete="off" class="gen_input xBox" name="gen_inputId27" type="text">
+				</div>
+				<div id="gen_widgetId28" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 26; top: 503px; left: 85px;">
+					<input id="gen_inputId28" autocomplete="off" class="gen_input xBox" name="gen_inputId28" type="text">
+				</div>
+				<div id="gen_widgetId29" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 27; top: 529px; left: 85px;">
+					<input id="gen_inputId29" autocomplete="off" class="gen_input xBox" name="gen_inputId29" type="text">
+				</div>
+				<div id="gen_widgetId30" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 28; top: 555px; left: 85px;">
+					<input id="gen_inputId30" autocomplete="off" class="gen_input xBox" name="gen_inputId30" type="text">
+				</div>
+				<div id="gen_widgetId31" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 17; top: 605px; left: 85px;">
+					<input id="gen_inputId31" autocomplete="off" class="gen_input xBox" name="gen_inputId31" type="text" value="">
+				</div>
+				<div id="gen_widgetId32" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 18; top: 628px; left: 85px;">
+					<input id="gen_inputId32" autocomplete="off" class="gen_input xBox" name="gen_inputId32" type="text" value="">
+				</div>
+				<div id="gen_widgetId9" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 29; top: 296px; left: 457px;">
+					<input id="gen_inputId9" class="gen_input noborderPrint" name="gen_inputId9" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId10" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 30; top: 321px; left: 457px;">
+					<input id="gen_inputId10" class="gen_input noborderPrint" name="gen_inputId10" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId11" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 31; top: 347px; left: 457px;">
+					<input id="gen_inputId11" class="gen_input noborderPrint" name="gen_inputId11" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId12" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 32; top: 372px; left: 457px;">
+					<input id="gen_inputId12" class="gen_input noborderPrint" name="gen_inputId12" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId13" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 33; top: 398px; left: 457px;">
+					<input id="gen_inputId13" class="gen_input noborderPrint" name="gen_inputId13" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId14" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 34; top: 424px; left: 457px;">
+					<input id="gen_inputId14" class="gen_input noborderPrint" name="gen_inputId14" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId15" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 35; top: 448px; left: 457px;">
+					<input id="gen_inputId15" class="gen_input noborderPrint" name="gen_inputId15" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId16" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 36; top: 473px; left: 457px;">
+					<input id="gen_inputId16" class="gen_input noborderPrint" name="gen_inputId16" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId17" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 37; top: 498px; left: 457px;">
+					<input id="gen_inputId17" class="gen_input noborderPrint" name="gen_inputId17" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId18" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 38; top: 523px; left: 457px;">
+					<input id="gen_inputId18" class="gen_input noborderPrint" name="gen_inputId18" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId19" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 117px; height: 16px; position: absolute; z-index: 39; top: 549px; left: 457px;">
+					<input id="gen_inputId19" class="gen_input noborderPrint" name="gen_inputId19" onfocus="mydatepicker(this)" onmouseover="mydatepicker(this)" type="text">
+				</div>
+				<div id="gen_widgetId33" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 46; top: 76.2333px; left: 539.867px;">
+					<input id="gen_inputId33" class="gen_input noborderPrint" name="gen_inputId33" oscardb="cell" title="cell" type="text">
+				</div>
+				<div id="gen_widgetId34" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 47; top: 57.2333px; left: 539.867px;">
+					<input id="gen_inputId34" class="gen_input noborderPrint" name="gen_inputId34" oscardb="phone" title="phone" type="text">
+				</div>
+				<div id="gen_widgetId35" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 219px; height: 16px; position: absolute; z-index: 45; top: 96.2333px; left: 538.867px;">
+					<input id="gen_inputId35" class="gen_input noborderPrint" name="gen_inputId35" oscardb="email" title="email" type="text">
+				</div>
+				<div id="gen_widgetId7" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 43; top: 745.233px; left: 448.867px;">
+					<input id="gen_inputId7" class="gen_input mydateclass noborderPrint" name="gen_inputId7" onblur="dateReformat(this,'dd/mmm/yyyy')" oscardb="today" title="today" type="text">
+				</div>
+				<div id="gen_widgetId8" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 48; top: 884.05px; left: 316.867px;">
+					<input id="gen_inputId8" class="gen_input noborderPrint" name="gen_inputId8" onclick="makehyperlink(this)" style="color: blue;" title="mailto:RH-SAC@vch.ca?subject=Covid19 Testing Request&amp;body=Please see attached" type="text" value="Click here to email">
+				</div>
+			</div>
+		</div>
+		<div id="BottomButtons" class="DoNotPrint">
+			<!-- Form Control Buttons --><label for="subject">Subject:</label>
+			<input id="subject" name="subject" size="40" type="text">
+			<input id="SubmitButton" name="SubmitButton" onclick="onEformSubmit();" type="button" value="Submit">
+			<input id="PrintButton" name="PrintButton" onclick="onEformPrint();" type="button" value="Print">
+			<input id="PrintSubmitButton" name="PrintSubmitButton" onclick="onEformPrintSubmit();" type="button" value="Print &amp; Submit">
+			<input id="Toggle" name="Toggle" onclick="TogglePg2();" title="Click to include/exclude page 2" type="button" value="Toggle Pg2">
+		       <input type="hidden" id="ToggleCheck" name="ToggleCheck" value="True" />
+			<div id="faxControl">
+			</div>
+		</div>
+		<div id="page_2" class="page_container ui-droppable" style="width: 800px; height: 1000px;">
+			<img id="gen_backgroundImage2" class="gen-layer1" onerror="myerror(this)" src="${oscar_image_path}SAC_Clinic-Map.png" style="width: auto; height: 100%; z-index: 12;">
+			<div class="input_elements">
+			</div>
+		</div>
+	</form>
+</div>
+
+</body>
+
+</html>

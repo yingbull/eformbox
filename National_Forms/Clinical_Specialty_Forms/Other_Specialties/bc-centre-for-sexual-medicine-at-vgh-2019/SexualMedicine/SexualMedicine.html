@@ -1,0 +1,507 @@
+<html>
+<head>
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<title>Sexual Medicine</title>
+<script src='${oscar_javascript_path}jquery/jquery-2.2.4.min.js'>
+</script>
+<script>window.jQuery || document.write("\x3cscript src='https://code.jquery.com/jquery-2.2.4.min.js'\x3e\x3c\/script\x3e");</script>
+<link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+<script src='https://code.jquery.com/jquery-1.12.4.js'>
+</script>
+<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'>
+</script>
+<script src='${oscar_javascript_path}eforms/faxControl.js'>
+</script>
+<style>
+
+.all-no-button2 {            
+			display: inline-block;
+			text-align: left;
+			vertical-align: top;
+			//background: transparent;
+			//border: 10;
+			font-size: 12px;
+			width: 50px;
+		}
+
+.all-no-button1 {
+    background: gray;
+    border: 5px solid #000000;
+	border-color: gray;
+    color: black;
+	padding-top: 1px;
+    padding-right: 40px;
+    padding-bottom: 10px;
+    padding-left: 1px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    //width: 70px;  
+	//height: 20px; 
+}
+
+[class^="only-one-radio"] {
+	height: 12px;
+	width: 12px;
+	font-size: 12px;
+	border: 1px solid black;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: pink;
+}
+
+		/* base style for pages */
+		.page_container {
+			position: relative;
+			background: #ffffff;
+			float: left;
+			border: solid 0;
+			margin: 0;
+		}
+
+		/* div containing form input elements */
+		.input_elements {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* base styling for input wrapper divs */
+		.gen-widget {
+			display: inline-block;
+			text-align: left;
+			vertical-align: top;
+			background: transparent;
+			border: 0;
+		}
+
+		/* style wrapped input elements */
+		.gen-widget input, textarea {
+			position: absolute;
+			display: inline-block;
+			text-align: left;
+			font-weight: normal;
+
+			font-size: 14px;
+			font-family: 'Helvetica', 'Arial', sans-serif;
+			background: transparent;
+			color: #000000;
+			border: 1px solid #d2d2d2;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+			margin: 0;
+		}
+
+		/* remove firefox webkit so that checkboxes are resizable */
+		.gen-widget input[type=checkbox] {
+			-moz-appearance: none;
+		}
+
+		/* define xbox styling */
+		.gen-xBox input {
+			background: aquamarine;
+			text-align: center;
+			font-weight: bold;
+			font-size: 11px;
+			border: 1px solid black;
+			cursor: pointer;
+		}
+
+		.gen-xBox input:focus {
+			outline: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+		}
+		.only-one-radio input {
+			background: pink;
+			text-align: center;
+			font-weight: bold;
+			font-size: 11px;
+			border: 1px solid black;
+			cursor: pointer;
+/*Rounds- delete comment if preferred */
+                       /*-webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 10px;*/
+
+		}
+             
+		.only-one-radio input:focus {
+			outline: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+		}
+
+		/* define other */
+		.noborder {
+			border-color: transparent !important;
+		}
+
+		/* print only styling */
+		@media print {
+			.DoNotPrint {
+				display: none;
+			}
+
+			.noborderPrint {
+				border-color: transparent !important;
+			}
+
+			.page_container {
+				page-break-after: always;
+			}
+		}
+
+		/* define label styling (only used by generated labels) */
+		.label-style_1 {
+			color: #000000;
+			font-size: 12px;
+			font-weight: normal;
+			font-family: Verdana, Arial, sans-serif;
+		}
+	</style>
+<script>
+	    function CHOOSE_FROM_HERE_DOWN(){}
+	
+	
+		var needToConfirm = false;
+		/** call this to prevent closing the window without a confirmation */
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+		/** call this to prevent the exit confirmation popup when closing the window */
+		function releaseDirtyFlag() {
+			needToConfirm = false;
+		}
+		/** call this function on page load to prevent the window from closing
+		 * without confirmation when unsaved changes have been made */
+		function initConfirmClose() {
+			window.addEventListener("beforeunload", function (event) {
+				if (needToConfirm) {
+					var confirmationMessage = "You have attempted to leave this page. " +
+						"If you have made any changes to the fields without clicking the Submit button, " +
+						"your changes will be lost. Are you sure you want to exit this page?";
+					event.returnValue = confirmationMessage;
+					return confirmationMessage;
+				}
+			});
+			$("input").change(function (event) {
+				setDirtyFlag();
+			});
+		}
+		/** this function fixes images paths in the eform to allow image use outside of oscar.
+		 *  This is useful when developing the eform, but can be removed for final versions */
+		function replaceOscarImagePathsWhenLocal($selector) {
+			var strLoc = window.location.href.toLowerCase();
+			if (strLoc.indexOf("https") == -1) {
+				$selector.find("img").not(".signature_data").each(function () {
+					this.src = this.src.replace(/$\%7Boscar_image_path\%7D/, '');
+				});
+			}
+		}
+		/** initializes custom x-box input functionality.
+		 *  should be called once on eform load */
+		function initXBoxes($selector) {
+			$selector.find(".xBox").click(function () {
+				$(this).val($(this).val() === 'X' ? '' : 'X');
+			}).keypress(function (event) {
+				// any key press except tab will constitute a value change to the checkbox
+				if (event.which != 0) {
+					$(this).click();
+					return false;
+				}
+			});
+		}
+		/** pre-check checkboxes and xboxes based on patient gender */
+		function initPrecheckedCheckboxes($selector) {
+			var $patientGender = $("#PatientGender");
+			if ($patientGender) {
+				var filter = ".gender_precheck_" + $patientGender.val();
+				$selector.find("input[type=checkbox]").filter(filter).prop('checked', true);
+				$selector.find(".xBox").filter(filter).val('X');
+			}
+		}
+		/** This function is called when the eform has been loaded */
+		function onEformLoad() {
+			var $input_elements = $(".input_elements");
+			replaceOscarImagePathsWhenLocal($("#eform_container"));
+			initXBoxes($input_elements);
+			initPrecheckedCheckboxes($input_elements);
+			initConfirmClose();
+		}
+		/** This function is called when the print button is clicked */
+		function onEformPrint() {
+			window.print();
+		}
+		/** This function is called when the eform submit button is clicked */
+		function onEformSubmit() {
+			releaseDirtyFlag();
+			document.forms[0].submit();
+		}
+		/** This function is called when the eform print & submit button is clicked */
+		function onEformPrintSubmit() {
+			onEformPrint();
+			releaseDirtyFlag();
+			setTimeout('document.forms[0].submit()', 2000);
+		}
+
+				
+function allno(){ //this checks All No on click
+var x = document.getElementsByClassName("all-no");
+for (var i = 0; i < x.length; i++) {
+x[i].value="X"
+//x[i].style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box****************************
+}
+var x = document.getElementsByClassName("clear-yes");
+for (var i = 0; i < x.length; i++) {
+x[i].value=""
+x[i].style.boxShadow = "inset 0 0 0 1000px white"  
+}
+}
+
+function myinit(){ //this blacks out boxes that are checked on load and clicks hidden fields
+$('input[type=hidden]').click();
+var y = document.getElementsByClassName("cradio");
+for (var i = 0; i < y.length; i++) {
+/*
+y[i].addEventListener("click", function(){
+    myupdate(this)
+});
+*/
+if (y[i].value=="X"){
+//y[i].style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*******************************
+}
+}
+var z = document.getElementsByClassName("all-no-button2");
+//alert(z.length)
+for (var i = 0; i < z.length; i++) {
+z[i].addEventListener("click", function(){
+    allno()
+});
+}
+}
+
+function myupdate(vid){ //only one box in the radio group will be checked
+var x = document.getElementsByClassName(vid.getAttribute("class"));
+var mygroup = $(x).attr("class").split(" ");
+for(i=0;i<mygroup.length;i++){
+if(mygroup[i].indexOf("only-one-radio")>-1){
+var getmyclass = mygroup[i]
+}
+}
+//alert(getmyclass)
+var x = document.getElementsByClassName(getmyclass);
+//alert(x.length)
+if (x.length==1 && x[0].value=="X"){ //if there is only one member of the radiogroup, then this will act as checkbox rather than radiobox
+x[0].style.boxShadow = "inset 0 0 0 1000px white"
+x[0].value=""
+//return
+}
+else
+{
+for (var i = 0; i < x.length; i++) {
+    x[i].style.boxShadow = "inset 0 0 0 1000px white"
+    x[i].value = "";
+    vid.value = "X"
+    //vid.style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*************************************
+}
+}
+}
+
+$.datepicker.setDefaults({
+//for documentation link to http://api.jqueryui.com/datepicker/		
+//showOn: "both",
+//buttonImageOnly: true,
+//buttonImage: "calendar.gif"
+//buttonText: "Calendar"
+});
+
+function mydatepicker(vid) {
+$( "#"+vid ).datepicker({ 
+dateFormat: 'yy-mm-dd (DD)',
+changeMonth: true,
+changeYear: true,
+showButtonPanel: true,
+closeText: 'Clear'
+ });
+};
+
+function myerror(myelement) {  
+//function to load image as standalone
+var newsrc = myelement.src.split('%7D')[1]
+myelement.src = newsrc 
+}
+
+function makehyperlink(myelement) {
+var str = myelement.value
+document.getElementById(myelement.id).readOnly = true; 
+document.getElementById(myelement.id).style.color = "blue";
+ // var result = str.link(str);
+  window.open(str)
+}
+
+function removeLineFeeds(myelement) {
+  var str = myelement.value.replace(/(\r\n\t|\n|\r\t)/gm, '; ');
+  document.getElementById(myelement.id).value = str;
+  document.getElementById(myelement.id).style.fontSize = '10px';
+  $(document).click(function (e) {
+    if (e.shiftKey) {
+      document.getElementById(myelement.id).style.fontSize = '14px';
+    }
+  });
+}
+
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("gen_backgroundImage1").src;
+		document.getElementById("gen_backgroundImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+
+</script>
+</head>
+<body onload='onEformLoad(); myinit();'>
+<div id='eform_container'style='max-width: 850px'>
+<form id="inputForm" action="">
+<div id="page_1" class="page_container ui-droppable" style="width: 850px; height: 1100px;">
+<img id="gen_backgroundImage1" class="gen-layer1" src="${oscar_image_path}Sexual-Medicine-Referral-Form.png"  onerror="myerror(this)"  style="width: 100%; height: auto; z-index: 0;">
+<div class="input_elements">
+<div id="gen_widgetId1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 11; top: 193.1px; left: 189.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="patient_nameL" id="gen_inputId1" name="gen_inputId1">
+</div>
+<div id="gen_widgetId2" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 12; top: 226.1px; left: 192.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="patient_nameF" id="gen_inputId2" name="gen_inputId2">
+</div>
+<div id="gen_widgetId6" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 13; top: 260.1px; left: 84.5333px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="dob" id="gen_inputId6" name="gen_inputId6">
+</div>
+<div id="gen_widgetId7" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 14; top: 260.6px; left: 409.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="hin" id="gen_inputId7" name="gen_inputId7">
+</div>
+<div id="gen_widgetId8" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 621px; height: 18px; z-index: 15; top: 307.6px; left: 137.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="address_street_number_and_name" id="gen_inputId8" name="gen_inputId8">
+</div>
+<div id="gen_widgetId9" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 16; top: 339.6px; left: 77.5333px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="city" id="gen_inputId9" name="gen_inputId9">
+</div>
+<div id="gen_widgetId10" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 17; top: 335.6px; left: 514.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="postal" id="gen_inputId10" name="gen_inputId10">
+</div>
+<div id="gen_widgetId11" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 123px; height: 20px; z-index: 24; top: 371.183px; left: 134.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="phone" id="gen_inputId11" name="gen_inputId11">
+</div>
+<div id="gen_widgetId12" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 113px; height: 19px; z-index: 25; top: 371.683px; left: 325.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="cell" id="gen_inputId12" name="gen_inputId12">
+</div>
+<div id="gen_widgetId14" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 126px; height: 18px; z-index: 18; top: 403.683px; left: 594.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="current_user_ohip_no" id="gen_inputId14" name="gen_inputId14">
+</div>
+<div id="gen_widgetId16" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 798px; height: 98px; z-index: 19; top: 674.65px; left: 16.5333px; position: absolute;">
+<textarea style="resize: none;" class="gen_input noborderPrint" id="gen_inputId16" name="gen_inputId16">
+</textarea>
+</div>
+<div id="gen_widgetId17" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 788px; height: 18px; z-index: 20; top: 815.65px; left: 23.5333px; position: absolute;">
+<textarea style="resize: none;" class="gen_input noborderPrint" id="gen_inputId17" name="gen_inputId17">
+</textarea>
+</div>
+<div id="gen_widgetId18" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 802px; height: 27px; z-index: 21; top: 912.65px; left: 19.5333px; position: absolute;">
+<textarea style="resize: none;" class="gen_input noborderPrint" id="gen_inputId18" name="gen_inputId18">
+</textarea>
+</div>
+<div id="gen_widgetId19" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 802px; height: 27px; z-index: 22; top: 970px; left: 20px; position: absolute;">
+<textarea style="resize: none;" class="gen_input noborderPrint" id="gen_inputId19" name="gen_inputId19"  font size="6" oscardb="medical_history" ondblclick="removeLineFeeds(this)"  title="dblclick to compress, shift+click to reset">
+</textarea>
+</div>
+<div id="gen_widgetId20" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 802px; height: 27px; z-index: 23; top: 1021px; left: 17px; position: absolute;">
+<textarea style="resize: none;" class="gen_input noborderPrint" id="gen_inputId20" name="gen_inputId20" oscardb="druglist_line"  ondblclick="removeLineFeeds(this)" title="dblclick to compress, shift+click to reset">
+</textarea>
+</div>
+<div id="gen_widgetId15" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 607px; height: 18px; z-index: 26; top: 434.1px; left: 93.5333px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="clinic_addressLine" id="gen_inputId15" name="gen_inputId15">
+</div>
+<div id="gen_widgetId21" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 27; top: 465.1px; left: 91.5333px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="clinic_city" id="gen_inputId21" name="gen_inputId21">
+</div>
+<div id="gen_widgetId22" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 99px; height: 18px; z-index: 28; top: 465.1px; left: 514.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="clinic_postal" id="gen_inputId22" name="gen_inputId22">
+</div>
+<div id="gen_widgetId23" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 146px; height: 18px; z-index: 29; top: 498.1px; left: 121.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="clinic_phone" id="gen_inputId23" name="gen_inputId23">
+</div>
+<div id="gen_widgetId24" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 139px; height: 18px; z-index: 30; top: 501.1px; left: 452.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="clinic_fax" id="gen_inputId24" name="gen_inputId24">
+</div>
+<div id="gen_widgetId13" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 31; top: 404.6px; left: 198.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" oscardb="provider_name" id="gen_inputId13" name="gen_inputId13">
+</div>
+<div id="gen_widgetId32" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 256px; height: 18px; z-index: 32; top: 596.1px; left: 542.533px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" id="gen_inputId32" name="gen_inputId32">
+</div>
+<div id="gen_widgetId29" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 33; top: 619.767px; left: 162.867px; position: absolute;" ondblclick="mydclick(this)" title="gen_inputId29">
+<input type="text" class="gen_input cradio  only-one-radiogen_inputId29" autocomplete="off" onclick="myupdate(this)" id="gen_inputId29" name="gen_inputId29" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId30" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 34; top: 618.767px; left: 211.867px; position: absolute;" ondblclick="mydclick(this)" title="gen_inputId29">
+<input type="text" class="gen_input cradio  only-one-radiogen_inputId29" autocomplete="off" onclick="myupdate(this)" id="gen_inputId30" name="gen_inputId30" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId33" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 35; top: 779.767px; left: 481.867px; position: absolute;" ondblclick="mydclick(this)" title="gen_inputId33">
+<input type="text" class="gen_input cradio only-one-radiogen_inputId33" autocomplete="off" onclick="myupdate(this)" id="gen_inputId33" name="gen_inputId33" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId34" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 36; top: 780px; left: 524px; position: absolute;" ondblclick="mydclick(this)" title="gen_inputId33">
+<input type="text" class="gen_input cradio  only-one-radiogen_inputId33" autocomplete="off" onclick="myupdate(this)" id="gen_inputId34" name="gen_inputId34" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId35" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 48; top: 861px; left: 350px; position: absolute;" ondblclick="mydclick(this)" title="gen_inputId35">
+<input type="text" class="gen_input cradio  only-one-radiogen_inputId35" autocomplete="off" onclick="myupdate(this)" id="gen_inputId35" name="gen_inputId35" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId36" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 49; top: 861px; left: 532px; position: absolute;" ondblclick="mydclick(this)" title="gen_inputId35">
+<input type="text" class="gen_input cradio  only-one-radiogen_inputId35" autocomplete="off" onclick="myupdate(this)" id="gen_inputId36" name="gen_inputId36" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId3" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 38; top: 204.767px; left: 622.867px; position: absolute;">
+<input type="text" class="gen_input xBox gender_precheck_M" autocomplete="off" id="gen_inputId3" name="gen_inputId3">
+</div>
+<div id="gen_widgetId4" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 39; top: 205.767px; left: 554.867px; position: absolute;">
+<input type="text" class="gen_input xBox gender_precheck_F" autocomplete="off" id="gen_inputId4" name="gen_inputId4">
+</div>
+<div id="gen_widgetId5" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 40; top: 204.767px; left: 689.867px; position: absolute;">
+<input type="text" class="gen_input xBox gender_precheck_O" autocomplete="off" id="gen_inputId5" name="gen_inputId5">
+</div>
+<div id="gen_widgetId25" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 41; top: 582.767px; left: 363.867px; position: absolute;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId25" name="gen_inputId25">
+</div>
+<div id="gen_widgetId26" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 42; top: 582.767px; left: 534.867px; position: absolute;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId26" name="gen_inputId26">
+</div>
+<div id="gen_widgetId27" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 43; top: 582.767px; left: 760.867px; position: absolute;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId27" name="gen_inputId27">
+</div>
+<div id="gen_widgetId28" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 44; top: 599.767px; left: 222.867px; position: absolute;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId28" name="gen_inputId28">
+</div>
+<div id="gen_widgetId31" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; z-index: 45; top: 619.767px; left: 696.867px; position: absolute;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId31" name="gen_inputId31">
+</div>
+<div id="gen_widgetId37" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 300px; height: 18px; z-index: 47; top: 79.7167px; left: 472.867px; position: absolute;">
+<input type="text" class="gen_input noborderPrint" onclick="makehyperlink(this)" id="gen_inputId37" name="gen_inputId37" value="http://www.vch.ca/locations-services/result?res_id=353" style="color:blue;">
+</div>
+</div>
+</div>
+<div class="DoNotPrint" id="BottomButtons">
+<!-- Form Control Buttons -->
+<label for="subject">Subject:</label>
+<input name="subject" id="subject" size="40" type="text">
+<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="onEformSubmit();">
+<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="onEformPrint();">
+<input value="Print &amp; Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="onEformPrintSubmit();">
+<div id="faxControl">
+</div>
+</div>
+<input type="hidden" id="PatientGender" name="PatientGender" oscardb="sex">
+</form>
+</div>
+</body>
+</html>

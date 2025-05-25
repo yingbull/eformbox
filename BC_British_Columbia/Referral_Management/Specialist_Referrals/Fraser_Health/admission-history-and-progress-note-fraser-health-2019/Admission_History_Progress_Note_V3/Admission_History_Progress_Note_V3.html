@@ -1,0 +1,1129 @@
+<html>
+<head>
+<title>Admission History and Progress Notes</title>
+
+<!-- Updated 2019-Oct-18 12:39 -->
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+
+<!-- js graphics scripts -->
+<script type="text/javascript" src="${oscar_image_path}jsgraphics.js"></script>
+
+<!-- --Script for pop-up menu------------------- -->
+<style type="text/css">
+#topbar{
+	position:absolute;
+	border: 1px solid black;
+	padding: 2px;
+	background-color: lightyellow;
+	width: 210px;
+	visibility: hidden;
+	z-index: 100;
+	font-size: 10;
+}
+</style>
+
+
+<script type="text/javascript">
+
+/***********************************************
+* Floating Top Bar script- u00A9 Dynamic Drive (www.dynamicdrive.com)
+* Sliding routine by Roy Whittle (http://www.javascript-fx.com/)
+* This notice must stay intact for legal use.
+* Visit http://www.dynamicdrive.com/ for full source code
+***********************************************/
+
+var persistclose=0 //set to 0 or 1. 1 means once the bar is manually closed, it will remain closed for browser session
+var startX = 760 //set x offset of bar in pixels
+var startY = 0//set y offset of bar in pixels
+var verticalpos="fromtop" //enter "fromtop" or "frombottom"
+
+function iecompattest(){
+	return (document.compatMode && document.compatMode!="BackCompat")? document.documentElement : document.body
+}
+
+function get_cookie(Name) {
+	var search = Name + "="
+	var returnvalue = "";
+	if (document.cookie.length > 0) {
+	offset = document.cookie.indexOf(search)
+	if (offset != -1) {
+	offset += search.length
+	end = document.cookie.indexOf(";", offset);
+	if (end == -1) end = document.cookie.length;
+	returnvalue=unescape(document.cookie.substring(offset, end))
+}
+}
+return returnvalue;
+}
+
+function closebar(){
+	if (persistclose)
+	document.cookie="remainclosed=1"
+	document.getElementById("topbar").style.visibility="hidden"
+	document.getElementById("topbar").style.display="none"
+}
+
+function staticbar(){
+	barheight=document.getElementById("topbar").offsetHeight
+	var ns = (navigator.appName.indexOf("Netscape") != -1) || window.opera;
+	var d = document;
+function ml(id){
+	var el=d.getElementById(id);
+	if (!persistclose || persistclose && get_cookie("remainclosed")=="")
+		el.style.visibility="visible"
+		if(d.layers)el.style=el;
+		el.sP=function(x,y){this.style.left=x+"px";this.style.top=y+"px";};
+		el.x = startX;
+		if (verticalpos=="fromtop")
+			el.y = startY;
+		else{
+			el.y = ns ? pageYOffset + innerHeight : iecompattest().scrollTop + iecompattest().clientHeight;
+			el.y -= startY;
+		}
+		return el;
+	}
+	window.stayTopLeft=function(){
+		if (verticalpos=="fromtop"){
+			var pY = ns ? pageYOffset : iecompattest().scrollTop;
+			ftlObj.y += (pY + startY - ftlObj.y)/8;
+		}
+		else{
+			var pY = ns ? pageYOffset + innerHeight - barheight: iecompattest().scrollTop + iecompattest().clientHeight - barheight;
+			ftlObj.y += (pY - startY - ftlObj.y)/8;
+		}
+		ftlObj.sP(ftlObj.x, ftlObj.y);
+		setTimeout("stayTopLeft()", 10);
+	}
+	ftlObj = ml("topbar");
+	stayTopLeft();
+}
+
+if (window.addEventListener)
+	window.addEventListener("load", staticbar, false)
+	else if (window.attachEvent)
+		window.attachEvent("onload", staticbar)
+	else if (document.getElementById)
+		window.onload=staticbar
+</script>
+
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if haven't saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-----------------script for current time--------->
+<script language="javascript">
+
+<!-- hide javascript
+
+function StartClock12() {
+Time12 = new Date();
+Cur12Hour = Time12.getHours();
+Cur12Mins = Time12.getMinutes();
+The12Time = 0;
+The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+The12Time += (Cur12Hour > 11) ? ' PM': ' AM';
+window.status = The12Time;
+setTimeout('StartClock12()',1000);
+}
+
+// done hiding -->
+</script> 
+
+<!-----------------script for current date--------->
+
+<script language="javascript">
+
+<!-- hide javascript
+
+function doDate() {
+       var digital = new Date();
+       var days = digital.getDate();
+       var months = digital.getMonth()*1 +1;
+       var years = digital.getFullYear();
+       var date =" " + days + "/" + months + "/" + years + " " ;
+       return date;
+}
+
+// done hiding -->
+
+</script>
+
+<!-- ----------------------------------------------------------------------------------------- -->
+<script language="javascript">
+ function start(){
+    if (document.getElementById("counter").value ==''){
+       (document.getElementById("counter").value = 1);
+
+	var history1 = document.getElementById('history1').value;
+        var history1Split = history1.split("]]-----");
+        var History1 = history1Split.pop();
+        document.getElementById('Current').value = History1;
+
+	var history2 = document.getElementById('history2').value;
+        var history2Split = history2.split("]]-----");
+        var History2 = history2Split.pop();
+        document.getElementById('MedicalHistory').value = History2;
+
+	var history3 = document.getElementById('history3').value;
+        var history3Split = history3.split("]]-----");
+        var History3 = history3Split.pop();
+        document.getElementById('SocialFamilyHistory').value = History3;
+
+   }
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+
+	<!-- Xbox styling -->
+	<style type="text/css">
+		.box1 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: white;
+			font-size: 14px;
+			width:16px;
+			height:16px;
+		}
+		
+	</style>
+	<!-- XBox styling -->
+	
+	<!-- XBox code -->
+	<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script language="javascript" type="text/javascript">
+	    $( document ).ready(function() {
+		    $('.XBox').prop("readonly","true");
+            $('.XBox').mousedown(function(evt) {
+            	changeValue(evt.target);
+            });
+			$('.XBox').keydown(function(evt) {
+				displayKeyCode(evt);
+			});	
+        });
+		function changeValue(element) {
+        	if (element.val == undefined) {
+        		element = $(element); // Convert to jquery element
+        	}
+
+            if (element.val() == '') {
+            	element.val('X');
+            } else {
+            	element.val('');
+            }
+        }
+        function displayKeyCode(evt) {
+            var charCode = evt.which || evt.keyCode;
+            // any key press except tab will constitute a value change to the checkbox
+            if (charCode != 9){
+                changeValue(evt.target);
+                return false;
+            }
+        }	
+	</script>
+	<!-- XBox code -->	
+<script>
+/*Autosize by Jack Moore (www.jacklmoore.com/autosize/) */
+(function (root, factory) {
+	"use strict";
+	root.autosize = factory();
+}(this, function () {
+	function main(ta) {
+		if (!ta || !ta.nodeName || ta.nodeName !== "TEXTAREA" || ta.hasAttribute("data-autosize-on")) { return; }
+		var maxHeight;
+		var heightOffset;
+
+		function init() {
+			var style = window.getComputedStyle(ta, null);
+
+			if (style.resize === "vertical") {
+				ta.style.resize = "none";
+			} else if (style.resize === "both") {
+				ta.style.resize = "horizontal";
+			}
+
+			// horizontal overflow is hidden, so break-word is necessary for handling words longer than the textarea width
+			ta.style.wordWrap = "break-word";
+
+			// Chrome/Safari-specific fix:
+			// When the textarea y-overflow is hidden, Chrome/Safari doesn"t reflow the text to account for the space
+			// made available by removing the scrollbar. This workaround will cause the text to reflow.
+			var width = ta.style.width;
+			ta.style.width = "0px";
+			// Force reflow:
+			/* jshint ignore:start */
+			ta.offsetWidth;
+			/* jshint ignore:end */
+			ta.style.width = width;
+
+			maxHeight = style.maxHeight !== "none" ? parseFloat(style.maxHeight) : false;
+			
+			if (style.boxSizing === "content-box") {
+				heightOffset = -(parseFloat(style.paddingTop)+parseFloat(style.paddingBottom));
+			} else {
+				heightOffset = parseFloat(style.borderTopWidth)+parseFloat(style.borderBottomWidth);
+			}
+
+			adjust();
+		}
+
+		function adjust() {
+			var startHeight = ta.style.height;
+			var htmlTop = document.documentElement.scrollTop;
+			var bodyTop = document.body.scrollTop;
+			
+			ta.style.height = "auto";
+
+			var endHeight = ta.scrollHeight+heightOffset;
+
+			if (maxHeight !== false && maxHeight < endHeight) {
+				endHeight = maxHeight;
+				if (ta.style.overflowY !== "scroll") {
+					ta.style.overflowY = "scroll";
+				}
+			} else if (ta.style.overflowY !== "hidden") {
+				ta.style.overflowY = "hidden";
+			}
+
+			ta.style.height = endHeight+"px";
+
+			// prevents scroll-position jumping
+			document.documentElement.scrollTop = htmlTop;
+			document.body.scrollTop = bodyTop;
+
+			if (startHeight !== ta.style.height) {
+				var evt = document.createEvent("Event");
+				evt.initEvent("autosize.resized", true, false);
+				ta.dispatchEvent(evt);
+			}
+		}
+
+		// IE9 does not fire onpropertychange or oninput for deletions,
+		// so binding to onkeyup to catch most of those events.
+		// There is no way that I know of to detect something like "cut" in IE9.
+		if ("onpropertychange" in ta && "oninput" in ta) {
+			ta.addEventListener("keyup", adjust);
+		}
+
+		window.addEventListener("resize", adjust);
+		ta.addEventListener("input", adjust);
+
+		ta.addEventListener("autosize.update", adjust);
+
+		ta.addEventListener("autosize.destroy", function(style){
+			window.removeEventListener("resize", adjust);
+			ta.removeEventListener("input", adjust);
+			ta.removeEventListener("keyup", adjust);
+			ta.removeEventListener("autosize.destroy");
+
+			Object.keys(style).forEach(function(key){
+				ta.style[key] = style[key];
+			});
+
+			ta.removeAttribute("data-autosize-on");
+		}.bind(ta, {
+			height: ta.style.height,
+			overflow: ta.style.overflow,
+			overflowY: ta.style.overflowY,
+			wordWrap: ta.style.wordWrap,
+			resize: ta.style.resize
+		}));
+
+		ta.setAttribute("data-autosize-on", true);
+		ta.style.overflow = "hidden";
+		ta.style.overflowY = "hidden";
+
+		init();		
+	}
+
+	// Do nothing in IE8 or lower
+	if (typeof window.getComputedStyle !== "function") {
+		return function(elements) {
+			return elements;
+		};
+	} else {
+		return function(elements) {
+			if (elements && elements.length) {
+				Array.prototype.forEach.call(elements, main);
+			} else if (elements && elements.nodeName) {
+				main(elements);
+			}
+			return elements;
+		};
+	}
+}));
+</script>
+
+<script type="text/javascript">
+function secondaryEntry(){
+
+var firstLine =  document.getElementById('line').value;
+var linePx = 26;
+var firstLineVal = firstLine*linePx+202;
+var firstLinePx = firstLineVal+'px';
+
+document.FormName.Report.style.top=firstLinePx;
+ document.FormName.time.style.top=firstLinePx;
+ document.getElementById('datecomplex').style.top=firstLinePx; 
+ document.FormName.PatientDemographics.style.display = 'none';
+ document.getElementById('BGImage1').style.display = 'none';
+ document.FormName.Stable.style.display = 'none';
+ document.FormName.UnStable.style.display = 'none';
+ document.FormName.Critical.style.display = 'none';
+ }
+</script>
+
+</head>
+
+<body onload="StartClock12(); document.FormName.Date.value=doDate(); reImg(); start();">
+
+	 <img id="BGImage1" src="${oscar_image_path}AdmissionProgressNote.png" style="position: absolute; left: 0px; top: 0px; width:750">
+
+ <form method="post" action="" name="FormName" id="FormName" >
+ 
+ <!--Hidden Inputs-->
+
+<input type="hidden" name="Today" id="Today" oscarDB=today>
+
+<input type="hidden" name="LMP" id="LMP" oscarDB=m$LMP#value>
+
+<input type="hidden" name="EDD" id="EDD" oscarDB=m$EDD#value>
+
+<input type="hidden" name="HT" id="HT" oscarDB=m$HT#value>
+
+<input type="hidden" name="WT" id="WT" oscarDB=m$WT#value>
+
+<input type="hidden" name="BMI" id="BMI" oscarDB=m$BMI#value>
+
+<input type="hidden" name="G" id="G" oscarDB=m$G#value>
+
+<input type="hidden" name="P" id="P" oscarDB=m$P#value>
+
+<input type="hidden" name="CC" id="CC" oscarDB=m$CC#value>
+
+<input type="hidden" name="ABD" id="ABD" oscarDB=m$ABD#value>
+
+<input type="hidden" name="BP" id="BP" oscarDB=m$BP#value>
+
+<input type="hidden" name="CHST" id="CHST" oscarDB=m$CHST#value>
+
+<input type="hidden" name="CVS" id="CVS" oscarDB=m$CVS#value>
+
+<input type="hidden" name="age" id="age" oscarDB=age>
+
+<input type="hidden" name="EGA" id="EGA" oscarDB=m$EGA#value>
+
+<input type="hidden" name="HN" id="HN" oscarDB=m$HN#value>
+
+<input type="hidden" name="HPI" id="HPI" oscarDB=m$HPI#value>
+
+<input type="hidden" name="history1" id="history1"  oscarDB=OngoingConcerns>
+
+<input type="hidden" name="history2" id="history2"  oscarDB=Medical_History>
+
+<input type="hidden" name="history3" id="history3"  oscarDB=Other_Medications_History>
+
+<input class="nodisplay" type="hidden" name="counter" id = "counter" >
+
+<input type="hidden" name="Current" id="Current" value="">
+
+<input type="hidden" name="MedicalHistory" id="MedicalHistory" value="">
+
+<input type="hidden" name="SocialFamilyHistory" id="SocialFamilyHistory" value="">
+
+<input type="hidden" name="recent_rx" id="recent_rx"  oscarDB=recent_rx>
+
+<input type="hidden" name="allergies_des_no_archived" id="allergies_des_no_archived"  oscarDB=allergies_des_no_archived>
+
+<input type="hidden" name="SFH" id="SFH" oscarDB=m$SFH#value>
+
+<input type="hidden" name="FHR" id="FHR" oscarDB=m$FHR#value>
+
+<input type="hidden" name="SES" id="SES" oscarDB=m$SES#value>
+
+<input type="hidden" name="PLAN" id="PLAN" oscarDB=m$PLAN#value>
+
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+<input name="FirstLastName" id="FirstLastName" type="hidden" oscarDB=first_last_name>
+
+<input type="hidden" name="provider_name_first_init" id="provider_name_first_init" oscarDB=provider_name_first_init>
+
+<input type="hidden" name="current_user_cpsid" id="current_user_cpsid" oscarDB=current_user_cpsid>
+
+<input type="hidden" name="current_user_ohip_no" id="current_user_ohip_no" oscarDB=current_user_ohip_no>
+
+<input type="hidden" name="dr_referral_name" id="dr_referral_name" oscarDB=dr_referral_name>
+
+<input type="hidden" name="Procedure" id="Procedure" oscarDB=m$PROC#value>
+
+<input type="hidden" name="02" id="02" oscarDB=m$02#value>
+
+<input type="hidden" name="BP" id="BP" oscarDB=m$BP#value>
+
+<input type="hidden" name="PULS" id="PULS" oscarDB=m$PULS#value>
+
+<input type="hidden" name="RESP" id="RESP" oscarDB=m$RESP#value>
+
+<input type="hidden" name="TEMP" id="TEMP" oscarDB=m$TEMP#value>
+
+
+<!-- End Hidden Inputs-->
+
+<textarea name="PatientDemographics" id="PatientDemographics" class="noborder" style="position:absolute; left:465px; top:10px; width:275px; height:170px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  oscarDB=label></textarea>
+
+<input name="Stable" id="Stable" type="text" class="Xbox box1" style="position:absolute; left:377px; top:207px; " value="">
+
+<input name="UnStable" id="UnStable" type="text" class="Xbox box1" style="position:absolute; left:475px; top:207px; " value="">
+
+<input name="Critical" id="Critical" type="text" class="Xbox box1" style="position:absolute; left:565px; top:207px; " value="">
+
+<span style="position:absolute; left:200px; top:120px; " class="DoNotPrint" >Reposition Inputs to line number <input name="line" id="line" type="text" class="noborder" style="width:25px; font-size:12px; text-align:left; background-color:white;" ><br>
+<input name="SecondaryEntry" id="SecondaryEntry" type="button" class="DoNotPrint"  title="Secondary Entry" onclick="secondaryEntry(); " value="Secondary Entry"></span>
+
+<div name="datecomplex" id="datecomplex" style=" position:absolute; left:70px; top:227px; font-size:12px;" ><input name="Date" id="Date" type="text" class="noborder" style=" width:67px; height:23; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:white;" ><br>
+dd/mm/yyyy</div>
+
+<input name="time" id="time" type="text" class="noborder" style="position:absolute; left:138px; top:227px; width:67px; height:23; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-decoration: underline; text-align:left; background-color:white;" value="" >
+
+
+
+<textarea name="Report" id="Report" class="noborder" style="position:absolute; left:207px; top:227px; width:515px; height:0px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  rows="1" value=""></textarea>
+
+
+
+
+
+ <div class="DoNotPrint" style="position: absolute; top:990px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text">
+			<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="releaseDirtyFlag();setTimeout('document.FormName.submit()',1000);"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="button" onclick="document.FormName.reset();"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('document.FormName.submit()',1000);"> 
+	 </td></tr></table>
+ </div>
+ </form>
+
+<!-- -----------Pop-up menu items ------------------------ -->
+<div id="topbar" class="DoNotPrint" style="font-size:12px;">
+<form name="LazySelect">
+
+
+<!-------------Report Info---------------->
+
+<input type="checkbox" name="TimeStamp"
+	onClick="
+	document.FormName.time.value = The12Time;
+	">Time Stamp<br>
+
+<u>Report Details:</u><br>
+	<input type="checkbox" name="Intro"
+	 onClick="
+		document.FormName.Report.value += 'Thank you for referring this pleasant ';
+		document.FormName.Report.value +=document.getElementById('age').value;
+		document.FormName.Report.value += ' yo ';
+		document.FormName.Report.value +=document.getElementById('PatientGender').value;
+		document.FormName.Report.value += ' who presents with ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		
+	">Referral Intro
+
+	<input type="checkbox" name="IntroOB"
+	 onClick="
+		document.FormName.Report.value += 'Thank you for referring this pleasant ';
+		document.FormName.Report.value +=document.getElementById('age').value;
+		document.FormName.Report.value += ' yo G';
+		document.FormName.Report.value +=document.getElementById('G').value;
+		document.FormName.Report.value += ' P';
+		document.FormName.Report.value +=document.getElementById('P').value;
+		document.FormName.Report.value += ' at ';
+		document.FormName.Report.value +=document.getElementById('EGA').value;
+		document.FormName.Report.value += 'wks gestation by dates/US who presents with ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		
+	">IntroOB<br>
+	<input type="checkbox" name="Admit"
+	 onClick="
+		document.FormName.Report.value += 'This is an admission note on ';
+		document.FormName.Report.value +=document.getElementById('FirstLastName').value;
+		document.FormName.Report.value += ', a pleasant ';
+		document.FormName.Report.value +=document.getElementById('age').value;
+		document.FormName.Report.value += ' yo ';
+		document.FormName.Report.value +=document.getElementById('PatientGender').value;
+		document.FormName.Report.value += ' who presents with ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		
+	">Admit Note Intro
+
+	<input type="checkbox" name="Weekend"
+	 onClick="
+		document.FormName.Report.value += 'This is a weekend note on this pleasant ';
+		document.FormName.Report.value +=document.getElementById('age').value;
+		document.FormName.Report.value += ' yo ';
+		document.FormName.Report.value +=document.getElementById('PatientGender').value;
+		
+	">Weekend Note
+
+	<input type="checkbox" name="HPI"
+	 onClick="
+		document.FormName.Report.value += 'The HPI is as follows: ';
+                document.FormName.Report.value +=document.getElementById('HPI').value;
+		
+	">HPI
+
+	<input type="checkbox" name="PMHx"
+	 onClick="
+		document.FormName.Report.value += 'The Patients PMHx includes the following: ';
+                document.FormName.Report.value +=document.getElementById('MedicalHistory').value;
+		
+	">PMHx<br>
+
+        <input type="checkbox" name="NoMedications"
+	 onClick="
+		document.FormName.Report.value += 'The patient denies taking any medications.';
+		
+	">No Medications
+
+	<input type="checkbox" name="Medications"
+	 onClick="
+		document.FormName.Report.value += 'The patient reports taking the following medications: ';
+        document.FormName.Report.value +=document.getElementById('recent_rx').value;
+		
+	">Medications<br>
+
+        <input type="checkbox" name="NoAllergies"
+	 onClick="
+		document.FormName.Report.value += 'The patient denies allegies to any medications.';
+		
+	">No Allergies
+
+	<input type="checkbox" name="allergies"
+	 onClick="
+		document.FormName.Report.value += 'The patient reports the following allergy(ies) to medication(s):  ';
+        document.FormName.Report.value +=document.getElementById('allergies_des_no_archived').value;		
+		
+	">Allergies<br>
+
+         <input type="checkbox" name="NoLatex"
+	 onClick="
+		document.FormName.Report.value += 'The patient denies any allergy to latex.';
+		
+	">No Al Latex
+
+         <input type="checkbox" name="Latex"
+	 onClick="
+		document.FormName.Report.value += 'The patient reports an allergy to latex.';
+		
+	">Yes Al Latex<br>
+
+         <input type="checkbox" name="NoAnaesthetic"
+	 onClick="
+		document.FormName.Report.value += 'The patient denies any problem with anaesthetics.';
+		
+	">No Prob Anaes
+	
+         <input type="checkbox" name="Anaesthetic"
+	 onClick="
+		document.FormName.Report.value += 'The patient reports the following problems with anaesthetics.';
+		
+	">Anaes Prob<br>
+
+         <input type="checkbox" name="NoSleepApnea"
+	 onClick="
+		document.FormName.Report.value += 'The patient denies any diagnosis of Sleep Apnea.';
+		
+	">No Sleep Apnea
+
+         <input type="checkbox" name="SleepApnea"
+	 onClick="
+		document.FormName.Report.value += 'The patient reports a diagnosis of Sleep Apnea.';
+		
+	">Yes Sleep Apnea<br>
+
+         <input type="checkbox" name="NoHabits"
+	 onClick="
+		document.FormName.Report.value += ' The patient does not smoke, does not drink alcohol and denies street drug use.';
+		
+	">No habits<br>
+
+<u>Examination:</u><br>
+
+
+
+	<input type="checkbox" name="OE"
+	 onClick="
+		document.FormName.Report.value += 'ON EXAMINATION: ';
+		
+	">OE
+
+
+	<input type="checkbox" name="VSS"
+	 onClick="
+		document.FormName.Report.value += 'Her vital signs are stable.  Her Temperature is:   ';
+        document.FormName.Report.value +=document.getElementById('TEMP').value;
+		document.FormName.Report.value += '&deg;C ,her Blood Pressure is:  ';
+        document.FormName.Report.value +=document.getElementById('BP').value;
+		document.FormName.Report.value += ' mm hg,her Pulse is:  ';
+       document.FormName.Report.value +=document.getElementById('PULS').value;
+		document.FormName.Report.value += ' bpm ,her Respiratory Rate is:  ';
+       document.FormName.Report.value +=document.getElementById('RESP').value;
+		document.FormName.Report.value += ' ,her O&#8322; Saturation is:  ';
+       document.FormName.Report.value +=document.getElementById('02').value;
+		document.FormName.Report.value += ' &#37; .';
+		
+	">VSS
+
+	<input type="checkbox" name="HTWTBMI"
+	 onClick="
+		document.FormName.Report.value += 'The patient&#8217;s height is ';
+        document.FormName.Report.value +=document.getElementById('HT').value;
+		document.FormName.Report.value += ' cm, The patient&#8217;s weight is ';
+        document.FormName.Report.value +=document.getElementById('WT').value;
+		document.FormName.Report.value += ' kg, giving them a BMI of ';
+        document.FormName.Report.value +=document.getElementById('BMI').value;
+		document.FormName.Report.value += '. ';
+	">Ht Wt BMI<br>	
+
+	
+
+	<input type="checkbox" name="NormalExamination"
+	 onClick="
+		document.FormName.Report.value += 'The Head and Neck exam is normal, the Chest is clear, the Cardiovascular exam is normal.  The Abdomen is *. ';
+		
+	">Normal Examination
+
+
+	<input type="checkbox" name="SFHFHR"
+	 onClick="
+		document.FormName.Report.value += 'Symphisis Fundal Height is ';
+                document.FormName.Report.value +=document.getElementById('SFH').value;
+		document.FormName.Report.value += ', Fetal Heart Rate is * with a baseline of ';
+                document.FormName.Report.value +=document.getElementById('FHR').value;
+		document.FormName.Report.value += '. ';
+		
+	">SFH FHR<br>
+	
+
+	<input type="checkbox" name="Pelvic"
+	 onClick="
+		document.FormName.Report.value += 'Pelvic Exam reveals a normal sized uterus with no adnexal abnormalities. ';
+		
+	">Pelvic
+
+
+	<input type="checkbox" name="PelvicOB"
+	 onClick="
+		document.FormName.Report.value += 'Pelvic Exam reveals a cervix that is *cm dilated, soft/firm, *% effaced and anterior/posterior.  The presenting part is vertex/breech, and is at spines +/- . ';
+		
+	">Pelvic OB
+
+	<input type="checkbox" name="DTR"
+	 onClick="
+		document.FormName.Report.value += 'Deep Tendon Reflexes are . ';
+		
+	">DTR<br>
+
+
+	<input type="checkbox" name="Imaging"
+	 onClick="
+		document.FormName.Report.value += ' IMAGING: The patient has had the following imaging studies:  ';
+		
+	">Imaging
+
+
+	<input type="checkbox" name="Labs"
+	 onClick="
+		document.FormName.Report.value += ' The patient has had the following Lab work performed: ';
+		
+	">Labs
+
+
+<input type="checkbox" name="Assessment"
+	 onClick="
+		document.FormName.Report.value += 'ASSESSMENT: This is a ';
+        document.FormName.Report.value +=document.getElementById('age').value;
+		document.FormName.Report.value += ' yo ';
+		document.FormName.Report.value +=document.getElementById('PatientGender').value;
+		document.FormName.Report.value += ' who presents with ';
+        document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '. I have identified the following concerns: ';
+        document.FormName.Report.value +=document.getElementById('SES').value;
+				
+	">Assessment<br>
+
+<input type="checkbox" name="Plan"
+	 onClick="
+		document.FormName.Report.value += 'PLAN: I recommend ';
+        document.FormName.Report.value +=document.getElementById('PLAN').value;
+		
+	">Plan
+
+<input type="checkbox" name="TransfusionConsent"
+	 onClick="
+		document.FormName.Report.value += 'I have discussed the risks associated with blood transfusion with this paitent.  They accept these risks. ';
+		
+	">Trans. Consent<br>
+
+<input type="checkbox" name="MOST"
+	 onClick="
+		document.FormName.Report.value += 'The most form has been reviewed with the patient and filled out. ';
+		
+	">MOST form filled out<br>
+
+
+<u>Surgeries</u><br>
+	<input type="checkbox" name="CS"
+	 onClick="
+		document.FormName.Report.value += ' OR NOTE Cesarean Section\n \n ';
+		document.FormName.Report.value += ' INDICATION:   ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '\n SURGEON: Dr. ';
+		document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += ' ASSISTANT: ';
+		document.FormName.Report.value +=document.getElementById('dr_referral_name').value;
+		document.FormName.Report.value += '\n ANAESTHETIST Dr.   ***   ANAESTHETIC Type: Spinal \n ';
+		document.FormName.Report.value += ' DRAIN: Foley Catheter  POSITION: Supine, wedged to Left \n';
+		document.FormName.Report.value += ' APPROACH:  Joel-Cohen technique \n ';
+		document.FormName.Report.value += ' FINDINGS:  Urinary Bladder mobilized, Transverse incision made in the lower uterine segment.  Incision size increased using cephalad-caudad traction.   Amniotic fluid was clear.  The presenting part was vertex.  It was a liveborn Male that screamed well at birth.  The cord was clamped after 30 seconds. Cord blood gasses were sent.  Routine cord blood were sent.  Carbetocin was given by the Anaesthetist.  The placenta was delivered with cord traction. \n  ';
+		document.FormName.Report.value += ' UTERINE CLOSURE:  The uterus was closed in 2 layers; First layer - locked 0-vicryl. Second layer - Imbricating Lembert stitch with 0-vicryl. \n';
+		document.FormName.Report.value += ' ADNEXA:  Both tubes and ovaries were visualized and found to be normal. \n';
+		document.FormName.Report.value += ' ABDOMINAL WALL CLOSURE:  The rectus muscle was loosely approximated with a figure of 8 0-vicryl suture.  The Fascia was closed with running 0-vicryl suture.  There were *** cm of sub-cutaneous fat.  The Subcutaneous tissue was closed with running 2-0 vicryl suture. \n';
+		document.FormName.Report.value += ' SKIN CLOSURE:  The skin was closed with running 3-0 monocryl on a Keith needle. \n';
+		document.FormName.Report.value += ' DRESSING: A Mepore dressing was applied. \n';
+		document.FormName.Report.value += ' The uterus was expressed for a moderate amount of blood and clot and the cervix was open. \n ';
+		document.FormName.Report.value += ' Estimated blood loss was 800cc. \n';
+		document.FormName.Report.value += ' Sponge and Instrument counts were correct. \n ';
+		document.FormName.Report.value += ' The patient left the Operating room in Satisfactory Condition. \n\n ';
+		
+	">CS
+
+	<input type="checkbox" name="PostOpDay1CS"
+	 onClick="
+		document.FormName.Report.value += 'POST OPERATIVE DAY 1 Cesarean Section. \n\n';
+		document.FormName.Report.value += 'S:  Patient is feeling well.  The pain is controlled with the analgesia.  She is mobilizing.  She is voiding well and passing flatus.  She has started eating.  Breast feeding has been established.  Her Lochia is moderate and red tinged.  \n';
+		document.FormName.Report.value += 'O: Her vital signs are stable.  Her Temperature is:   ';
+        document.FormName.Report.value +=document.getElementById('TEMP').value;
+		document.FormName.Report.value += '&deg;C ,her Blood Pressure is:  ';
+        document.FormName.Report.value +=document.getElementById('BP').value;
+		document.FormName.Report.value += ' mm hg,her Pulse is:  ';
+       document.FormName.Report.value +=document.getElementById('PULS').value;
+		document.FormName.Report.value += ' bpm ,her Respiratory Rate is:  ';
+       document.FormName.Report.value +=document.getElementById('RESP').value;
+		document.FormName.Report.value += ' ,her O&#8322; Saturation is:  ';
+       document.FormName.Report.value +=document.getElementById('02').value;
+		document.FormName.Report.value += ' &#37; .  Her Day 1 post-op Hemoglobin is  **. Her head and neck exam is normal, her chest is clear, her cardiovascular exam is normal.  Her abdomen is soft.  The dressing is dry and intact.\n';
+		document.FormName.Report.value += 'A: The patient is healing well. \n';
+		document.FormName.Report.value += 'P: Saline lock IV.  Increase Diet. Encourage mobilization.\n';
+		
+	">Post Op Day 1 CS<br>
+
+        <input type="checkbox" name="LS"
+	 onClick="
+		document.FormName.Report.value += ' OR NOTE  ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\n INDICATION:   ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '\n SURGEON: Dr. ';
+		document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += ' ASSISTANT: ';
+		document.FormName.Report.value +=document.getElementById('dr_referral_name').value;
+		document.FormName.Report.value += '\n ANAESTHETIST Dr.   ***   ANAESTHETIC Type: General \n ';
+		document.FormName.Report.value += ' DRAIN: Foley Catheter  POSITION: Lithotomy \n';
+		document.FormName.Report.value += ' PORTS(4):  Sub-Umbilical, Mid-Clavicular Line at the level of the Umbilicus bilaterally, Left lower quadrant \n ';
+		document.FormName.Report.value += ' FINDINGS:  Normal Appearing Uterus Fallopian Tubes and Ovaries.  No evidence of endometriosis, scaring or adhesions. \n  ';
+		document.FormName.Report.value += ' PROCEDURE:  The veres needle was placed through the umbilical incision.  The Pressure in the peritoneal cavity was  ***.  The peritoneal cavity was distended with CO2 until the pressure was 15mm Hg.  A ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += ' was carried out using a Harmonic Scalpel with the Advanced Hemostasis feature.  The vaginal vault was closed from below with 0-vicryl in a running locked fashion form left to right.  The abdomen was then re-inflated and the pedicles were examined.  The pedicles were found to be hemostatic.  The anterior and posterior walls of the vaginal vault were well apposed and the peritoneum was re-approximated over the vaginal vault.  The instruments were removed.  The sheaths were removed under low intra-abdominal pressure and there was no bleeding.  \n';
+		document.FormName.Report.value += ' SKIN CLOSURE:  The skin was closed with interrupted 4-0 monocryl sutures \n';
+		document.FormName.Report.value += ' DRESSING: The port sites were dressed with steri-strips overlaid with Telfa Tegaderm dressings. \n';
+		document.FormName.Report.value += ' The urine was clear at the end of the case. \n ';
+		document.FormName.Report.value += ' Estimated blood loss was 50cc. \n';
+		document.FormName.Report.value += ' Sponge and Instrument counts were correct. \n ';
+		document.FormName.Report.value += ' The patient left the Operating room in Satisfactory Condition. \n\n ';
+		
+	">LS Surgery
+
+	<input type="checkbox" name="PostOpDay1LS"
+	 onClick="
+		document.FormName.Report.value += 'POST OPERATIVE DAY 1 ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\nS:  Patient is feeling well.  The pain is controlled with the analgesia.  She is mobilizing.  She is voiding well and passing flatus.  She has started eating. \n';
+		document.FormName.Report.value += 'O: Her vital signs are stable.  Her Temperature is:   ';
+        document.FormName.Report.value +=document.getElementById('TEMP').value;
+		document.FormName.Report.value += '&deg;C ,her Blood Pressure is:  ';
+        document.FormName.Report.value +=document.getElementById('BP').value;
+		document.FormName.Report.value += ' mm hg,her Pulse is:  ';
+       document.FormName.Report.value +=document.getElementById('PULS').value;
+		document.FormName.Report.value += ' bpm ,her Respiratory Rate is:  ';
+       document.FormName.Report.value +=document.getElementById('RESP').value;
+		document.FormName.Report.value += ' ,her O&#8322; Saturation is:  ';
+       document.FormName.Report.value +=document.getElementById('02').value;
+		document.FormName.Report.value += ' &#37; .  Her Day 1 post-op Hemoglobin is  **. Her head and neck exam is normal, her chest is clear, her cardiovascular exam is normal.  Her abdomen is soft.  The dressings are dry and intact.\n';
+		document.FormName.Report.value += 'A: The patient is healing well. \n';
+		document.FormName.Report.value += 'P: Patient is discharged home to  follow up with me in 6 weeks.\n';
+		
+	">Post Op Day 1 LS<br>
+
+
+
+	<input type="checkbox" name="OpenSurgery"
+	 onClick="
+		document.FormName.Report.value += ' OR NOTE  ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\n INDICATION:   ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '\n SURGEON: Dr. ';
+		document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += ' ASSISTANT: ';
+		document.FormName.Report.value +=document.getElementById('dr_referral_name').value;
+		document.FormName.Report.value += '\n ANAESTHETIST Dr.   ***   ANAESTHETIC Type:  General \n ';
+		document.FormName.Report.value += ' DRAIN: Foley Catheter  POSITION: supine \n';
+		document.FormName.Report.value += ' Incision:  Pfannenstiel \n ';
+		document.FormName.Report.value += ' FINDINGS:  Normal Appearing Uterus Fallopian Tubes and Ovaries.  No evidence of endometriosis, scaring or adhesions. \n  ';
+		document.FormName.Report.value += ' PROCEDURE:  After the pfannenstiel skin incision, the sub-cutaneous tissue was dissected down to the fascia.  There were *** cm of sub-cutaneous fat.  The fascia was incised and the incision was extended bluntly.  The bodies of the rectus muscle were identified and the linea alba was incised.  The rectus muscles were separated and the peritoneum was identified and entered high and away from the bladder. A Balfour Retractor and bottom blade were used to visualize the pelvis, and 3 moistened packs were used to keep the bowels out of the surgical field. A ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += ' was carried out in the usual fashion.  The pedicles were examined and found to be hemostatic.  The instruments packs and retractors were removed. \n';
+		document.FormName.Report.value += ' ABDOMINAL WALL CLOSURE:  The rectus muscle was loosely approximated with a figure of 8 0-vicryl suture.  The Fascia was closed with running 0-vicryl suture.  There were *** cm of sub-cutaneous fat.  The Subcutaneous tissue was closed with running 2-0 vicryl suture. \n';
+		document.FormName.Report.value += ' SKIN CLOSURE:  The skin was closed with running 3-0 monocryl on a Keith needle. \n';
+		document.FormName.Report.value += ' DRESSING: A Mepore dressing was applied. \n';
+		document.FormName.Report.value += ' The urine was clear at the end of the case. \n ';
+		document.FormName.Report.value += ' Estimated blood loss was 100cc. \n';
+		document.FormName.Report.value += ' Sponge and Instrument counts were correct. \n ';
+		document.FormName.Report.value += ' The patient left the Operating room in Satisfactory Condition. \n\n ';
+		
+	">Open Surgery
+
+	<input type="checkbox" name="PostOpDay1Open"
+	 onClick="
+		document.FormName.Report.value += 'POST OPERATIVE DAY 1 ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\nS:  Patient is feeling well.  The pain is controlled with the analgesia.  She is mobilizing.  She is voiding well and passing flatus.  She has started eating. \n';
+		document.FormName.Report.value += 'O: Her vital signs are stable.  Her Temperature is:   ';
+        document.FormName.Report.value +=document.getElementById('TEMP').value;
+		document.FormName.Report.value += '&deg;C ,her Blood Pressure is:  ';
+        document.FormName.Report.value +=document.getElementById('BP').value;
+		document.FormName.Report.value += ' mm hg,her Pulse is:  ';
+       document.FormName.Report.value +=document.getElementById('PULS').value;
+		document.FormName.Report.value += ' bpm ,her Respiratory Rate is:  ';
+       document.FormName.Report.value +=document.getElementById('RESP').value;
+		document.FormName.Report.value += ' ,her O&#8322; Saturation is:  ';
+       document.FormName.Report.value +=document.getElementById('02').value;
+		document.FormName.Report.value += ' &#37; .  Her Day 1 post-op Hemoglobin is  **. Her head and neck exam is normal, her chest is clear, her cardiovascular exam is normal.  Her abdomen is soft.  The dressing is dry and intact.\n';
+		document.FormName.Report.value += 'A: The patient is healing well. \n';
+		document.FormName.Report.value += 'P: Saline lock IV.  Increase Diet. Encourage mobilization.\n';
+		
+	">PostOp D 1 Open<br>
+
+
+	<input type="checkbox" name="VagSurgery"
+	 onClick="
+		document.FormName.Report.value += ' OR NOTE  ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\n INDICATION:   ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '\n SURGEON: Dr. ';
+		document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += ' ASSISTANT: ';
+		document.FormName.Report.value +=document.getElementById('dr_referral_name').value;
+		document.FormName.Report.value += '\n ANAESTHETIST Dr.   ***   ANAESTHETIC Type:  General \n ';
+		document.FormName.Report.value += ' DRAIN: Foley Catheter  POSITION: Lithotomy \n';
+		document.FormName.Report.value += ' FINDINGS:Grade Cystocele, Grade Rectocele, Grade Uterine prolapse. \n  ';
+		document.FormName.Report.value += ' PROCEDURE: A pudendal Block was performed.  The anterior vaginal mucosa was injected with zylocaine with epinephrine. an incision was made 2 cm cephalad from the urethra and dissection was carried out to the vault of the vagina.  Dissection was carried out to both sacrospinous ligaments.  A capio needle passer was used to anchor 2 0-proline sutures on each sacrospinous ligament just below the attachment to the ischial spine.  These were sutured to the vaginal vault and the vaginal vault was elevated. . A ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += ' was carried out in the usual fashion.   An anterior repair was then carried out.  The Lone-Star retractor was used to hold the vaginal mucosa away from the incision site and the dissection was carried out laterally to identify the bladder pillars.  Using box sutures of 0-vicryl  the bladder pillars were re-approximated.  The anterior vaginal mucosa was then trimmed and closed with running 0-vicryl suture.  A posteriorr repair was then carried out.  The Lone-Star retractor was used to hold the vaginal mucosa away from the incision site .  The vaginal mucosa was incised at the level of the hymenal ring.  Dissection was carried up to the vaginal vault.  A biopsy was taken of the granulation tissue at the vaginal vault.  Dissection was carried out laterally to the connective tissue.  Using box sutures of 0-vicryl  the connective tissue was  re-approximated. \n';
+		document.FormName.Report.value += ' Vaginal Mucosa Closure:    The posterior vaginal mucosa was then trimmed and closed with running 0-vicryl suture. The incisions were examined and found to be hemostatic.  The instruments packs and retractors were removed. \n';
+		document.FormName.Report.value += ' The urine was clear at the end of the case. \n ';
+		document.FormName.Report.value += ' Estimated blood loss was 100cc. \n';
+		document.FormName.Report.value += ' Sponge and Instrument counts were correct. \n ';
+		document.FormName.Report.value += ' The patient left the Operating room in Satisfactory Condition. \n\n ';
+		
+	">Vag Surgery
+
+	<input type="checkbox" name="PostOpDay1Vag"
+	 onClick="
+		document.FormName.Report.value += 'POST OPERATIVE DAY 1 ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\nS:  Patient is feeling well.  The pain is controlled with the analgesia.  She is mobilizing.  She is voiding well and passing flatus.  She has started eating. \n';
+		document.FormName.Report.value += 'O: Her vital signs are stable.  Her Temperature is:   ';
+        document.FormName.Report.value +=document.getElementById('TEMP').value;
+		document.FormName.Report.value += '&deg;C ,her Blood Pressure is:  ';
+        document.FormName.Report.value +=document.getElementById('BP').value;
+		document.FormName.Report.value += ' mm hg,her Pulse is:  ';
+       document.FormName.Report.value +=document.getElementById('PULS').value;
+		document.FormName.Report.value += ' bpm ,her Respiratory Rate is:  ';
+       document.FormName.Report.value +=document.getElementById('RESP').value;
+		document.FormName.Report.value += ' ,her O&#8322; Saturation is:  ';
+       document.FormName.Report.value +=document.getElementById('02').value;
+		document.FormName.Report.value += ' &#37; .  Her Day 1 post-op Hemoglobin is  **. Her head and neck exam is normal, her chest is clear, her cardiovascular exam is normal.  Her abdomen is soft.\n';
+		document.FormName.Report.value += 'A: The patient is healing well. \n';
+		document.FormName.Report.value += 'P: Discharge the patient home once she can void.\n';
+		
+	">PostOp D 1 Vag<br>
+
+	<input type="checkbox" name="Hysteroscopy"
+	 onClick="
+		document.FormName.Report.value += ' OR NOTE  ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\n INDICATION:   ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '\n SURGEON: Dr. ';
+		document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += '\n ANAESTHETIST Dr.   ***   ANAESTHETIC Type:  General \n ';
+		document.FormName.Report.value += ' POSITION: Lithotomy \n';
+		document.FormName.Report.value += ' FINDINGS:Atrophic Uterine Cavity. \n  ';
+		document.FormName.Report.value += ' PROCEDURE: The perineum was prepared and draped in the usual fashion. A weighted Auvard speculum and right angle retractor was used to identify the cervix. A single-tooth tenaculum was used to grasp the anterior lip of the cervix. The cervix was dilated to a number 19 Pratt dilator. The Diagnostic Omni hysteroscope was assembled and inserted through the cervix into the uterine cavity. Gravity feed was used to provide distension of the uterine cavity with normal saline , and suction was used to remove the fluid. A good view of the uterine cavity was obtained. A ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += ' was carried out in the usual fashion. \n\n';
+		document.FormName.Report.value += 'HYSTEROSCOPIC FINDINGS:\nThe uterine cavity is atrophic \n';
+		document.FormName.Report.value += ' The instruments were removed.\nThe legs were removed from the stirrups.\n ';
+		document.FormName.Report.value += ' Estimated blood loss was minimal. \n';
+		document.FormName.Report.value += ' Sponge and Instrument counts were correct. \n ';
+		document.FormName.Report.value += ' The patient left the Operating room in Satisfactory Condition. \n\n ';
+		
+	">Hysteroscopy 
+
+	<input type="checkbox" name="TVTO"
+	 onClick="
+		document.FormName.Report.value += ' OR NOTE  ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += '\n\n INDICATION:   ';
+		document.FormName.Report.value +=document.getElementById('CC').value;
+		document.FormName.Report.value += '\n SURGEON: Dr. ';
+		document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += '\n ANAESTHETIST Dr.   ***   ANAESTHETIC Type:  General \n ';
+		document.FormName.Report.value += ' POSITION: Lithotomy \n';
+		document.FormName.Report.value += ' FINDINGS: Hypermobile urethra. \n  ';
+		document.FormName.Report.value += ' PROCEDURE: The legs were placed up in stirrups. The perineum was prepared and draped in the usual fashion. A catheter was placed for clear urine.  Measurements were made on the perineum and medial thigh on both sides to identify the point at which the TVTO trocars would exit the skin. These were marked and the tracts from the skin to the obturator membrane for the TVTO trocar were injected with a mixture of Xylocaine with Epinephrine, Marcaine 0.25% and normal saline. 20 cc were used on each side. A small incision was made in the skin for the exit of the trocar.  The vagina was then addressed. An Allis clamp was used to grasp the mucosa just below the level of the urethra, and another Allis clamp was placed about 2 cm below this. A suburethral incision of about 1 cm in length was made. The tract from this incision to the obturator membrane was injected with the same solution, 20cc on each side.  A ';
+		document.FormName.Report.value +=document.getElementById('Procedure').value;
+		document.FormName.Report.value += ' was carried out in the usual fashion. Dissection was carried out at a 45 degree angle with Metzenbaum scissors to the level of the obturator membrane on the right-hand side. The obturator membrane was perforated with the Metzenbaum scissors. The metal guide was placed through this tract . The TVTO trocar was introduced once the trocar pierced the skin it was grasped with a Kelly clamp. The trocar was pulled through to the level of the Prolene mesh. The Prolene mesh was clamped and the trocar was cut off.  The same procedure was performed on the left-hand side.The bladder was distended with 300 cc of saline. The mesh was then tightened, ensuring that there were no wrinkles underneath the urethra and set into place. The patient was encouraged to cough and the sling was tightened until she was continent with coughing. The mesh was then cut off at the level of the skin, where it exited the medial aspect of the thighs. The vaginal mucosa was then closed with running locked 0-0 Vicryl suture.  The bladder was then emptied of the remaining urine. \n\n';
+		document.FormName.Report.value += ' SKIN CLOSURE:The incisions on the medial aspects of the thighs were reapproximated with Steri-Strips.\n ';
+		document.FormName.Report.value += ' The instruments were removed.  The legs were removed from the stirrups.\n ';
+		document.FormName.Report.value += ' The urine was clear at the end of the case. Estimated blood loss was minimal. \n ';
+		document.FormName.Report.value += ' Sponge and Instrument counts were correct. The patient left the Operating room in Satisfactory Condition. \n\n ';
+		
+	">TVTO<br>
+ 
+
+
+
+<u>Closing:</u><br>
+	<input type="checkbox" name="Thanks"
+	 onClick="
+		document.FormName.Report.value += ' Once again thank you for this kind referral. ';
+		
+	">Thanks for the referral<br>
+
+        <input type="checkbox" name="ContinuingCare"
+	 onClick="
+		document.FormName.Report.value += ' I will continue to follow this patient along with you.';
+		
+	">Shared Care
+
+
+
+	<input type="checkbox" name="ReturnPatient"
+	 onClick="
+		document.FormName.Report.value += 'I am discharging this patient back in to your care.  I will be available for further consultation at any time if requested.';
+		
+	">Return Patient<br>
+
+
+	<input type="checkbox" name="Signature"
+	 onClick="
+		document.FormName.Report.value += 'Dr. ';
+        document.FormName.Report.value +=document.getElementById('provider_name_first_init').value;
+		document.FormName.Report.value += ' , CPSID ';
+       document.FormName.Report.value +=document.getElementById('current_user_cpsid').value;
+		document.FormName.Report.value += ' , MSP ';
+       document.FormName.Report.value +=document.getElementById('current_user_ohip_no').value;
+		document.FormName.Report.value += ' \n ';
+		
+	">Signature<br>
+
+
+
+<input name="MOST_Form" id="MOST_Form" type="button" class="DoNotPrint" title="eForm"  oscarOPEN="MOST" value="MOST Form"><input name="MOST_Form_OR" id="MOST_Form_OR" type="button" class="DoNotPrint" title="eForm"  oscarOPEN="MOST_Elective_Surgery" value="MOST OR"><br>
+
+<input value="Reset" name="reset" type="reset">
+	<input value="Close" name="Close" type="button" onClick="javascript: closebar(); return false">
+
+</form>
+</div>
+
+
+
+<!--  -----------Pop-up end----------------------- -->
+
+<script>
+autosize(document.getElementById('Report'));
+var theCheckBoxes = document.forms['LazySelect'].getElementsByTagName('input');
+[].slice.call(theCheckBoxes).forEach(function(theCheckBox){theCheckBox.setAttribute('onclick',theCheckBox.getAttribute('onclick')+";document.getElementById('Report').dispatchEvent(new Event('autosize.update'));");});
+</script>
+</body>
+ </html>

@@ -1,0 +1,1538 @@
+<html>
+<head>
+<title>Greig Health Record - 18-24yo</title>
+
+<!-- Updated 2015-10-18  
+Converts height from feet and inches to centimetres
+Converts weight from pounds to kilograms
+Pulls today's weight, height, BMI, BP and VA (LECM and RECM) from OSCAR Measurements (but today's date must first be entered into the "Date" field in the format dd-mm-yyyy)
+Calculates Body Mass Index
+Calculates Body Mass Index Percentile using CDC data from 2000
+Pushes values for weight, height, BMI and BMIP back to Oscar Measurements
+
+E-FORM DISCLAIMER: As is: E-Forms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty. No Quality Control: The author does not vet any E-Forms and does not purport to apply any manner of quality control. Responsibility: The responsibility for the clinical and medical-legal consequences of any and all E-Forms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. This applies to both E-Forms shared by others, and those created by users themselves. Attribution: E-Forms are shared freely among the user community, with attribution to the original author of the eForm. Free: E-Forms so shared may not be sold or purchased. Provincial validation:  E-Forms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.E-Forms  are not part of the OSCAR core program functionality and code base. For this reason E-Forms are not subject to provincial validation testing and conformance criteria. E-Forms are also not subject to the ISO production process for OSCAR.
+-->
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+
+
+<script language="javascript">
+function formPrint(){
+    window.print();
+} 
+</script>
+
+<script language="javascript">
+top.window.moveTo(400,0);
+if (document.all) {
+    top.window.resizeTo(screen.availWidth/2,screen.availHeight);
+}
+else if (document.layers||document.getElementById) {
+    if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+        top.window.outerHeight = screen.availHeight;
+        top.window.outerWidth = screen.availWidth/2.4;
+    }
+}
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+    needToConfirm = true;
+}
+function releaseDirtyFlag(){
+    needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+    if (needToConfirm){
+        return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+    }
+}
+</script>
+
+
+<script language="javascript">
+function isNumber(ss){
+    var s = ss.value;
+    var i;
+    for (i = 0; i < s.length; i++){
+// Check that current character is number.
+        var c = s.charAt(i);
+        if (c == '.') {
+            continue;
+        } 
+        else if (((c < "0") || (c > "9"))) {
+            alert('Invalid '+s+' in field ' + ss.name);
+            ss.focus();
+            return false;
+        }
+    }
+// All characters are numbers.
+    return true;
+}
+
+function getwt(gotwt,examdate) {
+// Get today's weight from Measurements, or convert a weight in imperial units to metric
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+// document.getElementById('first_last_name').value = document.getElementById('oscarweightdate').value;
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarweightdate').value) == true)) {
+        gotwt.value = document.getElementById('getoscarweight').value;
+    }
+    else {
+        wtEnglish2Metric(gotwt);
+    }
+}
+
+function getage(gotage) {
+// Get the patient's age 
+    var ageinyears = getageinmonths()/12;
+    gotage.value = ageinyears.toFixed(1);
+}
+
+function getht(gotht,examdate) {
+// Get today's height from Measurements, or convert a height in imperial units to metric
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarheightdate').value) == true)) {
+        gotht.value = document.getElementById('getoscarheight').value;
+    }
+    else {
+        htEnglish2Metric(gotht);
+    }
+}
+
+function wtEnglish2Metric(obj) {
+// Convert a weight in pounds to kilograms
+    if(isNumber(obj) ) {
+        weight = obj.value;
+        weightM = Math.round(weight * 10 * 0.4536) / 10 ;
+        if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
+            obj.value = weightM;
+        }
+    }
+}
+
+function htEnglish2Metric(obj) {
+// Convert a weight in pounds to kilograms
+    height = obj.value;
+    if(height.length > 1 && height.indexOf("'") > 0 ) {
+        feet = height.substring(0, height.indexOf("'"));
+        inch = height.substring(height.indexOf("'"));
+        if(inch.length == 1) {
+             inch = 0;
+        } 
+        else {
+            inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+            inch = inch.substring(1);
+        }
+        height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
+        if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+            obj.value = height;
+        }
+    }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+// Get today's date using a passed variable
+function gettoday(field){
+    checkOSCARdb();  //  retrieve data from Measurements
+    var calDate = new Date();
+    var present_yr = calDate.getFullYear();
+    var present_mo = calDate.getMonth()+1;
+    present_mo = present_mo>9? present_mo : ("0"+present_mo);
+    var present_day = calDate.getDate()>9? calDate.getDate() : ("0"+calDate.getDate());
+    field.value = present_day + '-' + present_mo + '-' + present_yr;
+}
+
+function returntoday(){
+// Get today's date in format dd-mm-yyyy
+    var calDate = new Date();
+    var present_yr = calDate.getFullYear();
+    var present_mo = calDate.getMonth()+1;
+    present_mo = present_mo>9? present_mo : ("0"+present_mo);
+    var present_day = calDate.getDate()>9? calDate.getDate() : ("0"+calDate.getDate());
+    return(present_day + '-' + present_mo + '-' + present_yr);
+}
+
+function returnflippedtoday(){
+// Get today's date in format yyyy-mm-dd
+    var calDate = new Date();
+    var present_yr = calDate.getFullYear();
+    var present_mo = calDate.getMonth()+1;
+    present_mo = present_mo>9? present_mo : ("0"+present_mo);
+    var present_day = calDate.getDate()>9? calDate.getDate() : ("0"+calDate.getDate());
+    return(present_yr + '-' + present_mo + '-' + present_day);
+}
+
+function samedates(todaysdate, datetocheck) {
+//  Compare the first 10 characters of two strings, such as two dates in the same format (dd-mm-yyyy or yyyy-mm-dd)
+    var datesaresame = true;
+    var a;
+    for (a = 0; a < 10; a++) {
+        if (datetocheck.charAt(a) != todaysdate.charAt(a))  datesaresame = false;
+    }
+    return (datesaresame);
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getbmi(gotbmi,examdate,gwt,ght){
+//  Get the bmi, calculated today, from Measurements 
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarbmidate').value) == true)) {
+        gotbmi.value = document.getElementById('getoscarbmi').value;
+    }
+    else {
+        calcbmi(gwt,ght,gotbmi);
+    }
+}
+
+function getbmip(gotbmip,examdate,gwt,ght,gbmi){
+//  Get the bmip, calculated today, from Measurements 
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarbmipdate').value) == true)) {
+        gotbmip.value = document.getElementById('getoscarbmip').value;
+    }
+    else {
+        calcbmip(gwt,ght,gbmi,gotbmip);
+    }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getbp(gotbp,examdate){
+//  Get the blood pressure, measured today, from Measurements 
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarbpdate').value) == true)) {
+        gotbp.value = document.getElementById('oscarbp').value + '  (' + document.getElementById('oscarbpcomment').value + ')';
+    }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getvaL(gotvaL,examdate){
+//  Get the left eye visual acuity, measured today, from Measurements 
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarvaLdate').value) == true)) {
+        gotvaL.value =  '20:' + document.getElementById('getoscarvaL').value + '  (Snellen chart)';
+    }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getvaR(gotvaR,examdate){
+//  Get the left eye visual acuity, measured today, from Measurements 
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if ((samedates(today, examdate.value) == true) && (samedates(flippedtoday, document.getElementById('oscarvaRdate').value) == true)) {
+        gotvaR.value = '20:' + document.getElementById('getoscarvaR').value + '  (Snellen chart)';
+    }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function calcbmi(calcwt,calcht,bmi) {
+// Calculate bmi 
+    calcht = calcht / 100;
+    if((isNaN(calcwt) == false) && (isNaN(calcht) == false)) {
+        if(calcwt!="" && calcwt!="0" && calcht!="" && calcht!="0") {
+            bmi.value = Math.round(calcwt * 10 / calcht / calcht) / 10;
+        }
+    }
+}
+</script>
+
+
+<!-- BMI Percentile Calculator, using CDC data from 2000 and based on code from Medscape -->
+<script type="text/javascript" language="javascript">
+function log(i){
+    return Math.log(i) * Math.LOG10E;   
+}
+
+function ln(i){
+    return Math.log(i);
+}
+
+function sq(i){
+    return i * i;
+}
+
+function sqr(i){
+    return Math.sqrt(i);
+}
+
+function power(x,y){
+    return Math.pow(x,y);
+}
+
+function eTo(x){
+    return Math.exp(x);
+}
+
+function fixDP(r, dps) {
+    if(isNaN(r))  return "NaN";
+    var msign = "";
+    if(r < 0)  msign = "-";
+    x = Math.abs(r);
+    if(x > Math.pow(10, 21))  return (msign + x.toString());
+    var m = Math.round(x * Math.pow(10, dps)).toString();
+    if(dps == 0)  return (msign + m);
+    while(m.length <= dps)  m = "0" + m;
+    return (msign + m.substring(0, m.length - dps) + "." + m.substring(m.length - dps));
+}
+
+var L = 0;
+var M = 0;
+var S = 0;
+
+n = new Array;
+n[0] = 50;
+n[1] = 50.399;
+n[2] = 50.798;
+n[3] = 51.197;
+n[4] = 51.595;
+n[5] = 51.994;
+n[6] = 52.392;
+n[7] = 52.79;
+n[8] = 53.188;
+n[9] = 53.586;
+n[10] = 53.983;
+n[11] = 54.38;
+n[12] = 54.776;
+n[13] = 55.172;
+n[14] = 55.567;
+n[15] = 55.962;
+n[16] = 56.356;
+n[17] = 56.749;
+n[18] = 57.142;
+n[19] = 57.535;
+n[20] = 57.926;
+n[21] = 58.317;
+n[22] = 58.706;
+n[23] = 59.095;
+n[24] = 59.483;
+n[25] = 59.871;
+n[26] = 60.257;
+n[27] = 60.642;
+n[28] = 61.026;
+n[29] = 61.409;
+n[30] = 61.791;
+n[31] = 62.172;
+n[32] = 62.552;
+n[33] = 62.93;
+n[34] = 63.307;
+n[35] = 63.683;
+n[36] = 64.058;
+n[37] = 64.431;
+n[38] = 64.803;
+n[39] = 65.173;
+n[40] = 65.542;
+n[41] = 65.91;
+n[42] = 66.276;
+n[43] = 66.64;
+n[44] = 67.003;
+n[45] = 67.364;
+n[46] = 67.724;
+n[47] = 68.082;
+n[48] = 68.439;
+n[49] = 68.793;
+n[50] = 69.146;
+n[51] = 69.497;
+n[52] = 69.847;
+n[53] = 70.194;
+n[54] = 70.54;
+n[55] = 70.884;
+n[56] = 71.226;
+n[57] = 71.566;
+n[58] = 71.904;
+n[59] = 72.24;
+n[60] = 72.575;
+n[61] = 72.907;
+n[62] = 73.237;
+n[63] = 73.565;
+n[64] = 73.891;
+n[65] = 74.215;
+n[66] = 74.537;
+n[67] = 74.857;
+n[68] = 75.175;
+n[69] = 75.49;
+n[70] = 75.804;
+n[71] = 76.115;
+n[72] = 76.424;
+n[73] = 76.73;
+n[74] = 77.035;
+n[75] = 77.337;
+n[76] = 77.637;
+n[77] = 77.935;
+n[78] = 78.23;
+n[79] = 78.524;
+n[80] = 78.814;
+n[81] = 79.103;
+n[82] = 79.389;
+n[83] = 79.673;
+n[84] = 79.955;
+n[85] = 80.234;
+n[86] = 80.511;
+n[87] = 80.785;
+n[88] = 81.057;
+n[89] = 81.327;
+n[90] = 81.594;
+n[91] = 81.859;
+n[92] = 82.121;
+n[93] = 82.381;
+n[94] = 82.639;
+n[95] = 82.894;
+n[96] = 83.147;
+n[97] = 83.398;
+n[98] = 83.646;
+n[99] = 83.891;
+n[100] = 84.134;
+n[101] = 84.375;
+n[102] = 84.614;
+n[103] = 84.849;
+n[104] = 85.083;
+n[105] = 85.314;
+n[106] = 85.543;
+n[107] = 85.769;
+n[108] = 85.993;
+n[109] = 86.214;
+n[110] = 86.433;
+n[111] = 86.65;
+n[112] = 86.864;
+n[113] = 87.076;
+n[114] = 87.286;
+n[115] = 87.493;
+n[116] = 87.698;
+n[117] = 87.9;
+n[118] = 88.1;
+n[119] = 88.298;
+n[120] = 88.493;
+n[121] = 88.686;
+n[122] = 88.877;
+n[123] = 89.065;
+n[124] = 89.251;
+n[125] = 89.435;
+n[126] = 89.617;
+n[127] = 89.796;
+n[128] = 89.973;
+n[129] = 90.147;
+n[130] = 90.32;
+n[131] = 90.49;
+n[132] = 90.658;
+n[133] = 90.824;
+n[134] = 90.988;
+n[135] = 91.149;
+n[136] = 91.308;
+n[137] = 91.466;
+n[138] = 91.621;
+n[139] = 91.774;
+n[140] = 91.924;
+n[141] = 92.073;
+n[142] = 92.22;
+n[143] = 92.364;
+n[144] = 92.507;
+n[145] = 92.647;
+n[146] = 92.785;
+n[147] = 92.922;
+n[148] = 93.056;
+n[149] = 93.189;
+n[150] = 93.319;
+n[151] = 93.448;
+n[152] = 93.574;
+n[153] = 93.699;
+n[154] = 93.822;
+n[155] = 93.943;
+n[156] = 94.062;
+n[157] = 94.179;
+n[158] = 94.295;
+n[159] = 94.408;
+n[160] = 94.52;
+n[161] = 94.63;
+n[162] = 94.738;
+n[163] = 94.845;
+n[164] = 94.95;
+n[165] = 95.053;
+n[166] = 95.154;
+n[167] = 95.254;
+n[168] = 95.352;
+n[169] = 95.449;
+n[170] = 95.543;
+n[171] = 95.637;
+n[172] = 95.728;
+n[173] = 95.818;
+n[174] = 95.907;
+n[175] = 95.994;
+n[176] = 96.08;
+n[177] = 96.164;
+n[178] = 96.246;
+n[179] = 96.327;
+n[180] = 96.407;
+n[181] = 96.485;
+n[182] = 96.562;
+n[183] = 96.638;
+n[184] = 96.712;
+n[185] = 96.784;
+n[186] = 96.856;
+n[187] = 96.926;
+n[188] = 96.995;
+n[189] = 97.062;
+n[190] = 97.128;
+n[191] = 97.193;
+n[192] = 97.257;
+n[193] = 97.32;
+n[194] = 97.381;
+n[195] = 97.441;
+n[196] = 97.5;
+n[197] = 97.558;
+n[198] = 97.615;
+n[199] = 97.67;
+n[200] = 97.725;
+n[201] = 97.778;
+n[202] = 97.831;
+n[203] = 97.882;
+n[204] = 97.932;
+n[205] = 97.982;
+n[206] = 98.03;
+n[207] = 98.077;
+n[208] = 98.124;
+n[209] = 98.169;
+n[210] = 98.214;
+n[211] = 98.257;
+n[212] = 98.3;
+n[213] = 98.341;
+n[214] = 98.382;
+n[215] = 98.422;
+n[216] = 98.461;
+n[217] = 98.5;
+n[218] = 98.537;
+n[219] = 98.574;
+n[220] = 98.61;
+n[221] = 98.645;
+n[222] = 98.679;
+n[223] = 98.713;
+n[224] = 98.745;
+n[225] = 98.778;
+n[226] = 98.809;
+n[227] = 98.84;
+n[228] = 98.87;
+n[229] = 98.899;
+n[230] = 98.928;
+n[231] = 98.956;
+n[232] = 98.983;
+n[233] = 99.01;
+n[234] = 99.036;
+n[235] = 99.061;
+n[236] = 99.086;
+n[237] = 99.111;
+n[238] = 99.134;
+n[239] = 99.158;
+n[240] = 99.18;
+n[241] = 99.202;
+n[242] = 99.224;
+n[243] = 99.245;
+n[244] = 99.266;
+n[245] = 99.286;
+n[246] = 99.305;
+n[247] = 99.324;
+n[248] = 99.343;
+n[249] = 99.361;
+n[250] = 99.379;
+n[251] = 99.396;
+n[252] = 99.413;
+n[253] = 99.43;
+n[254] = 99.446;
+n[255] = 99.461;
+n[256] = 99.477;
+n[257] = 99.492;
+n[258] = 99.506;
+n[259] = 99.52;
+n[260] = 99.534;
+n[261] = 99.547;
+n[262] = 99.56;
+n[263] = 99.573;
+n[264] = 99.585;
+n[265] = 99.598;
+n[266] = 99.609;
+n[267] = 99.621;
+n[268] = 99.632;
+n[269] = 99.643;
+n[270] = 99.653;
+n[271] = 99.664;
+n[272] = 99.674;
+n[273] = 99.683;
+n[274] = 99.693;
+n[275] = 99.702;
+n[276] = 99.711;
+n[277] = 99.72;
+n[278] = 99.728;
+n[279] = 99.736;
+n[280] = 99.744;
+n[281] = 99.752;
+n[282] = 99.76;
+n[283] = 99.767;
+n[284] = 99.774;
+n[285] = 99.781;
+n[286] = 99.788;
+n[287] = 99.795;
+n[288] = 99.801;
+n[289] = 99.807;
+n[290] = 99.813;
+n[291] = 99.819;
+n[292] = 99.825;
+n[293] = 99.831;
+n[294] = 99.836;
+n[295] = 99.841;
+n[296] = 99.846;
+n[297] = 99.851;
+n[298] = 99.856;
+n[299] = 99.861;
+n[300] = 99.865;
+n[301] = 99.869;
+n[302] = 99.874;
+n[303] = 99.878;
+n[304] = 99.882;
+n[305] = 99.886;
+n[306] = 99.889;
+n[307] = 99.893;
+n[308] = 99.896;
+n[309] = 99.9;
+
+daysinprevmonth = new Array;
+daysinprevmonth[1] = 31;
+daysinprevmonth[2] = 31;
+daysinprevmonth[3] = 28.25;
+daysinprevmonth[4] = 31;
+daysinprevmonth[5] = 30;
+daysinprevmonth[6] = 31;
+daysinprevmonth[7] = 30;
+daysinprevmonth[8] = 31;
+daysinprevmonth[9] = 31;
+daysinprevmonth[10] = 30;
+daysinprevmonth[11] = 31;
+daysinprevmonth[12] = 30;
+
+function ZtoPercentile(z){
+    az = Math.abs(z);
+    if (z < -3.09)  return 0.1;
+    if (z > 3.09)  return 99.9;
+    thispercentile = n[Math.round(az * 100)];
+    if(z >= 0)  {
+        return thispercentile;
+    }
+    else  {
+        return (100 - thispercentile);
+    }
+}
+
+function getageinmonths(){
+// Calculate the patient's age in months
+    var monthsold = 0;
+    var calDate = new Date();
+    var present_mo = calDate.getMonth()+1;
+    var present_yr = calDate.getFullYear();
+    var present_day = calDate.getDate();
+    var birth_yr = document.getElementById('dob_yr').value;
+    var birth_mo = document.getElementById('dob_mo').value;
+    var birth_day = document.getElementById('dob_day').value;
+    if (present_day >= birth_day){
+        if (present_mo >= birth_mo) {
+            monthsold = present_mo-birth_mo + 12*(present_yr - birth_yr) + (present_day-birth_day)/30.4375;
+
+        }
+        else {
+            monthsold=(present_mo+12-birth_mo) + 12*(present_yr - birth_yr - 1) + (present_day-birth_day)/30.4375;
+        }
+    }
+    else {
+        if (present_mo > birth_mo) {
+            monthsold = (present_mo-1)-birth_mo + 12*(present_yr - birth_yr) + (present_day+daysinprevmonth[present_mo]-birth_day)/30.4375;
+        }
+        else {
+            monthsold=(present_mo-1+12-birth_mo) + 12*(present_yr - birth_yr - 1) + (present_day+daysinprevmonth[present_mo]-birth_day)/30.4375;
+        }
+    }
+return(monthsold);
+}
+
+function calcbmip(weight,height,bmi,bmip) {
+//  Calculate BMI percentile
+    var Zscore = 0;
+    var doCalc = true;
+    var dp = 1;
+    var bmi_p = 0;
+
+    Age_Months = getageinmonths();
+    var Age_Years = Age_Months/12;
+    doCalc = minMaxCheck(Age_Years,height,weight,bmip);
+
+    if (document.getElementById("PatientGender").value == "M"){
+if(Age_Months >= 24 && Age_Months < 25){L = -1.982373595; M = 16.54777487; S = 0.080127429;};
+if(Age_Months >= 25 && Age_Months < 26){L = -1.924100169; M = 16.49442763; S = 0.079233994;};
+if(Age_Months >= 26 && Age_Months < 27){L = -1.86549793; M = 16.44259552; S = 0.078389356;};
+if(Age_Months >= 27 && Age_Months < 28){L = -1.807261899; M = 16.3922434; S = 0.077593501;};
+if(Age_Months >= 28 && Age_Months < 29){L = -1.750118905; M = 16.34333654; S = 0.076846462;};
+if(Age_Months >= 29 && Age_Months < 30){L = -1.69481584; M = 16.29584097; S = 0.076148308;};
+if(Age_Months >= 30 && Age_Months < 31){L = -1.642106779; M = 16.24972371; S = 0.075499126;};
+if(Age_Months >= 31 && Age_Months < 32){L = -1.592744414; M = 16.20495268; S = 0.074898994;};
+if(Age_Months >= 32 && Age_Months < 33){L = -1.547442391; M = 16.16149871; S = 0.074347997;};
+if(Age_Months >= 33 && Age_Months < 34){L = -1.506902601; M = 16.11933258; S = 0.073846139;};
+if(Age_Months >= 34 && Age_Months < 35){L = -1.471770047; M = 16.07842758; S = 0.07339337;};
+if(Age_Months >= 35 && Age_Months < 36){L = -1.442628957; M = 16.03875896; S = 0.072989551;};
+if(Age_Months >= 36 && Age_Months < 37){L = -1.419991255; M = 16.00030401; S = 0.072634432;};
+if(Age_Months >= 37 && Age_Months < 38){L = -1.404277619; M = 15.96304277; S = 0.072327649;};
+if(Age_Months >= 38 && Age_Months < 39){L = -1.39586317; M = 15.92695418; S = 0.07206864;};
+if(Age_Months >= 39 && Age_Months < 40){L = -1.394935252; M = 15.89202582; S = 0.071856805;};
+if(Age_Months >= 40 && Age_Months < 41){L = -1.401671596; M = 15.85824093; S = 0.071691278;};
+if(Age_Months >= 41 && Age_Months < 42){L = -1.416100312; M = 15.82558822; S = 0.071571093;};
+if(Age_Months >= 42 && Age_Months < 43){L = -1.438164899; M = 15.79405728; S = 0.071495113;};
+if(Age_Months >= 43 && Age_Months < 44){L = -1.467669032; M = 15.76364255; S = 0.071462106;};
+if(Age_Months >= 44 && Age_Months < 45){L = -1.504376347; M = 15.73433668; S = 0.071470646;};
+if(Age_Months >= 45 && Age_Months < 46){L = -1.547942838; M = 15.70613566; S = 0.071519218;};
+if(Age_Months >= 46 && Age_Months < 47){L = -1.597896397; M = 15.67904062; S = 0.071606277;};
+if(Age_Months >= 47 && Age_Months < 48){L = -1.653732283; M = 15.65305192; S = 0.071730167;};
+if(Age_Months >= 48 && Age_Months < 49){L = -1.714869347; M = 15.62817269; S = 0.071889214;};
+if(Age_Months >= 49 && Age_Months < 50){L = -1.780673181; M = 15.604408; S = 0.072081737;};
+if(Age_Months >= 50 && Age_Months < 51){L = -1.850468473; M = 15.58176458; S = 0.072306081;};
+if(Age_Months >= 51 && Age_Months < 52){L = -1.923551865; M = 15.56025067; S = 0.072560637;};
+if(Age_Months >= 52 && Age_Months < 53){L = -1.999220429; M = 15.5398746; S = 0.07284384;};
+if(Age_Months >= 53 && Age_Months < 54){L = -2.076707178; M = 15.52064993; S = 0.073154324;};
+if(Age_Months >= 54 && Age_Months < 55){L = -2.155348017; M = 15.50258427; S = 0.073490667;};
+if(Age_Months >= 55 && Age_Months < 56){L = -2.234438552; M = 15.48568973; S = 0.073851672;};
+if(Age_Months >= 56 && Age_Months < 57){L = -2.313321723; M = 15.46997718; S = 0.074236235;};
+if(Age_Months >= 57 && Age_Months < 58){L = -2.391381273; M = 15.45545692; S = 0.074643374;};
+if(Age_Months >= 58 && Age_Months < 59){L = -2.468032491; M = 15.44213961; S = 0.075072264;};
+if(Age_Months >= 59 && Age_Months < 60){L = -2.542781541; M = 15.43003207; S = 0.075522104;};
+if(Age_Months >= 60 && Age_Months < 61){L = -2.61516595; M = 15.41914163; S = 0.07599225;};
+if(Age_Months >= 61 && Age_Months < 62){L = -2.684789516; M = 15.40947356; S = 0.076482128;};
+if(Age_Months >= 62 && Age_Months < 63){L = -2.751316949; M = 15.40103139; S = 0.076991232;};
+if(Age_Months >= 63 && Age_Months < 64){L = -2.81445945; M = 15.39381785; S = 0.077519149;};
+if(Age_Months >= 64 && Age_Months < 65){L = -2.87402476; M = 15.38783094; S = 0.07806539;};
+if(Age_Months >= 65 && Age_Months < 66){L = -2.92984048; M = 15.38306945; S = 0.078629592;};
+if(Age_Months >= 66 && Age_Months < 67){L = -2.981796828; M = 15.37952958; S = 0.079211369;};
+if(Age_Months >= 67 && Age_Months < 68){L = -3.029831343; M = 15.37720582; S = 0.079810334;};
+if(Age_Months >= 68 && Age_Months < 69){L = -3.073924224; M = 15.37609107; S = 0.080426086;};
+if(Age_Months >= 69 && Age_Months < 70){L = -3.114093476; M = 15.37617677; S = 0.081058206;};
+if(Age_Months >= 70 && Age_Months < 71){L = -3.15039004; M = 15.37745304; S = 0.081706249;};
+if(Age_Months >= 71 && Age_Months < 72){L = -3.182893018; M = 15.37990886; S = 0.082369741;};
+if(Age_Months >= 72 && Age_Months < 73){L = -3.21170511; M = 15.38353217; S = 0.083048178;};
+if(Age_Months >= 73 && Age_Months < 74){L = -3.23694834; M = 15.38831005; S = 0.083741021;};
+if(Age_Months >= 74 && Age_Months < 75){L = -3.25876011; M = 15.39422883; S = 0.0844477;};
+if(Age_Months >= 75 && Age_Months < 76){L = -3.277281546; M = 15.40127496; S = 0.085167651;};
+if(Age_Months >= 76 && Age_Months < 77){L = -3.292683774; M = 15.40943252; S = 0.085900184;};
+if(Age_Months >= 77 && Age_Months < 78){L = -3.305124073; M = 15.41868691; S = 0.086644667;};
+if(Age_Months >= 78 && Age_Months < 79){L = -3.314768951; M = 15.42902273; S = 0.087400421;};
+if(Age_Months >= 79 && Age_Months < 80){L = -3.321785992; M = 15.44042439; S = 0.088166744;};
+if(Age_Months >= 80 && Age_Months < 81){L = -3.326345795; M = 15.45287581; S = 0.088942897;};
+if(Age_Months >= 81 && Age_Months < 82){L = -3.328602731; M = 15.46636218; S = 0.089728202;};
+if(Age_Months >= 82 && Age_Months < 83){L = -3.328725277; M = 15.48086704; S = 0.090521875;};
+if(Age_Months >= 83 && Age_Months < 84){L = -3.32687018; M = 15.49637465; S = 0.091323162;};
+if(Age_Months >= 84 && Age_Months < 85){L = -3.323188896; M = 15.51286936; S = 0.092131305;};
+if(Age_Months >= 85 && Age_Months < 86){L = -3.317827016; M = 15.53033563; S = 0.092945544;};
+if(Age_Months >= 86 && Age_Months < 87){L = -3.310923871; M = 15.54875807; S = 0.093765118;};
+if(Age_Months >= 87 && Age_Months < 88){L = -3.302612272; M = 15.56812143; S = 0.09458927;};
+if(Age_Months >= 88 && Age_Months < 89){L = -3.293018361; M = 15.58841065; S = 0.095417247;};
+if(Age_Months >= 89 && Age_Months < 90){L = -3.282260813; M = 15.60961101; S = 0.096248301;};
+if(Age_Months >= 90 && Age_Months < 91){L = -3.270454609; M = 15.63170735; S = 0.097081694;};
+if(Age_Months >= 91 && Age_Months < 92){L = -3.257703616; M = 15.65468563; S = 0.097916698;};
+if(Age_Months >= 92 && Age_Months < 93){L = -3.244108214; M = 15.67853139; S = 0.098752593;};
+if(Age_Months >= 93 && Age_Months < 94){L = -3.229761713; M = 15.70323052; S = 0.099588675;};
+if(Age_Months >= 94 && Age_Months < 95){L = -3.214751287; M = 15.72876911; S = 0.100424251;};
+if(Age_Months >= 95 && Age_Months < 96){L = -3.199158184; M = 15.75513347; S = 0.101258643;};
+if(Age_Months >= 96 && Age_Months < 97){L = -3.18305795; M = 15.78231007; S = 0.102091189;};
+if(Age_Months >= 97 && Age_Months < 98){L = -3.166520664; M = 15.8102856; S = 0.102921245;};
+if(Age_Months >= 98 && Age_Months < 99){L = -3.1496103; M = 15.83904708; S = 0.103748189;};
+if(Age_Months >= 99 && Age_Months < 100){L = -3.132389637; M = 15.86858123; S = 0.104571386;};
+if(Age_Months >= 100 && Age_Months < 101){L = -3.114911153; M = 15.89887562; S = 0.105390269;};
+if(Age_Months >= 101 && Age_Months < 102){L = -3.097226399; M = 15.92991765; S = 0.106204258;};
+if(Age_Months >= 102 && Age_Months < 103){L = -3.079383079; M = 15.96169481; S = 0.107012788;};
+if(Age_Months >= 103 && Age_Months < 104){L = -3.061423765; M = 15.99419489; S = 0.107815327;};
+if(Age_Months >= 104 && Age_Months < 105){L = -3.043386071; M = 16.02740607; S = 0.108611374;};
+if(Age_Months >= 105 && Age_Months < 106){L = -3.025310003; M = 16.0613159; S = 0.109400388;};
+if(Age_Months >= 106 && Age_Months < 107){L = -3.007225737; M = 16.09591292; S = 0.110181915;};
+if(Age_Months >= 107 && Age_Months < 108){L = -2.989164598; M = 16.13118532; S = 0.110955478;};
+if(Age_Months >= 108 && Age_Months < 109){L = -2.971148225; M = 16.16712234; S = 0.111720691;};
+if(Age_Months >= 109 && Age_Months < 110){L = -2.953208047; M = 16.20371168; S = 0.112477059;};
+if(Age_Months >= 110 && Age_Months < 111){L = -2.935363951; M = 16.24094239; S = 0.1132242;};
+if(Age_Months >= 111 && Age_Months < 112){L = -2.917635157; M = 16.27880346; S = 0.113961734;};
+if(Age_Months >= 112 && Age_Months < 113){L = -2.900039803; M = 16.31728385; S = 0.114689291;};
+if(Age_Months >= 113 && Age_Months < 114){L = -2.882593796; M = 16.35637267; S = 0.115406523;};
+if(Age_Months >= 114 && Age_Months < 115){L = -2.865311266; M = 16.39605916; S = 0.116113097;};
+if(Age_Months >= 115 && Age_Months < 116){L = -2.848204697; M = 16.43633265; S = 0.116808702;};
+if(Age_Months >= 116 && Age_Months < 117){L = -2.831285052; M = 16.47718256; S = 0.117493042;};
+if(Age_Months >= 117 && Age_Months < 118){L = -2.81456189; M = 16.51859843; S = 0.11816584;};
+if(Age_Months >= 118 && Age_Months < 119){L = -2.79804347; M = 16.56056987; S = 0.118826835;};
+if(Age_Months >= 119 && Age_Months < 120){L = -2.781736856; M = 16.60308661; S = 0.119475785;};
+if(Age_Months >= 120 && Age_Months < 121){L = -2.765648008; M = 16.64613844; S = 0.120112464;};
+if(Age_Months >= 121 && Age_Months < 122){L = -2.749782197; M = 16.68971518; S = 0.120736656;};
+if(Age_Months >= 122 && Age_Months < 123){L = -2.734142443; M = 16.73380695; S = 0.121348181;};
+if(Age_Months >= 123 && Age_Months < 124){L = -2.718732873; M = 16.77840363; S = 0.121946849;};
+if(Age_Months >= 124 && Age_Months < 125){L = -2.703555506; M = 16.82349538; S = 0.122532501;};
+if(Age_Months >= 125 && Age_Months < 126){L = -2.688611957; M = 16.86907238; S = 0.123104991;};
+if(Age_Months >= 126 && Age_Months < 127){L = -2.673903164; M = 16.91512487; S = 0.123664186;};
+if(Age_Months >= 127 && Age_Months < 128){L = -2.659429443; M = 16.96164317; S = 0.124209969;};
+if(Age_Months >= 128 && Age_Months < 129){L = -2.645190534; M = 17.00861766; S = 0.124742239;};
+if(Age_Months >= 129 && Age_Months < 130){L = -2.631185649; M = 17.05603879; S = 0.125260905;};
+if(Age_Months >= 130 && Age_Months < 131){L = -2.617413511; M = 17.10389705; S = 0.125765895;};
+if(Age_Months >= 131 && Age_Months < 132){L = -2.603872392; M = 17.15218302; S = 0.126257147;};
+if(Age_Months >= 132 && Age_Months < 133){L = -2.590560148; M = 17.20088732; S = 0.126734613;};
+if(Age_Months >= 133 && Age_Months < 134){L = -2.577474253; M = 17.25000062; S = 0.12719826;};
+if(Age_Months >= 134 && Age_Months < 135){L = -2.564611831; M = 17.29951367; S = 0.127648067;};
+if(Age_Months >= 135 && Age_Months < 136){L = -2.551969684; M = 17.34941726; S = 0.128084023;};
+if(Age_Months >= 136 && Age_Months < 137){L = -2.539539972; M = 17.39970308; S = 0.128506192;};
+if(Age_Months >= 137 && Age_Months < 138){L = -2.527325681; M = 17.45036072; S = 0.128914497;};
+if(Age_Months >= 138 && Age_Months < 139){L = -2.515320235; M = 17.50138161; S = 0.129309001;};
+if(Age_Months >= 139 && Age_Months < 140){L = -2.503519447; M = 17.55275674; S = 0.129689741;};
+if(Age_Months >= 140 && Age_Months < 141){L = -2.491918934; M = 17.60447714; S = 0.130056765;};
+if(Age_Months >= 141 && Age_Months < 142){L = -2.480514136; M = 17.6565339; S = 0.130410133;};
+if(Age_Months >= 142 && Age_Months < 143){L = -2.469300331; M = 17.70891811; S = 0.130749913;};
+if(Age_Months >= 143 && Age_Months < 144){L = -2.458272656; M = 17.76162094; S = 0.131076187;};
+if(Age_Months >= 144 && Age_Months < 145){L = -2.447426113; M = 17.81463359; S = 0.131389042;};
+if(Age_Months >= 145 && Age_Months < 146){L = -2.436755595; M = 17.86794729; S = 0.131688579;};
+if(Age_Months >= 146 && Age_Months < 147){L = -2.426255887; M = 17.92155332; S = 0.131974905;};
+if(Age_Months >= 147 && Age_Months < 148){L = -2.415921689; M = 17.97544299; S = 0.132248138;};
+if(Age_Months >= 148 && Age_Months < 149){L = -2.405747619; M = 18.02960765; S = 0.132508403;};
+if(Age_Months >= 149 && Age_Months < 150){L = -2.395728233; M = 18.08403868; S = 0.132755834;};
+if(Age_Months >= 150 && Age_Months < 151){L = -2.385858029; M = 18.1387275; S = 0.132990575;};
+if(Age_Months >= 151 && Age_Months < 152){L = -2.376131459; M = 18.19366555; S = 0.133212776;};
+if(Age_Months >= 152 && Age_Months < 153){L = -2.366542942; M = 18.24884431; S = 0.133422595;};
+if(Age_Months >= 153 && Age_Months < 154){L = -2.357086871; M = 18.3042553; S = 0.133620197;};
+if(Age_Months >= 154 && Age_Months < 155){L = -2.347757625; M = 18.35989003; S = 0.133805756;};
+if(Age_Months >= 155 && Age_Months < 156){L = -2.338549576; M = 18.41574009; S = 0.133979452;};
+if(Age_Months >= 156 && Age_Months < 157){L = -2.3294571; M = 18.47179706; S = 0.13414147;};
+if(Age_Months >= 157 && Age_Months < 158){L = -2.320474586; M = 18.52805255; S = 0.134292005;};
+if(Age_Months >= 158 && Age_Months < 159){L = -2.311596446; M = 18.5844982; S = 0.134431256;};
+if(Age_Months >= 159 && Age_Months < 160){L = -2.302817124; M = 18.64112567; S = 0.134559427;};
+if(Age_Months >= 160 && Age_Months < 161){L = -2.294131107; M = 18.69792663; S = 0.134676731;};
+if(Age_Months >= 161 && Age_Months < 162){L = -2.285532933; M = 18.75489278; S = 0.134783385;};
+if(Age_Months >= 162 && Age_Months < 163){L = -2.277017201; M = 18.81201584; S = 0.134879611;};
+if(Age_Months >= 163 && Age_Months < 164){L = -2.268578584; M = 18.86928753; S = 0.134965637;};
+if(Age_Months >= 164 && Age_Months < 165){L = -2.260211837; M = 18.92669959; S = 0.135041695;};
+if(Age_Months >= 165 && Age_Months < 166){L = -2.251911809; M = 18.98424378; S = 0.135108024;};
+if(Age_Months >= 166 && Age_Months < 167){L = -2.243673453; M = 19.04191185; S = 0.135164867;};
+if(Age_Months >= 167 && Age_Months < 168){L = -2.235491842; M = 19.09969557; S = 0.135212469;};
+if(Age_Months >= 168 && Age_Months < 169){L = -2.227362173; M = 19.15758672; S = 0.135251083;};
+if(Age_Months >= 169 && Age_Months < 170){L = -2.21927979; M = 19.21557707; S = 0.135280963;};
+if(Age_Months >= 170 && Age_Months < 171){L = -2.211240187; M = 19.27365839; S = 0.135302371;};
+if(Age_Months >= 171 && Age_Months < 172){L = -2.203239029; M = 19.33182247; S = 0.135315568;};
+if(Age_Months >= 172 && Age_Months < 173){L = -2.195272161; M = 19.39006106; S = 0.135320824;};
+if(Age_Months >= 173 && Age_Months < 174){L = -2.187335625; M = 19.44836594; S = 0.135318407;};
+if(Age_Months >= 174 && Age_Months < 175){L = -2.179425674; M = 19.50672885; S = 0.135308594;};
+if(Age_Months >= 175 && Age_Months < 176){L = -2.171538789; M = 19.56514153; S = 0.135291662;};
+if(Age_Months >= 176 && Age_Months < 177){L = -2.163671689; M = 19.62359571; S = 0.135267891;};
+if(Age_Months >= 177 && Age_Months < 178){L = -2.155821357; M = 19.6820831; S = 0.135237567;};
+if(Age_Months >= 178 && Age_Months < 179){L = -2.147985046; M = 19.74059538; S = 0.135200976;};
+if(Age_Months >= 179 && Age_Months < 180){L = -2.140160305; M = 19.7991242; S = 0.135158409;};
+if(Age_Months >= 180 && Age_Months < 181){L = -2.132344989; M = 19.85766121; S = 0.135110159;};
+if(Age_Months >= 181 && Age_Months < 182){L = -2.124537282; M = 19.916198; S = 0.135056522;};
+if(Age_Months >= 182 && Age_Months < 183){L = -2.116735712; M = 19.97472615; S = 0.134997797;};
+if(Age_Months >= 183 && Age_Months < 184){L = -2.108939167; M = 20.03323719; S = 0.134934285;};
+if(Age_Months >= 184 && Age_Months < 185){L = -2.10114692; M = 20.09172262; S = 0.134866291;};
+if(Age_Months >= 185 && Age_Months < 186){L = -2.093358637; M = 20.15017387; S = 0.134794121;};
+if(Age_Months >= 186 && Age_Months < 187){L = -2.085574403; M = 20.20858236; S = 0.134718085;};
+if(Age_Months >= 187 && Age_Months < 188){L = -2.077794735; M = 20.26693944; S = 0.134638494;};
+if(Age_Months >= 188 && Age_Months < 189){L = -2.070020599; M = 20.32523642; S = 0.134555663;};
+if(Age_Months >= 189 && Age_Months < 190){L = -2.062253431; M = 20.38346455; S = 0.13446991;};
+if(Age_Months >= 190 && Age_Months < 191){L = -2.054495145; M = 20.44161501; S = 0.134381553;};
+if(Age_Months >= 191 && Age_Months < 192){L = -2.046748156; M = 20.49967894; S = 0.134290916;};
+if(Age_Months >= 192 && Age_Months < 193){L = -2.039015385; M = 20.5576474; S = 0.134198323;};
+if(Age_Months >= 193 && Age_Months < 194){L = -2.031300282; M = 20.6155114; S = 0.134104101;};
+if(Age_Months >= 194 && Age_Months < 195){L = -2.023606828; M = 20.67326189; S = 0.134008581;};
+if(Age_Months >= 195 && Age_Months < 196){L = -2.015942013; M = 20.73088905; S = 0.133912066;};
+if(Age_Months >= 196 && Age_Months < 197){L = -2.008305745; M = 20.7883851; S = 0.133814954;};
+if(Age_Months >= 197 && Age_Months < 198){L = -2.000706389; M = 20.84574003; S = 0.133717552;};
+if(Age_Months >= 198 && Age_Months < 199){L = -1.993150137; M = 20.90294449; S = 0.1336202;};
+if(Age_Months >= 199 && Age_Months < 200){L = -1.985643741; M = 20.95998909; S = 0.133523244;};
+if(Age_Months >= 200 && Age_Months < 201){L = -1.97819451; M = 21.01686433; S = 0.133427032;};
+if(Age_Months >= 201 && Age_Months < 202){L = -1.970810308; M = 21.07356067; S = 0.133331914;};
+if(Age_Months >= 202 && Age_Months < 203){L = -1.96349954; M = 21.1300685; S = 0.133238245;};
+if(Age_Months >= 203 && Age_Months < 204){L = -1.956271141; M = 21.18637813; S = 0.133146383;};
+if(Age_Months >= 204 && Age_Months < 205){L = -1.949134561; M = 21.24247982; S = 0.13305669;};
+if(Age_Months >= 205 && Age_Months < 206){L = -1.942099744; M = 21.29836376; S = 0.132969531;};
+if(Age_Months >= 206 && Age_Months < 207){L = -1.935177101; M = 21.35402009; S = 0.132885274;};
+if(Age_Months >= 207 && Age_Months < 208){L = -1.92837748; M = 21.40943891; S = 0.132804292;};
+if(Age_Months >= 208 && Age_Months < 209){L = -1.921712136; M = 21.46461026; S = 0.132726962;};
+if(Age_Months >= 209 && Age_Months < 210){L = -1.915192685; M = 21.51952414; S = 0.132653664;};
+if(Age_Months >= 210 && Age_Months < 211){L = -1.908831065; M = 21.57417053; S = 0.132584784;};
+if(Age_Months >= 211 && Age_Months < 212){L = -1.902639482; M = 21.62853937; S = 0.132520711;};
+if(Age_Months >= 212 && Age_Months < 213){L = -1.896630358; M = 21.68262062; S = 0.132461838;};
+if(Age_Months >= 213 && Age_Months < 214){L = -1.890816268; M = 21.73640419; S = 0.132408563;};
+if(Age_Months >= 214 && Age_Months < 215){L = -1.885209876; M = 21.78988003; S = 0.132361289;};
+if(Age_Months >= 215 && Age_Months < 216){L = -1.879823505; M = 21.84303819; S = 0.132320427;};
+if(Age_Months >= 216 && Age_Months < 217){L = -1.874670324; M = 21.8958685; S = 0.132286382;};
+if(Age_Months >= 217 && Age_Months < 218){L = -1.869760299; M = 21.94836168; S = 0.1322596;};
+if(Age_Months >= 218 && Age_Months < 219){L = -1.865113245; M = 22.00050569; S = 0.132240418;};
+if(Age_Months >= 219 && Age_Months < 220){L = -1.860734944; M = 22.05229242; S = 0.13222933;};
+if(Age_Months >= 220 && Age_Months < 221){L = -1.85663384; M = 22.10371305; S = 0.132226801;};
+if(Age_Months >= 221 && Age_Months < 222){L = -1.852827186; M = 22.15475603; S = 0.132233201;};
+if(Age_Months >= 222 && Age_Months < 223){L = -1.849323204; M = 22.20541249; S = 0.132248993;};
+if(Age_Months >= 223 && Age_Months < 224){L = -1.846131607; M = 22.255673; S = 0.132274625;};
+if(Age_Months >= 224 && Age_Months < 225){L = -1.843261294; M = 22.30552831; S = 0.132310549;};
+if(Age_Months >= 225 && Age_Months < 226){L = -1.840720248; M = 22.3549693; S = 0.132357221;};
+if(Age_Months >= 226 && Age_Months < 227){L = -1.83851544; M = 22.40398706; S = 0.132415103;};
+if(Age_Months >= 227 && Age_Months < 228){L = -1.83665586; M = 22.45257182; S = 0.132484631;};
+if(Age_Months >= 228 && Age_Months < 229){L = -1.835138046; M = 22.50071778; S = 0.132566359;};
+if(Age_Months >= 229 && Age_Months < 230){L = -1.833972004; M = 22.54841437; S = 0.132660699;};
+if(Age_Months >= 230 && Age_Months < 231){L = -1.833157751; M = 22.59565422; S = 0.132768153;};
+if(Age_Months >= 231 && Age_Months < 232){L = -1.83269562; M = 22.64242956; S = 0.132889211;};
+if(Age_Months >= 232 && Age_Months < 233){L = -1.832584342; M = 22.68873292; S = 0.133024368;};
+if(Age_Months >= 233 && Age_Months < 234){L = -1.832820974; M = 22.73455713; S = 0.133174129;};
+if(Age_Months >= 234 && Age_Months < 235){L = -1.833400825; M = 22.7798953; S = 0.133338999;};
+if(Age_Months >= 235 && Age_Months < 236){L = -1.834317405; M = 22.82474087; S = 0.133519496;};
+if(Age_Months >= 236 && Age_Months < 237){L = -1.83555752; M = 22.86908912; S = 0.133716192;};
+if(Age_Months >= 237 && Age_Months < 238){L = -1.837119466; M = 22.91293151; S = 0.133929525;};
+if(Age_Months >= 238 && Age_Months < 239){L = -1.838987063; M = 22.95626373; S = 0.134160073;};
+if(Age_Months >= 239 && Age_Months < 240){L = -1.841146139; M = 22.99908062; S = 0.134408381;};
+if(Age_Months >= 240 && Age_Months < 241){L = -1.843580575; M = 23.04137734; S = 0.134675001;};
+    }
+    else if (document.getElementById("PatientGender").value == "F"){
+if(Age_Months >= 24 && Age_Months < 25){L = -1.024496827; M = 16.38804056; S = 0.085025838;};
+if(Age_Months >= 25 && Age_Months < 26){L = -1.102698353; M = 16.3189719; S = 0.084214052;};
+if(Age_Months >= 26 && Age_Months < 27){L = -1.18396635; M = 16.25207985; S = 0.083455124;};
+if(Age_Months >= 27 && Age_Months < 28){L = -1.268071036; M = 16.18734669; S = 0.082748284;};
+if(Age_Months >= 28 && Age_Months < 29){L = -1.354751525; M = 16.12475448; S = 0.082092737;};
+if(Age_Months >= 29 && Age_Months < 30){L = -1.443689692; M = 16.06428762; S = 0.081487717;};
+if(Age_Months >= 30 && Age_Months < 31){L = -1.53454192; M = 16.00593001; S = 0.080932448;};
+if(Age_Months >= 31 && Age_Months < 32){L = -1.626928093; M = 15.94966631; S = 0.080426175;};
+if(Age_Months >= 32 && Age_Months < 33){L = -1.720434829; M = 15.89548197; S = 0.079968176;};
+if(Age_Months >= 33 && Age_Months < 34){L = -1.814635262; M = 15.84336179; S = 0.079557735;};
+if(Age_Months >= 34 && Age_Months < 35){L = -1.909076262; M = 15.79329146; S = 0.079194187;};
+if(Age_Months >= 35 && Age_Months < 36){L = -2.003296102; M = 15.7452564; S = 0.078876895;};
+if(Age_Months >= 36 && Age_Months < 37){L = -2.096828937; M = 15.69924188; S = 0.078605255;};
+if(Age_Months >= 37 && Age_Months < 38){L = -2.189211877; M = 15.65523282; S = 0.078378696;};
+if(Age_Months >= 38 && Age_Months < 39){L = -2.279991982; M = 15.61321371; S = 0.078196674;};
+if(Age_Months >= 39 && Age_Months < 40){L = -2.368732949; M = 15.57316843; S = 0.078058667;};
+if(Age_Months >= 40 && Age_Months < 41){L = -2.455021314; M = 15.53508019; S = 0.077964169;};
+if(Age_Months >= 41 && Age_Months < 42){L = -2.538471972; M = 15.49893145; S = 0.077912684;};
+if(Age_Months >= 42 && Age_Months < 43){L = -2.618732901; M = 15.46470384; S = 0.077903716;};
+if(Age_Months >= 43 && Age_Months < 44){L = -2.695488973; M = 15.43237817; S = 0.077936763;};
+if(Age_Months >= 44 && Age_Months < 45){L = -2.768464816; M = 15.40193436; S = 0.078011309;};
+if(Age_Months >= 45 && Age_Months < 46){L = -2.837426693; M = 15.37335154; S = 0.078126817;};
+if(Age_Months >= 46 && Age_Months < 47){L = -2.902178205; M = 15.34660842; S = 0.078282739;};
+if(Age_Months >= 47 && Age_Months < 48){L = -2.962580386; M = 15.32168181; S = 0.078478449;};
+if(Age_Months >= 48 && Age_Months < 49){L = -3.018521987; M = 15.29854897; S = 0.078713325;};
+if(Age_Months >= 49 && Age_Months < 50){L = -3.069936555; M = 15.27718618; S = 0.078986694;};
+if(Age_Months >= 50 && Age_Months < 51){L = -3.116795864; M = 15.2575692; S = 0.079297841;};
+if(Age_Months >= 51 && Age_Months < 52){L = -3.159107331; M = 15.23967338; S = 0.079646006;};
+if(Age_Months >= 52 && Age_Months < 53){L = -3.196911083; M = 15.22347371; S = 0.080030389;};
+if(Age_Months >= 53 && Age_Months < 54){L = -3.230276759; M = 15.20894491; S = 0.080450145;};
+if(Age_Months >= 54 && Age_Months < 55){L = -3.259300182; M = 15.19606152; S = 0.080904391;};
+if(Age_Months >= 55 && Age_Months < 56){L = -3.284099963; M = 15.18479799; S = 0.081392203;};
+if(Age_Months >= 56 && Age_Months < 57){L = -3.30481415; M = 15.17512871; S = 0.081912623;};
+if(Age_Months >= 57 && Age_Months < 58){L = -3.321596954; M = 15.16702811; S = 0.082464661;};
+if(Age_Months >= 58 && Age_Months < 59){L = -3.334615646; M = 15.16047068; S = 0.083047295;};
+if(Age_Months >= 59 && Age_Months < 60){L = -3.344047622; M = 15.15543107; S = 0.083659478;};
+if(Age_Months >= 60 && Age_Months < 61){L = -3.35007771; M = 15.15188405; S = 0.084300139;};
+if(Age_Months >= 61 && Age_Months < 62){L = -3.352893805; M = 15.14980479; S = 0.0849682;};
+if(Age_Months >= 62 && Age_Months < 63){L = -3.352691376; M = 15.14916825; S = 0.085662539;};
+if(Age_Months >= 63 && Age_Months < 64){L = -3.34966438; M = 15.14994984; S = 0.086382035;};
+if(Age_Months >= 64 && Age_Months < 65){L = -3.343998803; M = 15.15212585; S = 0.087125591;};
+if(Age_Months >= 65 && Age_Months < 66){L = -3.335889574; M = 15.15567186; S = 0.087892047;};
+if(Age_Months >= 66 && Age_Months < 67){L = -3.325522491; M = 15.16056419; S = 0.088680264;};
+if(Age_Months >= 67 && Age_Months < 68){L = -3.31307846; M = 15.16677947; S = 0.089489106;};
+if(Age_Months >= 68 && Age_Months < 69){L = -3.298732648; M = 15.17429464; S = 0.090317434;};
+if(Age_Months >= 69 && Age_Months < 70){L = -3.282653831; M = 15.18308694; S = 0.091164117;};
+if(Age_Months >= 70 && Age_Months < 71){L = -3.265003896; M = 15.1931339; S = 0.092028028;};
+if(Age_Months >= 71 && Age_Months < 72){L = -3.245937506; M = 15.20441335; S = 0.092908048;};
+if(Age_Months >= 72 && Age_Months < 73){L = -3.225606516; M = 15.21690296; S = 0.093803033;};
+if(Age_Months >= 73 && Age_Months < 74){L = -3.204146115; M = 15.2305815; S = 0.094711916;};
+if(Age_Months >= 74 && Age_Months < 75){L = -3.181690237; M = 15.24542745; S = 0.095633595;};
+if(Age_Months >= 75 && Age_Months < 76){L = -3.158363475; M = 15.26141966; S = 0.096566992;};
+if(Age_Months >= 76 && Age_Months < 77){L = -3.134282833; M = 15.27853728; S = 0.097511046;};
+if(Age_Months >= 77 && Age_Months < 78){L = -3.109557879; M = 15.29675967; S = 0.09846471;};
+if(Age_Months >= 78 && Age_Months < 79){L = -3.084290931; M = 15.31606644; S = 0.099426955;};
+if(Age_Months >= 79 && Age_Months < 80){L = -3.058577292; M = 15.33643745; S = 0.100396769;};
+if(Age_Months >= 80 && Age_Months < 81){L = -3.032505499; M = 15.35785274; S = 0.101373159;};
+if(Age_Months >= 81 && Age_Months < 82){L = -3.0061576; M = 15.38029261; S = 0.10235515;};
+if(Age_Months >= 82 && Age_Months < 83){L = -2.979609448; M = 15.40373754; S = 0.103341788;};
+if(Age_Months >= 83 && Age_Months < 84){L = -2.952930993; M = 15.42816819; S = 0.104332139;};
+if(Age_Months >= 84 && Age_Months < 85){L = -2.926186592; M = 15.45356545; S = 0.105325289;};
+if(Age_Months >= 85 && Age_Months < 86){L = -2.899435307; M = 15.47991037; S = 0.106320346;};
+if(Age_Months >= 86 && Age_Months < 87){L = -2.872731211; M = 15.50718419; S = 0.10731644;};
+if(Age_Months >= 87 && Age_Months < 88){L = -2.846123683; M = 15.53536829; S = 0.108312721;};
+if(Age_Months >= 88 && Age_Months < 89){L = -2.819657704; M = 15.56444426; S = 0.109308364;};
+if(Age_Months >= 89 && Age_Months < 90){L = -2.793374145; M = 15.5943938; S = 0.110302563;};
+if(Age_Months >= 90 && Age_Months < 91){L = -2.767310047; M = 15.6251988; S = 0.111294537;};
+if(Age_Months >= 91 && Age_Months < 92){L = -2.741498897; M = 15.65684126; S = 0.112283526;};
+if(Age_Months >= 92 && Age_Months < 93){L = -2.715970894; M = 15.68930333; S = 0.113268793;};
+if(Age_Months >= 93 && Age_Months < 94){L = -2.690753197; M = 15.7225673; S = 0.114249622;};
+if(Age_Months >= 94 && Age_Months < 95){L = -2.665870146; M = 15.75661555; S = 0.115225321;};
+if(Age_Months >= 95 && Age_Months < 96){L = -2.641343436; M = 15.79143062; S = 0.116195218;};
+if(Age_Months >= 96 && Age_Months < 97){L = -2.617192204; M = 15.82699517; S = 0.117158667;};
+if(Age_Months >= 97 && Age_Months < 98){L = -2.593430614; M = 15.86329241; S = 0.118115073;};
+if(Age_Months >= 98 && Age_Months < 99){L = -2.570076037; M = 15.90030484; S = 0.119063807;};
+if(Age_Months >= 99 && Age_Months < 100){L = -2.547141473; M = 15.93801545; S = 0.12000429;};
+if(Age_Months >= 100 && Age_Months < 101){L = -2.524635245; M = 15.97640787; S = 0.120935994;};
+if(Age_Months >= 101 && Age_Months < 102){L = -2.502569666; M = 16.01546483; S = 0.121858355;};
+if(Age_Months >= 102 && Age_Months < 103){L = -2.48095189; M = 16.05516984; S = 0.12277087;};
+if(Age_Months >= 103 && Age_Months < 104){L = -2.459785573; M = 16.09550688; S = 0.123673085;};
+if(Age_Months >= 104 && Age_Months < 105){L = -2.439080117; M = 16.13645881; S = 0.124564484;};
+if(Age_Months >= 105 && Age_Months < 106){L = -2.418838304; M = 16.17800955; S = 0.125444639;};
+if(Age_Months >= 106 && Age_Months < 107){L = -2.399063683; M = 16.22014281; S = 0.126313121;};
+if(Age_Months >= 107 && Age_Months < 108){L = -2.379756861; M = 16.26284277; S = 0.127169545;};
+if(Age_Months >= 108 && Age_Months < 109){L = -2.360920527; M = 16.30609316; S = 0.128013515;};
+if(Age_Months >= 109 && Age_Months < 110){L = -2.342557728; M = 16.34987759; S = 0.128844639;};
+if(Age_Months >= 110 && Age_Months < 111){L = -2.324663326; M = 16.39418118; S = 0.129662637;};
+if(Age_Months >= 111 && Age_Months < 112){L = -2.307240716; M = 16.43898741; S = 0.130467138;};
+if(Age_Months >= 112 && Age_Months < 113){L = -2.290287663; M = 16.48428082; S = 0.131257852;};
+if(Age_Months >= 113 && Age_Months < 114){L = -2.273803847; M = 16.53004554; S = 0.132034479;};
+if(Age_Months >= 114 && Age_Months < 115){L = -2.257782149; M = 16.57626713; S = 0.132796819;};
+if(Age_Months >= 115 && Age_Months < 116){L = -2.242227723; M = 16.62292864; S = 0.133544525;};
+if(Age_Months >= 116 && Age_Months < 117){L = -2.227132805; M = 16.67001572; S = 0.134277436;};
+if(Age_Months >= 117 && Age_Months < 118){L = -2.212495585; M = 16.71751288; S = 0.134995324;};
+if(Age_Months >= 118 && Age_Months < 119){L = -2.19831275; M = 16.76540496; S = 0.135697996;};
+if(Age_Months >= 119 && Age_Months < 120){L = -2.184580762; M = 16.81367689; S = 0.136385276;};
+if(Age_Months >= 120 && Age_Months < 121){L = -2.171295888; M = 16.86231366; S = 0.137057004;};
+if(Age_Months >= 121 && Age_Months < 122){L = -2.158454232; M = 16.91130036; S = 0.137713039;};
+if(Age_Months >= 122 && Age_Months < 123){L = -2.146051754; M = 16.96062216; S = 0.138353254;};
+if(Age_Months >= 123 && Age_Months < 124){L = -2.134084303; M = 17.0102643; S = 0.138977537;};
+if(Age_Months >= 124 && Age_Months < 125){L = -2.122547629; M = 17.06021213; S = 0.139585795;};
+if(Age_Months >= 125 && Age_Months < 126){L = -2.111437411; M = 17.11045106; S = 0.140177947;};
+if(Age_Months >= 126 && Age_Months < 127){L = -2.100749266; M = 17.16096656; S = 0.140753927;};
+if(Age_Months >= 127 && Age_Months < 128){L = -2.090478774; M = 17.21174424; S = 0.141313686;};
+if(Age_Months >= 128 && Age_Months < 129){L = -2.080621484; M = 17.26276973; S = 0.141857186;};
+if(Age_Months >= 129 && Age_Months < 130){L = -2.071172932; M = 17.31402878; S = 0.142384404;};
+if(Age_Months >= 130 && Age_Months < 131){L = -2.062128649; M = 17.3655072; S = 0.142895332;};
+if(Age_Months >= 131 && Age_Months < 132){L = -2.053484173; M = 17.4171909; S = 0.143389972;};
+if(Age_Months >= 132 && Age_Months < 133){L = -2.045235058; M = 17.46906585; S = 0.143868341;};
+if(Age_Months >= 133 && Age_Months < 134){L = -2.03737688; M = 17.52111811; S = 0.144330469;};
+if(Age_Months >= 134 && Age_Months < 135){L = -2.029906684; M = 17.57333347; S = 0.144776372;};
+if(Age_Months >= 135 && Age_Months < 136){L = -2.022817914; M = 17.62569869; S = 0.145206138;};
+if(Age_Months >= 136 && Age_Months < 137){L = -2.016107084; M = 17.67819987; S = 0.145619819;};
+if(Age_Months >= 137 && Age_Months < 138){L = -2.009769905; M = 17.7308234; S = 0.146017491;};
+if(Age_Months >= 138 && Age_Months < 139){L = -2.003802134; M = 17.78355575; S = 0.146399239;};
+if(Age_Months >= 139 && Age_Months < 140){L = -1.998199572; M = 17.83638347; S = 0.146765161;};
+if(Age_Months >= 140 && Age_Months < 141){L = -1.992958064; M = 17.88929321; S = 0.147115364;};
+if(Age_Months >= 141 && Age_Months < 142){L = -1.988073505; M = 17.94227168; S = 0.147449967;};
+if(Age_Months >= 142 && Age_Months < 143){L = -1.983541835; M = 17.9953057; S = 0.147769097;};
+if(Age_Months >= 143 && Age_Months < 144){L = -1.979359041; M = 18.04838216; S = 0.148072891;};
+if(Age_Months >= 144 && Age_Months < 145){L = -1.975521156; M = 18.10148804; S = 0.148361495;};
+if(Age_Months >= 145 && Age_Months < 146){L = -1.972024258; M = 18.15461039; S = 0.148635067;};
+if(Age_Months >= 146 && Age_Months < 147){L = -1.968864465; M = 18.20773639; S = 0.148893769;};
+if(Age_Months >= 147 && Age_Months < 148){L = -1.966037938; M = 18.26085325; S = 0.149137776;};
+if(Age_Months >= 148 && Age_Months < 149){L = -1.963540872; M = 18.31394832; S = 0.14936727;};
+if(Age_Months >= 149 && Age_Months < 150){L = -1.961369499; M = 18.36700902; S = 0.149582439;};
+if(Age_Months >= 150 && Age_Months < 151){L = -1.959520079; M = 18.42002284; S = 0.149783482;};
+if(Age_Months >= 151 && Age_Months < 152){L = -1.9579889; M = 18.47297739; S = 0.149970604;};
+if(Age_Months >= 152 && Age_Months < 153){L = -1.956772271; M = 18.52586035; S = 0.15014402;};
+if(Age_Months >= 153 && Age_Months < 154){L = -1.95586652; M = 18.57865951; S = 0.15030395;};
+if(Age_Months >= 154 && Age_Months < 155){L = -1.955267984; M = 18.63136275; S = 0.150450621;};
+if(Age_Months >= 155 && Age_Months < 156){L = -1.954973011; M = 18.68395801; S = 0.15058427;};
+if(Age_Months >= 156 && Age_Months < 157){L = -1.954977947; M = 18.73643338; S = 0.150705138;};
+if(Age_Months >= 157 && Age_Months < 158){L = -1.955279136; M = 18.788777; S = 0.150813475;};
+if(Age_Months >= 158 && Age_Months < 159){L = -1.955872909; M = 18.84097713; S = 0.150909535;};
+if(Age_Months >= 159 && Age_Months < 160){L = -1.956755579; M = 18.89302212; S = 0.150993582;};
+if(Age_Months >= 160 && Age_Months < 161){L = -1.957923436; M = 18.94490041; S = 0.151065883;};
+if(Age_Months >= 161 && Age_Months < 162){L = -1.959372737; M = 18.99660055; S = 0.151126714;};
+if(Age_Months >= 162 && Age_Months < 163){L = -1.9610997; M = 19.04811118; S = 0.151176355;};
+if(Age_Months >= 163 && Age_Months < 164){L = -1.963100496; M = 19.09942105; S = 0.151215094;};
+if(Age_Months >= 164 && Age_Months < 165){L = -1.96537124; M = 19.15051899; S = 0.151243223;};
+if(Age_Months >= 165 && Age_Months < 166){L = -1.967907983; M = 19.20139397; S = 0.151261042;};
+if(Age_Months >= 166 && Age_Months < 167){L = -1.970706706; M = 19.25203503; S = 0.151268855;};
+if(Age_Months >= 167 && Age_Months < 168){L = -1.973763307; M = 19.30243131; S = 0.151266974;};
+if(Age_Months >= 168 && Age_Months < 169){L = -1.977073595; M = 19.35257209; S = 0.151255713;};
+if(Age_Months >= 169 && Age_Months < 170){L = -1.980633277; M = 19.40244671; S = 0.151235395;};
+if(Age_Months >= 170 && Age_Months < 171){L = -1.984437954; M = 19.45204465; S = 0.151206347;};
+if(Age_Months >= 171 && Age_Months < 172){L = -1.988483106; M = 19.50135548; S = 0.151168902;};
+if(Age_Months >= 172 && Age_Months < 173){L = -1.992764085; M = 19.55036888; S = 0.151123398;};
+if(Age_Months >= 173 && Age_Months < 174){L = -1.997276103; M = 19.59907464; S = 0.15107018;};
+if(Age_Months >= 174 && Age_Months < 175){L = -2.002014224; M = 19.64746266; S = 0.151009595;};
+if(Age_Months >= 175 && Age_Months < 176){L = -2.00697335; M = 19.69552294; S = 0.150942;};
+if(Age_Months >= 176 && Age_Months < 177){L = -2.012148213; M = 19.7432456; S = 0.150867753;};
+if(Age_Months >= 177 && Age_Months < 178){L = -2.017533363; M = 19.79062086; S = 0.150787221;};
+if(Age_Months >= 178 && Age_Months < 179){L = -2.023123159; M = 19.83763907; S = 0.150700774;};
+if(Age_Months >= 179 && Age_Months < 180){L = -2.028911755; M = 19.88429066; S = 0.150608788;};
+if(Age_Months >= 180 && Age_Months < 181){L = -2.034893091; M = 19.9305662; S = 0.150511645;};
+if(Age_Months >= 181 && Age_Months < 182){L = -2.041060881; M = 19.97645636; S = 0.150409731;};
+if(Age_Months >= 182 && Age_Months < 183){L = -2.047408604; M = 20.02195192; S = 0.15030344;};
+if(Age_Months >= 183 && Age_Months < 184){L = -2.05392949; M = 20.06704377; S = 0.150193169;};
+if(Age_Months >= 184 && Age_Months < 185){L = -2.060616513; M = 20.11172291; S = 0.150079322;};
+if(Age_Months >= 185 && Age_Months < 186){L = -2.067462375; M = 20.15598047; S = 0.149962308;};
+if(Age_Months >= 186 && Age_Months < 187){L = -2.074459502; M = 20.19980767; S = 0.14984254;};
+if(Age_Months >= 187 && Age_Months < 188){L = -2.081600029; M = 20.24319586; S = 0.149720441;};
+if(Age_Months >= 188 && Age_Months < 189){L = -2.088875793; M = 20.28613648; S = 0.149596434;};
+if(Age_Months >= 189 && Age_Months < 190){L = -2.096278323; M = 20.32862109; S = 0.149470953;};
+if(Age_Months >= 190 && Age_Months < 191){L = -2.103798828; M = 20.37064138; S = 0.149344433;};
+if(Age_Months >= 191 && Age_Months < 192){L = -2.111428194; M = 20.41218911; S = 0.149217319;};
+if(Age_Months >= 192 && Age_Months < 193){L = -2.119156972; M = 20.45325617; S = 0.14909006;};
+if(Age_Months >= 193 && Age_Months < 194){L = -2.126975375; M = 20.49383457; S = 0.14896311;};
+if(Age_Months >= 194 && Age_Months < 195){L = -2.134873266; M = 20.5339164; S = 0.148836931;};
+if(Age_Months >= 195 && Age_Months < 196){L = -2.142840157; M = 20.57349387; S = 0.148711989;};
+if(Age_Months >= 196 && Age_Months < 197){L = -2.150865204; M = 20.61255929; S = 0.148588757;};
+if(Age_Months >= 197 && Age_Months < 198){L = -2.158937201; M = 20.65110506; S = 0.148467715;};
+if(Age_Months >= 198 && Age_Months < 199){L = -2.167044578; M = 20.6891237; S = 0.148349348;};
+if(Age_Months >= 199 && Age_Months < 200){L = -2.175176987; M = 20.72660728; S = 0.14823412;};
+if(Age_Months >= 200 && Age_Months < 201){L = -2.183317362; M = 20.76355011; S = 0.148122614;};
+if(Age_Months >= 201 && Age_Months < 202){L = -2.191457792; M = 20.79994337; S = 0.148015249;};
+if(Age_Months >= 202 && Age_Months < 203){L = -2.199583649; M = 20.83578051; S = 0.147912564;};
+if(Age_Months >= 203 && Age_Months < 204){L = -2.207681525; M = 20.87105449; S = 0.147815078;};
+if(Age_Months >= 204 && Age_Months < 205){L = -2.215737645; M = 20.90575839; S = 0.147723315;};
+if(Age_Months >= 205 && Age_Months < 206){L = -2.223739902; M = 20.93988477; S = 0.147637768;};
+if(Age_Months >= 206 && Age_Months < 207){L = -2.231667995; M = 20.97342858; S = 0.147559083;};
+if(Age_Months >= 207 && Age_Months < 208){L = -2.239511942; M = 21.00638171; S = 0.147487716;};
+if(Age_Months >= 208 && Age_Months < 209){L = -2.247257081; M = 21.0387374; S = 0.14742421;};
+if(Age_Months >= 209 && Age_Months < 210){L = -2.254885145; M = 21.07048996; S = 0.147369174;};
+if(Age_Months >= 210 && Age_Months < 211){L = -2.26238209; M = 21.10163241; S = 0.147323144;};
+if(Age_Months >= 211 && Age_Months < 212){L = -2.269731517; M = 21.13215845; S = 0.147286698;};
+if(Age_Months >= 212 && Age_Months < 213){L = -2.276917229; M = 21.16206171; S = 0.147260415;};
+if(Age_Months >= 213 && Age_Months < 214){L = -2.283925442; M = 21.1913351; S = 0.147244828;};
+if(Age_Months >= 214 && Age_Months < 215){L = -2.290731442; M = 21.21997472; S = 0.147240683;};
+if(Age_Months >= 215 && Age_Months < 216){L = -2.29732427; M = 21.24797262; S = 0.147248467;};
+if(Age_Months >= 216 && Age_Months < 217){L = -2.303687802; M = 21.27532239; S = 0.14726877;};
+if(Age_Months >= 217 && Age_Months < 218){L = -2.309799971; M = 21.30201933; S = 0.147302299;};
+if(Age_Months >= 218 && Age_Months < 219){L = -2.315651874; M = 21.32805489; S = 0.147349514;};
+if(Age_Months >= 219 && Age_Months < 220){L = -2.32121731; M = 21.35342563; S = 0.147411215;};
+if(Age_Months >= 220 && Age_Months < 221){L = -2.326481911; M = 21.37812462; S = 0.147487979;};
+if(Age_Months >= 221 && Age_Months < 222){L = -2.331428139; M = 21.40214589; S = 0.147580453;};
+if(Age_Months >= 222 && Age_Months < 223){L = -2.336038473; M = 21.42548351; S = 0.147689289;};
+if(Age_Months >= 223 && Age_Months < 224){L = -2.34029545; M = 21.44813156; S = 0.14781515;};
+if(Age_Months >= 224 && Age_Months < 225){L = -2.344181703; M = 21.47008412; S = 0.147958706;};
+if(Age_Months >= 225 && Age_Months < 226){L = -2.34768; M = 21.49133529; S = 0.148120633;};
+if(Age_Months >= 226 && Age_Months < 227){L = -2.350773286; M = 21.51187918; S = 0.148301619;};
+if(Age_Months >= 227 && Age_Months < 228){L = -2.353444725; M = 21.53170989; S = 0.148502355;};
+if(Age_Months >= 228 && Age_Months < 229){L = -2.355677743; M = 21.55082155; S = 0.148723546;};
+if(Age_Months >= 229 && Age_Months < 230){L = -2.35745607; M = 21.56920824; S = 0.148965902;};
+if(Age_Months >= 230 && Age_Months < 231){L = -2.358763788; M = 21.58686406; S = 0.149230142;};
+if(Age_Months >= 231 && Age_Months < 232){L = -2.359585369; M = 21.60378309; S = 0.149516994;};
+if(Age_Months >= 232 && Age_Months < 233){L = -2.359905726; M = 21.61995939; S = 0.149827195;};
+if(Age_Months >= 233 && Age_Months < 234){L = -2.359710258; M = 21.635387; S = 0.150161492;};
+if(Age_Months >= 234 && Age_Months < 235){L = -2.358980464; M = 21.65006126; S = 0.150520734;};
+if(Age_Months >= 235 && Age_Months < 236){L = -2.357714508; M = 21.6639727; S = 0.150905439;};
+if(Age_Months >= 236 && Age_Months < 237){L = -2.355892424; M = 21.67711736; S = 0.151316531;};
+if(Age_Months >= 237 && Age_Months < 238){L = -2.353501353; M = 21.68948935; S = 0.151754808;};
+if(Age_Months >= 238 && Age_Months < 239){L = -2.350528726; M = 21.70108288; S = 0.152221086;};
+if(Age_Months >= 239 && Age_Months < 240){L = -2.346962247; M = 21.71189225; S = 0.152716206;};
+if(Age_Months >= 240 && Age_Months < 241){L = -2.342796948; M = 21.72190973; S = 0.153240872;};
+    }
+    ZScore = (power((bmi / M), L) - 1) / (L * S);
+    bmi_p = ZtoPercentile(ZScore);
+    if(doCalc)  bmip.value = fixDP(bmi_p, dp);
+}		
+
+function minMaxCheck(age, height, weight,bmip){
+//  Check that input values are within the range of the BMI Percentile table
+    var valuesinrange = true;
+    if(age < 2) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("The minimum value for Age is 2yr.");
+    }
+    if(age > 19.99) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("The maximum value for Age is 20yr.");
+    }
+    if(height < 50) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("The minimum value for Height is 50 cm.\nIf you are specifying a value with a different unit,\nconvert to metric before performing the calculation.");
+    }
+    if(height > 300) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("The maximum value for Height is 300 cm.\nIf you are specifying a value with a different unit,\nconvert to metric before performing the calculation.");
+    }
+    if(weight < 5) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("The minimum value for Weight is 5 kg.\nIf you are specifying a value with a different unit,\nconvert to metric before performing the calculation.");
+    }
+    if(weight > 300) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("The maximum value for Weight is 300 kg.\nIf you are specifying a value with a different unit,\nconvert to metric before performing the calculation.");
+    }
+    if((height = "") || (weight = "")) {
+        clrResults(bmip);
+        valuesinrange = false;
+        alert("You must specify a value for both Height and Weight before performing the calculation.");
+    }
+    return(valuesinrange);
+}
+
+function clrResults(bmip){
+    bmip.value = "";
+}
+</script>
+
+
+<script type="text/javascript" language="javascript">
+function savemeasurements(){
+//  Save weight, height, BMI and BMI percentile to Measurements if no other corresponding value has already been saved today 
+    var today = returntoday();
+    var  flippedtoday = returnflippedtoday();
+    if (samedates(today, document.getElementById('today14').value) == true) {
+        if (samedates(flippedtoday , document.getElementById('oscarweightdate').value) == false)  document.getElementById('putoscarwt').value = document.getElementById('wt14').value;
+        if (samedates(flippedtoday , document.getElementById('oscarheightdate').value) == false  && isNaN(document.getElementById('ht14').value) == false)  document.getElementById('putoscarht').value = document.getElementById('ht14').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmidate').value) == false)  document.getElementById('putoscarbmi').value = document.getElementById('bmi14').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmipdate').value) == false)  document.getElementById('putoscarbmip').value = document.getElementById('bmip14').value;
+    }
+    else if (samedates(today, document.getElementById('today15').value) == true) {
+        if (samedates(flippedtoday , document.getElementById('oscarweightdate').value) == false)  document.getElementById('putoscarwt').value = document.getElementById('wt15').value;
+        if (samedates(flippedtoday , document.getElementById('oscarheightdate').value) == false  && isNaN(document.getElementById('ht15').value) == false)  document.getElementById('putoscarht').value = document.getElementById('ht15').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmidate').value) == false)  document.getElementById('putoscarbmi').value = document.getElementById('bmi15').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmipdate').value) == false)  document.getElementById('putoscarbmip').value = document.getElementById('bmip15').value;
+    }
+    else if (samedates(today, document.getElementById('today16').value) == true) {
+        if (samedates(flippedtoday , document.getElementById('oscarweightdate').value) == false)  document.getElementById('putoscarwt').value = document.getElementById('wt16').value;
+        if (samedates(flippedtoday , document.getElementById('oscarheightdate').value) == false  && isNaN(document.getElementById('ht16').value) == false)  document.getElementById('putoscarht').value = document.getElementById('ht16').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmidate').value) == false)  document.getElementById('putoscarbmi').value = document.getElementById('bmi16').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmipdate').value) == false)  document.getElementById('putoscarbmip').value = document.getElementById('bmip16').value;
+    }
+    else if (samedates(today, document.getElementById('today17').value) == true) {
+        if (samedates(flippedtoday , document.getElementById('oscarweightdate').value) == false)  document.getElementById('putoscarwt').value = document.getElementById('wt17').value;
+        if (samedates(flippedtoday , document.getElementById('oscarheightdate').value) == false  && isNaN(document.getElementById('ht17').value) == false)  document.getElementById('putoscarht').value = document.getElementById('ht17').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmidate').value) == false)  document.getElementById('putoscarbmi').value = document.getElementById('bmi17').value;
+        if (samedates(flippedtoday , document.getElementById('oscarbmipdate').value) == false)  document.getElementById('putoscarbmip').value = document.getElementById('bmip17').value;
+    }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+var measureArray=[];
+var measureDateArray=[];
+var measureCommentArray=[];
+
+function getMeasures(measure, measurementvalue, measurementdate, measurementcomment) {
+    measureArray[0] = ' ';
+    measureDateArray[0] = '2000-01-01';
+    measureCommentArray[0] = ' ';
+    xmlhttp=new XMLHttpRequest();
+    var pathArray = window.location.pathname.split( '/' );
+    var newURL = window.location.protocol + "//" + window.location.host +"/"+pathArray[1]+"/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do?type="+measure;
+    xmlhttp.onreadystatechange=function(){
+        if (xmlhttp.readyState==4 && xmlhttp.status==200){
+            var str=xmlhttp.responseText; //local variable
+            if (!str) { return; }
+            var myArray;
+            var myRe = /<td width="10">([\d,\./:-]+)<\/td>/g;  //for the measurement
+            var i=0;
+
+            while ((myArray = myRe.exec(str)) !== null){
+                measureArray[i]=myArray[1];
+                i=i+1;
+            }
+            measurementvalue.value = measureArray[0];
+
+            myRe = /<td width="150">([0-9,-]+)<\/td>\s*<td width="150">/g;  //the first date is the observation date
+            i=0;
+
+            while ((myArray = myRe.exec(str)) !== null){
+                measureDateArray[i]=myArray[1];
+                i=i+1;
+            }
+            measurementdate.value =  measureDateArray[0];
+            myRe = /<td width="300"><\/td>|<td width="300">([\D]+)<\/td>/g;  //for the comment
+            i=0;
+            while ((myArray = myRe.exec(str)) !== null) {
+                if (myArray[1] == null) measureCommentArray[i] = ' ';
+                else  measureCommentArray[i] = myArray[1];
+                i=i+1;
+            }
+            measurementcomment.value = measureCommentArray[0];
+        }
+    }
+
+// document.getElementById('dob') = 88;
+xmlhttp.open("GET",newURL,false);
+xmlhttp.send();
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function checkOSCARdb(){
+    getMeasures('WT', document.getElementById('getoscarweight'), document.getElementById('oscarweightdate'), document.getElementById('oscarweightcomment'));
+    getMeasures('HT', document.getElementById('getoscarheight'), document.getElementById('oscarheightdate'), document.getElementById('oscarheightcomment'));
+    getMeasures('BMI', document.getElementById('getoscarbmi'), document.getElementById('oscarbmidate'), document.getElementById('oscarbmicomment'));
+    getMeasures('BMIP', document.getElementById('getoscarbmip'), document.getElementById('oscarbmipdate'), document.getElementById('oscarbmipcomment'));
+    getMeasures('BP', document.getElementById('oscarbp'), document.getElementById('oscarbpdate'), document.getElementById('oscarbpcomment'));
+//    getMeasures('VISL', document.getElementById('getoscarvaL'), document.getElementById('oscarvaLdate'), document.getElementById('oscarvaLcomment'));
+//    getMeasures('VISR', document.getElementById('getoscarvaR'), document.getElementById('oscarvaRdate'), document.getElementById('oscarvaRcomment'));
+    getMeasures('LECM', document.getElementById('getoscarvaL'), document.getElementById('oscarvaLdate'), document.getElementById('oscarvaLcomment'));
+    getMeasures('RECM', document.getElementById('getoscarvaR'), document.getElementById('oscarvaRdate'), document.getElementById('oscarvaRcomment'));
+
+
+}
+</script>
+
+</head>
+
+<body onload="">
+<img id='BGImage' src="${oscar_image_path}Greig Health Record - 18-24yo.jpg" style="position: absolute; left: 0px; top: 0px; width:750px">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<!-- ---------------------------Hidden inputs   ------ -->
+<input name="dob_yr" id="dob_yr" type="hidden" oscarDB=dob_year>
+<input name="dob_mo" id="dob_mo" type="hidden" oscarDB=dob_month>
+<input name="dob_day" id="dob_day" type="hidden" oscarDB=dob_day>
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+<input name="PatientAge" id="PatientAge" type="hidden" oscarDB=age>
+
+<!-- Inputs for pulling data from and saving data to Oscar Measurements -->
+<input type="hidden" name="getoscarweight" id="getoscarweight" >
+<input type="hidden" name="oscarweightdate" id="oscarweightdate" >
+<input type="hidden" name="oscarweightcomment" id="oscarweightcomment" >
+<input type="hidden" name="getoscarheight" id="getoscarheight" >
+<input type="hidden" name="oscarheightdate" id="oscarheightdate" >
+<input type="hidden" name="oscarheightcomment" id="oscarheightcomment" >
+<input type="hidden" name="getoscarbmi" id="getoscarbmi" >
+<input type="hidden" name="oscarbmidate" id="oscarbmidate" >
+<input type="hidden" name="oscarbmicomment" id="oscarbmicomment" >
+<input type="hidden" name="getoscarbmip" id="getoscarbmip" >
+<input type="hidden" name="oscarbmipdate" id="oscarbmipdate" >
+<input type="hidden" name="oscarbmipcomment" id="oscarbmipcomment" >
+<input type="hidden" name="oscarbp" id="oscarbp" >
+<input type="hidden" name="oscarbpdate" id="oscarbpdate" >
+<input type="hidden" name="oscarbpcomment" id="oscarbpcomment" >
+<input type="hidden" name="getoscarvaL" id="getoscarvaL" >
+<input type="hidden" name="oscarvaLdate" id="oscarvaLdate" >
+<input type="hidden" name="oscarvaLcomment" id="oscarvaLcomment" >
+<input type="hidden" name="getoscarvaR" id="getoscarvaR" >
+<input type="hidden" name="oscarvaRdate" id="oscarvaRdate" >
+<input type="hidden" name="oscarvaRcomment" id="oscarvaRcomment" >
+<input type="hidden" name="m$WT#value" id="putoscarwt" >
+<input type="hidden" name="m$HT#value" id="putoscarht" >
+<input type="hidden" name="m$BMI#value" id="putoscarbmi" >
+<input type="hidden" name="m$BMIP#value" id="putoscarbmip" >
+<!-- -------------------------------------------------- -->
+
+<input name="first_last_name" id="first_last_name" type="text" class="noborder" style="position:absolute; left:610px; top:12px; width:140px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=first_last_name>
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:612px; top:32px; width:138px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob>
+
+<input name="age14" id="age14" type="text" class="noborder" style="position:absolute; left:317px; top:81px; width:50px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:transparent;" onDblclick="getage(this)" value="">
+<input name="today14" id="today14" type="text" class="noborder" title="doubleclick to import today's date" style="position:absolute; left:307px; top:102px; width:70px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:#D3D3D3;" onDblClick="gettoday(this)" value="">
+<input name="wt14" id="wt14" type="text" class="noborder" title="doubleclick to convert from imperial to metric or to import today's weight" style="position:absolute; left:282px; top:122px; width:62px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblclick="getwt(this,today14)" value="">
+<input name="ht14" id="ht14" type="text" class="noborder" title="doubleclick to convert from imperial to metric or to import today's height" style="position:absolute; left:282px; top:143px; width:62px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getht(this,today14)" value="">
+<input name="bmi14" id="bmi14" type="text" class="noborder" title="doubleclick to calculate the BMI or to import today's BMI" style="position:absolute; left:342px; top:122px; width:54px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmi(this,today14,wt14.value,ht14.value)" value="">
+<input name="bmip14" id="bmip14" type="text" class="noborder" title="doubleclick to calculate the BMIP or to import today's BMIP" style="position:absolute; left:342px; top:143px; width:54px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmip(this,today14,wt14.value,ht14.value,bmi14.value)" value="">
+
+<textarea name="AutoName38a" id="AutoName38a" class="noborder" style="position:absolute; left:282px; top:160px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName22" id="AutoName22" type="text" class="noborder" style="position:absolute; left:282px; top:188px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName26" id="AutoName26" type="text" class="noborder" style="position:absolute; left:282px; top:202px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName30" id="AutoName30" type="text" class="noborder" style="position:absolute; left:282px; top:216px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName34" id="AutoName34" type="text" class="noborder" style="position:absolute; left:282px; top:230px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName38" id="AutoName38" class="noborder" style="position:absolute; left:282px; top:243px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName42" id="AutoName42" type="text" class="noborder" style="position:absolute; left:282px; top:271px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName54a" id="AutoName54a" class="noborder" style="position:absolute; left:282px; top:284px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName46" id="AutoName46" type="text" class="noborder" style="position:absolute; left:282px; top:312px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName50" id="AutoName50" type="text" class="noborder" style="position:absolute; left:282px; top:326px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName63" id="AutoName63" type="text" class="noborder" style="position:absolute; left:282px; top:340px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName54" id="AutoName54" class="noborder" style="position:absolute; left:282px; top:353px; width:114px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName58" id="AutoName58" type="text" class="noborder" style="position:absolute; left:282px; top:394px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName67" id="AutoName67" type="text" class="noborder" style="position:absolute; left:282px; top:408px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName75" id="AutoName75" type="text" class="noborder" style="position:absolute; left:282px; top:422px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName79" id="AutoName79" type="text" class="noborder" style="position:absolute; left:282px; top:436px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName83" id="AutoName83" type="text" class="noborder" style="position:absolute; left:282px; top:450px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName91" id="AutoName91" class="noborder" style="position:absolute; left:282px; top:463px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName95" id="AutoName95" type="text" class="noborder" style="position:absolute; left:282px; top:491px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName99" id="AutoName99" type="text" class="noborder" style="position:absolute; left:282px; top:505px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName107" id="AutoName107" type="text" class="noborder" style="position:absolute; left:282px; top:519px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName111" id="AutoName111" type="text" class="noborder" style="position:absolute; left:282px; top:533px; width:114px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName115" id="AutoName115" class="noborder" style="position:absolute; left:282px; top:548px; width:114px; height:66px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="bp14" id="bp14" type="text" class="noborder" title="doubleclick to import today's blood pressure" style="position:absolute; left:282px; top:614px; width:114px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getbp(this,today14)" value="">
+<input name="AutoName123" id="AutoName123" type="text" class="noborder" style="position:absolute; left:282px; top:640px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="vaL14" id="vaL14" type="text" class="noborder" title="doubleclick to import today's left eye VA" style="position:absolute; left:282px; top:654px; width:114px; height:14x; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaL(this,today14)" value="">
+<input name="vaR14" id="vaR14" type="text" class="noborder" title="doubleclick to import today's right eye VA" style="position:absolute; left:282px; top:667px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaR(this,today14)" value="">
+<input name="AutoName135" id="AutoName135" type="text" class="noborder" style="position:absolute; left:282px; top:680px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName139" id="AutoName139" type="text" class="noborder" style="position:absolute; left:282px; top:693px; width:114px; height:14x; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName143" id="AutoName143" type="text" class="noborder" style="position:absolute; left:282px; top:706px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName147" id="AutoName147" type="text" class="noborder" style="position:absolute; left:282px; top:720px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName152" id="AutoName152" type="text" class="noborder" style="position:absolute; left:282px; top:733px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName156" id="AutoName156" type="text" class="noborder" style="position:absolute; left:282px; top:746px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName160" id="AutoName160" class="noborder" style="position:absolute; left:282px; top:759px; width:114px; height:117px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="signature14" id="signature14" type="text" class="noborder" style="position:absolute; left:282px; top:875px; width:114px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+
+<input name="age15" id="age15" type="text" class="noborder" style="position:absolute; left:427px; top:81px; width:50px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:transparent;" onDblclick="getage(this)" value="">
+<input name="today15" id="today15" type="text" class="noborder" title="doubleclick to import today's date" style="position:absolute; left:417px; top:102px; width:70px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:#D3D3D3;"  onDblClick="gettoday(this)" value="">
+<input name="wt15" id="wt15" type="text" class="noborder" title="doubleclick to convert from imperial to metric or to import today's weight" style="position:absolute; left:394px; top:122px; width:60px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getwt(this,today15)" value="">
+<input name="ht15" id="ht15" type="text" class="noborder" title="doubleclick to convert from imperial to metric or to import today's height" style="position:absolute; left:394px; top:143px; width:60px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getht(this,today15)" value="">
+<input name="bmi15" id="bmi15" type="text" class="noborder" title="doubleclick to calculate the BMI or to import today's BMI" style="position:absolute; left:452px; top:122px; width:56px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12x; text-align:left; background-color:#E0E0E0;" onDblClick="getbmi(this,today15,wt15.value,ht15.value)" value="">
+<input name="bmip15" id="bmip15" type="text" class="noborder" title="doubleclick to calculate the BMIP or to import today's BMIP" style="position:absolute; left:452px; top:143px; width:56px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmip(this,today15,wt15.value,ht15.value,bmi15.value)" value="">
+
+<textarea name="AutoName39a" id="AutoName39a" class="noborder" style="position:absolute; left:394px; top:160px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName31" id="AutoName31" type="text" class="noborder" style="position:absolute; left:394px; top:188px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName35" id="AutoName35" type="text" class="noborder" style="position:absolute; left:394px; top:202px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName35a" id="AutoName35a" type="text" class="noborder" style="position:absolute; left:394px; top:216px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName35b" id="AutoName35b" type="text" class="noborder" style="position:absolute; left:394px; top:230px; width:114px; height:17\5px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName39" id="AutoName39" class="noborder" style="position:absolute; left:394px; top:243px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName43" id="AutoName43" type="text" class="noborder" style="position:absolute; left:394px; top:271px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName55a" id="AutoName55a" class="noborder" style="position:absolute; left:394px; top:284px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName47" id="AutoName47" type="text" class="noborder" style="position:absolute; left:394px; top:312px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName51" id="AutoName51" type="text" class="noborder" style="position:absolute; left:394px; top:326px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName64" id="AutoName64" type="text" class="noborder" style="position:absolute; left:394px; top:340px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName55" id="AutoName55" class="noborder" style="position:absolute; left:394px; top:353px; width:114px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName59" id="AutoName59" type="text" class="noborder" style="position:absolute; left:394px; top:394px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName68" id="AutoName68" type="text" class="noborder" style="position:absolute; left:394px; top:408px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName76" id="AutoName76" type="text" class="noborder" style="position:absolute; left:394px; top:422px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName80" id="AutoName80" type="text" class="noborder" style="position:absolute; left:394px; top:436px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName84" id="AutoName84" type="text" class="noborder" style="position:absolute; left:394px; top:450px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName92" id="AutoName92" class="noborder" style="position:absolute; left:394px; top:463px; width:114px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName96" id="AutoName96" type="text" class="noborder" style="position:absolute; left:394px; top:491px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName100" id="AutoName100" type="text" class="noborder" style="position:absolute; left:394px; top:505px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName108" id="AutoName108" type="text" class="noborder" style="position:absolute; left:394px; top:519px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName112" id="AutoName112" type="text" class="noborder" style="position:absolute; left:394px; top:533px; width:114px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName116" id="AutoName116" class="noborder" style="position:absolute; left:394px; top:548px; width:114px; height:66px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="bp15" id="bp15" type="text" class="noborder" title="doubleclick to import today's blood pressure" style="position:absolute; left:394px; top:614px; width:114px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getbp(this,today15)" value="">
+<input name="AutoName124" id="AutoName124" type="text" class="noborder" style="position:absolute; left:394px; top:640px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="vaL15" id="vaL15" type="text" class="noborder" title="doubleclick to import today's left eye VA" style="position:absolute; left:394px; top:654px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaL(this,today15)" value="">
+<input name="vaR15" id="vaR15" type="text" class="noborder" title="doubleclick to import today's right eye VA" style="position:absolute; left:394px; top:667px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaR(this,today15)" value="">
+<input name="AutoName136" id="AutoName136" type="text" class="noborder" style="position:absolute; left:394px; top:680px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName140" id="AutoName140" type="text" class="noborder" style="position:absolute; left:394px; top:693px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName144" id="AutoName144" type="text" class="noborder" style="position:absolute; left:394px; top:706px; width:114px; height:145x; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName149" id="AutoName149" type="text" class="noborder" style="position:absolute; left:394px; top:720px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName153" id="AutoName153" type="text" class="noborder" style="position:absolute; left:394px; top:733px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName157" id="AutoName157" type="text" class="noborder" style="position:absolute; left:394px; top:746px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName161" id="AutoName161" class="noborder" style="position:absolute; left:394px; top:759px; width:114px; height:117px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="signature15" id="signature15" type="text" class="noborder" style="position:absolute; left:394px; top:875px; width:114px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+
+<input name="age16" id="age16" type="text" class="noborder" style="position:absolute; left:538px; top:81px; width:50px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:transparent;" onDblclick="getage(this)" value="">
+<input name="today16" id="today16" type="text" class="noborder" title="doubleclick to import today's date" style="position:absolute; left:528px; top:102px; width:70px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:#D3D3D3;"  onDblClick="gettoday(this)" value="">
+<input name="wt16" id="wt16" type="text" title="doubleclick to convert from imperial to metric or to import today's weight" class="noborder" style="position:absolute; left:506px; top:122px; width:57px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getwt(this,today16)" value="">
+<input name="ht16" id="ht16" type="text" title="doubleclick to convert from imperial to metric or to import today's height" class="noborder" style="position:absolute; left:506px; top:143px; width:57px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getht(this,today16)" value="">
+<input name="bmi16" id="bmi16" type="text" class="noborder" title="doubleclick to calculate the BMI or to import today's BMI" style="position:absolute; left:561px; top:122px; width:59px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmi(this,today16,wt16.value,ht16.value)" value="">
+<input name="bmip16" id="bmip16" type="text" class="noborder" title="doubleclick to calculate the BMIP or to import today's BMIP" style="position:absolute; left:561px; top:143px; width:59px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmip(this,today16,wt16.value,ht16.value,bmi16.value)" value="">
+
+<textarea name="AutoName40a" id="AutoName40a" class="noborder" style="position:absolute; left:506px; top:160px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName32" id="AutoName32" type="text" class="noborder" style="position:absolute; left:506px; top:188px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName36" id="AutoName36" type="text" class="noborder" style="position:absolute; left:506px; top:202px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName36a" id="AutoName36a" type="text" class="noborder" style="position:absolute; left:506px; top:216px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName36b" id="AutoName36b" type="text" class="noborder" style="position:absolute; left:506px; top:230px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName40" id="AutoName40" class="noborder" style="position:absolute; left:506px; top:243px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName44" id="AutoName44" type="text" class="noborder" style="position:absolute; left:506px; top:271px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName56a" id="AutoName56a" class="noborder" style="position:absolute; left:506px; top:284px; width:114px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName48" id="AutoName48" type="text" class="noborder" style="position:absolute; left:506px; top:312px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName52" id="AutoName52" type="text" class="noborder" style="position:absolute; left:506px; top:326px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName65" id="AutoName65" type="text" class="noborder" style="position:absolute; left:506px; top:340px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName56" id="AutoName56" class="noborder" style="position:absolute; left:506px; top:353px; width:114px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName60" id="AutoName60" type="text" class="noborder" style="position:absolute; left:506px; top:394px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName69" id="AutoName69" type="text" class="noborder" style="position:absolute; left:506px; top:408px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName77" id="AutoName77" type="text" class="noborder" style="position:absolute; left:506px; top:422px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName81" id="AutoName81" type="text" class="noborder" style="position:absolute; left:506px; top:436px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName85" id="AutoName85" type="text" class="noborder" style="position:absolute; left:506px; top:450px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName93" id="AutoName93" class="noborder" style="position:absolute; left:506px; top:463px; width:114px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName97" id="AutoName97" type="text" class="noborder" style="position:absolute; left:506px; top:491px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName101" id="AutoName101" type="text" class="noborder" style="position:absolute; left:506px; top:505px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName109" id="AutoName109" type="text" class="noborder" style="position:absolute; left:506px; top:519px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName113" id="AutoName113" type="text" class="noborder" style="position:absolute; left:506px; top:533px; width:114px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName117" id="AutoName117" class="noborder" style="position:absolute; left:506px; top:548px; width:114px; height:67px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="bp16" id="bp16" type="text" class="noborder" title="doubleclick to import today's blood pressure" style="position:absolute; left:506px; top:614px; width:114px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getbp(this,today16)" value="">
+<input name="AutoName125" id="AutoName125" type="text" class="noborder" style="position:absolute; left:506px; top:640px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="vaL16" id="vaL16" type="text" class="noborder" title="doubleclick to import today's left eye VA" style="position:absolute; left:506px; top:654px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaL(this,today16)" value="">
+<input name="vaR16" id="vaR16" type="text" class="noborder" title="doubleclick to import today's right eye VA" style="position:absolute; left:506px; top:667px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaR(this,today16)" value="">
+<input name="AutoName137" id="AutoName137" type="text" class="noborder" style="position:absolute; left:506px; top:680px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName141" id="AutoName141" type="text" class="noborder" style="position:absolute; left:506px; top:693px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName145" id="AutoName145" type="text" class="noborder" style="position:absolute; left:506px; top:706px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName150" id="AutoName150" type="text" class="noborder" style="position:absolute; left:506px; top:720px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName154" id="AutoName154" type="text" class="noborder" style="position:absolute; left:506px; top:733px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName158" id="AutoName158" type="text" class="noborder" style="position:absolute; left:506px; top:746px; width:114px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName162" id="AutoName162" class="noborder" style="position:absolute; left:506px; top:759px; width:114px; height:117px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="signature16" id="signature16" type="text" class="noborder" style="position:absolute; left:506px; top:875px; width:114px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+
+<input name="age17" id="age17" type="text" class="noborder" style="position:absolute; left:646px; top:81px; width:50px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:transparent;" onDblclick="getage(this)" value="">
+<input name="today17" id="today17" type="text" class="noborder" title="doubleclick to import today's date" style="position:absolute; left:636px; top:102px; width:70px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:center; background-color:#D3D3D3;" onDblClick="gettoday(this)" value="">
+<input name="wt17" id="wt17" type="text" title="doubleclick to convert from imperial to metric or to import today's weight" class="noborder" style="position:absolute; left:618px; top:122px; width:55px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getwt(this,today17)" value="">
+<input name="ht17" id="ht17" type="text" title="doubleclick to convert from imperial to metric or to import today's height" class="noborder" style="position:absolute; left:618px; top:143px; width:55px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#DCDCDC;" onDblClick="getht(this,today17)" value="">
+<input name="bmi17" id="bmi17" type="text" class="noborder" title="doubleclick to calculate the BMI or to import today's BMI" style="position:absolute; left:671px; top:122px; width:59px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmi(this,today17,wt17.value,ht17.value)" value="">
+<input name="bmip17" id="bmip17" type="text" class="noborder" title="doubleclick to calculate the BMIP or to import today's BMIP" style="position:absolute; left:671px; top:143px; width:59px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:#E0E0E0;" onDblClick="getbmip(this,today17,wt17.value,ht17.value,bmi17.value)" value="">
+
+
+<textarea name="AutoName41a" id="AutoName41a" class="noborder" style="position:absolute; left:618px; top:160px; width:112px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName33" id="AutoName33" type="text" class="noborder" style="position:absolute; left:618px; top:188px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName37" id="AutoName37" type="text" class="noborder" style="position:absolute; left:618px; top:202px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName37a" id="AutoName37a" type="text" class="noborder" style="position:absolute; left:618px; top:216px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName37b" id="AutoName37b" type="text" class="noborder" style="position:absolute; left:618px; top:230px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName41" id="AutoName41" class="noborder" style="position:absolute; left:618px; top:243px; width:112px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName45" id="AutoName45" type="text" class="noborder" style="position:absolute; left:618px; top:271px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName57a" id="AutoName57a" class="noborder" style="position:absolute; left:618px; top:284px; width:112px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName49" id="AutoName49" type="text" class="noborder" style="position:absolute; left:618px; top:312px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName53" id="AutoName53" type="text" class="noborder" style="position:absolute; left:618px; top:326px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName66" id="AutoName66" type="text" class="noborder" style="position:absolute; left:618px; top:340px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName57" id="AutoName57" class="noborder" style="position:absolute; left:618px; top:353px; width:112px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName61" id="AutoName61" type="text" class="noborder" style="position:absolute; left:618px; top:394px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName70" id="AutoName70" type="text" class="noborder" style="position:absolute; left:618px; top:408px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName78" id="AutoName78" type="text" class="noborder" style="position:absolute; left:618px; top:422px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName82" id="AutoName82" type="text" class="noborder" style="position:absolute; left:618px; top:436px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName86" id="AutoName86" type="text" class="noborder" style="position:absolute; left:618px; top:450px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<textarea name="AutoName94" id="AutoName94" class="noborder" style="position:absolute; left:618px; top:463px; width:112px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="AutoName98" id="AutoName98" type="text" class="noborder" style="position:absolute; left:618px; top:491px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName102" id="AutoName102" type="text" class="noborder" style="position:absolute; left:618px; top:505px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName110" id="AutoName110" type="text" class="noborder" style="position:absolute; left:618px; top:519px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName114" id="AutoName114" type="text" class="noborder" style="position:absolute; left:618px; top:533px; width:112px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName118" id="AutoName118" class="noborder" style="position:absolute; left:618px; top:548px; width:112px; height:67px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="bp17" id="bp17" type="text" class="noborder" title="doubleclick to import today's blood pressure" style="position:absolute; left:618px; top:614px; width:112px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:E8E8E8;" onDblClick="getbp(this,today17)" value="">
+<input name="AutoName126" id="AutoName126" type="text" class="noborder" style="position:absolute; left:618px; top:640px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="vaL17" id="vaL17" type="text" class="noborder" title="doubleclick to import today's left eye VA" style="position:absolute; left:618px; top:654px; width:112px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaL(this,today17)" value="">
+<input name="vaR17" id="vaR17" type="text" class="noborder" title="doubleclick to import today's right eye VA" style="position:absolute; left:618px; top:667px; width:112px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:#E8E8E8;" onDblClick="getvaR(this,today17)" value="">
+<input name="AutoName138" id="AutoName138" type="text" class="noborder" style="position:absolute; left:618px; top:680px; width:112px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName142" id="AutoName142" type="text" class="noborder" style="position:absolute; left:618px; top:693px; width:112px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName146" id="AutoName146" type="text" class="noborder" style="position:absolute; left:618px; top:706px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName151" id="AutoName151" type="text" class="noborder" style="position:absolute; left:618px; top:720px; width:112px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName155" id="AutoName155" type="text" class="noborder" style="position:absolute; left:618px; top:733px; width:112px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+<input name="AutoName159" id="AutoName159" type="text" class="noborder" style="position:absolute; left:618px; top:746px; width:112px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="AutoName163" id="AutoName163" class="noborder" style="position:absolute; left:618px; top:759px; width:112px; height:117px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:9px; text-align:left; background-color:transparent;" ></textarea>
+<input name="signature17" id="signature17" type="text" class="noborder" style="position:absolute; left:618px; top:875px; width:112px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+
+<textarea name="FxRFAllergies" id="FxRFAllergies" class="noborder" style="position:absolute; left:6px; top:35px; width:201px; height:35px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:963px; left:42px;">
+        <table><tr><td>
+        Subject: <input name="subject" size="40" type="text"> 
+            <input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="savemeasurements();releaseDirtyFlag();"> 
+            <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+            <input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+            <input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();setTimeout('SubmitButton.click()',2000);"> 
+        </td></tr></table>
+</div>
+</form>
+
+</body>
+</html>

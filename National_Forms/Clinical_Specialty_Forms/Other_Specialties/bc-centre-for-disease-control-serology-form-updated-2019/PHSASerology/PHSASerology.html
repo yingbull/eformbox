@@ -1,0 +1,566 @@
+<html>
+<head>
+
+<!-- PHSA Serology Screening Requisition V1 -->
+<!-- Update V2_Oct8_2017, for Pathways. New background Feb14_2014, from JPOCSC.  John Yap -->
+<!-- Update V3_Oct28_2017, for Pathways. New 2017 background; updated architecture;  John Yap -->
+<!-- V4_Sep17_2019; updated with 2019 background; John Yap -->
+<!-- V5_Dec22_2020; fix date collected input and format; thanks HerbC for finding glitch; JohnY -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}PHSA_SerologyReq_Aug_2019_Pg1.png"
+// "${oscar_image_path}PHSA_SerologyReq_Aug_2019_Pg2.png"
+</script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+input#SubmitButton { 
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background: #229ece;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bb5d2), to(#229ece));
+	background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+	background: -o-linear-gradient(top, #6bb5d2, #229ece);
+	background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+
+input#SubmitButton:hover {
+	color: #333333;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #a0dbc4;
+	background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#6bb5d2));
+	background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+	background: -o-linear-gradient(top, #229ece, #6bb5d2);
+	background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+ 
+input#PrintSubmitButton {
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background-color: rebeccapurple;
+	background: -webkit-gradient(linear, left top, left bottom, from(rebeccapurple), to(#835aac));
+	background: -moz-linear-gradient(top, rebeccapurple, #835aac);
+	background: -o-linear-gradient(top, rebeccapurple, #835aac);
+	background: -ms-linear-gradient(top, rebeccapurple, #835aac);}
+
+input#PrintSubmitButton:hover {
+	color: #fcf4fc;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #835aac;
+	background: -webkit-gradient(linear, left top, left bottom, from(#835aac), to(rebeccapurple));
+	background: -moz-linear-gradient(top, #835aac, rebeccapurple);
+	background: -o-linear-gradient(top, #835aac, rebeccapurple);
+	background: -ms-linear-gradient(top, #835aac, rebeccapurple);}
+
+a {text-decoration:none;} 
+a:hover { border: 1px solid #000000; border-style:outset; background:pink; opacity:0.6;}
+a:active { border: 3px solid #000000; border-style: inset;}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+.DoNotPrint {display: none;}
+.noborder {
+	 border : 0px;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 overflow: hidden;
+}
+</style>
+
+<!-- Xbox/Show/Hide/FontChange styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	font-size: 10px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.box2 {
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	font-size: 12px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.noborder {background:transparent};
+</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {	
+			// new off-line architecture as per K Yap
+			setDocumentTitle('Serology_Req_BC',document.getElementById('PatientNameL').value);
+			changeImage("PHSA_SerologyReq_Aug_2019_Pg1.png", "BGImage1");
+			changeImage("PHSA_SerologyReq_Aug_2019_Pg2.png", "BGImage2");
+			setDefaults();
+
+			// Optimize window size/width
+			top.window.resizeTo(1200, screen.availHeight);
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+		
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				checkGender();
+				parseName('CurrentProviderDoctor1');
+				parseDate('today');
+			}   
+		}
+
+		/****************************
+			Create name in proper order 
+		****************************/
+		function parseName(id) {
+			// Get the name
+		
+			var fullName = document.getElementById(id).value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.getElementById(id).value = First_Last_Name;
+		}
+
+		/****************************
+			Create date in dd/mm/yyyy format; 
+			Oscar default is yyyy-mm-dd
+		****************************/
+		function parseDate(id) {
+			// Change date field to dd/mmm/yyyy format
+			// Function expects an array of date components in yyyy-mm-dd format
+			// Get the date
+			var FullDate = document.getElementById(id).value;
+			var delimiter = '-';
+
+			// Split the value
+			var Year = FullDate.split(delimiter)[0];
+			var MonthNum = FullDate.split(delimiter)[1];
+			var Day = FullDate.split(delimiter)[2];
+
+			var NumericDate = Day + "/" + MonthNum + "/" + Year;
+
+			// Show the fields on the page
+			document.getElementById(id).value = NumericDate;
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// remove extra text in field
+			document.getElementById("PHN").style.background = 'transparent';
+			document.getElementById("patient_nameL").style.background = 'transparent';
+			document.getElementById("patient_nameF").style.background = 'transparent';
+			document.getElementById("dobc").style.background = 'transparent';
+			document.getElementById("ClinicAddress").style.background = 'white';
+			document.getElementById("CurrentProviderDoctor1").style.background = 'white';
+			document.getElementById("whiteout1").style.background = 'white';
+			document.getElementById("whiteout2").style.background = 'white';
+
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+		Checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+				$( this ).click();
+				return false;
+				}
+			});
+		});
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		/****************************
+			scripts to check gender 
+		****************************/
+		function checkGender() {
+			if (document.getElementById("PatientGender").value == "M") {
+			document.getElementById("Gender_Male").value ="X";
+			} 
+			else if (document.getElementById("PatientGender").value == "F") {
+			 document.getElementById("Gender_Female").value ="X";
+			}
+			else if (document.getElementById("PatientGender").value == "O") {
+			 document.getElementById("Gender_X").value ="X";
+			}
+			else if (document.getElementById("PatientGender").value == "U") {
+			 document.getElementById("Gender_U").value ="X";
+			}
+		}
+
+		/****************************
+			scripts for Prenatal Labs
+		****************************/
+		function Prenatal_Labs() {
+			if (document.getElementById("PrenatalLabs_check").value == "") {
+				document.getElementById("Prenatal").value ="X";
+				document.getElementById("HIVCCNom").value ="X";
+				document.getElementById("HIVCCNonNom").value ="";
+				document.getElementById("HBVP").value ="X";
+				document.getElementById("RUBEB").value ="X";
+				document.getElementById("TPE").value ="X";
+				document.getElementById("PrenatalLabs_check").value ="X";
+				}
+			else {
+				document.getElementById("Prenatal").value ="";
+				document.getElementById("HIVCCNom").value ="";
+				document.getElementById("HIVCCNonNom").value ="";
+				document.getElementById("HBVP").value ="";
+				document.getElementById("RUBEB").value ="";
+				document.getElementById("TPE").value ="";
+				document.getElementById("PrenatalLabs_check").value ="";
+				}
+		}
+</script>
+
+<script>
+		/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x and is named in the convention name_X where X appears in the string defined in scales
+		****************************/
+		function Radio_Box1(x) {
+			var scales = ["Male", "Female", "X", "U"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+</script>
+
+</head>
+
+<body onload="startUp();">
+
+<form method="post" action="" name="FormName" id="FormName">
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<img id="BGImage1" src="" style="position:relative; left:0px; top:0px; width:850px;">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for checkGender -->
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+<!-- Hidden input for Prenatal_Labs -->
+<input name="PrenatalLabs_check" id="PrenatalLabs_check" type="hidden" value="">
+
+<!-- All textfields/checkboxes/textareas go here -->
+<a class="DoNotPrint" style="position:absolute; left:175px; top:55px; width:235px; height:30px;" href="http://www.bccdc.ca/health-professionals/professional-resources/laboratory-services" target="_blank" title="Web reference"></a>
+
+<input name="PrenatalLabs" id="PrenatalLabs" type="button" class="DoNotPrint" value="Click for Prenatal Labs" style="position:absolute; left:470px; top:90px; background:yellow;"  onclick="Prenatal_Labs();">
+
+<a id="BGImage2" class="DoNotPrint" style="position:absolute; left:635px; top:85px; font-size:45px; color:red; background:transparent; text-decoration:none;" href="" target="_blank" title="Additional Information">&#42;</a>
+
+<a class="DoNotPrint" style="position:absolute; left:685px; top:90px; color:green; text-decoration:none;" href="http://www.elabhandbook.info/PHSA/Default.aspx" target="_blank" title="Web reference">eLab Handbook</a>
+
+<span style="position:absolute; left:30px; top:105px; font-size:14px;">Date:</span> 
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:70px; top:105px; width:105px; font-size:14px;" oscarDB=today>
+
+<!-- Section 1 Patient/Provider Info -->
+<span name="whiteout" id="whiteout1" style="position:absolute; left:30px; top:159px; width:170px; height:9px; background:white;"></span> 
+<input name="PHN" id="PHN" type="text" class="noborder" style="position:absolute; left:30px; top:159px; width:295px; font-size:14px;" oscarDB=hinc>
+<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position:absolute; left:30px; top:192px; width:295px; font-size:14px;" oscarDB=patient_nameL>
+<span name="whiteout" style="position:absolute; left:102px; top:217px; width:25px; height:11px; background:white;"></span> 
+<span name="whiteout" style="position:absolute; left:30px; top:225px; width:75px; height:11px; background:white;"></span> 
+<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position:absolute; left:30px; top:228px; width:295px; font-size:14px;" oscarDB=patient_nameF>
+
+<span name="whiteout" id="whiteout2" style="position:absolute; left:30px; top:262px; width:60px; height:9px; font-size:13px; background:transparent;"></span> 
+<input name="dobc" id="dobc" type="text" class="noborder" style="position:absolute; left:30px; top:262px; width:140px; font-size:14px;" oscarDB=dobc>
+
+<input name="Gender_Male" id="Gender_Male" type="text" class="Xbox box1" style="left:189px; top:260px;" onclick="Radio_Box1(this.id);">
+<input name="Gender_Female" id="Gender_Female" type="text" class="Xbox box1" style="left:219px; top:260px;" onclick="Radio_Box1(this.id);">
+<input name="Gender_X" id="Gender_X" type="text" class="Xbox box1" style="left:247px; top:260px;" onclick="Radio_Box1(this.id);">
+<input name="Gender_U" id="Gender_U" type="text" class="Xbox box1" style="left:276px; top:260px;" onclick="Radio_Box1(this.id);">
+
+<textarea name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:28px; top:298px; width:299px; height:115px; resize:none; font-size:18px; background:white;" oscarDB=addressline></textarea>
+
+<!-- Ordering Physician -->
+<input name="CurrentProviderDoctor1" id="CurrentProviderDoctor1" type="text" class="noborder" style="position:absolute; left:330px; top:159px; width:292px; font-size:13px;" oscarDB=current_user>
+
+<textarea name="ClinicAddress" id="ClinicAddress" class="noborder" style="position:absolute; left:330px; top:176px; width:298px; height:60px; resize:none; font-size:13px; background:transparent;" oscarDB=clinic_address></textarea>
+
+<input name="DoNotRequire" id="DoNotRequire" type="text" class="Xbox box1" style="position:absolute; left:334px; top:240px;">
+<input name="Locum" id="Locum" type="text" class="Xbox box1" style="position:absolute; left:512px; top:240px;">
+
+<textarea name="Additional1" id="Additional1" type="text" class="noborder" style="position:absolute; left:340px; top:298px; width:287px; height:34px; resize:none; font-size:14px; background:transparent;" value=""></textarea>
+<textarea name="Additional2" id="Additional2" type="text" class="noborder" style="position:absolute; left:340px; top:338px; width:287px; height:34px; resize:none; font-size:14px; background:transparent;" value=""></textarea>
+<textarea name="Additional3" id="Additional3" type="text" class="noborder" style="position:absolute; left:340px; top:375px; width:287px; height:34px; resize:none; font-size:14px; background:transparent;" value=""></textarea>
+
+<input name="Sample_reference" id="Sample_reference" type="text" class="noborder" style="position:absolute; left:640px; top:341px; width:185px; font-size:14px; text-align:center;" value="">
+<input name="CollectDate" id="CollectDate" type="text" class="noborder" style="position:absolute; left:640px; top:371px; width:185px; font-size:14px; text-align:center;">
+<input name="Time" id="Time" type="text" class="noborder" style="position:absolute; left:640px; top:400px; width:185px; font-size:14px; text-align:center;" value="">
+
+<!-- Section 2 Clinical Info -->
+	<!-- Reason for test -->
+<input name="Needlestick" id="Needlestick" type="text" class="Xbox box2" style="left:30px; top:468px;">
+<input name="Prenatal" id="Prenatal" type="text" class="Xbox box2" style="left:30px; top:488px;">
+
+<input name="Outbreak" id="Outbreak" type="text" class="Xbox box2" style="left:196px; top:468px;">
+<input name="Other_Box" id="Other_Box" type="text" class="Xbox box2" style="left:196px; top:488px;">
+<textarea name="Other_reason" id="Other_reason" type="text" class="noborder" style="position:absolute; left:283px; top:485px; width:132px; height:46px; resize:none; font-size:14px; background:white;" value=""></textarea>
+
+	<!-- Clinical Information -->
+<input name="Rash" id="Rash" type="text" class="Xbox box2" style="left:423px; top:468px;">
+<input name="STDContact" id="STDContact" type="text" class="Xbox box2" style="left:553px; top:468px;">
+<input name="STDSx" id="STDSx" type="text" class="Xbox box2" style="left:667px; top:468px;">
+
+<input name="RecentTravel" id="RecentTravel" type="text" class="noborder" style="position:absolute; left:420px; top:514px; width:265px; font-size:14px; background:transparent;" value="">
+<input name="OnsetDate" id="OnsetDate" type="text" class="noborder" style="position:absolute; left:695px; top:514px; width:130px; font-size:14px; background:transparent;" value="">
+
+<!-- Section 3 Test(s) Requested -->
+	<!-- Prenatal Screening -->
+<input name="HIVCCNom" id="HIVCCNom" type="text" class="Xbox box2" style="left:164px; top:601px;">
+<input name="HIVCCNonNom" id="HIVCCNonNom" type="text" class="Xbox box2" style="left:164px; top:624px;">
+<input name="HBVP" id="HBVP" type="text" class="Xbox box2" style="left:164px; top:645px;">
+<input name="RUBEB" id="RUBEB" type="text" class="Xbox box2" style="left:164px; top:668px;">
+<input name="TPE" id="TPE" type="text" class="Xbox box2" style="left:164px; top:690px;">
+<textarea name="Other_prenatal" id="Other_prenatal" type="text" class="noborder" style="position:absolute; left:26px; top:740px; width:193px; height:46px; resize:none; font-size:16px; background:white;" value=""></textarea>
+
+	<!-- Perinatal Syphilis -->
+<input name="PDSYP" id="PDSYP" type="text" class="Xbox box2" style="left:164px; top:815px;">
+
+	<!-- Routine Syphilis -->
+<input name="TPE2" id="TPE2" type="text" class="Xbox box2" style="left:164px; top:878px;">
+
+	<!-- HIV (Non-Prenatal) -->
+<input name="HIVCC2Nom" id="HIVCC2Nom" type="text" class="Xbox box2" style="left:164px; top:948px;">
+<input name="HIVCC2NonNom" id="HIVCC2NonNom" type="text" class="Xbox box2" style="left:164px; top:1019px;">
+
+	<!-- Hepatitis Serology -->
+<input name="HEPSB" id="HEPSB" type="text" class="Xbox box2" style="left:354px; top:613px;">
+<input name="DHEPCH" id="DHEPCH" type="text" class="Xbox box2" style="left:354px; top:667px;">
+<input name="HBSAG" id="HBSAG" type="text" class="Xbox box2" style="left:354px; top:708px;">
+<input name="HAAT" id="HAAT" type="text" class="Xbox box2" style="left:354px; top:739px;">
+<input name="HAVMB" id="HAVMB" type="text" class="Xbox box2" style="left:354px; top:774px;">
+<input name="HBVSA" id="HBVSA" type="text" class="Xbox box2" style="left:354px; top:808px;">
+<input name="HBSAB" id="HBSAB" type="text" class="Xbox box2" style="left:354px; top:829px;">
+<input name="HBXEA" id="HBXEA" type="text" class="Xbox box2" style="left:354px; top:862px;">
+<input name="HBXEB" id="HBXEB" type="text" class="Xbox box2" style="left:354px; top:896px;">
+<input name="HEPCB" id="HEPCB" type="text" class="Xbox box2" style="left:354px; top:929px;">
+
+	<!-- Hepatitis C PCR -->
+<input name="HPCRBB" id="HPCRBB" type="text" class="Xbox box2" style="left:354px; top:995px;">
+<input name="HEPCRB" id="HEPCRB" type="text" class="Xbox box2" style="left:354px; top:1031px;">
+
+	<!-- Other Serology Immunity-->
+<input name="CMVIGB" id="CMVIGB" type="text" class="Xbox box2" style="left:555px; top:613px;">
+<input name="EBGSB" id="EBGSB" type="text" class="Xbox box2" style="left:555px; top:634px;">
+<input name="MIGB" id="MIGB" type="text" class="Xbox box2" style="left:555px; top:658px;">
+<input name="MUIGB" id="MUIGB" type="text" class="Xbox box2" style="left:555px; top:690px;">
+<input name="PARVGB" id="PARVGB" type="text" class="Xbox box2" style="left:555px; top:712px;">
+<input name="RUBEB2" id="RUBEB2" type="text" class="Xbox box2" style="left:555px; top:734px;">
+<input name="VZIGB" id="VZIGB" type="text" class="Xbox box2" style="left:555px; top:756px;">
+
+	<!-- Other Serology Acute-->
+<input name="CMVSP" id="CMVSP" type="text" class="Xbox box2" style="left:756px; top:613px;">
+<input name="EBVSP" id="EBVSP" type="text" class="Xbox box2" style="left:756px; top:634px;">
+<input name="MEASP" id="MEASP" type="text" class="Xbox box2" style="left:756px; top:658px;">
+<input name="MUMPS" id="MUMPS" type="text" class="Xbox box2" style="left:756px; top:690px;">
+<input name="PARVP" id="PARVP" type="text" class="Xbox box2" style="left:756px; top:712px;">
+<input name="RUBP" id="RUBP" type="text" class="Xbox box2" style="left:756px; top:734px;">
+
+	<!-- Other Serology Misc-->
+<input name="HELIB" id="HELIB" type="text" class="Xbox box2" style="left:555px; top:810px;">
+<input name="HTLVB" id="HTLVB" type="text" class="Xbox box2" style="left:555px; top:833px;">
+
+<input name="HSVTSS" id="HSVTSS" type="text" class="Xbox box2" style="left:756px; top:810px;">
+
+<input name="Other_tests" id="Other_tests" class="noborder" style="position:absolute; left:420px; top:885px; width:405px; font-size:14px; background:transparent;">
+<a class="DoNotPrint" style="position:absolute; left:420px; top:910px; width:405px; height:60px;" href="http://www.elabhandbook.info/PHSA/Default.aspx" target="_blank" title="Web reference"></a>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:30px; top:1100px; width:800px;">
+	<table><tr style="background:#e5f2ff;"><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />				
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();">
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="printSubmit();">
+	</td></tr></table>
+
+<!-- Copy Left -->
+ <a rel="licence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+ <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> PHSA Serology eFORM, update V5_Dec22_2020 by Dr. John Yap, for Oscar BC, </span>
+ is licensed under a 
+ <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a>
+ <span style="color:forestgreen;">Please consider supporting </span><a href="http://oscarbc.ca/" target="_blank">oscarbc.ca.</a> 
+ <a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">&nbsp;Email: info@oscarbc.ca&nbsp;</a> |
+ <a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">&nbsp;Facebook&nbsp;</a> |
+ <a href="https://twitter.com/OSCARBCemr" target="_blank">&nbsp;Twitter&nbsp;</a> |
+ <a href="https://www.linkedin.com/company/oscarbc/" target="_blank">&nbsp;LinkedIn&nbsp;</a>
+ <br><br>
+</div>
+</div>
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"today", ifFormat : "%d/%m/%Y", showsTime:false, button : "today" } );
+	Calendar.setup( { inputField :"CollectDate", ifFormat : "%d/%m/%Y", showsTime:false, button : "CollectDate" } );
+	Calendar.setup( { inputField :"OnsetDate", ifFormat : "%d/%m/%Y", showsTime:false, button : "OnsetDate" } );
+</script>
+
+</body></html>

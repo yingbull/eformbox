@@ -1,0 +1,621 @@
+<html>
+<head>
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<title>Caregiver Checklist</title>
+<script src='${oscar_javascript_path}jquery/jquery-2.2.4.min.js'>
+</script>
+<script>window.jQuery || document.write("\x3cscript src='https://code.jquery.com/jquery-2.2.4.min.js'\x3e\x3c\/script\x3e");</script>
+<link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+<script src='https://code.jquery.com/jquery-1.12.4.js'>
+</script>
+<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'>
+</script>
+<script src='${oscar_image_path}faxControl.js'>
+</script>
+<style>
+
+.all-no-button2 {            
+			display: inline-block;
+			text-align: left;
+			vertical-align: top;
+			//background: transparent;
+			//border: 10;
+			font-size: 12px;
+			width: 50px;
+		}
+
+.all-no-button1 {
+    background: gray;
+    border: 5px solid #000000;
+	border-color: gray;
+    color: black;
+	padding-top: 1px;
+    padding-right: 40px;
+    padding-bottom: 10px;
+    padding-left: 1px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    //width: 70px;  
+	//height: 20px; 
+}
+
+[class^="only-one-radio"] {
+	height: 12px;
+	width: 12px;
+	font-size: 12px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: pink;
+}
+
+		/* base style for pages */
+		.page_container {
+			position: relative;
+			background: #ffffff;
+			float: left;
+			border: solid 0;
+			margin: 0;
+		}
+
+		/* div containing form input elements */
+		.input_elements {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* base styling for input wrapper divs */
+		.gen-widget {
+			display: inline-block;
+			text-align: left;
+			vertical-align: top;
+			background: transparent;
+			border: 0;
+		}
+
+		/* style wrapped input elements */
+		.gen-widget input, textarea {
+			position: absolute;
+			display: inline-block;
+			text-align: left;
+			font-weight: normal;
+
+			font-size: 12px;
+			font-family: 'Helvetica', 'Arial', sans-serif;
+			background: transparent;
+			color: #000000;
+			border: 1px solid #d2d2d2;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+			margin: 0;
+		}
+
+		/* remove firefox webkit so that checkboxes are resizable */
+		.gen-widget input[type=checkbox] {
+			-moz-appearance: none;
+		}
+
+		/* define xbox styling */
+		.gen-xBox input {
+			background: aquamarine;
+			text-align: center;
+			font-weight: bold;
+			font-size: 16px;
+			border: 1px solid black;
+			cursor: pointer;
+		}
+
+		.gen-xBox input:focus {
+			outline: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+		}
+		.only-one-radio input {
+			background: pink;
+			text-align: center;
+			font-weight: bold;
+			font-size: 16px;
+			border: 1px solid black;
+			cursor: pointer;
+/*Rounds- delete comment if preferred */
+                       /*-webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 10px;*/
+
+		}
+             
+		.only-one-radio input:focus {
+			outline: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+		}
+
+		/* define other */
+		.noborder {
+			border-color: transparent !important;
+		}
+
+		/* print only styling */
+		@media print {
+			.DoNotPrint {
+				display: none;
+			}
+
+			.noborderPrint {
+				border-color: transparent !important;
+			}
+
+			.page_container {
+				page-break-after: always;
+			}
+		}
+
+		/* define label styling (only used by generated labels) */
+		.label-style_1 {
+			color: #000000;
+			font-size: 12px;
+			font-weight: normal;
+			font-family: Verdana, Arial, sans-serif;
+		}
+		
+<!--Float Box -->	
+body {
+	font-family: "Lato", sans-serif;
+}
+.sidenav {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	background-color: #9ef3fa;
+	overflow-x: hidden;
+	transition: 0.5s;
+	padding-top: 60px;
+}
+.sidenav a {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 18px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+}
+.sidenav a:hover {
+	color: #011; //;
+	#f1f1f1;
+}
+.sidenav .closebtn {
+	position: absolute;
+	top: 0;
+	right: 25px;
+	font-size: 36px;
+	margin-left: 50px;
+}
+@media screen and (max-height: 450px) {
+.sidenav {
+	padding-top: 15px;
+}
+.sidenav a {
+	font-size: 18px;
+}
+<!--END Float Box -->
+</style>
+<script>
+	    	
+	
+		var needToConfirm = false;
+		/** call this to prevent closing the window without a confirmation */
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+		/** call this to prevent the exit confirmation popup when closing the window */
+		function releaseDirtyFlag() {
+			needToConfirm = false;
+		}
+		/** call this function on page load to prevent the window from closing
+		 * without confirmation when unsaved changes have been made */
+		function initConfirmClose() {
+			window.addEventListener("beforeunload", function (event) {
+				if (needToConfirm) {
+					var confirmationMessage = "You have attempted to leave this page. " +
+						"If you have made any changes to the fields without clicking the Submit button, " +
+						"your changes will be lost. Are you sure you want to exit this page?";
+					event.returnValue = confirmationMessage;
+					return confirmationMessage;
+				}
+			});
+			$("input").change(function (event) {
+				setDirtyFlag();
+			});
+		}
+		/** this function fixes images paths in the eform to allow image use outside of oscar.
+		 *  This is useful when developing the eform, but can be removed for final versions */
+		function replaceOscarImagePathsWhenLocal($selector) {
+			var strLoc = window.location.href.toLowerCase();
+			if (strLoc.indexOf("https") == -1) {
+				$selector.find("img").not(".signature_data").each(function () {
+					this.src = this.src.replace(/$\%7Boscar_image_path\%7D/, '');
+				});
+			}
+		}
+		/** initializes custom x-box input functionality.
+		 *  should be called once on eform load */
+		function initXBoxes($selector) {
+			$selector.find(".xBox").click(function () {
+				$(this).val($(this).val() === 'X' ? '' : 'X');
+			}).keypress(function (event) {
+				// any key press except tab will constitute a value change to the checkbox
+				if (event.which != 0) {
+					$(this).click();
+					return false;
+				}
+			});
+		}
+		/** pre-check checkboxes and xboxes based on patient gender */
+		function initPrecheckedCheckboxes($selector) {
+			var $patientGender = $("#PatientGender");
+			if ($patientGender) {
+				var filter = ".gender_precheck_" + $patientGender.val();
+				$selector.find("input[type=checkbox]").filter(filter).prop('checked', true);
+				$selector.find(".xBox").filter(filter).val('X');
+			}
+		}
+		/** This function is called when the eform has been loaded */
+		function onEformLoad() {
+			var $input_elements = $(".input_elements");
+			replaceOscarImagePathsWhenLocal($("#eform_container"));
+			initXBoxes($input_elements);
+			initPrecheckedCheckboxes($input_elements);
+			initConfirmClose();
+		}
+		/** This function is called when the print button is clicked */
+		function onEformPrint() {
+			window.print();
+		}
+		/** This function is called when the eform submit button is clicked */
+		function onEformSubmit() {
+			releaseDirtyFlag();
+			document.forms[0].submit();
+		}
+		/** This function is called when the eform print & submit button is clicked */
+		function onEformPrintSubmit() {
+			onEformPrint();
+			releaseDirtyFlag();
+			setTimeout('document.forms[0].submit()', 2000);
+		}
+
+				
+function allno(){ //this checks All No on click
+var x = document.getElementsByClassName("all-no");
+for (var i = 0; i < x.length; i++) {
+x[i].value="X"
+//x[i].style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box****************************
+}
+var x = document.getElementsByClassName("clear-yes");
+for (var i = 0; i < x.length; i++) {
+x[i].value=""
+x[i].style.boxShadow = "inset 0 0 0 1000px white"  
+}
+}
+
+
+function myinit(){ //this blacks out boxes that are checked on load and clicks hidden fields
+$('input[type=hidden]').click();
+var y = document.getElementsByClassName("cradio");
+for (var i = 0; i < y.length; i++) {
+/*
+y[i].addEventListener("click", function(){
+    myupdate(this)
+});
+*/
+if (y[i].value=="X"){
+//y[i].style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*******************************
+}
+}
+var z = document.getElementsByClassName("all-no-button2");
+//alert(z.length)
+for (var i = 0; i < z.length; i++) {
+z[i].addEventListener("click", function(){
+    allno()
+});
+}
+//update all dateclasses
+var x = document.getElementsByClassName('mydateclass');  //2019-Feb-13
+//alert(x.length)
+for(i=0;i<x.length;i++){
+x[i].focus()
+}
+}
+
+
+
+function myupdate(vid){ //only one box in the radio group will be checked
+var x = document.getElementsByClassName(vid.getAttribute("class"));
+var mygroup = $(x).attr("class").split(" ");
+for(i=0;i<mygroup.length;i++){
+if(mygroup[i].indexOf("only-one-radio")>-1){
+var getmyclass = mygroup[i]
+}
+}
+//alert(getmyclass)
+var x = document.getElementsByClassName(getmyclass);
+//alert(x.length)
+if (x.length==1 && x[0].value=="X"){ //if there is only one member of the radiogroup, then this will act as checkbox rather than radiobox
+x[0].style.boxShadow = "inset 0 0 0 1000px white"
+x[0].value=""
+//return
+}
+else
+{
+for (var i = 0; i < x.length; i++) {
+    x[i].style.boxShadow = "inset 0 0 0 1000px white"
+    x[i].value = "";
+    vid.value = "X"
+    //vid.style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*************************************
+}
+}
+}
+
+
+function SELECT_FUNCTION(){} //Start function list here and below
+
+function mydatepicker(myelement) {
+$( "#"+myelement.id).datepicker({ 
+dateFormat: 'yy-mm-dd (DD)',
+changeMonth: true,
+changeYear: true,
+showButtonPanel: true,
+closeText: 'Clear'
+ });
+};
+
+$.datepicker.setDefaults({
+//for documentation link to http://api.jqueryui.com/datepicker/		
+//showOn: "both",
+//buttonImageOnly: true,
+//buttonImage: "calendar.gif"
+//buttonText: "Calendar"
+});
+
+function myerror(myelement) {  
+//function to load image as standalone
+var newsrc = myelement.src.split('%7D')[1]
+myelement.src = newsrc 
+}
+
+function makehyperlink(myelement) {
+var str = myelement.value
+document.getElementById(myelement.id).readOnly = true; 
+document.getElementById(myelement.id).style.color = "blue";
+// var result = str.link(str);
+window.open(str)
+}
+
+function removeLineFeeds(myelement) {
+  var str = myelement.value.replace(/(\r\n\t|\n|\r\t)/gm, '; ');
+  document.getElementById(myelement.id).value = str;
+  document.getElementById(myelement.id).style.fontSize = '12px';
+  $(document).click(function (e) {
+    if (e.shiftKey) {
+      document.getElementById(myelement.id).style.fontSize = '14px';
+    }
+  });
+}
+
+function dateReformat(mydate){
+//Today's date
+ var month = new Array(11);
+ month[0]=  "Jan";
+ month[1]=  "Feb";
+ month[2]=  "Mar";
+ month[3]=  "Apr";
+ month[4]=  "May";
+ month[5]=  "Jun";
+ month[6]=  "Jul";
+ month[7]=  "Aug";
+ month[8]=  "Sep";
+ month[9]=  "Oct";
+ month[10]=  "Nov";
+ month[11]=  "Dec";
+
+var today = new Date(mydate.value);
+//alert(today)
+today.setTime(today.getTime()+(today.getTimezoneOffset()*60*1000))
+//alert(today)
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var mmm = month[today.getMonth()]
+    var yy = today.getFullYear().toString().substr(-2);
+    var yyyy = today.getFullYear();
+
+    if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    } 
+    var today = yyyy+'-'+mmm+'-'+dd;	//change this manually
+//alert(today)
+return mydate.value = today
+}
+
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("gen_backgroundImage1").src;
+		document.getElementById("gen_backgroundImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+
+//---Start Float Box
+function openNav() {
+window.resizeTo(1100,900)
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById('mySidenav').style.width = '0';
+}
+
+function updateReq(myelement,mytype) {
+  //alert(myelement)
+    if (myelement == 'Clear All') {
+    for (i = 48; i < 51; i++) {
+      g = '#gen_inputId' + i 
+	  //alert(g)
+	  $(g).val('')
+    }
+  }
+  
+  for (i = 48; i < 51; i++) {
+    g = '#gen_inputId' + i
+     t = '#gen_inputId'+mytype
+      //alert(t)
+    if ($(g).val() == '' && myelement != 'Clear All') {
+      $(g).val(myelement)
+      $(t).click()
+      return
+    }
+  }
+}
+//---END Float Box
+
+</script>
+</head>
+<body onload='onEformLoad(); myinit();'>
+<div id='eform_container'style='max-width: 800px'>
+<form id="inputForm" action="">
+<div id="page_1" class="page_container ui-droppable" style="width: 800px; height: 1000px;">
+<img id="gen_backgroundImage1" class="gen-layer1" src="${oscar_image_path}CAREGIVER_CHECKLIST.png" onerror="myerror(this)" style="width: auto; height: 100%; z-index: 0;">
+<div class="input_elements">
+<div id="gen_widgetId1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 287px; height: 16px; position: absolute; z-index: 9; top: 54.8167px; left: 48.5333px;">
+<input type="text" class="gen_input noborderPrint" oscardb="patient_name" title="patient_name" id="gen_inputId1" name="gen_inputId1">
+</div>
+<div id="gen_widgetId2" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 11; top: 57.8167px; left: 536.533px;">
+<input type="text" class="gen_input noborderPrint" oscardb="today" title="today" id="gen_inputId2" name="gen_inputId2">
+</div>
+<div id="gen_widgetId3" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 13; top: 274.867px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId3" name="gen_inputId3">
+</div>
+<div id="gen_widgetId4" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 14; top: 293px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId4" name="gen_inputId4">
+</div>
+<div id="gen_widgetId5" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 15; top: 311px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId5" name="gen_inputId5">
+</div>
+<div id="gen_widgetId6" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 16; top: 329px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId6" name="gen_inputId6">
+</div>
+<div id="gen_widgetId7" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 17; top: 389px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId7" name="gen_inputId7">
+</div>
+<div id="gen_widgetId8" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 18; top: 407px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId8" name="gen_inputId8">
+</div>
+<div id="gen_widgetId9" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 19; top: 423px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId9" name="gen_inputId9">
+</div>
+<div id="gen_widgetId10" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 20; top: 441px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId10" name="gen_inputId10">
+</div>
+<div id="gen_widgetId11" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 21; top: 499px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId11" name="gen_inputId11">
+</div>
+<div id="gen_widgetId12" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 22; top: 516px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId12" name="gen_inputId12">
+</div>
+<div id="gen_widgetId13" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 23; top: 533px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId13" name="gen_inputId13">
+</div>
+<div id="gen_widgetId14" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 24; top: 551px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId14" name="gen_inputId14">
+</div>
+<div id="gen_widgetId15" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 26; top: 568px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId15" name="gen_inputId15">
+</div>
+<div id="gen_widgetId16" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 25; top: 586px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId16" name="gen_inputId16">
+</div>
+<div id="gen_widgetId17" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 27; top: 644px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId17" name="gen_inputId17">
+</div>
+<div id="gen_widgetId18" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 28; top: 660px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId18" name="gen_inputId18">
+</div>
+<div id="gen_widgetId19" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 29; top: 678px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId19" name="gen_inputId19">
+</div>
+<div id="gen_widgetId20" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 30; top: 696px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId20" name="gen_inputId20">
+</div>
+<div id="gen_widgetId21" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 31; top: 713px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId21" name="gen_inputId21">
+</div>
+<div id="gen_widgetId22" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 32; top: 731px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId22" name="gen_inputId22">
+</div>
+<div id="gen_widgetId23" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 33; top: 751px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId23" name="gen_inputId23">
+</div>
+<div id="gen_widgetId24" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 34; top: 768px; left: 113px;">
+<input type="text" class="gen_input xBox" autocomplete="off" id="gen_inputId24" name="gen_inputId24">
+</div>
+<div id="gen_widgetId25" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 611px; height: 153px; position: absolute; z-index: 37; top: 824.367px; left: 113px;">
+<textarea style="resize: none;" class="gen_input noborderPrint" oscardb="today" title="today" id="gen_inputId25" name="gen_inputId25">
+</textarea>
+</div>
+</div>
+</div>
+<div class="DoNotPrint" id="BottomButtons">
+<!-- Form Control Buttons -->
+<label for="subject">Subject:</label>
+<input name="subject" id="subject" size="40" type="text">
+<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="onEformSubmit();">
+<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="onEformPrint();">
+<input value="Print &amp; Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="onEformPrintSubmit();">
+<div id="faxControl">
+</div>
+</div>
+</form>
+<!---Float bar>
+<!-- Caution --- changes to this code will not be saved if the eform is re-processed with the generator. Save code changes to a separate>
+<file and manually update before and after re-processing>
+<To activate sidebar code, place openNav() in the body onload line or create a click button that calls openNav()-->
+<div id="mySidenav" class="sidenav DoNotPrint">
+<a class="closebtn" href="javascript:void(0)" onclick="closeNav()">×</a>
+<a class="closebtn" href="javascript:void(0)" onclick="closeNav()">×</a>
+<a href="#" onclick="updateReq('Link1','1')">Link1</a>
+<a href="#" onclick="updateReq('Link2','1')">Link2</a>
+<a href="#" onclick="updateReq('Link3','3')">Link3</a>
+<a href="#" onclick="updateReq('Link4','3')">Link4</a>
+<a href="#" onclick="updateReq('Clear All')" style="color: red;">Clear All</a>
+<input id="checkbox100" name="checkbox100" onclick="updateReq(this,'Link1')" type="checkbox">
+<label for="checkbox100">Link1</label>
+<br>
+<br>
+<input id="checkbox101" name="checkbox101" onclick="updateReq(this,'Link2')" type="checkbox">
+<label for="checkbox101">Link2</label>
+<br>
+<br>
+<input id="checkbox102" name="checkbox102" onclick="updateReq(this,'Link3')" type="checkbox">
+<label for="checkbox102">Link3</label>
+<br>
+<br>
+<input id="checkbox103" name="checkbox103" onclick="updateReq(this,'Link3')" type="checkbox">
+<label for="checkbox103">Link4</label>
+<br>
+<br>
+</div>
+<!---End Float bar---->
+</div>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<html>
+<head>
+
+<!-- created Mar2020 by Khai Phan with eForm Generator 6, thanks Peter Hutten Czapski & Shelter Lee! -->
+<!-- V3.1 01 May 2020, 2nd confirmation box at bottom which was overlooked in V3 added -->
+<!-- V3 29 Apr 2020, background changed and link for COVID testing added; K Phan -->
+<!-- V2_Apr3_2020, presbyopia tweaks, reformatting to enhance readability; John Yap -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR.-->
+ 
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>BDFP-COVID-Primary-Care-Site</title>
+
+<style type="text/css" media="screen" >
+ .input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {display: none;}
+ .noborder {
+	border: 0px;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width:14px;
+	height:14px;
+	font-size: 14px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: lavender;
+}
+.box2 {
+	position: absolute;
+	width:18px;
+	height:18px;
+	font-size: 18px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: lavender;
+}
+.FontSizeChange {
+	position:absolute;
+	width:16px;
+	height:15px;
+	font-size:13px;
+	cursor:pointer;
+	background:yellow;
+	text-align:center;
+	border: 1px solid #000000;
+}
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+});
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	}
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	setDocumentTitle('BDFP_COVID_Primary_Care_Site',document.getElementById('PatientNameL').value);
+	setDefaults();
+	loadFontSize();
+
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		var src2 = document.getElementById("BGImage2").src;
+		document.getElementById("BGImage2").src = src2.replace("$%7Boscar_image_path%7D","");
+		var src3 = document.getElementById("BGImage3").src;
+		document.getElementById("BGImage3").src = src3.replace("$%7Boscar_image_path%7D","");
+	}
+}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {  
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				document.getElementById("Confirm").value = 'X';
+
+				 parseName('ptname');
+				 parseName('refMD');
+			}
+		}
+
+		/****************************
+			Create name in proper order 
+		****************************/
+		function parseName(id) {
+			// Get the name
+		
+			var fullName = document.getElementById(id).value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.getElementById(id).value = First_Last_Name;
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+			// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+			script to Increase or Decrease the Font Size
+			name = input name/id, delta = increase (+) or decrease (-) increment #
+			Requires loadFontSize(); in startUp, or in onload line
+		****************************/
+		function changeFontSize(name, delta) {
+			var element = $("#" + name)
+			var oldSize = parseInt(element.css("font-size"));
+			var newSize = oldSize + delta;
+	
+			// Save new font size into "value" field of hidden element
+			$("#" + name + "_fontsize").attr('value', newSize);
+	
+			// Set font size
+			element.css({'font-size': newSize + 'px'});
+		}
+
+		// Retains altered font size when eForm is reopened; 
+		// Requires hidden inputs with format for each field using this feature: 
+		// <input type="hidden" name="Input_fontsize" id="Input_fontsize" value="">
+		function loadFontSize() {
+			$.each($("input[name*='_fontsize'"), function(index, element) {
+				var fontSize = element.value;
+	
+				if (!!fontSize) {
+					var name = element.name.split('_')[0];
+					$("#" + name).css({'font-size': fontSize + 'px'});
+				}
+			});
+		}
+</script>
+
+<script>
+		/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox 
+		is passed as x and is named in the convention name_X where X 
+		appears in the string defined in scales
+		****************************/
+		function Radio_Box1(x) {
+			var scales = ["1", "2", "3", "4", "5"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+</script>
+</head>
+
+<body onload="reImg();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="page-break-after:always;position:relative;">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for font size changer inputs-->
+<input type="hidden" name="Reasonforvisit_fontsize" id="Reasonforvisit_fontsize" value="">
+<input type="hidden" name="currmeds_fontsize" id="currmeds_fontsize" value="">
+<input type="hidden" name="PMHx_fontsize" id="PMHx_fontsize" value="">
+<input type="hidden" name="comments_fontsize" id="comments_fontsize" value="">
+
+<img id="BGImage1" src="${oscar_image_path}20200409-UPCC-Central-Park-Testing-Site-Refe.png" style="position:relative; left:0px; top:0px; width:750px;">
+
+<div class="DoNotPrint" style="position:absolute; left:41px; top:85px; width:660px; height:50px; border:2px solid #FF0000;"></div>
+
+<a href="https://ca.surveygizmo.com/s3/50073316/"style="position:absolute; left:45px; top:112px; font-family:Arial; font-weight:bold; font-size:13px;" target="_blank">Link for COVID-19 Testing</a>
+
+<input name="Confirm" id="Confirm" type="text" class="Xbox box2" style="left:41px; top:245px;" value="">
+
+<!-- Priority -->
+<input name="level1" id="level_1" type="text" class="Xbox box1" style="left:386px; top:292px;" onclick="Radio_Box1(this.id);">
+<input name="level2" id="level_2" type="text" class="Xbox box1" style="left:386px; top:312px;" onclick="Radio_Box1(this.id);">
+<input name="level3" id="level_3" type="text" class="Xbox box1" style="left:386px; top:332px;" onclick="Radio_Box1(this.id);">
+
+<textarea name="Reasonforvisit" id="Reasonforvisit" type="text" class="noborder" style="position:absolute; left:52px; top:302px; width:320px; height:58px; resize:none; font-family:sans-serif; font-size:14px; background:lavender;"></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:34px; top:331px;" onclick="changeFontSize('Reasonforvisit', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:34px; top:347px;" onclick="changeFontSize('Reasonforvisit', -1);">&#9660;</span>
+
+<!-- Referring Details -->
+<input name="RefDate" id="RefDate" type="text" class="noborder" style="position:absolute; left:134px; top:412px; width:135px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=today>
+
+<input name="refMD" id="refMD" type="text" class="noborder" style="position:absolute; left:480px; top:412px; width:215px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=current_user>
+
+<input name="clinicph" id="clinicph" type="text" class="noborder" style="position:absolute; left:185px; top:430px; width:190px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_phone>
+
+<input name="clinicfax" id="clinicfax" type="text" class="noborder" style="position:absolute; left:499px; top:430px; width:205px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_fax>
+
+<input name="clinicname" id="clinicname" type="text" class="noborder" style="position:absolute; left:127px; top:449px; width:240px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=clinic_name>
+
+<textarea name="clinic_addressLineFull" id="clinic_addressLineFull" type="text" class="noborder" style="position:absolute; left:475px; top:449px; width:225px; height:36px; resize:none; font-family:sans-serif; font-size:13px; background:white;" oscarDB=clinic_addressLineFull></textarea>
+
+<!-- Patient Details -->
+<input name="ptname" id="ptname" type="text" class="noborder" style="position:absolute; left:137px; top:499px; width:216px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=patient_name>
+
+<input name="DOB" id="DOB" type="text" class="noborder" style="position:absolute; left:100px; top:530px; width:110px; height:17px; font-family:sans-serif; font-size:14px; background:white;" oscarDB=dobc>
+
+<input name="PHN" id="PHN" type="text" class="noborder" style="position:absolute; left:270px; top:530px; width:95px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=hinc>
+
+<textarea name="EMContact" id="EMContact" type="text" class="noborder" style="position:absolute; left:210px; top:560px; width:160px; height:52px; resize:none; font-family:sans-serif; font-size:14px; background:lavender;"></textarea>
+
+<textarea name="ptaddress" id="ptaddress" type="text" class="noborder" style="position:absolute; left:435px; top:481px; width:245px; height:34px; resize:none; font-family:sans-serif; font-size:13px; background:white;" oscarDB=addressline></textarea>
+
+<input name="sex" id="sex" type="text" class="noborder" style="position:absolute; left:580px; top:530px; width:57px; font-family:sans-serif; font-size:16px; text-align:center; background:white;" oscarDB=sex>
+
+<span style="position:absolute; left:380px; top:560px; width:70px; font-family:Arial; font-size:12px; font-weight:bold; background:white;">Cell Ph: </span>
+<span style="position:absolute; left:380px; top:575px; width:70px; font-family:Arial; font-size:12px; font-weight:bold; background:white;">Work Ph: </span>
+<span style="position:absolute; left:380px; top:590px; width:70px; font-family:Arial; font-size:12px; font-weight:bold; background:white;">Home Ph: </span>
+
+<input name="cellph" id="cellph" type="text" class="noborder" style="position:absolute; left:440px; top:558px; width:250px; font-family:sans-serif; font-size:13px; background:white;" oscarDB=cell>
+
+<input name="workph" id="workph" type="text" class="noborder" style="position:absolute; left:440px; top:573px; width:250px; font-family:sans-serif; font-size:13px; background:white;" oscarDB=phone2>
+
+<input name="homeph" id="homeph" type="text" class="noborder" style="position:absolute; left:440px; top:588px; width:250px; font-family:sans-serif; font-size:13px; background:white;" oscarDB=phone>
+
+<textarea name="currmeds" id="currmeds" type="text" class="noborder" style="position:absolute; left:180px; top:610px; width:505px; height:34px; resize:none; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=druglist_line></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:705px; top:610px;" onclick="changeFontSize('currmeds', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:705px; top:625px;" onclick="changeFontSize('currmeds', -1);">&#9660;</span>
+
+<textarea name="PMHx" id="PMHx" type="text" class="noborder" style="position:absolute; left:52px; top:660px; width:650px; height:38px; resize:none; font-family:sans-serif; font-size:14px; background:lavender;" oscarDB=medical_history></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:705px; top:660px;" onclick="changeFontSize('PMHx', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:705px; top:675px;" onclick="changeFontSize('PMHx', -1);">&#9660;</span>
+
+<textarea name="comments" id="comments" type="text" class="noborder" style="position:absolute; left:52px; top:715px; width:650px; height:50px; resize:none; font-family:sans-serif; font-size:14px; background:lavender;"></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:705px; top:725px;" onclick="changeFontSize('comments', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:705px; top:740px;" onclick="changeFontSize('comments', -1);">&#9660;</span>
+
+<input name="Confirm2" id="Confirm2" type="text" class="Xbox box2" style="left:53px; top:777px;" value="X">
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:40px; top:915px; width:650px;">
+	<table><tr><td style="background:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text"><br>
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);">
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();">
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="printSubmit();">
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> created Apr. 2020 by Dr. Khai Phan, </span>
+licensed under a 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. 
+<span style="color:forestgreen;">Please consider supporting </span> 
+<a href="https://oscar-emr.com/" target="_blank" >OSCAR EMR Canada</a> <span style="color:forestgreen;"> and/or  </span> 
+<a href="http://oscarbc.ca/" target="_blank" >OSCAR BC</a>
+<br><br>
+</div>
+
+</div>
+</form>
+</body></html>

@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="description" content="HIV Drug Treatment Program - Prescription Request eForm" />
+		<meta name="keywords" content="HIV, AIDS, BC, CDC, Prescription" />
+		<meta name="robots" content="nofollow" />
+		<meta http-equiv="author" content="John Yap" />
+
+		<!-- V1_May2024; HIV/AIDS Drug Request Prescription Form - Dr. John Yap; Oscar V12.1; X-boxes; background from BC Centre of Excellence, modified for Oscar -->
+		<!-- V2_Jun2014 with new background from BC Centre of Excellence in HIV/AIDS; Enrolment Link -->
+		<!-- V3_May29_2024 update new 2023 background; John Yap -->
+
+		<!-- Requires the following measurements:  HT (height in cm), WT (weight in kg), EDD (adjust to EDC if that is your measurement), CD4 (CD4 count), VLOA (viral load) - some of these may already be in your measurement. Ensure the CD4 and VLOA are properly mapped to your labs for autopopulation; also requires Drug Treatment Program Enrolment form with the exact name: HIV Enrolment Form-->
+
+		<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+		<script>
+			// For OSCAR to detect what files to include in the generated ZIP, the
+			// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+			// this serves as a workaround to force the files to be included for ZIP exports.
+			// Allows for appropriate import of all png files that are not referenced by BGImage tags
+			// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+			// "${oscar_image_path}HIV_Rx_request_form_v2023_09_19_Pg1.png"
+			// "${oscar_image_path}HIV_Rx_request_form_v2023_09_19_Pg2.png"
+			// "${oscar_image_path}CreativeCommonsIcon.png" // for Copy Left footer
+		</script>
+
+		<!-- jQuery for greater functionality -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+		<script>
+			window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>');
+		</script>
+		<script>
+			if (typeof jQuery === "undefined") {
+				document.write(unescape("%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E"));
+			}
+		</script>
+
+		<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors 
+		<script type="text/javascript" src="jSignature.min.js"></script>
+		End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors  -->
+
+		<!-- Freeform Signatures -->
+		<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+		<!-- main calendar program -->
+		<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+		<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+		<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+		<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+		<style type="text/css" media="screen">
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			input {
+				-moz-box-sizing: content-box;
+				-webkit-box-print-color-adjust: exact;
+				-webkit-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+
+			input#SubmitButton {
+				color: white;
+				text-shadow: 0px 1px 1px #ffffff;
+				border-bottom: 2px solid #b2b2b2;
+				background: #229ece;
+				background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+				background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+				background: -o-linear-gradient(top, #6bb5d2, #229ece);
+				background: -ms-linear-gradient(top, #6bb5d2, #229ece);
+			}
+
+			input#SubmitButton:hover {
+				color: #333333;
+				border: 1px solid #a4a4a4;
+				border-top: 2px solid #b2b2b2;
+				background-color: #a0dbc4;
+				background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#f2effb));
+				background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+				background: -o-linear-gradient(top, #229ece, #6bb5d2);
+				background: -ms-linear-gradient(top, #229ece, #6bb5d2);
+			}
+
+			.attn {
+				animation-name: lookHere;
+				animation-duration: 5s;
+				animation-timing-function: linear;
+				animation-iteration-count: 3;
+				animation-direction: alternate;
+			}
+
+			@keyframes lookHere {
+				0% {
+					border-color: #ced5e3;
+					box-shadow: 0 0 5px #ced5e3;
+				}
+				25% {
+					border-color: #364460;
+					box-shadow: 0 0 20px #364460;
+				}
+				50% {
+					border-color: #a21d22;
+					box-shadow: 0 0 5px #a21d22;
+				}
+				75% {
+					border-color: #f7977b;
+					box-shadow: 0 0 20px #f7977b;
+				}
+				100% {
+					border-color: #ced5e3;
+					box-shadow: 0 0 5px #ced5e3;
+				}
+			}
+
+			.sig {
+				border: 2px dotted blue;
+				background: transparent;
+			}
+
+			a {
+				text-decoration: none;
+			}
+			a:hover {
+				border: 1px solid #000000;
+				border-style: outset;
+				background: pink;
+				opacity: 0.6;
+			}
+			a:active {
+				border: 3px solid #000000;
+				border-style: inset;
+			}
+
+			::placeholder {
+				color: rebeccapurple;
+				font-style: italic;
+				opacity: 1;
+			}
+
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+
+			textarea {
+				resize: none;
+			}
+		</style>
+
+		<style type="text/css" media="print">
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			input {
+				-moz-box-sizing: content-box;
+				-webkit-box-print-color-adjust: exact;
+				-webkit-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+
+			.DoNotPrint {
+				display: none;
+			}
+			.noborder {
+				border: 0px;
+				background: transparent;
+				scrollbar-3dlight-color: transparent;
+				scrollbar-arrow-color: transparent;
+				scrollbar-base-color: transparent;
+				scrollbar-darkshadow-color: transparent;
+				scrollbar-face-color: transparent;
+				scrollbar-highlight-color: transparent;
+				scrollbar-shadow-color: transparent;
+				scrollbar-track-color: transparent;
+				overflow: hidden;
+			}
+			.sig {
+				background: transparent;
+			}
+
+			/* hide placehoders */
+			::placeholder {
+				color: transparent;
+			}
+		</style>
+
+		<!-- Xbox styling -->
+		<style type="text/css">
+			.box1 {
+				position: absolute;
+				width: 14px;
+				height: 16px;
+				font-size: 16px;
+				font-family: Arial;
+				border: 1px solid #000000;
+				cursor: pointer;
+				font-weight: bold;
+				text-align: center;
+				background: aquamarine;
+			}
+
+			.box2 {
+				position: absolute;
+				width: 11px;
+				height: 13px;
+				font-size: 13px;
+				font-family: Arial;
+				border: 1px solid #000000;
+				cursor: pointer;
+				font-weight: bold;
+				text-align: center;
+				background: aquamarine;
+			}
+
+			.FontSizeChange {
+				position: absolute;
+				width: 16px;
+				height: 15px;
+				font-size: 13px;
+				cursor: pointer;
+				background: yellow;
+				text-align: center;
+				border: 1px solid #000000;
+			}
+
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+
+			.BoldThis {
+				font-weight: bold;
+				font-size: 18px;
+				background: pink;
+			}
+			.UnBoldThis {
+				font-weight: normal;
+				font-size: 12px;
+				background: transparent;
+			}
+
+			.Show {
+				visibility: visible;
+				display: inline;
+			}
+			.Hide {
+				visibility: hidden;
+				display: none;
+			}
+		</style>
+
+		<script language="javascript" type="text/javascript">
+			/****************************
+			Startup functions
+			****************************/
+			function startUp() {
+				// new off-line architecture as per K Yap
+				setDocumentTitle("HIV_Drug_Treatment_Program_Rx", document.getElementById("PatientNameL").value);
+				changeImage("HIV_Rx_request_form_v2023_09_19_Pg1.png", "BGImage1");
+				changeImage("HIV_Rx_request_form_v2023_09_19_Pg2.png", "BGImage2");
+				changeImage("CreativeCommonsIcon.png", "CreativeCommons"); // for Copy Left footer
+				loadFontSize();
+				setDefaults();
+				//optimize window size/width
+				top.window.resizeTo(1095, screen.availHeight);
+			}
+
+			function resourceLink(resource, extension) {
+				// Takes two arguments -- the base filename and its extension -- and
+				// returns a string depending on whether the page has been opened
+				// locally or if it has been uploaded to OSCAR.
+				//
+				// Example usage: resourceLink('image1', 'png')
+				// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+				var prefix = window.location.href.toLowerCase().indexOf("http") != -1 ? "${oscar_image_path}" : "";
+				if (typeof extension === "undefined") {
+					var extension = "";
+				} else {
+					var extension = "." + extension;
+				}
+				return prefix + resource + extension;
+			}
+
+			function changeImage(img, imgId) {
+				// Changes the src value of an <img>.
+				document.getElementById(imgId).src = resourceLink(img);
+				document.getElementById(imgId).href = resourceLink(img);
+			}
+
+			function setDocumentTitle(Title, PatientNameL) {
+				// set document title
+				document.title = Title + "_" + PatientNameL;
+			}
+
+			function setDefaults() {
+				// check the newform flag to ensure this is the initial load of the form
+				if (document.getElementById("newForm").value == "True") {
+					parseName("current_user");
+					contactChoice("home_choice"); // default contact phone is home
+					document.getElementById("FU_Physician").value = "Same as above";
+					parseMeasurementDate("CD4_date");
+					parseMeasurementDate("VLOA_date");
+					document.getElementById("Stamp").click(); // stamp signature is default
+					parseDate("Confinement", 0, 1, 2, "-", "-");
+				} else {
+					// actions if eForm is reopened
+					loadSig();
+					reloadSignature(); // Determine submitted signature state on reload
+				}
+			}
+
+			/****************************
+			Create name in conventional order
+			****************************/
+			function parseName(id) {
+				// Get the name
+				var fullName = document.getElementById(id).value;
+				// Split the value
+				var splitName = fullName.split(",");
+				var firstName = "";
+				var lastName = "";
+				// Check for last name
+				if (splitName.length >= 1) {
+					lastName = splitName[0].trim();
+				}
+				if (splitName.length >= 2) {
+					firstName = splitName[1].trim();
+				}
+				var First_Last_Name = firstName + " " + lastName;
+				// Show the fields on the page
+				document.getElementById(id).value = First_Last_Name;
+			}
+
+			/****************************
+			Remove time stamp from measurement
+			Oscar default is yyyy-mm-dd hh:mm:ss
+			From database tag e.g. oscardb=m$PHQ9#dateObserved
+			****************************/
+			function parseMeasurementDate(id) {
+				// Change observed measurement date field to yyyy-mm-dd format, without time stamp
+				var FullMeasurementDate = document.getElementById(id).value;
+				var DateOnly = FullMeasurementDate.split(" ")[0];
+				// Show the parsed field
+				document.getElementById(id).value = DateOnly;
+			}
+
+			/****************************
+			Create Date in alternate format
+			****************************/
+			function parseDate(id, x, y, z, D, d) {
+				// Change date field to dd/mmm/yyyy format
+				//The element that you want to change is passed via the id; and x = year; y = mo; z = d
+				// If the initial order is YYYY  MM  DD then x should be 0 (first position), y should be 1, and z should be 2
+				// If the initial order is  DD  MM and YYYY then x should be 2, y should be 1, and z should be 0
+				// Delimiter (between the digits for day month and year) is passed as D - usually either a "-"  or a "/"
+				// Separater to display is d - usually either a "-"  or a "/"
+				// Get the date
+				var FullDate = document.getElementById(id).value;
+				if (FullDate) {
+					// Split the value
+					var Year = FullDate.split(D)[x];
+					var MonthNum = FullDate.split(D)[y];
+					MonthNumArray = MonthNum - 1; // Jan = 1 when split, and 0 in array
+					var Day = FullDate.split(D)[z];
+					var Month = "";
+					var Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+					// Convert Numeric Month to 3 letter month
+					Month = Months[MonthNumArray];
+					var MixedDate = Day + d + Month + d + Year;
+					var NumericDate = Day + d + MonthNum + d + Year;
+					var ISODate = Year + d + MonthNum + d + Day;
+					var TraditionalDate = Month + " " + Day + ", " + Year;
+					// Show the fields on the page
+					document.getElementById(id).value = NumericDate;
+				} else {
+					document.getElementById(id).value = "click for date";
+				}
+			}
+
+			/****************************a
+			Print and submit/save functions
+			****************************/
+			function printLetter() {
+				// prints back page
+				// Save reminder; allows for validity testing
+				document.getElementById("SubmitButton").classList.toggle("attn");
+				document.getElementById("ResetButton").style.color = "black";
+				document.getElementById("SubmitButton").style.border = "2px solid red";
+				//	alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+				window.print();
+			}
+
+			function submission() {
+				// requires type="submit" in submit button input to allow for validity testing
+				setFlag();
+				saveSig();
+				releaseDirtyFlag();
+			}
+
+			function setFlag() {
+				// indicate that the form has been submitted
+				if (document.getElementById("newForm").value == "True") document.getElementById("newForm").value = "False";
+			}
+
+			/****************************
+			Signature functions - 1 signature
+			****************************/
+			jQuery(document).ready(function () {
+				$("#CanvasSignature1").jSignature({ "decor-color": "rgba(255, 255, 255, 0.0)" });
+			});
+
+			function saveSig() {
+				var $sig = $("#CanvasSignature1");
+				var datapair = new Array();
+				datapair = $sig.jSignature("getData", "base30");
+				document.getElementById("StoreSignature1").value = datapair.join(",");
+				// signature checker
+				if ($("#CanvasSignature1").jSignature("getData", "base30")[1] == "") {
+					document.getElementById("StoreSignature1").value = "image/jsignature;base30,0_0";
+				}
+			}
+
+			function clearSig() {
+				$("#CanvasSignature1").jSignature("reset");
+			}
+
+			function loadSig() {
+				var $sig = $("#CanvasSignature1");
+				var data;
+				data = document.getElementById("StoreSignature1").value;
+				$sig.jSignature("setData", "data:" + data);
+			}
+
+			/****************************
+			Script to enable signature stamps. No Array needed.
+			Signature assigned to ProviderNumber in the format:
+			consult_sig_+ProviderNumber+.png
+			****************************/
+			function SignForm() {
+				var ProviderNumber = document.getElementById("current_user_id").value;
+				document.getElementById("StampSignature").src = "../eform/displayImage.do?imagefile=consult_sig_" + ProviderNumber + ".png";
+			}
+
+			/****************************
+			Script to add/remove Wet signature option
+			****************************/
+			function Add_Wet() {
+				document.getElementById("CanvasSignature1").className = "sig";
+				document.getElementById("Signature_Stamp").className = "Hide";
+				document.getElementById("Stamp").checked = false;
+				document.getElementById("SignatureChoice").value = "Wet";
+			}
+			function remove_Wet() {
+				document.getElementById("CanvasSignature1").className = "Hide";
+				document.getElementById("SignatureChoice").value = "None";
+			}
+
+			/****************************
+			Script to add/remove Stamp signature option
+			****************************/
+			function Add_Stamp() {
+				SignForm();
+				document.getElementById("Signature_Stamp").className = "Show";
+				document.getElementById("CanvasSignature1").className = "Hide";
+				document.getElementById("Wet").checked = false;
+				document.getElementById("SignatureChoice").value = "Stamp";
+			}
+			function remove_Stamp() {
+				document.getElementById("Signature_Stamp").className = "Hide";
+				document.getElementById("SignatureChoice").value = "None";
+			}
+
+			/****************************
+			Script to load None signature option
+			****************************/
+			function Add_None() {
+				document.getElementById("CanvasSignature1").className = "Hide";
+				document.getElementById("Signature_Stamp").className = "Hide";
+			}
+
+			/****************************
+			Script to reload signature option selected on submit
+			****************************/
+			function reloadSignature() {
+				// show chosen signature format on submit: e.g.  Wet, Stamp, None
+				var chosenSig = document.getElementById("SignatureChoice").value;
+				document.getElementById(chosenSig).checked = true;
+				if (chosenSig === "Stamp") {
+					Add_Stamp();
+				} else if (chosenSig === "Wet") {
+					Add_Wet();
+				} else if (chosenSig === "None") {
+					Add_None();
+				}
+			}
+
+			/****************************
+			Checkbox functions
+			****************************/
+			$(document).ready(function () {
+				$(".Xbox").click(function () {
+					var st = $(this).val();
+					if (st == "X") {
+						$(this).val("");
+					} else {
+						$(this).val("X");
+					}
+				});
+
+				$(".Xbox").keypress(function (event) {
+					// any key press except tab will constitute a value change to the checkbox
+					if (event.which != 0) {
+						$(this).click();
+						return false;
+					}
+				});
+			});
+
+			/****************************
+			Scripts to confirm closing of window if have not saved yet
+			****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup = setDirtyFlag;
+			function setDirtyFlag() {
+				needToConfirm = true;
+			}
+
+			function releaseDirtyFlag() {
+				needToConfirm = false; //Call this function if does not require an alert.
+				//this could be called when save button is clicked
+			}
+			window.onbeforeunload = confirmExit;
+
+			function confirmExit() {
+				if (needToConfirm) {
+					return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+				}
+			}
+
+			/****************************
+			Radio-Xbox functions
+			Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x
+			and is named in the convention name_X where X appears in the string defined in scales
+			Ensure that the list is sequential. Do no skip numbers. An input can be hidden if appropriate.
+			****************************/
+			function Radio_Box(x) {
+				var scales = ["1", "2", "3", "4", "5"];
+				var partA = x.substring(0, x.indexOf("_"));
+				var i = x.substring(x.indexOf("_"));
+				var j = i.substr(1);
+				for (var n in scales) {
+					if (j == scales[n]) {
+						for (var m in scales) {
+							if (m != n) {
+								document.getElementById(partA + "_" + scales[m]).value = "";
+							}
+						}
+					}
+				}
+				return false;
+			}
+
+			/****************************
+			Script to Increase or Decrease the Font Size
+			name = input name/id, delta = increase (+) or decrease (-) increment #
+			Requires loadFontSize(); in startUp, or in onload line
+			****************************/
+			function changeFontSize(name, delta) {
+				var element = $("#" + name);
+				var oldSize = parseInt(element.css("font-size"));
+				var newSize = oldSize + delta;
+
+				// Save new font size into "value" field of hidden element
+				$("#" + name + "_fontsize").attr("value", newSize);
+
+				// Set font size
+				element.css({ "font-size": newSize + "px" });
+			}
+
+			// Retains altered font size when eForm is reopened;
+			// Requires hidden inputs with format for each field using this feature:
+			// <input type="hidden" name="Input_fontsize" id="Input_fontsize">
+			function loadFontSize() {
+				$.each($("input[name*='_fontsize'"), function (index, element) {
+					var fontSize = element.value;
+
+					if (!!fontSize) {
+						var name = element.name.split("_")[0];
+						$("#" + name).css({ "font-size": fontSize + "px" });
+					}
+				});
+			}
+
+			/****************************
+			Script for contact phone number choice
+			****************************/
+			function contactChoice(i) {
+				var choice = i.substring(0, i.indexOf("_"));
+				document.FormName.phone.value = document.getElementById(choice).value + ", " + choice;
+			}
+
+			/****************************
+			Copy to Clipboard
+			****************************/
+			$(document).ready(function () {
+				var y = document.getElementsByClassName("copyable");
+				$(y).click(function () {
+					this.select();
+					document.execCommand("copy");
+					$(this).css("background-color", "pink").fadeIn("slow");
+				});
+			});
+
+			/****************************
+			Script to trigger required filed with name id_text
+			where id is the triggering X-box input field.
+			****************************/
+			function changeAndCheck(id) {
+				// Subsequent text field must be name of Xbox + _text so Other and Other_text
+				var id2 = id + "_text";
+				if (document.getElementById(id).value == "X") {
+					document.getElementById(id2).required = false;
+					document.getElementById(id2).value = "";
+				} else {
+					document.getElementById(id2).required = true;
+					document.getElementById(id2).reportValidity();
+				}
+			}
+
+			function checkGender() {
+				if (document.getElementById("PatientGender").value == "M") {
+					document.getElementById("Sex_1").click();
+				} else if (document.getElementById("PatientGender").value == "F") {
+					document.getElementById("Sex_2").click();
+				} else if (document.getElementById("PatientGender").value != "F" && document.getElementById("PatientGender").value != "M") {
+					document.getElementById("Sex_3").click();
+				}
+			}
+		</script>
+
+		<body onload="startUp();" onbeforeprint="document.forms['FormName'].reportValidity();">
+			<form method="post" action="" name="FormName" id="FormName" autocomplete="off">
+				<div id="page1" style="position: relative; left: 0px; top: 0px; width: 850px; page-break-after: always">
+					<img id="BGImage1" src="" />
+
+					<!-- Hidden input for eForm title -->
+					<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB="patient_nameL" />
+
+					<!-- Hidden input for storing Signature data -->
+					<input type="hidden" name="StoreSignature1" id="StoreSignature1" />
+
+					<!-- Hidden Inputs for signature stamps -->
+					<input type="hidden" name="SignatureChoice" id="SignatureChoice" />
+					<input type="hidden" name="current_user_id" id="current_user_id" oscarDB="current_user_id" />
+
+					<!-- Hidden Inputs for contact phone -->
+					<input type="hidden" name="home" id="home" oscarDB="phone" />
+					<input type="hidden" name="cell" id="cell" oscarDB="cell" />
+					<input type="hidden" name="work" id="work" oscarDB="phone2" />
+
+					<!-- Hidden Input for checkGender() -->
+					<input name="PatientGender" id="PatientGender" type="hidden" oscarDB="sex" />
+
+					<!-- Hidden Input for confinement -->
+					<input type="hidden" name="EDD" id="EDD" oscarDB="m$EDD#value" />
+					<input type="hidden" name="EDC" id="EDC" oscarDB="m$EDC#value" />
+
+					<a id="BGImage2" class="DoNotPrint" style="position: absolute; left: 237px; top: 70px; font-size: 14px; color: green" href="" target="_blank">instructions on reverse:</a>
+					<input name="HIV_Enrolment_Link" type="button" class="DoNotPrint" title="eForm" style="position: absolute; left: 550px; top: 107px; color: green" value="Enrolment Form" oscarOPEN="HIV Enrolment Form" />
+
+					<!-- All textfields/checkboxes/textareas go here... -->
+					<!-- Patient Info -->
+					<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position: absolute; left: 15px; top: 175px; width: 290px; font-size: 16px; background: transparent" oscarDB="patient_nameF" />
+
+					<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position: absolute; left: 320px; top: 175px; width: 280px; font-size: 16px; background: transparent" oscarDB="patient_nameL" />
+
+					<span class="DoNotPrint" style="position: absolute; left: 605px; top: 160px; font-size: 40px; color: green">&#42;</span>
+					<input name="phone" id="phone" type="text" class="noborder" style="position: absolute; left: 615px; top: 175px; width: 215px; font-size: 16px; background: transparent" />
+
+					<div id="Default_phone" class="DoNotPrint" style="position: absolute; left: 850px; top: 160px; width: 250px; font-size: 13px; color: green">
+						<span style="position: absolute; font-size: 40px">&#42; </span>
+						<span style="position: absolute; left: 15px">Default contact &#35; is home. Click to choose alternate contact phone &#35;</span><br /><br />
+						<select style="position: absolute; left: 15px; color: green; font-size: 12px">
+							<option>Default is home</option>
+							<option name="work_choice" id="work_choice" onclick="contactChoice(this.id);">Work</option>
+							<option name="cell_choice" id="cell_choice" onclick="contactChoice(this.id);">Cell</option>
+							<option name="home_choice" id="home_choice" onclick="contactChoice(this.id);">Home</option>
+						</select>
+					</div>
+
+					<input name="addressline" id="addressline" type="text" class="noborder" style="position: absolute; left: 15px; top: 218px; width: 530px; font-size: 16px; background: white" oscarDB="addressline" />
+					<input name="HINc" id="HINc" type="text" class="noborder" style="position: absolute; left: 565px; top: 218px; width: 265px; font-size: 16px; background: transparent" oscarDB="HINc" />
+
+					<input name="Sex_Male" id="Sex_1" type="text" class="Xbox box1" style="left: 15px; top: 264px" onclick="Radio_Box(this.id);" />
+					<input name="Sex_Female" id="Sex_2" type="text" class="Xbox box1" style="left: 75px; top: 264px" onclick="Radio_Box(this.id);" />
+					<input name="Sex_other" id="Sex_3" type="hidden" onclick="Radio_Box(this.id);" />
+
+					<input name="Gender_Male" id="Gender_1" type="text" class="Xbox box1" style="left: 161px; top: 264px" onclick="Radio_Box(this.id);" />
+					<input name="Gender_Female" id="Gender_2" type="text" class="Xbox box1" style="left: 218px; top: 264px" onclick="Radio_Box(this.id);" />
+					<input name="Gender_other" id="Gender_3" type="text" class="Xbox box1" style="left: 291px; top: 264px" onclick="Radio_Box(this.id);" />
+					<input name="Gender_3_text" id="Gender_3_text" type="text" class="noborder" style="position: absolute; left: 360px; top: 263px; width: 105px; font-size: 14px; background: transparent" placeholder="Details?" />
+
+					<input name="HT" id="m$HT#value" type="text" class="noborder" style="position: absolute; left: 530px; top: 245px; width: 50px; font-size: 16px; text-align: center; background: transparent" oscarDB="m$HT#value" />
+					<input name="WT" id="m$WT#value" type="text" class="noborder" style="position: absolute; left: 530px; top: 264px; width: 50px; font-size: 16px; text-align: center; background: transparent" oscarDB="m$WT#value" />
+
+					<input name="dob_day" id="dob_day" type="text" class="noborder" style="position: absolute; left: 645px; top: 265px; width: 20px; font-size: 16px; text-align: center; background: transparent" oscarDB="dob_day" />
+					<input name="dob_month" id="dob_month" type="text" class="noborder" style="position: absolute; left: 710px; top: 265px; width: 20px; font-size: 16px; text-align: center; background: transparent" oscarDB="dob_month" />
+					<input name="dob_year" id="dob_year" type="text" class="noborder" style="position: absolute; left: 780px; top: 265px; width: 50px; font-size: 16px; text-align: center; background: transparent" oscarDB="dob_year" />
+
+					<input name="SPH" id="Site_1" type="text" class="Xbox box1" style="left: 270px; top: 291px" onclick="document.getElementById('Site_2_text').value = '';  Radio_Box(this.id);" />
+					<input name="Other_Site" id="Site_2" type="text" class="Xbox box1" style="left: 423px; top: 291px" onclick="changeAndCheck(this.id); 					document.getElementById('Site_2_text').required = false; Radio_Box(this.id);" />
+					<input name="Site_2_text" id="Site_2_text" type="text" class="noborder" style="position: absolute; left: 585px; top: 292px; width: 245px; font-size: 16px; background: transparent" />
+
+					<!-- Physician Info -->
+					<input name="current_user" id="current_user" type="text" class="noborder" style="position: absolute; left: 60px; top: 329px; width: 475px; font-size: 16px; background: transparent" oscarDB="current_user" />
+					<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position: absolute; left: 650px; top: 329px; width: 180px; font-size: 16px; background: transparent" oscarDB="current_user_ohip_no" />
+
+					<textarea name="clinic_addressLineFull" class="noborder" style="position: absolute; left: 75px; top: 356px; width: 460px; height: 35px; font-size: 16px; background: transparent" oscarDB="clinic_addressLineFull"></textarea>
+					<input name="clinic_phone" id="clinic_phone" type="text" class="noborder" style="position: absolute; left: 630px; top: 356px; width: 200px; font-size: 16px; background: transparent" oscarDB="clinic_phone" />
+					<input name="clinic_fax" id="clinic_fax" type="text" class="noborder" style="position: absolute; left: 630px; top: 381px; width: 200px; font-size: 16px; background: transparent" oscarDB="clinic_fax" />
+
+					<input name="FU_Physician" id="FU_Physician" type="text" class="noborder" style="position: absolute; left: 63px; top: 422px; width: 225px; font-size: 14px; background: transparent" />
+					<input name="FU_PhysicianMSP" id="FU_PhysicianMSP" type="text" class="noborder" style="position: absolute; left: 342px; top: 422px; width: 55px; font-size: 14px; background: transparent" />
+					<input name="FU_PhysicianAddress" id="FU_PhysicianAddress" type="text" class="noborder" style="position: absolute; left: 465px; top: 422px; width: 215px; font-size: 14px; background: transparent" />
+					<input name="FU_PhysicianTel" id="FU_PhysicianTel" type="text" class="noborder" style="position: absolute; left: 715px; top: 422px; width: 115px; font-size: 14px; background: transparent" />
+
+					<!-- Other Medical Info -->
+					<input name="HCV_Y" id="HCV_1" type="text" class="Xbox box2" style="left: 201px; top: 470px" onclick="Radio_Box(this.id);" />
+					<input name="HCV_N" id="HCV_2" type="text" class="Xbox box2" style="left: 250px; top: 470px" onclick="Radio_Box(this.id);" />
+					<input name="HCV_U" id="HCV_3" type="text" class="Xbox box2" style="left: 294px; top: 470px" onclick="Radio_Box(this.id);" />
+
+					<input name="HBV_Y" id="HBV_1" type="text" class="Xbox box2" style="left: 201px; top: 493px" onclick="Radio_Box(this.id);" />
+					<input name="HBV_N" id="HBV_2" type="text" class="Xbox box2" style="left: 250px; top: 493px" onclick="Radio_Box(this.id);" />
+					<input name="HBV_U" id="HBV_3" type="text" class="Xbox box2" style="left: 294px; top: 493px" onclick="Radio_Box(this.id);" />
+
+					<input name="IDU_Y" id="HCV_1" type="text" class="Xbox box2" style="left: 201px; top: 516px" onclick="Radio_Box(this.id);" />
+					<input name="IDU_N" id="HCV_2" type="text" class="Xbox box2" style="left: 250px; top: 516px" onclick="Radio_Box(this.id);" />
+					<input name="IDU_U" id="IDU_3" type="text" class="Xbox box2" style="left: 294px; top: 516px" onclick="Radio_Box(this.id);" />
+
+					<!-- Lab Data -->
+					<input name="CD4" id="CD4" type="text" class="noborder" style="position: absolute; left: 526px; top: 491px; width: 70px; font-size: 16px; text-align: center; background: transparent" oscarDB="m$CD4#value" />
+					<span name="whiteout_dates" style="position: absolute; left: 605px; top: 491px; width: 235px; height: 46px; background: white"></span>
+
+					<input name="CD4_date" id="CD4_date" type="text" class="noborder" style="position: absolute; left: 605px; padding-left: 5px; top: 491px; width: 220px; font-size: 16px; background: white" oscarDB="m$CD4#dateObserved" />
+
+					<input name="VLOA" id="VLOA" type="text" class="noborder" style="position: absolute; left: 526px; top: 514px; width: 70px; font-size: 16px; text-align: center; background: transparent" oscarDB="m$VLOA#value" />
+					<input name="VLOA_date" id="VLOA_date" type="text" class="noborder" style="position: absolute; left: 605px; padding-left: 5px; top: 514px; width: 220px; font-size: 16px; background: white" oscarDB="m$VLOA#dateObserved" />
+
+					<!-- Medical History -->
+					<textarea name="MedicalHx" id="MedicalHx" class="noborder" style="position: absolute; left: 12px; top: 554px; width: 395px; height: 30px; font-size: 14px; border: 0px; background: transparent" placeholder="Add details"></textarea>
+					<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left: 410px; top: 553px" onclick="changeFontSize('MedicalHx', 1);">&#9650;</span>
+					<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left: 410px; top: 568px" onclick="changeFontSize('MedicalHx', -1);">&#9660;</span>
+
+					<input name="Pregnant" id="Pregnant" type="text" class="Xbox box2" style="left: 503px; top: 547px" onclick="Radio_Box(this.id);" />
+
+					<input name="Confinement" id="Confinement" type="text" class="noborder" style="position: absolute; left: 605px; top: 545px; width: 120px; font-size: 16px; background: white" oscarDB="m$EDC#value" />
+					<span style="position: absolute; left: 730px; padding-left: 4px; top: 545px; width: 105px; height: 20px; font-size: 16px; background: white">dd-mm-yyyy</span>
+
+					<input name="Allergy" id="Allergy" type="text" class="noborder" style="position: absolute; left: 550px; top: 568px; width: 280px; font-size: 14px; background: transparent" oscarDB="allergies_des_no_archived" />
+
+					<!-- Medication Regimen -->
+					<input name="Med1" type="text" class="noborder" style="position: absolute; left: 35px; top: 639px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med2" type="text" class="noborder" style="position: absolute; left: 35px; top: 668px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med3" type="text" class="noborder" style="position: absolute; left: 35px; top: 699px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med4" type="text" class="noborder" style="position: absolute; left: 35px; top: 730px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med5" type="text" class="noborder" style="position: absolute; left: 35px; top: 761px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med6" type="text" class="noborder" style="position: absolute; left: 35px; top: 792px; width: 280px; font-size: 16px; background: transparent" />
+
+					<input name="Med1_stop" type="text" class="noborder" style="position: absolute; left: 35px; top: 856px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med2_stop" type="text" class="noborder" style="position: absolute; left: 35px; top: 886px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med3_stop" type="text" class="noborder" style="position: absolute; left: 35px; top: 916px; width: 280px; font-size: 16px; background: transparent" />
+					<input name="Med4_stop" type="text" class="noborder" style="position: absolute; left: 35px; top: 947px; width: 280px; font-size: 16px; background: transparent" />
+
+					<input name="Cont_Meds_Outside_BC" id="Cont_Meds_Outside_BC" type="text" class="Xbox box2" style="left: 361px; top: 616px" />
+					<input name="Restart_Med" id="Restart_Med" type="text" class="Xbox box2" style="left: 361px; top: 636px" />
+
+					<input name="Rx_Failure" id="Rx_Failure" type="text" class="Xbox box2" style="left: 361px; top: 680px" />
+					<input name="Rx_Resistance" id="Rx_Resistance" type="text" class="Xbox box2" style="left: 361px; top: 700px" />
+					<input name="Rx_Simplify" id="Rx_Simplify" type="text" class="Xbox box2" style="left: 361px; top: 720px" />
+					<input name="Rx_Interaction" id="Rx_Interaction" type="text" class="Xbox box2" style="left: 361px; top: 740px" onclick="changeAndCheck(this.id);" />
+					<input name="Rx_Interaction_text" id="Rx_Interaction_text" type="text" class="noborder" style="position: absolute; left: 540px; top: 736px; width: 290px; font-size: 16px; background: white; text-decoration: underline" placeholder="Add details" />
+
+					<input name="Rx_AE" id="Rx_AE" type="text" class="Xbox box2" style="left: 361px; top: 773px" onclick="changeAndCheck(this.id);" />
+					<input name="Rx_AE_text" id="Rx_AE_text" type="text" class="noborder" style="position: absolute; left: 505px; top: 769px; width: 240px; font-size: 16px; background: transparent" />
+
+					<input name="AE_D" id="AE_D" type="text" class="noborder" style="position: absolute; left: 535px; top: 808px; width: 20px; font-size: 16px; text-align: center; background: transparent" />
+					<input name="AE_M" iM="AE_M" type="text" class="noborder" style="position: absolute; left: 597px; top: 808px; width: 20px; font-size: 16px; text-align: center; background: transparent" />
+					<input name="AE_Y" iY="AE_Y" type="text" class="noborder" style="position: absolute; left: 660px; top: 808px; width: 40px; font-size: 16px; text-align: center; background: transparent" />
+
+					<textarea name="Rxn_Onset_text" id="Rxn_Onset_text" class="noborder" style="position: absolute; left: 370px; padding-left: 5px; top: 827px; width: 455px; height: 45px; font-size: 14px; background: white" placeholder="Add details"></textarea>
+
+					<!-- Reaction Severity -->
+					<input name="mild" id="Severity_1" type="text" class="Xbox box2" style="left: 411px; top: 884px" onclick="Radio_Box(this.id);" />
+					<input name="moderate" id="Severity_2" type="text" class="Xbox box2" style="left: 469px; top: 884px" onclick="Radio_Box(this.id);" />
+					<input name="severe" id="Severity_3" type="text" class="Xbox box2" style="left: 565px; top: 884px" onclick="Radio_Box(this.id);" />
+					<input name="life_threatening" id="Severity_4" type="text" class="Xbox box2" style="left: 647px; top: 884px" onclick="Radio_Box(this.id);" />
+
+					<input name="Hospitalize_Y" id="Hospitalize_1" type="text" class="Xbox box2" style="left: 542px; top: 906px" onclick="Radio_Box(this.id);" />
+					<input name="Hospitalize_N" id="Hospitalize_2" type="text" class="Xbox box2" style="left: 599px; top: 906px" onclick="Radio_Box(this.id);" />
+
+					<textarea name="Other_Rxn_cause" id="Other_Rxn_cause" type="text" class="noborder" style="position: absolute; left: 595px; padding-left: 3px; top: 923px; width: 232px; height: 30px; font-size: 14px; background: white" placeholder="Add details"></textarea>
+
+					<input name="Other_Reason_Chg" id="Other_Reason_Chg" type="text" class="Xbox box2" style="left: 358px; top: 965px" onclick="changeAndCheck(this.id);" />
+					<input name="Other_Reason_Chg_text" id="Other_Reason_Chg_text" type="text" class="noborder" style="position: absolute; left: 585px; padding-left: 5px; top: 962px; width: 240px; font-size: 14px; background: transparent" />
+
+					<!-- Sign Off -->
+					<!-- Wet Script -->
+					<div id="CanvasSignature1" class="sig" style="position: absolute; left: 170px; top: 990px; width: 200px; height: 40px"></div>
+					<!-- Signature Stamp -->
+					<div id="Signature_Stamp" class="Hide" style="position: absolute; left: 170px; top: 997px; background: white">
+						<img id="StampSignature" src="" style="width: 150px; height: 36px" />
+					</div>
+
+					<!-- Signature Control -->
+					<div id="signatureControl" class="DoNotPrint" style="position: absolute; left: 780px; top: 1005px">
+						<input name="Stamp" id="Stamp" type="checkbox" class="DoNotPrint" style="position: absolute; left: 0px; top: 0px; color: green" onclick="document.getElementById('Wet').checked = false; if (this.checked == true) {Add_Stamp();} else {remove_Stamp();}" />
+						<span class="DoNotPrint" style="position: absolute; left: 25px; top: 5px; width: 80px; font-size: 12px; color: green">Stamp</span>
+
+						<input name="Wet" id="Wet" type="checkbox" class="DoNotPrint" style="position: absolute; left: 0px; top: 15px; color: green" onclick="document.getElementById('Stamp').checked = false; if (this.checked == true) {Add_Wet();} else {remove_Wet();}" />
+						<span class="DoNotPrint" style="position: absolute; left: 25px; top: 20px; width: 150px; font-size: 12px; color: green">Wet</span>
+						<input name="ClearButton" id="ClearButton" type="button" class="DoNotPrint" style="position: absolute; left: 55px; top: 18px; font-size: 10px; color: red" onclick="clearSig();" value="Clear Sig" />
+					</div>
+
+					<input name="current_user_ohip_no2" id="current_user_ohip_no2" type="text" class="noborder" style="position: absolute; left: 430px; top: 1013px; width: 75px; font-size: 16px; text-align: center; background: transparent" oscarDB="current_user_ohip_no" />
+					<input name="today" id="today" type="text" class="noborder" style="position: absolute; left: 555px; padding-left: 10px; top: 1012px; width: 210px; height: 20px; font-size: 16px; background: white; text-decoration: underline" oscarDB="today" />
+				</div>
+				<!-- END OF PAGE 1 -->
+
+				<!-- The submit/print/reset buttons -->
+				<div class="DoNotPrint" id="BottomButtons" style="position: absolute; left: 20px; top: 1110px; width: 780px; font-size: 13px">
+					<table>
+						<tr>
+							<td style="background: #e5f2ff">
+								<input type="hidden" id="newForm" name="newForm" value="True" />
+								Subject: <input name="subject" id="subject" size="40" type="text" />
+								<input value="Reset" name="ResetButton" id="ResetButton" type="reset" style="color: red" onclick="history.go(0);" />
+								<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color: green" onclick="printLetter();" />
+								<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();" />
+							</td>
+						</tr>
+					</table>
+
+					<!-- Copy Left -->
+					<a rel="licence" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" id="CreativeCommons" style="border: 0px" src="" /></a>
+					<span> HIV Drug Treatment Program eFORM, V3_May29_2024, by Dr. John Yap, is licensed under a </span>
+					<a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br />
+					<span style="color: forestgreen">Please consider supporting </span><a href="https://oscarbc.ca/" target="_blank">oscarbc.ca.</a> | <a id="emailLnk1" style="cursor: pointer" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> | <a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | <a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | <a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> | <br /><br />
+				</div>
+
+				<!-- Calendar Setup for each field -->
+				<script type="text/javascript">
+					Calendar.setup({ inputField: "today", ifFormat: "%d-%m-%Y", showsTime: false, button: "today", singleClick: true, step: 1 });
+				</script>
+			</form>
+		</body>
+	</head>
+</html>

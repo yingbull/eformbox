@@ -1,0 +1,1237 @@
+<html ng-app="opiodComponent">
+<head>
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-resource.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+<!-- script src="../web/common/providerServices.js"></script -->
+
+
+<script>
+function updateVals() {
+                        	document.getElementById('lastConsultInputs').value = document.getElementById('lastConsultInputs').value.replace(/"/g,"'")
+                        	document.getElementById('firstConsultInputs').value = document.getElementById('firstConsultInputs').value.replace(/"/g,"'")
+}
+</script>
+</head>
+<body ng-controller="opiodComponent" onload="">
+<div class="container-fluid">
+   <div class="page-header">
+      <h4>Opioid Use Form
+
+      </h4>
+
+   </div>
+
+
+
+<div class="row">
+<!--  ng-if="isOatMed(med)" -->
+	<div class="col-xs-3 col-md-3" ng-repeat="med in currentMedList.slice().reverse()" style="padding-left:3px; padding-right:3px;"  ng-show="showMed($index)">
+		<div class="thumbnail" >
+      		<div class="caption" style="padding:0px;">
+        			<p><small>Start:</small> {{med.rxDate}}<br> <small>End:</small> {{med.endDate}} &nbsp;&nbsp;&nbsp;Duration: {{med.duration}}</p>
+        			<pre>{{med.instructions}}</pre>
+        			<button type="button" class="btn btn-default btn-xs btn-block" ng-click="reRx(med)">re-Rx</button>
+      		</div>
+    		</div>
+  	</div>
+<a class="pull-right" style="margin-right:30px;" ng-click="flipLimit()" ng-show="currentMedList.length > 4">More/Less</a>
+</div>
+
+
+<form class="form-horizontal">
+<div class="row">
+
+ <div class="col-xs-6">
+
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Visit Checklist</div>
+    <div class="panel-body">
+
+
+  <input type="hidden" id="lastConsultInputs" name="lastConsultInputs" oscarDB="e$last#*"/>
+  <input type="hidden" id="firstConsultInputs" name="firstConsultInputs" oscarDB="e$first#*"/>
+  <input type="hidden" id="patientRx" name="patientRx" oscarDB="recent_rx"/>
+  <input type="hidden" id="patient_id" name="patient_id" oscarDB="patient_id"/>
+  <input type="hidden" id="current_user_id" name="current_user_id" oscarDB="current_user_id"/>
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-6 control-label">Pharmanet Reviewed</label>
+    <div class="col-sm-6">
+       <div class="checkbox"   >
+         <label>
+            <input type="checkbox"   name="pharmanetReviewed" id="pharmanetReviewed">
+         </label>
+       </div>
+
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Any ORT missed doses in last 7 days </label>
+    <div class="col-sm-6">
+        <label class="radio-inline">
+          <input type="radio" name="anyORTMissed" id="anyORTMissedYes" value="yes"> Yes
+       </label>
+       <label class="radio-inline">
+          <input type="radio" name="anyORTMissed" id="anyORTMissedNo" value="no"> No
+       </label>
+    </div>
+  </div>
+  <!--
+
+Last reviewed dates.
+The logic for last reviewed dates is:
+When checkbox is checked update page.lastSubstanceUseReviewed angular model variable, this will get submitted as lastSubstanceUseReviewed html form variable
+When the form is loaded it should take this variable from the e$last# and populate the model
+   -->
+<div class="form-group">
+    <div class="col-sm-12">
+      <input type="text" class="form-control" id="descMissed" placeholder="If yes, describe" name="descMissed" >
+    </div>
+  </div>
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Current substance use reviewed </label>
+    <div class="col-sm-6">
+      <div class="checkbox">
+         <label>
+            <input type="checkbox" name="currSubReviewed" ng-model="page.currSubReviewed" />
+            <input type="hidden" name="lastSubstanceUseReviewed" ng-model="page.lastSubstanceUseReviewed" id="lastSubstanceUseReviewed" />
+         </label>
+       </div>
+      Last Checked: {{page.lastSubstanceUseReviewed | date:'yyyy-MM-dd'}}
+    </div>
+  </div>
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label"># ODs in the last 30 Days</label>
+    <div class="col-sm-3">
+       <input type="text" class="form-control" id="numODSin30" placeholder="Number" name="numODSin30">
+    </div>
+    <div class="col-sm-3">
+       <p class="form-control-static">Last Value:  {{lastODSin30}}</p>
+    </div>
+  </div>
+
+<div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Linkage to social work/counselling discussed</label>
+    <div class="col-sm-6">
+      <div class="checkbox">
+         <label>
+            <input type="checkbox"  name="linkToSocialWork" ng-model="linkToSocialWork">
+            <input type="hidden" name="lastLinkToSocialWork" ng-model="lastLinkToSocialWork" id="lastLinkToSocialWork" />
+         </label>
+       </div>
+      Last Checked: {{lastLinkToSocialWork | date:'yyyy-MM-dd'}}
+    </div>
+  </div>
+
+<!-- form -->
+<table class="table">
+   <tr>
+         <td>&nbsp;</td>
+          <th>Last Date Verified</th>
+          <th>Verified Today</th>
+   </tr>
+<tr>
+         <th>Has THN kit</th>
+          <td>{{lastHasTHNKit | date:'yyyy-MM-dd'}}</td>
+          <td>
+                  <input type="checkbox"  name="hasTHNKit" ng-model="hasTHNKit">
+                  <input type="hidden" name="lastHasTHNKit" ng-model="lastHasTHNKit" id="lastHasTHNKit" />
+          </td>
+   </tr>
+<tr>
+         <th>Has THN training</th>
+          <td>{{lastHasTHNTraining | date:'yyyy-MM-dd'}}</td>
+          <td>
+                  <input type="checkbox"  name="hasTHNTraining" ng-model="hasTHNTraining">
+                  <input type="hidden" name="lastHasTHNTraining" ng-model="lastHasTHNTraining" id="lastHasTHNTraining" />
+          </td>
+   </tr>
+<tr>
+         <th>Has access to harm reduction supplies</th>
+          <td>{{lasthasHarmReductSup | date:'yyyy-MM-dd'}}</td>
+          <th>
+               <input type="checkbox"  name="hasHarmReductSup" ng-model="hasHarmReductSup">
+                  <input type="hidden" name="lasthasHarmReductSup" ng-model="lasthasHarmReductSup" id="lasthasHarmReductSup" />
+           </th>
+   </tr>
+<tr>
+         <th>Aware of supervised consumption sites</th>
+          <td>{{lastawareSupConsump | date:'yyyy-MM-dd'}}</td>
+          <td>
+                <input type="checkbox"  name="awareSupConsump"   ng-model="awareSupConsump">
+                  <input type="hidden" name="lastawareSupConsump" ng-model="lastawareSupConsump" id="lastawareSupConsump" />
+
+          </td>
+   </tr>
+<tr>
+         <th>&nbsp;</th>
+          <td>Last Score</td>
+          <td>
+                {{lastScore}}
+                 <input type="hidden" name="lastScore" ng-model="lastScore" id="lastScore" />
+          </td>
+   </tr>
+<tr>
+         <th>&nbsp;</th>
+          <td>First Score</td>
+          <td>
+               {{firstScore}}
+               <input type="hidden" name="firstScore" ng-model="firstScore" id="firstScore" />
+          </td>
+   </tr>
+</table>
+
+    </div>
+  </div>
+
+</div>
+<div class="col-xs-6">
+  <div class="panel panel-default">
+    <div class="panel-heading">Rx Writer</div>
+    <div class="panel-body">
+
+     <div class="form-group">
+    <label for="inputEmail3" class="col-sm-6 control-label">OAT Med</label>
+    <div class="col-sm-6">
+       <select class="form-control"  name="oatMed" ng-model="oatMed" ng-change="medSelectedCheck()">
+          <option>Kadian</option>
+          <option>Methadone</option>
+          <option>Suboxone</option>
+          <option>Hydromorphone</option>
+<option>Fentanyl</option>
+<option>Oxycodone IR</option>
+<option>m-eslon</option>
+<option>Hydromorphone 50mgmL</option>
+<option>Percocet</option>
+<option>Hydromorph contin</option>
+       </select>
+    </div>
+  </div>
+
+  <div class="form-group" ng-hide="oatMed!=='Hydromorphone'">
+    <label for="inputPassword3" class="col-sm-6 control-label">Tablet strength (mg)</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="inputPassword3" placeholder="" name="tabStrength" ng-model="tabStrength">
+    </div>
+  </div>
+  <div class="form-group" ng-hide="oatMed!=='Hydromorphone'">
+    <label for="inputPassword3" class="col-sm-6 control-label">Tablets per day</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="inputPassword3" placeholder="" name="dailyTabs" ng-model="dailyTabs">
+    </div>
+  </div>
+  <div class="form-group" ng-hide="oatMed==='Hydromorphone'">
+    <label for="inputPassword3" class="col-sm-6 control-label">Daily dose (mg)</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="inputPassword3" placeholder="" name="dailyDose" ng-model="dailyDose">
+    </div>
+  </div>
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Start Day</label>
+    <div class="col-sm-6">
+         <div class="input-group">
+	   <input type="text" class="form-control" uib-datepicker-popup ng-model="startDay" is-open="popup5.opened" close-text="Close" placeholder="YYYY-MM-DD" name="startDay"/>
+              <span class="input-group-btn">
+		<button type="button" class="btn btn-default" ng-click="open5()"><i class="glyphicon glyphicon-calendar"></i></button>
+	     </span>
+          </div>
+    </div>
+  </div>
+
+<!---
+<input type="text" class="form-control" id="inputPassword3" placeholder="YYYY-MM-DD" name="firstOATDate" ng-model="startDay">
+
+-->
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Last Day</label>
+    <div class="col-sm-6">
+         <div class="input-group">
+	   <input type="text" class="form-control" uib-datepicker-popup ng-model="lastDay" is-open="popup6.opened" close-text="Close"  placeholder="YYYY-MM-DD" name="lastDay"/>
+              <span class="input-group-btn">
+		<button type="button" class="btn btn-default" ng-click="open6()"><i class="glyphicon glyphicon-calendar"></i></button>
+	     </span>
+          </div>
+    </div>
+  </div>
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Rx Duration (days)</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="inputPassword3" placeholder="days" name="rxDaysDuration" ng-model="rxDaysDuration">
+    </div>
+  </div>
+
+
+ <div class="form-group" ng-hide="oatMed==='Hydromorphone'">
+    <label for="inputPassword3" class="col-sm-6 control-label">Carry Directions</label>
+    <div class="col-sm-6">
+        <label class="radio-inline">
+          <input type="radio" name="carryDirections" ng-model="carryDirections" id="inlineRadio1" value="DWI" ng-change="carryDirectionsCheck()"> DWI
+       </label>
+       <label class="radio-inline">
+          <input type="radio" name="carryDirections" ng-model="carryDirections" id="inlineRadio2" value="Carries" ng-change="carryDirectionsCheck()"> Carries
+       </label>
+    </div>
+  </div>
+
+<div class="form-group" ng-hide="oatMed==='Hydromorphone'">
+    <label for="inputPassword3" class="col-sm-6 control-label">Days witnessed</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="inputPassword3" placeholder="days" name="daysWitnessed" ng-model="daysWitnessed">
+    </div>
+  </div>
+
+  <div class="form-group" ng-hide="oatMed!=='Kadian'">
+     <label for="inputPassword3" class="col-sm-6 control-label">Sprinkled</label>
+     <div class="col-sm-6">
+         <label class="radio-inline">
+           <input type="radio" name="sprinkled" ng-model="sprinkled" id="inlineRadio1" value="sprinkled"> Yes
+        </label>
+        <label class="radio-inline">
+           <input type="radio" name="sprinkled" ng-model="sprinkled" id="inlineRadio2" value="not sprinkled"> No
+        </label>
+     </div>
+   </div>
+
+   <div class="form-group">
+     <label for="inputPassword3" class="col-sm-6 control-label">Additional instructions</label>
+     <div class="col-sm-6">
+     <input type="text" class="form-control" id="inputPassword3" placeholder="" name="directionsForUse"  ng-model="directionsForUse">
+    </div>
+  </div>
+
+<button type="button" id="save" class="btn btn-default" ng-click="onPrescribe()">Prescribe</button>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Treatment Course</div>
+    <div class="panel-body">
+
+
+       <!-- form class="form-horizontal" -->
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-6 control-label">Treatment Stage</label>
+    <div class="col-sm-6">
+       <select class="form-control"  name="treatmentStage" ng-model="treatmentStage">
+          <option>stable dose</option>
+          <option>new start on OAT</option>
+          <option>restart on OAT</option>
+          <option>dose decrease for planned taper</option>
+          <option>dose decrease for missed dose</option>
+          <option>dose increase</option>
+          <option>bridging rx (has another OAT provider)</option>
+          <option>no prescription given)</option>
+       </select>
+
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">First ever OAT initiation date</label>
+    <div class="col-sm-6">
+    	  <div class="input-group">
+	   <input type="text" class="form-control" uib-datepicker-popup ng-model="firstOATDate" is-open="popup7.opened" close-text="Close" placeholder="YYYY-MM-DD" name="firstOATDate" ng-model-options="{timezone: 'utc'}" />
+       <span class="input-group-btn">
+		  <button type="button" class="btn btn-default" ng-click="open7()"><i class="glyphicon glyphicon-calendar"></i></button>
+	   </span>
+      </div>
+
+
+      <!--  input type="text" class="form-control" id="inputPassword3" placeholder="YYYY-MM-DD" name="firstOATDate" ng-model="firstOATDate"> -->
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Most recent OAT start date</label>
+    <div class="col-sm-6">
+    	  <div class="input-group">
+	   <input type="text" class="form-control" uib-datepicker-popup ng-model="mostRecentOatDate" is-open="popup8.opened" close-text="Close" placeholder="YYYY-MM-DD" name="mostRecentOatDate" ng-model-options="{timezone: 'utc'}" />
+       <span class="input-group-btn">
+		  <button type="button" class="btn btn-default" ng-click="open8()"><i class="glyphicon glyphicon-calendar"></i></button>
+	   </span>
+      </div>
+
+
+      <!--  input type="text" class="form-control" id="inputPassword3" placeholder="YYYY-MM-DD" name="mostRecentOatDate" ng-model="mostRecentOatDate" -->
+    </div>
+  </div>
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">Stable dose date</label>
+    <div class="col-sm-6">
+    	  <div class="input-group">
+	   <input type="text" class="form-control" uib-datepicker-popup ng-model="stableDoseDate" is-open="popup9.opened" close-text="Close" placeholder="YYYY-MM-DD" name="stableDoseDate" ng-model-options="{timezone: 'utc'}" />
+       <span class="input-group-btn">
+		  <button type="button" class="btn btn-default" ng-click="open9()"><i class="glyphicon glyphicon-calendar"></i></button>
+	   </span>
+      </div>
+      <!-- input type="text" class="form-control" id="inputPassword3" placeholder="YYYY-MM-DD" name="stableDoseDate" ng-model="stableDoseDate" -->
+    </div>
+  </div>
+   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-6 control-label">OAT Duration</label>
+    <div class="col-sm-6">
+       <p class="form-control-static">{{numDaysOAT}}</p>
+    </div>
+  </div>
+    </div>
+   </div>
+   </div>
+
+  </div>
+<button type="submit" id="save" class="btn btn-default"  ng-click="onSave()"onclick="updateVals();">Save</button>
+
+<!-- button type="button" id="save" class="btn btn-default" onclick"updateVals();" ng-click="onSave()">Test</button -->
+</form>
+ </div>
+</div>
+
+<small>
+       <form class="form-inline pull-right" method="post" action="https://jay.medinet.ca/cgi-bin/oscar.cgi" target="PharmanetLogin" id="pharmanetform" >
+		  <div class="form-group">
+		    <label for="pharmaUsername">Username</label>
+		    <input type="text" class="form-control" name="username" id="pharmaUsername" ng-model="pharmaUsername" placeholder="Pharmanet username">
+		    <input type="hidden" name="Phn" oscarDB="hinc"/>
+		  </div>
+		  <div class="form-group">
+		    <label for="pharmaPassword">Password</label>
+		    <input type="password" name="passwd" class="form-control" id="pharmaPassword"  ng-model="pharmaPassword" placeholder="Pharmanet password">
+		  </div>
+		  <button   class="btn btn-default" ng-click="launchPharmaNet()">Launch Pharmanet</button>
+		</form>
+        </small>
+<span oscarDB="_eform_values_last_all_json"></span>
+<script>
+
+var TEN = 10;
+var ONE_HUNDRED = 100;
+var ONE_THOUSAND = 1000;
+var ONE_MILLION = 1000000;
+var ONE_BILLION = 1000000000;           //         1.000.000.000 (9)
+var ONE_TRILLION = 1000000000000;       //     1.000.000.000.000 (12)
+var ONE_QUADRILLION = 1000000000000000; // 1.000.000.000.000.000 (15)
+var MAX = 9007199254740992;             // 9.007.199.254.740.992 (15)
+
+var LESS_THAN_TWENTY = [
+    'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+    'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'
+];
+
+var TENTHS_LESS_THAN_HUNDRED = [
+    'zero', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'
+];
+
+/**
+ * Converts an integer into words.
+ * If number is decimal, the decimals will be removed.
+ * @example toWords(12) => 'twelve'
+ * @param {number|string} number
+ * @param {boolean} [asOrdinal] - Deprecated, use toWordsOrdinal() instead!
+ * @returns {string}
+ */
+function toWords(number, asOrdinal) {
+    var words;
+    var num = parseInt(number, 10);
+    if (!isFinite(num)) throw new TypeError('Not a finite number: ' + number + ' (' + typeof number + ')');
+    words = generateWords(num);
+    return asOrdinal ? makeOrdinal(words) : words;
+}
+
+function generateWords(number) {
+    var remainder, word,
+        words = arguments[1];
+
+    // Were done
+    if (number === 0) {
+        return !words ? 'zero' : words.join(' ').replace(/,$/, '');
+    }
+    // First run
+    if (!words) {
+        words = [];
+    }
+    // If negative, prepend minus
+    if (number < 0) {
+        words.push('minus');
+        number = Math.abs(number);
+    }
+
+    if (number < 20) {
+        remainder = 0;
+        word = LESS_THAN_TWENTY[number];
+
+    } else if (number < ONE_HUNDRED) {
+        remainder = number % TEN;
+        word = TENTHS_LESS_THAN_HUNDRED[Math.floor(number / TEN)];
+        // In case of remainder, we need to handle it here to be able to add the -
+        if (remainder) {
+            word += '-' + LESS_THAN_TWENTY[remainder];
+            remainder = 0;
+        }
+
+    } else if (number < ONE_THOUSAND) {
+        remainder = number % ONE_HUNDRED;
+        word = generateWords(Math.floor(number / ONE_HUNDRED)) + ' hundred';
+
+    } else if (number < ONE_MILLION) {
+        remainder = number % ONE_THOUSAND;
+        word = generateWords(Math.floor(number / ONE_THOUSAND)) + ' thousand ';
+
+    } else if (number < ONE_BILLION) {
+        remainder = number % ONE_MILLION;
+        word = generateWords(Math.floor(number / ONE_MILLION)) + ' million ';
+
+    } else if (number < ONE_TRILLION) {
+        remainder = number % ONE_BILLION;
+        word = generateWords(Math.floor(number / ONE_BILLION)) + ' billion ';
+
+    } else if (number < ONE_QUADRILLION) {
+        remainder = number % ONE_TRILLION;
+        word = generateWords(Math.floor(number / ONE_TRILLION)) + ' trillion ';
+
+    } else if (number <= MAX) {
+        remainder = number % ONE_QUADRILLION;
+        word = generateWords(Math.floor(number / ONE_QUADRILLION)) +
+        ' quadrillion ';
+    }
+
+    words.push(word);
+    return generateWords(remainder, words);
+}
+
+
+
+
+
+	var app = angular.module("opiodComponent", ['ui.bootstrap','ngResource']);
+	//providerServices
+
+	app.controller("opiodComponent", function($scope,$http,$window,$sce){
+
+		var patient_id = document.getElementById("patient_id").value;
+        var doctor_provider_no = document.getElementById("current_user_id").value;
+        $scope.currentMedList = [];
+///////////////////////////////////////////////////////////////////
+
+        getMedications = function (demographicNo) {
+            console.log("Debug: calling getMedications, demo="+demographicNo);
+            //if (status !== "") {
+            //    queryPath = queryPath + '/' + status
+            //}
+            var queryPath = '../ws/rs/rx/drugs?demographicNo=' + demographicNo;
+            $http.get(queryPath).then(function (data) {
+            		opioidMeds = [];
+            		for(i=0; i < data.data.content.length; i++){
+            			med = data.data.content[i];
+            			if(med.atc === "N07BC51" || med.atc === "N02AA01" || med.atc === "N07BC02" || med.atc === "N02AA03" || med.atc === "ATC1234"){
+            				opioidMeds.push(med);
+            			}
+            		}
+
+                $scope.currentMedList = opioidMeds;//data.data.content;
+            },function () {
+                console.log("error fetching items");
+            });
+        }
+        getMedications(patient_id);
+///////////////////////////////////////////////////////////////////
+        $scope.isOatMed = function(med){
+			if(med.atc === "N07BC51" || med.atc === "N02AA01" || med.atc === "N07BC02" || med.atc === "N02AA03" || med.atc === "ATC1234"){
+				return true;
+			}
+			return false;
+		}
+
+		upperLimit = 3;
+		$scope.flipLimit = function(){
+			if(upperLimit == 3){
+				upperLimit = 1000;
+			}else{
+				upperLimit = 3;
+			}
+		}
+
+		$scope.showMed = function(idx){
+			console.log("showMEd",idx);
+			if(idx > upperLimit){
+				return false;
+			}
+			return true;
+		}
+
+		$scope.medSelectedCheck = function(){
+			if($scope.oatMed === "Kadian"){
+         $scope.directionsForUse = "For OAT"
+			}else if($scope.oatMed === "Methadone"){
+				 $scope.directionsForUse= "";
+				 $scope.daysWitnessed = "7";
+			}else if($scope.oatMed === "Suboxone"){
+				$scope.directionsForUse = "";
+			}
+		}
+
+  		$scope.reRx = function(med){
+			console.log("med",med);
+			/////////
+			if(med.atc === 'N02AA01'){
+				$scope.oatMed = "Kadian";
+			}else if(med.atc === 'N07BC02'){
+				$scope.oatMed = "Methadone";
+			}else if(med.atc === 'N07BC51'){
+				$scope.oatMed = "Suboxone";
+			}else if(med.atc === 'N02AA03'){
+				$scope.oatMed = "Hydromorphone";
+			}else if(med.atc === 'ATC1234'){
+				$scope.oatMed = "Fentanyl";
+			}else if(med.atc === 'ATC2234'){
+				$scope.oatMed = "Oxycodone IR";
+			}else if(med.atc === 'ATC3234'){
+				$scope.oatMed = "m-eslon";
+			}else if(med.atc === 'ATC4234'){
+				$scope.oatMed = "Hydromorphone 50mgmL";
+			}else if(med.atc === 'ATC5234'){
+				$scope.oatMed = "Percocet";
+			}else if(med.atc === 'ATC6234'){
+				$scope.oatMed = "Hydromorph contin";
+			}
+
+			$scope.dailyDose = med.strength;
+			$scope.rxDaysDuration = med.duration;
+
+			$scope.startDay = new Date();
+			$scope.lastDay = new Date();
+			$scope.lastDay.setDate($scope.lastDay.getDate() + ($scope.rxDaysDuration-1));
+
+
+			 $scope.medSelectedCheck();
+
+		       <!--  ng-model=""  ng-model="daysWitnessed"   ng-model="directionsForUse" -->
+
+			/////////
+		}
+
+		$scope.launchPharmaNet = function(){
+			window.open('', 'PharmanetLogin',"toolbar=no, menubar=no, location=no, directories=no, resizable=yes, titlebar=no, scrollbars=yes, status=yes");
+			document.getElementById('pharmanetform').action ="https://jay.medinet.ca/cgi-bin/oscar.cgi"
+			document.getElementById('pharmanetform').submit();
+		}
+
+
+        $scope.lastODSin30 = "--";
+        $scope.lastForm = {};
+
+        $scope.page = {};
+
+        $scope.popup5 = {
+    			opened: false
+ 		};
+
+        $scope.open5 = function() {
+    			$scope.popup5.opened = true;
+		};
+
+        $scope.popup6 = {
+    			opened: false
+		};
+
+        $scope.open6 = function() {
+    			$scope.popup6.opened = true;
+	    };
+
+
+	    $scope.popup7 = {
+    			opened: false
+		};
+
+        $scope.open7 = function() {
+    			$scope.popup7.opened = true;
+	    };
+
+	    $scope.popup8 = {
+    			opened: false
+		};
+
+        $scope.open8 = function() {
+    			$scope.popup8.opened = true;
+	    };
+
+	    $scope.popup9 = {
+    			opened: false
+		};
+
+        $scope.open9 = function() {
+    			$scope.popup9.opened = true;
+	    };
+
+
+        $scope.$watch('startDay', function (newValue, oldValue, scope) {
+			//console.log("scope",scope,newValue);
+            getDaysBetween();
+		});
+
+        $scope.$watch('lastDay', function (newValue, oldValue, scope) {
+        		//console.log("scope",scope,newValue);
+            getDaysBetween();
+		});
+
+        getDaysBetween = function(){
+           var one_day=1000*60*60*24;    // Convert both dates to milliseconds
+           var startDay = $scope.startDay.getTime();
+           var lastDay = $scope.lastDay.getTime();    // Calculate the difference in milliseconds
+           var difference = lastDay - startDay;        // Convert back to days and return
+           $scope.rxDaysDuration = Math.round(difference/one_day)+1;
+
+	if($scope.oatMed === "Hydromorphone"){
+           $scope.dailyDose = $scope.tabStrength * $scope.dailyTabs; //ONLY for hydromorphone -- calculates daily dose based on no. of tabs and tab strength
+        }
+           $scope.totalMg = $scope.rxDaysDuration * $scope.dailyDose;
+
+        }
+
+        createPoint   = function(X,Y,fontSize,text){
+                 point = {};
+                 point.fontSize = fontSize;
+                 point.x = X;
+                 point.y = Y;
+                 point.text = text;
+                 return point;
+        }
+
+        createBCControlledRxObject = function(rxDate,startDate,lastDate,totalmg,mgPerDay,drugName,line1forPrint,line2forPrint,line3forPrint,line4forPrint){
+	        	rxPrint = {};
+	        	rxPrint.demographic = patient_id;
+	        	rxPrint.drugId = 0;
+	        	rxPrint.printPoints = [];
+	        	rxPrint.width = 595;
+	        	rxPrint.height = 842;
+
+			//phn
+			rxPrint.printPoints.push(createPoint (170,759,10,'@@HIN'));
+
+			rxPrint.printPoints.push(createPoint (428,762,7,new Date().getFullYear()));
+			rxPrint.printPoints.push(createPoint (397,762,7,new Date().getMonth()+1));
+			rxPrint.printPoints.push(createPoint (369,762,7,new Date().getDate()));
+
+			rxPrint.printPoints.push(createPoint (198,735,10,'@@DEMO.FIRSTNAME'));
+			rxPrint.printPoints.push(createPoint (325,735,10,'@@DEMO.LASTNAME'));
+			//address.street //address.city  //address.prov
+			rxPrint.printPoints.push(createPoint (198,710,10,'@@ADDRESS.STREET'));
+			rxPrint.printPoints.push(createPoint (198,690,10,'@@ADDRESS.CITY'));
+			rxPrint.printPoints.push(createPoint (325,690,10,'@@ADDRESS.PROV'));
+
+			rxPrint.printPoints.push(createPoint (428,690,7,'@@DEMO.DOB.YEAR'));
+			rxPrint.printPoints.push(createPoint (397,690,7,'@@DEMO.DOB.MONTH'));
+			rxPrint.printPoints.push(createPoint (369,690,7,'@@DEMO.DOB.DAY'));
+
+			rxPrint.printPoints.push(createPoint (170,650,10,drugName +" "+mgPerDay+" MG"));
+
+			rxPrint.printPoints.push(createPoint (170,615,7,totalmg+" MG"));
+			//totalmgAlpha;
+			rxPrint.printPoints.push(createPoint (241,615,7,toWords(totalmg)+" MG"));
+
+			rxPrint.printPoints.push(createPoint (170,580,10,line1forPrint));
+			rxPrint.printPoints.push(createPoint (170,560,10,line2forPrint));
+			rxPrint.printPoints.push(createPoint (170,540,10,line3forPrint));
+			rxPrint.printPoints.push(createPoint (170,520,10,line4forPrint));
+
+			return rxPrint;
+
+        }
+
+
+        createMethadonePrintObject = function(rxDate,startDate,lastDate,totalmg,mgPerDay,numWitnessIngestion,specInstr,carryDirections){
+        	rxPrint = {};
+        	rxPrint.demographic = patient_id;
+        	rxPrint.drugId = 0;
+        	rxPrint.printPoints = [];
+        	rxPrint.width = 595;
+        	rxPrint.height = 842;
+
+
+		//phn
+		rxPrint.printPoints.push(createPoint (160,753,10,'@@HIN'));
+
+		rxPrint.printPoints.push(createPoint (428,757,7,startDate.getFullYear()));
+		rxPrint.printPoints.push(createPoint (400,757,7,startDate.getMonth()+1));
+		rxPrint.printPoints.push(createPoint (368,757,7,startDate.getDate()));
+
+		rxPrint.printPoints.push(createPoint (198,728,10,'@@DEMO.FIRSTNAME'));
+		rxPrint.printPoints.push(createPoint (315,728,10,'@@DEMO.LASTNAME'));
+		//address.street //address.city  //address.prov
+		rxPrint.printPoints.push(createPoint (198,710,10,'@@ADDRESS.STREET'));
+		rxPrint.printPoints.push(createPoint (198,680,10,'@@ADDRESS.CITY'));
+		rxPrint.printPoints.push(createPoint (315,680,10,'@@ADDRESS.PROV'));
+
+		rxPrint.printPoints.push(createPoint (428,680,7,'@@DEMO.DOB.YEAR'));
+		rxPrint.printPoints.push(createPoint (400,680,7,'@@DEMO.DOB.MONTH'));
+		rxPrint.printPoints.push(createPoint (368,680,7,'@@DEMO.DOB.DAY'));
+
+
+		//totalmg;
+		rxPrint.printPoints.push(createPoint (160,612,10,totalmg));
+		//totalmgAlpha;
+		rxPrint.printPoints.push(createPoint (230,612,10,toWords(totalmg)));
+
+		//start.day //start.month //start.year
+		rxPrint.printPoints.push(createPoint (267,593,7,startDate.getFullYear()));
+		rxPrint.printPoints.push(createPoint (241,593,7,startDate.getMonth()+1));
+		rxPrint.printPoints.push(createPoint (206,593,7,startDate.getDate()));
+		//last.day  //last.month  //last.year
+		rxPrint.printPoints.push(createPoint (409,593,7,lastDate.getFullYear()));
+		rxPrint.printPoints.push(createPoint (383,593,7,lastDate.getMonth()+1));
+		rxPrint.printPoints.push(createPoint (348,593,7,lastDate.getDate()));
+
+		//mgPerDay;
+		rxPrint.printPoints.push(createPoint (200,560,10,mgPerDay));
+		//dwi or carries
+
+		//numWitnessIngestion;
+		rxPrint.printPoints.push(createPoint (334,540,10,numWitnessIngestion));
+		//numWitnessIngestionAlpha;
+		rxPrint.printPoints.push(createPoint (370,540,10,toWords(numWitnessIngestion)));
+
+		//**specInstr;
+		rxPrint.printPoints.push(createPoint (160,510,10,specInstr));
+
+               //carryDirections;
+
+               if(carryDirections === "DWI"){
+			////////DWI BOX
+		rxPrint.xPolygonCoords = [272,302,302,272];
+		rxPrint.yPolygonCoords = [575,575,555,555];
+			////////DWI END BOX
+
+                }else if(carryDirections === "Carries"){
+			////////CARRIES BOX
+		rxPrint.xPolygonCoords = [262,312,312,262];
+		rxPrint.yPolygonCoords = [557,557,537,537];
+			////////CARRIES END BOX
+		}
+
+
+		return rxPrint;
+    }
+
+
+
+        //mm = pt*25.4 / 72
+
+        //175mm = pt * 25.4/72    pt = 175 / 25.4 /72
+        //0.352777777777778
+        //25mm = pt * 25.4/72
+        createMethadonePrintObject2 = function(rxDate,startDate,lastDate,totalmg,mgPerDay,numWitnessIngestion,specInstr){
+	        	rxPrint = {};
+	        	rxPrint.demographic = patient_id;
+	        	rxPrint.drugId = 0;
+	        	rxPrint.printPoints = [];
+	        	rxPrint.width = 312;
+	        	rxPrint.height = 496;
+
+			//phn
+			rxPrint.printPoints.push(createPoint (10,422,10,'@@HIN'));
+
+			//rxDate.day //rxDate.month //rxDate.year
+			rxPrint.printPoints.push(createPoint (250,426,10,new Date().getFullYear()));
+			rxPrint.printPoints.push(createPoint (275,426,10,new Date().getMonth()+1));
+			rxPrint.printPoints.push(createPoint (285,426,10,new Date.getDate()));
+
+
+			//patient.first //patient.last
+			rxPrint.printPoints.push(createPoint (10,405,10,'@@DEMO.FIRSTNAME'));
+			rxPrint.printPoints.push(createPoint (80,405,10,'@@DEMO.LASTNAME'));
+			//address.street //address.city  //address.prov
+			rxPrint.printPoints.push(createPoint (10,390,10,'@@ADDRESS.STREET'));
+			rxPrint.printPoints.push(createPoint (10,375,10,'@@ADDRESS.CITY'));
+			rxPrint.printPoints.push(createPoint (80,375,10,'@@ADDRESS.PROV'));
+			//dob.day //dob.month  //dob.year
+			rxPrint.printPoints.push(createPoint (250,375,7,'@@DEMO.DOB.YEAR'));
+			rxPrint.printPoints.push(createPoint (275,375,7,'@@DEMO.DOB.MONTH'));
+			rxPrint.printPoints.push(createPoint (285,375,7,'@@DEMO.DOB.DAY'));
+
+			//totalmg;
+			rxPrint.printPoints.push(createPoint (30,350,7,totalmg));
+			//totalmgAlpha;
+			rxPrint.printPoints.push(createPoint (100,350,7,toWords(totalmg)));
+
+			//start.day //start.month //start.year
+			rxPrint.printPoints.push(createPoint (100,330,7,startDate.getFullYear()));
+			rxPrint.printPoints.push(createPoint (120,330,7,startDate.getMonth()+1));
+			rxPrint.printPoints.push(createPoint (130,330,7,startDate.getDate()));
+			//last.day  //last.month  //last.year
+			rxPrint.printPoints.push(createPoint (270,330,7,lastDate.getFullYear()));
+			rxPrint.printPoints.push(createPoint (290,330,7,lastDate.getMonth()+1));
+			rxPrint.printPoints.push(createPoint (300,330,7,lastDate.getDate()));
+
+			//rxPrint.yPolygonCoords = [100,300,300,100];
+			//rxPrint.xPolygonCoords = [330,330,300,300];
+			rxPrint.xPolygonCoords = [20,20,60,60];
+		rxPrint.yPolygonCoords = [20,60,60,20];
+
+
+			//mgPerDay;
+			rxPrint.printPoints.push(createPoint (80,300,10,mgPerDay));
+			//dwi or carries
+
+			//numWitnessIngestion;
+			rxPrint.printPoints.push(createPoint (80,285,7,numWitnessIngestion));
+			//numWitnessIngestionAlpha;
+			rxPrint.printPoints.push(createPoint (110,285,7,toWords(numWitnessIngestion)));
+
+			//**specInstr;
+
+			return rxPrint;
+        }
+
+
+		$scope.onPrescribe = function(){
+
+			console.log("oatMed",$scope.oatMed);
+			getDaysBetween();
+
+            drug = {};
+            drug.drugId = 0;
+            drug.demographicNo = patient_id;
+            drug.providerNo = doctor_provider_no;
+            drug.takeMin = 1;
+            drug.takeMax = 1;
+            drug.rxDate = $scope.startDay;
+            drug.endDate = $scope.lastDay;
+            drug.duration =  $scope.rxDaysDuration;
+            drug.durationUnit = 'D';
+            drug.route = 'oral';
+            drug.prn =false;
+            drug.repeats =0;
+            drug.quantity = $scope.totalMg;
+            drug.archived = false;
+            drug.noSubstitutions = false;
+
+            if(angular.isUndefined($scope.directionsForUse)){
+            		$scope.directionsForUse = "";
+            }
+
+
+
+            rxPrint = {};
+            rxDate = new Date();
+
+			if("Kadian" === $scope.oatMed){
+				drug.brandName = 'KADIAN'; // 100MG
+				drug.genericName = 'MORPHINE SULFATE';
+				drug.atc = 'N02AA01';
+				drug.regionalIdentifier = '02184451'
+				drug.instructions = "KADIAN\n"+$scope.dailyDose+" MG PO daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG PO daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line3forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line4forPrint = $scope.directionsForUse+", "+$scope.sprinkled;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+				//drug.
+				//KADIAN 100MG
+				//200MG per day for 7 days
+				//Qty:1400 MG Repeats:0
+
+			}else if("Methadone" === $scope.oatMed){
+				drug.brandName = 'METHADONE HYDROCHLORIDE';//METHADOSE 10MG DYE FREE, SUGAR FREE, UNFLAVORED';
+				drug.genericName = 'METHADONE HYDROCHLORIDE';
+				drug.atc = 'N07BC02';
+				drug.regionalIdentifier = '02394618'
+        rxPrint = createMethadonePrintObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,$scope.daysWitnessed,$scope.directionsForUse,$scope.carryDirections);
+        drug.instructions = "METHADONE HYDROCHLORIDE\n"+$scope.dailyDose+" MG PO DWI for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+
+      }else if("Suboxone" === $scope.oatMed){
+				drug.brandName = 'SUBOXONE';// 8MG/2MG';
+				drug.genericName = 'BUPRENORPHINE (BUPRENORPHINE HYDROCHLORIDE) 8.0 MG NALOXONE (NALOXONE HYDROCHLORIDE DIHYDRATE) 2.0 MG';
+				drug.atc = 'N07BC51';
+				drug.regionalIdentifier = '02295709'
+				drug.instructions = "SUBOXONE\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+
+  		}else if("Hydromorphone" === $scope.oatMed){
+				drug.brandName = 'HYDROmorphone';// 8MG/2MG';
+				drug.genericName = 'HYDROmorphone';
+				drug.atc = 'N02AA03';
+				drug.regionalIdentifier = '02146126'
+				drug.instructions = "HYDROmorphone "+$scope.tabStrength+" MG\nTake 1-2 tabs PO q3h PRN for pain/withdrawal\nDaily dispense "+$scope.dailyTabs+" tablets for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = "Take 1-2 tabs PO q3h PRN for pain/withdrawal";
+				line2forPrint = "Daily dispense "+$scope.dailyTabs+" tablets for "+$scope.rxDaysDuration+" days";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.tabStrength,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint); //tabStrength instead of total
+			}else if("Fentanyl" === $scope.oatMed){
+				drug.brandName = 'Fentanyl';// 8MG/2MG';
+				drug.genericName = 'Fentanyl';
+				drug.atc = 'ATC1234';
+				drug.regionalIdentifier = '00000001';
+				drug.instructions = "Fentanyl\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+}else if("Oxycodone IR" === $scope.oatMed){
+				drug.brandName = 'Oxycodone IR';// 8MG/2MG';
+				drug.genericName = 'Oxycodone IR';
+				drug.atc = 'ATC2234';
+				drug.regionalIdentifier = '00000002';
+				drug.instructions = "Oxycodone IR\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+}else if("m-eslon" === $scope.oatMed){
+				drug.brandName = 'm-eslon';// 8MG/2MG';
+				drug.genericName = 'm-eslon';
+				drug.atc = 'ATC3234';
+				drug.regionalIdentifier = '00000003';
+				drug.instructions = "m-eslon\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+}else if("Hydromorphone 50mgmL" === $scope.oatMed){
+				drug.brandName = 'hydromorphone 50mgmL';// 8MG/2MG';
+				drug.genericName = 'hydromorphone 50mgmL';
+				drug.atc = 'ATC4234';
+				drug.regionalIdentifier = '00000004';
+				drug.instructions = "hydromorphone 50mgmL\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+}else if("Percocet" === $scope.oatMed){
+				drug.brandName = 'Percocet';// 8MG/2MG';
+				drug.genericName = 'Percocet';
+				drug.atc = 'ATC5234';
+				drug.regionalIdentifier = '00000005';
+				drug.instructions = "Percocet\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+}else if("Hydromorph contin" === $scope.oatMed){
+				drug.brandName = 'Hydromorph contin';// 8MG/2MG';
+				drug.genericName = 'Hydromorph contin';
+				drug.atc = 'ATC6234';
+				drug.regionalIdentifier = '00000006';
+				drug.instructions = "Hydromorph contin\n"+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days\nQty:"+$scope.totalMg+" MG Repeats:0\n"+$scope.directionsForUse+"\n"+$scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line1forPrint = ""+$scope.dailyDose+" MG sublingual daily for "+$scope.rxDaysDuration+" days";
+				line2forPrint = $scope.carryDirections+" "+$scope.daysWitnessed+" days per week";
+				line3forPrint = $scope.startDay.getFullYear()+"-"+($scope.startDay.getMonth()+1)+"-"+$scope.startDay.getDate()+" to "+$scope.lastDay.getFullYear()+"-"+($scope.lastDay.getMonth()+1)+"-"+$scope.lastDay.getDate();
+				line4forPrint = $scope.directionsForUse;
+				rxPrint = createBCControlledRxObject(rxDate,$scope.startDay,$scope.lastDay,$scope.totalMg,$scope.dailyDose,drug.brandName,line1forPrint,line2forPrint,line3forPrint,line4forPrint);
+}
+
+
+
+//   private String frequency;
+//   private String form;
+//   private String method;
+//	 private String additionalInstructions;
+//   private String archivedReason;
+//   private Date archivedDate;
+//   private Float strength;
+//   private String strengthUnit;
+//   private String externalProvider;
+//   drug.longTerm = tr
+
+
+
+
+
+			console.log("drug to send",drug);
+            	meds = [];
+			meds.push(drug);
+
+                var queryPath = '../ws/rs/rx/prescribe?demographicNo=' + patient_id;
+
+                $http.post(queryPath, meds).then(function (data) {
+                		console.log('dataata',data);
+
+                		if(angular.isDefined(data.data.success) && !data.data.success){
+                			alert("Error: "+data.data.message);
+                			return;
+                		}
+                		getMedications(patient_id);
+                    	alert(drug.instructions + " \nAdded to Drug Profile");
+                    	console.log("rxPrint",rxPrint);
+
+                    	if(angular.isDefined(rxPrint.demographic)){
+	                    $http.post('../ws/rs/rx/'+patient_id+'/print/4',rxPrint,{responseType : 'blob'}).then(function(data2){
+	                          console.log(data2)
+	//                          var pdfFile = new Blob([ data2.data ], {type : 'application/pdf'});
+	                          //var pdfFile = new Blob( data2.data , {type : 'application/pdf'});
+	                          var pdfUrl = URL.createObjectURL(data2.data);  // (pdfFile); //
+	                          $sce.trustAsResourceUrl(pdfUrl);
+	                          var printwWindow = $window.open(pdfUrl);
+	                         //printwWindow.print();
+	                    });
+                    	}
+//window.open('../ws/rs/rx/'+patient_id+'/print/4');
+
+                      /* $http.post('../ws/rs/rx/'+patient_id+'/print/4',drug,{
+
+            headers : {
+                'Content-type' : 'application/pdf','Accept': 'application/pdf'
+            },
+            responseType : 'arraybuffer'
+        }).then(function(data) {
+           console.log(data);
+            var pdfFile = new Blob([ data.data ], {
+                type : 'application/pdf'
+            });
+            var pdfUrl = URL.createObjectURL(pdfFile);
+            var printwWindow = $window.open(pdfUrl);
+            printwWindow.print();
+        });*/
+
+                      console.log(data);
+                });
+
+                       }
+
+
+                       $scope.page.lastSubstanceUseReviewed;
+
+                       var lastInputs = document.getElementById('lastConsultInputs').value.replace(/'/g,'"');
+                       console.log("lastInputs",lastInputs);
+                       var lastInputsJson = JSON.parse(lastInputs);
+                       angular.forEach(lastInputsJson, function(fieldvalues) {
+                       		if(fieldvalues.fieldvalue != null){
+		    						$scope.lastForm[fieldvalues.fieldname] = fieldvalues.fieldvalue;
+                        		}
+		    			   });
+
+
+                        console.log("lastInputsJson",lastInputsJson);
+
+                        $scope.lastODSin30 =$scope.lastForm['numODSin30'];
+                        $scope.page.lastSubstanceUseReviewed = $scope.lastForm['lastSubstanceUseReviewed'];
+                        document.getElementById('lastSubstanceUseReviewed').value = $scope.page.lastSubstanceUseReviewed;
+
+                        $scope.lastLinkToSocialWork = $scope.lastForm['lastLinkToSocialWork'];
+                        document.getElementById('lastLinkToSocialWork').value = $scope.lastLinkToSocialWork;
+
+                        $scope.lastHasTHNKit = $scope.lastForm['lastHasTHNKit'];
+                        document.getElementById('lastHasTHNKit').value = $scope.lastHasTHNKit;
+
+                        $scope.lastHasTHNTraining = $scope.lastForm['lastHasTHNTraining'];
+                        document.getElementById('lastHasTHNTraining').value = $scope.lastHasTHNTraining;
+
+                        $scope.lasthasHarmReductSup = $scope.lastForm['lasthasHarmReductSup'];
+                        document.getElementById('lasthasHarmReductSup').value = $scope.lasthasHarmReductSup;
+
+                        $scope.lastawareSupConsump = $scope.lastForm['lastawareSupConsump'];
+                        document.getElementById('lastawareSupConsump').value = $scope.lastawareSupConsump;
+
+                        $scope.lastScore = $scope.lastForm['lastScore'];
+                        document.getElementById('lastScore').value  = $scope.lastScore ;
+
+                        $scope.firstScore = 0;  //FIX ME LATER
+
+                        $scope.treatmentStage = $scope.lastForm['treatmentStage'];
+
+                        $scope.firstOATDate = new Date($scope.lastForm['firstOATDate']);
+
+                        $scope.mostRecentOatDate = new Date($scope.lastForm['mostRecentOatDate']);
+
+                        $scope.stableDoseDate = new Date($scope.lastForm['stableDoseDate']);
+
+                        mostRecentDateObj = Date.parse($scope.mostRecentOatDate);
+                        console.log("mostRecentDateObj",mostRecentDateObj);
+                        var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+                        today = new Date();
+                        var diffDays = Math.round(Math.abs((mostRecentDateObj - today.getTime())/(oneDay)));
+                        if(isNaN(diffDays)){
+                           diffDays = 0;
+                        }
+                        $scope.numDaysOAT = diffDays;
+
+                        window.resizeTo(900, 1000);
+
+                        $scope.onSave = function(){
+
+                        		 newLine =  '\n'
+
+                        		 var textToPaste = "";
+
+                        		 //////////
+                        		 if(document.getElementById("pharmanetReviewed").checked){
+                        			 textToPaste = textToPaste + "Pharmanet Reviewed. ";
+                        		 }
+
+                        		 if(document.getElementById("anyORTMissedYes").checked){
+                        			 textToPaste = textToPaste + "ORT Missed, "+document.getElementById("descMissed").value+newLine;
+                        		 }
+
+                        		 if(document.getElementById("numODSin30").value != ""){
+                        			 textToPaste = textToPaste + document.getElementById("numODSin30").value+" ODs in the last 30 Days."+'\n'
+                        		 }
+
+                              if($scope.page.currSubReviewed){
+                                 $scope.page.lastSubstanceUseReviewed = new Date();
+                                 document.getElementById('lastSubstanceUseReviewed').value = $scope.page.lastSubstanceUseReviewed.getTime();
+                                 textToPaste = textToPaste + "Current Substance use Reviewed. ";
+                              }
+
+                              if($scope.linkToSocialWork){
+                                    $scope.lastLinkToSocialWork = new Date();
+                                    document.getElementById('lastLinkToSocialWork').value = $scope.lastLinkToSocialWork.getTime();
+                                    textToPaste = textToPaste + "Linkage to social work/counselling discussed. ";
+                               }
+
+                              textToPaste = textToPaste + '\n'+"Verified today: ";
+
+                               newScore = 0;
+                               if($scope.hasTHNKit){
+                                   newScore++;
+                                   $scope.lastHasTHNKit = new Date();
+                                   document.getElementById('lastHasTHNKit').value  = $scope.lastHasTHNKit.getTime();
+                                   textToPaste = textToPaste + "Has THN kit. "+newLine;
+                               }
+
+                               if($scope.hasTHNTraining){
+                                   newScore++;
+                                    $scope.lastHasTHNTraining = new Date();
+                                    document.getElementById('lastHasTHNTraining').value = $scope.lastHasTHNTraining.getTime();
+                                    textToPaste = textToPaste + "Has THN Training. "+newLine;
+                               }
+
+                               if($scope.hasHarmReductSup){
+                                   newScore++;
+                                  $scope.lasthasHarmReductSup = new Date();
+                                  document.getElementById('lasthasHarmReductSup').value  = $scope.lasthasHarmReductSup.getTime();
+                                  textToPaste = textToPaste + "Has access to harm reduction supplies. "+newLine;
+                               }
+
+                               if($scope.awareSupConsump){
+                                   newScore++;
+                                  $scope.lastawareSupConsump = new Date();
+                                  document.getElementById('lastawareSupConsump').value = $scope.lastawareSupConsump.getTime();
+                                  textToPaste = textToPaste + "Aware of supervised consumption sites. "+newLine;
+                               }
+
+                               document.getElementById('lastScore').value = newScore;
+
+                               if( opener.document.forms["caseManagementEntryForm"] != undefined ) {
+                                   opener.pasteToEncounterNote(textToPaste);
+                                 }
+
+
+                        }
+
+
+                });
+
+
+</script>
+</body>
+</html>

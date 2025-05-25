@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Advance Care Planning (ACP) Record eForm" />
+<meta name="keywords" content="FHA, ACP, SIGC, GOC" />
+<meta name="robots" content="nofollow" />
+<meta http-equiv="author" content="John Yap" />
+
+<!-- original eForm created by K Meyerink -->
+<!-- Version 2: new background expanded to 850px -->
+<!-- New offline architecture, updated background, jQuery X-boxes. John Yap -->
+<!-- V3_Jun2_2019 - updated background, radio-X-boxes, signature script. John Yap -->
+<!-- V4_Aug16_2023 - updated to Jul2023 background, and 2023 features. John Yap -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included.
+// Allows for appropriate import of all png files
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}ADDI101231H_AdvanceCarePlanningRecord_July11_2023.png"
+// "${oscar_image_path}CreativeCommonsIcon.png" // for Copy Left footer
+// "${oscar_image_path}ADDI101231F_AdvanceCarePlan_combined_May2018_Pg2.png"
+</script>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous" ></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+
+<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors 
+<script type="text/javascript" src="jSignature.min.js"></script>
+End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+<!-- Freeform Signatures -->
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-box-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+input#SubmitButton { 
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background: #229ece;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+	background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+	background: -o-linear-gradient(top, #6bb5d2, #229ece);
+	background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+
+input#SubmitButton:hover {
+	color: #333333;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #a0dbc4;
+	background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#F2EFFB));
+	background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+	background: -o-linear-gradient(top, #229ece, #6bb5d2);
+	background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+
+.attn {
+	animation-name: lookHere;
+	animation-duration: 5s;
+	animation-timing-function: linear;
+	animation-iteration-count: 3;
+	animation-direction: alternate;
+}
+
+@keyframes lookHere {
+  0%   {border-color:#ced5e3;
+box-shadow: 0 0 5px #ced5e3;}
+  25%  {border-color:#364460;
+box-shadow: 0 0 20px #364460;}
+  50%  {border-color:#a21d22;
+box-shadow: 0 0 5px #a21d22;}
+  75%  {border-color:#f7977b;
+box-shadow: 0 0 20px #f7977b;}
+  100% {border-color:#ced5e3;
+box-shadow: 0 0 5px #ced5e3;}
+}
+
+.sig {
+	 border: 2px dotted blue;
+	 background: transparent;
+}
+
+a {text-decoration: none;} 
+a:hover {border: 1px solid #000000; border-style: outset; background: pink; opacity: 0.6;}
+a:active {border: 3px solid #000000; border-style: inset;}
+
+.Show{
+	visibility: visible;
+	display: inline;
+}
+.Hide{
+	visibility: hidden;
+	display: none;
+}
+
+::placeholder {
+	color: rebeccapurple;
+	font-style: italic;
+	opacity: 1;
+}
+
+textarea{resize: none;}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	 -moz-box-sizing: content-box;
+	 -webkit-box-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box;
+}
+.DoNotPrint {
+	 display: none;
+}
+.noborder {
+	 border: 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 overflow: hidden;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+.sig {
+	 background: transparent;
+}
+
+/* hide placehoders */
+::placeholder {
+	color: transparent;
+}
+</style>
+
+ <!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 10px;
+	height: 12px;
+	font-size: 12px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.box2 {
+	position: absolute;
+	width: 16px;
+	height: 18px;
+	font-size: 18px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.box3 {
+	position: absolute;
+	width: 10px;
+	height: 12px;
+	font-size: 12px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+
+.BoxBorderThick {
+	position: absolute;
+	border: 3px solid #808080;
+} 
+.BoxBorderThin {
+	position: absolute;
+	border: 1px solid #808080;
+}
+.Show {
+	visibility: visible;
+	display: inline;
+ }
+.Hide {
+	visibility: hidden;
+	display: none;
+}
+
+.FontSizeChange {
+	position: absolute;
+	width: 16px;
+	height: 15px;
+	font-size: 13px;
+	cursor: pointer;
+	background: yellow;
+	text-align: center;
+	border: 1px solid #000000;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+	/****************************
+		startup functions 
+	****************************/
+	function startUp() {
+		setDocumentTitle('ACP_Record', document.getElementById('PatientNameL').value);
+		changeImage("ADDI101231H_AdvanceCarePlanningRecord_July11_2023.png", "BGImage1");
+		changeImage("ADDI101231F_AdvanceCarePlan_combined_May2018_Pg2.png", "BGImage2");
+		changeImage("CreativeCommonsIcon.png", "CreativeCommons"); // for Copy Left footer
+		loadFontSize();
+		setDefaults();
+		//optimize window size/width
+		top.window.resizeTo(950, screen.availHeight);
+	}
+
+	function resourceLink(resource, extension) {
+		// Takes two arguments -- the base filename and its extension -- and
+		// returns a string depending on whether the page has been opened
+		// locally or if it has been uploaded to OSCAR.
+		//
+		// Example usage: resourceLink('image1', 'png')
+		// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+		var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+		if (typeof extension === "undefined") {
+			var extension = '';
+		} else {
+			var extension = '.' + extension;
+		}
+		return prefix + resource + extension;
+	}
+
+	function changeImage(img,imgId) {
+		// Changes the src value of an <img>.
+		document.getElementById(imgId).src = resourceLink(img)
+		document.getElementById(imgId).href = resourceLink(img)
+	}
+
+	function setDocumentTitle(Title,PatientNameL) {
+		// set document title
+		document.title = Title + '_' + PatientNameL;
+	}
+
+	function setDefaults() {
+		// check the newform flag to ensure this is the initial load of the form
+		if (document.getElementById("newForm").value == 'True') {
+			document.getElementById('Stamp').click();
+		// set up reminder due date and hide as default setting
+			parseName('current_user');
+			parseDate('today');
+		} else {  // actions if eForm is reopened
+			loadSig();
+			reloadSignature();  // Determine submitted signature state on reload
+		}
+	}
+
+	/****************************
+		Create name in proper order 
+	****************************/
+	function parseName(id) {
+		// Get the name
+		var fullName = document.getElementById(id).value;
+		// Split the value
+		var splitName = fullName.split(",");
+		var firstName = "";
+		var lastName  = "";
+		// Check for last name
+		if(splitName.length >= 1) {
+			lastName = splitName[0].trim();
+		}
+		if(splitName.length >= 2) {
+			firstName = splitName[1].trim();
+		}
+		var First_Last_Name = firstName + " " + lastName;
+		// Show the fields on the page
+		document.getElementById(id).value = First_Last_Name;
+	}
+
+	/****************************
+		Create date in dd/mm/yyyy format; 
+		Oscar default is yyyy-mm-dd
+	****************************/
+	function parseDate(id) {
+		// Change date field to dd/mmm/yyyy format
+		// Function expects an array of date components in yyyy-mm-dd format
+		// Get the date
+		var FullDate = document.getElementById(id).value;
+		var delimiter = '-';
+		// Split the value
+		var Year = FullDate.split(delimiter)[0];
+		var MonthNum = FullDate.split(delimiter)[1];
+		var Day = FullDate.split(delimiter)[2];
+		var NumericDate = Day + "/" + MonthNum + "/" + Year;
+		// Show the fields on the page
+		document.getElementById(id).value = NumericDate;
+	}
+
+	/****************************
+		submit and print functions 
+	****************************/
+	function printLetter() { 
+		// Save reminder; allows for validity testing
+		document.getElementById('ResetButton').style.color = 'black';
+		document.getElementById('SubmitButton').classList.toggle('attn');
+		document.getElementById('SubmitButton').style.border = '2px solid red';
+		alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+		window.print();
+	} 
+
+	function submission() {  // requires type="submit" in submit button input to allow for validity testing
+		setFlag();
+		saveSig();
+		releaseDirtyFlag();
+	}
+
+	function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+	}
+
+	/****************************
+		Checkbox functions 
+	****************************/
+	$(document).ready(function() {
+		$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		}
+		else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+		// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0) {
+			$( this ).click();
+			return false;
+			}
+		});
+	});
+
+	/****************************
+		Signature functions - 1 signature
+	****************************/
+	jQuery(document).ready(function() {
+		$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	})
+
+	function saveSig() {
+		var $sig=$("#CanvasSignature1");
+		var datapair=new Array();
+		datapair=$sig.jSignature("getData","base30");
+		document.getElementById("StoreSignature1").value=datapair.join(",");
+		// signature checker
+		if ($('#CanvasSignature1').jSignature('getData', 'base30')[1] == "") {
+			document.getElementById("StoreSignature1").value="image/jsignature;base30,0_0";
+		}
+	}
+
+	function clearSig() {
+		$("#CanvasSignature1").jSignature("reset");
+	}
+
+	function loadSig() {
+		var $sig=$("#CanvasSignature1");
+		var data
+		data=document.getElementById("StoreSignature1").value;
+		$sig.jSignature("setData","data:"+ data);
+	}
+
+	/****************************
+		Script to enable signature stamps. No Array needed.  
+		Signature assigned to ProviderNumber in the format:
+		consult_sig_+ProviderNumber+.png
+	****************************/
+	function SignForm() {
+		var ProviderNumber = document.getElementById('current_user_id').value;
+		document.getElementById('StampSignature').src = "../eform/displayImage.do?imagefile=consult_sig_"+ProviderNumber+".png";
+	}
+
+	/****************************
+		Script to add/remove Wet signature option
+	****************************/
+	function Add_Wet() {
+		document.getElementById('CanvasSignature1').className = 'sig';
+		document.getElementById('Signature_Stamp').className = 'Hide';
+		document.getElementById('Stamp').checked = false;
+		document.getElementById('SignatureChoice').value = 'Wet';
+	}
+	function remove_Wet() {
+		document.getElementById('CanvasSignature1').className = 'Hide';
+		document.getElementById('SignatureChoice').value = 'None';
+	}
+
+	/****************************
+		Script to add/remove Stamp signature option
+	****************************/
+	function Add_Stamp() {
+		SignForm();
+		document.getElementById('Signature_Stamp').className = 'Show';
+		document.getElementById('CanvasSignature1').className = 'Hide';
+		document.getElementById('Wet').checked = false;
+		document.getElementById('SignatureChoice').value = 'Stamp';
+	}
+	function remove_Stamp() {
+		document.getElementById('Signature_Stamp').className = 'Hide';
+		document.getElementById('SignatureChoice').value = 'None';
+	}
+
+	/****************************
+		Script to load None signature option
+	****************************/
+	function Add_None() {
+		document.getElementById('CanvasSignature1').className = 'Hide';
+		document.getElementById('Signature_Stamp').className = 'Hide';
+	}
+
+	/****************************
+		Script to reload signature option selected on submit
+	****************************/
+	function reloadSignature() {
+		// show chosen signature format on submit: e.g.  Wet, Stamp, None
+		var chosenSig = document.getElementById('SignatureChoice').value;
+		document.getElementById(chosenSig).checked = true;
+		if (chosenSig === 'Stamp') {
+			Add_Stamp();
+		} else if (chosenSig === 'Wet') {
+			Add_Wet();
+		} else if (chosenSig === 'None') {
+			Add_None();
+		}
+	}
+
+	/****************************
+		scripts to confirm closing of window if it has not been saved yet
+	****************************/
+		//keypress events trigger dirty flag
+		var needToConfirm = false;
+		document.onkeyup=setDirtyFlag;
+	function setDirtyFlag() {
+		needToConfirm = true;
+	}
+
+	function releaseDirtyFlag() {
+		needToConfirm = false; //Call this function if does not require an alert.
+		//this could be called when save button is clicked
+	}
+		window.onbeforeunload = confirmExit;
+
+	function confirmExit() {
+		if (needToConfirm) {
+			return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+		}
+	}
+
+	/****************************
+		script to Increase or Decrease the Font Size
+		name = input name/id, delta = increase (+) or decrease (-) increment #
+		Requires loadFontSize(); in startUp, or in onload line
+	****************************/
+	function changeFontSize(name, delta) {
+		var element = $("#" + name)
+		var oldSize = parseInt(element.css("font-size"));
+		var newSize = oldSize + delta;
+		// Save new font size into "value" field of hidden element
+		$("#" + name + "_fontsize").attr('value', newSize);
+		// Set font size
+		element.css({'font-size': newSize + 'px'});
+	}
+
+	// Retains altered font size when eForm is reopened; 
+	// Requires hidden inputs with format for each field using this feature: 
+	// <input type="hidden" name="Input_fontsize" id="Input_fontsize">
+	function loadFontSize() {
+		$.each($("input[name*='_fontsize'"), function(index, element) {
+			var fontSize = element.value;
+			if (!!fontSize) {
+				var name = element.name.split('_')[0];
+				$("#" + name).css({'font-size': fontSize + 'px'});
+			}
+		});
+	}
+
+	/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x 
+		and is named in the convention name_X where X appears in the string defined in scales
+		Ensure that the list is sequential. Do no skip numbers. An input can be hidden if appropriate.
+	****************************/
+	function Radio_Box(x) {
+		var scales = ["1", "2", "3", "4", "5", "6"];
+		var partA = x.substring(0, x.indexOf("_"));
+		var i = x.substring(x.indexOf("_"));
+		var j = i.substr(1);
+		for (var n in scales) {
+			if ( j == scales[n]) {
+				for (var m in scales){
+					if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+				}
+			}
+		}
+		return false;
+	}
+
+	/****************************
+		Copy to Clipboard
+	****************************/
+	$(document).ready(function() {
+		var y = document.getElementsByClassName('copyable');
+		$(y).click(function() {
+		this.select();
+		document.execCommand('copy');
+		$(this).css('background-color', 'pink').fadeIn("slow");
+		})
+	})
+
+	/****************************
+		scripts for current time 
+	****************************/
+	function StartClock12() {
+		Time12 = new Date();
+		Cur12Hour = Time12.getHours();
+		Cur12Mins = Time12.getMinutes();
+		The12Time = 0;
+		The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+		The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+		The12Time += (Cur12Hour > 11) ? ' PM': ' AM';
+		window.status = The12Time;
+		setTimeout('StartClock12()',50);
+	}
+</script>
+</head>
+
+<body onload="startUp();" onbeforeprint="document.forms['FormName'].reportValidity();">
+	<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for signature -->
+<input type="hidden" name="StoreSignature1" id="StoreSignature1">
+
+<!-- Hidden Inputs for signature stamps; must account for all format options provided in this eFORM e.g. Wet, Stamp, and None -->
+<input type="hidden" name="SignatureChoice" id="SignatureChoice">
+<input type="hidden" name="current_user_id" id="current_user_id" oscarDB=current_user_id /> 
+
+<!-- Hidden input for font size changer inputs-->
+<input type="hidden" name="label_fontsize" id="label_fontsize">
+<input type="hidden" name="label_fontsize" id="label_fontsize">
+<input type="hidden" name="label_fontsize" id="label_fontsize">
+<input type="hidden" name="label_fontsize" id="label_fontsize">
+
+<!-- START OF PAGE 1 -->
+<div id="page1" style="position:relative; left:0px; top:0px; width:750px;" class="pagebreak">
+	<img id="BGImage1" src="">
+
+<a id="BGImage2" class="DoNotPrint" style="position:absolute; left:180px; top:74px; font-size:16px;" href="" target="_blank" title="Reference from previous version of ACP">Show Instructions</a>
+
+<!-- Patient Demographics -->
+<textarea name="label" id="label" class="noborder" style="position:absolute; left:512px; padding-left:5px; top:95px; width:291px; height:120px; font-size:15px; background:transparent;" oscarDB=label></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:815px; top:97px;" onclick="changeFontSize('label', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:815px; top:112px;" onclick="changeFontSize('label', -1);">&#9660;</span>
+
+<!-- Previous ACP Documentation -->
+<input name="ACP_record" id="ACP_record" type="text" class="Xbox box1" style="left:88px; top:248px;">
+<input name="ACP" id="ACP" type="text" class="Xbox box1" style="left:88px; top:263px;">
+<input name="Advance_Directive" id="Advance_Directive" type="text" class="Xbox box1" style="left:88px; top:278px;">
+<input name="ID_SDM" id="ID_SDM" type="text" class="Xbox box1" style="left:88px; top:293px;">
+
+<input name="MOST" id="MOST" type="text" class="Xbox box1" style="left:444px; top:248px;">
+<input name="No_CPR" id="No_CPR" type="text" class="Xbox box1" style="left:444px; top:263px;">
+<input name="Rep_Agreement" id="Rep_Agreement" type="text" class="Xbox box1" style="left:444px; top:278px;">
+
+<textarea name="Summary" id="Summary" class="noborder" style="position:absolute; left:82px; padding-left:5px; top:359px; width:719px; height:282px; font-size:16px; background:transparent;" placeholder="Please add sufficient details" required></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:815px; top:361px;" onclick="changeFontSize('Summary', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:815px; top:376px;" onclick="changeFontSize('Summary', -1);">&#9660;</span>
+
+<!-- Specific Interventions -->
+<input name="BloodProducts_Y" id="BloodProducts_1" type="text" class="Xbox box1" style="left:258px; top:707px;" onclick="Radio_Box(this.id);">
+<input name="BloodProducts_N" id="BloodProducts_2" type="text" class="Xbox box1" style="left:308px; top:707px;" onclick="Radio_Box(this.id);">
+<input name="BloodProducts" id="BloodProducts" type="text" class="noborder" style="position:absolute; left:365px; top:705px; width:440px; font-size:16px; background:transparent;" placeholder="add details">
+
+<input name="Cardioversion_Y" id="Cardioversion_1" type="text" class="Xbox box1" style="left:258px; top:728px;" onclick="Radio_Box(this.id);">
+<input name="Cardioversion_N" id="Cardioversion_2" type="text" class="Xbox box1" style="left:308px; top:728px;" onclick="Radio_Box(this.id);">
+<input name="Cardioversion" id="Cardioversion" type="text" class="noborder" style="position:absolute; left:365px; top:726px; width:440px; font-size:16px; background:transparent;" placeholder="add details">
+
+<input name="Dialysis_Y" id="Dialysis_1" type="text" class="Xbox box1" style="left:258px; top:749px;" onclick="Radio_Box(this.id);">
+<input name="Dialysis_N" id="Dialysis_2" type="text" class="Xbox box1" style="left:308px; top:749px;" onclick="Radio_Box(this.id);">
+<input name="Dialysis" id="Dialysis" type="text" class="noborder" style="position:absolute; left:365px; top:747px; width:440px; font-size:16px; background:transparent;" placeholder="add details">
+
+<input name="BiPAP_Y" id="BiPAP_1" type="text" class="Xbox box1" style="left:258px; top:770px;" onclick="Radio_Box(this.id);">
+<input name="BiPAP_N" id="BiPAP_2" type="text" class="Xbox box1" style="left:308px; top:770px;" onclick="Radio_Box(this.id);">
+<input name="BiPAP" id="BiPAP" type="text" class="noborder" style="position:absolute; left:365px; top:768px; width:440px; font-size:16px; background:transparent;" placeholder="add details">
+
+<input name="Nutrition_Y" id="Nutrition_1" type="text" class="Xbox box1" style="left:258px; top:795px;" onclick="Radio_Box(this.id);">
+<input name="Nutrition_N" id="Nutrition_2" type="text" class="Xbox box1" style="left:308px; top:795px;" onclick="Radio_Box(this.id);">
+<input name="Nutrition" id="Nutrition" type="text" class="noborder" style="position:absolute; left:365px; top:793px; width:440px; font-size:16px; background:transparent;" placeholder="add details">
+
+<input name="OtherIntervention_Y" id="OtherIntervention_1" type="text" class="Xbox box1" style="left:258px; top:823px;" onclick="Radio_Box(this.id);">
+<input name="OtherIntervention_N" id="OtherIntervention_2" type="text" class="Xbox box1" style="left:308px; top:823px;" onclick="Radio_Box(this.id);">
+<input name="OtherIntervention" id="OtherIntervention" type="text" class="noborder" style="position:absolute; left:365px; top:821px; width:440px; font-size:16px; background:transparent;" placeholder="add details">
+
+<textarea name="Participants" id="Participants" class="noborder" style="position:absolute; left:82px; padding-left:5px; top:865px; width:719px; height:43px; font-size:16px; background:transparent;" placeholder="Please add sufficient details"></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:815px; top:867px;" onclick="changeFontSize('Participants', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:815px; top:882px;" onclick="changeFontSize('Participants', -1);">&#9660;</span>
+
+<textarea name="AddDocumentation" id="AddDocumentation" class="noborder" style="position:absolute; left:82px; padding-left:5px; top:945px; width:719px; height:43px; font-size:16px; background:transparent;" placeholder="Please add sufficient details"></textarea>
+	<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:815px; top:947px;" onclick="changeFontSize('AddDocumentation', 1);">&#9650;</span>
+	<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:815px; top:962px;" onclick="changeFontSize('AddDocumentation', -1);">&#9660;</span>
+
+	<!-- Referring Source -->
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:82px; padding-left:5px; top:1015px; width:85px; font-size:16px; background:transparent;" oscarDB=today>
+<input name="TimeStamp" id="TimeStamp" type="text" class="noborder" style="position:absolute; left:175px; top:1015px; width:73px; font-size:16px; text-align:center; background:transparent;" onclick="StartClock12(); document.FormName.TimeStamp.value = The12Time;" title="Click for time">
+<input name="Site_location" id="Site_location" type="text" class="noborder" style="position:absolute; left:258px; top:1015px; width:215px; font-size:16px; background:transparent;" placeholder="add details">
+
+<!-- Signature Wet Script -->
+<div id="CanvasSignature1" class="sig" style="position:absolute; left:695px; top:1000px; width:115px; height:40px;"></div>
+
+<!-- Signature Stamp -->
+<div id="Signature_Stamp" class="Hide" style="position:absolute; left:699px; top:1015px;">
+	<img id="StampSignature" src="" style="width:112px; height:24px;">
+</div>
+
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:483px; top:1015px; width:205px; font-size:16px; background:transparent;" oscarDB=current_user>
+
+<!-- Signature Control -->
+<div id="signatureControl" class="DoNotPrint" style="position:absolute; left:830px; top:1000px;">
+	<input name="Stamp" id="Stamp" type="checkbox" style="position:absolute; left:0px; top:0px; color:green;"
+		onclick="document.getElementById('Wet').checked = false;
+			if (this.checked == true) {
+				Add_Stamp();
+			} else {
+				remove_Stamp();
+			}">
+	<span style="position:absolute; left:25px; top:5px; width:80px; font-size:12px; color:green;">Stamp</span>
+
+	<input name="Wet" id="Wet" type="checkbox" style="position:absolute; left:0px; top:15px; color:green;"
+		onclick="document.getElementById('Stamp').checked = false;
+			if (this.checked == true) {
+				Add_Wet();
+			} else {
+				remove_Wet();
+			}">
+	<span style="position:absolute; left:25px; top:20px; width:150px; font-size:12px; color:green;">Signature</span>
+	<input name="ClearButton1" id="ClearButton1" type="button" style="position:absolute; left:85px; top:18px; font-size:10px; color:red;" onclick="clearSig1();" value="Clear Sig"> 
+</div>
+
+<input name="CopyFax" id="CopyFax" class="copyable DoNotPrint" style="position:absolute; left:330px; top:1045px; width:89px; font-size:14px; font-weight:bold; text-align:center; border:0px; background:white;" title="click to copy" value="604-587-3748">
+<span class="DoNotPrint" style="position:absolute; left:316px; top:1065px; width:120px; font-size:12px; text-align:center; color:green;">&#40;Click above to copy&#41;</span>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div style="position:absolute; left:80px; top:1100px; width:820px; font-size:13px;" class="DoNotPrint" id="BottomButtons" >
+	<table><tr style="background:#e5f2ff;"><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" id="subject" size="40" type="text">
+		<input value = "Reset" name="ResetButton" id="ResetButton" type="reset" style="color:red;" onclick="history.go(0);"> 
+		<input value = "Print" name="PrintButton" id="PrintButton" type="button" style="color:green;" onclick="printLetter();"> 
+		<input value = "Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();">
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="licence" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" id="CreativeCommons" style="border:0px;" src="" /></a>
+<span> ACP FHA-specific, V4_Aug16_2023, is licensed under a </span> 
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br>
+<span style="color:forestgreen;">Please consider supporting </span><a href="https://oscarbc.ca/" target="_blank">oscarbc.ca.</a> |
+<a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> |
+<a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | 
+<a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | 
+<a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> |
+<br><br><br>
+</div>
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"today", ifFormat : "%d/%m/%Y", showsTime:false, button : "today" } );
+</script>
+</body></html>

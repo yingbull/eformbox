@@ -1,0 +1,233 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<style type="text/css" media="screen">
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+ <!-- scripts for scaling up checkboxes -->
+    <style type="Text/css">
+        input.largerCheckbox {
+	-moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+}
+</style>
+    <style type="text/css" media="print">
+        input.largerCheckbox {
+            -moz-transform: scale(1.8);
+            /*scale up image 1.8x - Firefox specific */
+            -webkit-transform: scale(1.3);
+            /*Webkit based browser eg Chrome, Safari */
+            -o-transform: scale(1.3);
+            /*Opera browser */
+        }
+    </style>
+    <!--[if IE]>
+<style type="text/css">
+input.largerCheckbox { 
+	height: 30px;                     /*30px checkboxes for IE 5 to IE 7 */ 
+	width: 30px; 
+} 
+</style> 
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+<script type="text/javascript">
+if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:28, width:181, top:811, left:163});});}</script>
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="416-431-8211"',1000);
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1">
+
+</head>
+
+<body onload="setFaxNo();">
+<form method="post" action="" name="FormName" id="FormName">
+<div id="page1" style="position:relative;">
+<img id="BGImage1" src="${oscar_image_path}SHN - Non-Invasive Cardiac Diagnostic pg1.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+
+<input name="page1_1" id="page1_1" type="checkbox" style="position:absolute; left:82px; top:144px; " class="largerCheckbox">
+<input name="page1_2" id="page1_2" type="checkbox" style="position:absolute; left:274px; top:145px; " class="largerCheckbox">
+<input name="page1_3" id="page1_3" type="checkbox" style="position:absolute; left:469px; top:145px; data-prechecked=" true"="" data-prechecked="true" checked="checked" class="largerCheckbox">
+<textarea name="label" id="label" type="text" class=" noborder" style="position:absolute; left:55px; top:214px; width:314px; height:107px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:14px; text-align:left; background-color:transparent;" oscardb="label"></textarea>
+<input name="appt_date" id="appt_date" type="text" class=" noborder" style="position:absolute; left:476px; top:214px; width:212px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscardb="appt_date">
+<input name="page1_4" id="page1_4" type="text" class=" noborder" style="position:absolute; left:476px; top:235px; width:212px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<input name="page1_5" id="page1_5" type="text" class=" noborder" style="position:absolute; left:476px; top:256px; width:212px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<input name="current_user_fname_lname" id="current_user_fname_lname" type="text" class=" noborder" style="position:absolute; left:476px; top:277px; width:212px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscardb="current_user_fname_lname">
+<input name="page1_6" id="page1_6" type="text" class=" noborder" style="position:absolute; left:476px; top:298px; width:212px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<input name="page1_7" id="page1_7" type="checkbox" style="position:absolute; left:58px; top:344px; " class="largerCheckbox">
+<input name="page1_8" id="page1_8" type="checkbox" style="position:absolute; left:58px; top:360px; " class="largerCheckbox">
+<input name="page1_9" id="page1_9" type="checkbox" style="position:absolute; left:58px; top:376px; " class="largerCheckbox">
+<input name="page1_10" id="page1_10" type="checkbox" style="position:absolute; left:58px; top:393px; " class="largerCheckbox">
+<input name="page1_11" id="page1_11" type="checkbox" style="position:absolute; left:283px; top:344px; " class="largerCheckbox">
+<input name="page1_12" id="page1_12" type="checkbox" style="position:absolute; left:283px; top:361px; " class="largerCheckbox">
+<input name="page1_13" id="page1_13" type="checkbox" style="position:absolute; left:283px; top:377px; " class="largerCheckbox">
+<input name="page1_14" id="page1_14" type="checkbox" style="position:absolute; left:283px; top:393px; " class="largerCheckbox">
+<input name="page1_15" id="page1_15" type="checkbox" style="position:absolute; left:479px; top:345px; " class="largerCheckbox">
+<input name="page1_16" id="page1_16" type="checkbox" style="position:absolute; left:479px; top:361px; " class="largerCheckbox">
+<input name="page1_17" id="page1_17" type="checkbox" style="position:absolute; left:479px; top:377px; " class="largerCheckbox">
+<input name="page1_18" id="page1_18" type="text" class=" noborder" style="position:absolute; left:95px; top:411px; width:570px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<input name="page1_19" id="page1_19" type="checkbox" style="position:absolute; left:71px; top:475px; " class="largerCheckbox">
+<input name="page1_20" id="page1_20" type="checkbox" style="position:absolute; left:71px; top:493px; " class="largerCheckbox">
+<input name="page1_21" id="page1_21" type="checkbox" style="position:absolute; left:91px; top:511px; " class="largerCheckbox">
+<input name="page1_22" id="page1_22" type="checkbox" style="position:absolute; left:91px; top:527px; " class="largerCheckbox">
+<input name="page1_23" id="page1_23" type="checkbox" style="position:absolute; left:71px; top:558px; " class="largerCheckbox">
+<input name="page1_24" id="page1_24" type="checkbox" style="position:absolute; left:89px; top:575px; " class="largerCheckbox">
+<input name="page1_25" id="page1_25" type="checkbox" style="position:absolute; left:89px; top:591px; " class="largerCheckbox">
+<input name="page1_26" id="page1_26" type="checkbox" style="position:absolute; left:89px; top:607px; " class="largerCheckbox">
+<input name="page1_27" id="page1_27" type="checkbox" style="position:absolute; left:89px; top:624px; " class="largerCheckbox">
+<input name="page1_28" id="page1_28" type="checkbox" style="position:absolute; left:89px; top:640px; " class="largerCheckbox">
+<input name="page1_29" id="page1_29" type="checkbox" style="position:absolute; left:72px; top:660px; " class="largerCheckbox">
+<input name="page1_30" id="page1_30" type="checkbox" style="position:absolute; left:395px; top:476px; " class="largerCheckbox">
+<input name="page1_31" id="page1_31" type="checkbox" style="position:absolute; left:395px; top:508px; " class="largerCheckbox">
+<input name="page1_32" id="page1_32" type="checkbox" style="position:absolute; left:408px; top:558px; " class="largerCheckbox">
+<input name="page1_33" id="page1_33" type="checkbox" style="position:absolute; left:429px; top:575px; " class="largerCheckbox">
+<input name="page1_34" id="page1_34" type="checkbox" style="position:absolute; left:429px; top:590px; " class="largerCheckbox">
+<input name="page1_35" id="page1_35" type="checkbox" style="position:absolute; left:429px; top:606px; " class="largerCheckbox">
+<input name="page1_36" id="page1_36" type="checkbox" style="position:absolute; left:57px; top:718px; " class="largerCheckbox">
+<input name="page1_37" id="page1_37" type="checkbox" style="position:absolute; left:78px; top:734px; " class="largerCheckbox">
+<input name="page1_38" id="page1_38" type="checkbox" style="position:absolute; left:78px; top:749px; " class="largerCheckbox">
+<input name="page1_39" id="page1_39" type="checkbox" style="position:absolute; left:410px; top:685px; " class="largerCheckbox">
+<input name="page1_40" id="page1_40" type="checkbox" style="position:absolute; left:429px; top:702px; " class="largerCheckbox">
+<input name="page1_41" id="page1_41" type="checkbox" style="position:absolute; left:429px; top:719px; " class="largerCheckbox">
+<input name="page1_42" id="page1_42" type="checkbox" style="position:absolute; left:429px; top:735px; " class="largerCheckbox">
+<input name="page1_43" id="page1_43" type="checkbox" style="position:absolute; left:409px; top:755px; " class="largerCheckbox">
+<input name="page1_44" id="page1_44" type="checkbox" style="position:absolute; left:409px; top:627px; " class="largerCheckbox">
+
+<input name="email_label" id="email_label" type="text" class=" noborder" style="position:absolute; left:57px; top:296px; width:70px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="Email:">
+<input name="email1" id="email1" type="text" class=" noborder" style="position:absolute; left:130px; top:296px; width:235px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscardb="email">
+
+
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:469px; top:811px; width:179px; height:29px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscardb="today">
+<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="">
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	 <table><tbody><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print &amp; Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></tbody></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"></a><br>
+</div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+
+
+</body>

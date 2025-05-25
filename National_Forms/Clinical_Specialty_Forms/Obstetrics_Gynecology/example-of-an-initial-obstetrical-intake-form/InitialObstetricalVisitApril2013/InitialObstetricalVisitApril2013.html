@@ -1,0 +1,606 @@
+<html>
+<title>Initial Obstetrical Consult</title>
+<meta charset="UTF-8">
+<head>
+
+<!--- Updated December 2014, Written for version 12.0, No Image, Writes directly to the encounter pane, pushes and pulls measurements for use in other areas, uses check boxes to write in to text spaces --->
+
+<!--- Now converts Ht and Wt from imperial to metric and calculates bmi --->
+
+<!-- New measurements and CLEAR method added -->
+
+<!-------Script to maximize window on loading----------->
+<script language="JavaScript1.2">
+<!--
+top.window.moveTo(0,0);
+if (document.all) {
+top.window.resizeTo(screen.availWidth,screen.availHeight);
+}
+else if (document.layers||document.getElementById) {
+if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+top.window.outerHeight = screen.availHeight;
+top.window.outerWidth = screen.availWidth;
+}
+}
+//-->
+</script>
+<!----------End maximizing window scipt---------->
+<style type="text/css">
+.title{
+	text-transform: uppercase;
+	font-size: 16;
+	font-family: Arial;
+	font-weight: bolder;
+	text-align: left;
+	color: black;
+}
+.heading1{
+	text-transform: capitalize;
+	width: 100%;
+	font-size: 14;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	color: white;
+	background-color: black;
+	border-width: 1;
+}
+.heading2{
+	text-transform: capitalize;
+	width:25%;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background-color: rgb(192,192,192);
+	border-width: 1;
+}
+.normaltext{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 0;
+}
+.formtext{
+	width: 100%;
+	height: 100%;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 1;
+	border-style: solid; 
+}
+</style>
+
+<!-- CSS Script that removes textarea and textbox borders when printing ---(put this inbetween <header></header>)----------------->
+<style type="text/css" media="print">
+td.subjectline {
+	display: none;
+}
+input.noborder {
+	border : 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	//scrollbar : none;
+	border : 0px;
+}
+</style>
+
+
+<!-- ----------------------------------------------------------------------------------------- -->
+
+<script language="javascript">
+ function start(){
+    if (document.getElementById("counter").value ==''){
+       (document.getElementById("counter").value = 1);
+
+	var history1 = document.getElementById('history1').value;
+        var history1Split = history1.split("]]-----\n");
+        var History1 = history1Split.pop();
+        document.getElementById('Current').value = History1;
+
+	var history2 = document.getElementById('history2').value;
+        var history2Split = history2.split("]]-----\n");
+        var History2 = history2Split.pop();
+        document.getElementById('MedicalHistory').value = History2;
+
+	var history3 = document.getElementById('history3').value;
+        var history3Split = history3.split("]]-----\n");
+        var History3 = history3Split.pop();
+        document.getElementById('SocialFamilyHistory').value = History3;
+
+   }
+}
+</script>
+
+
+	<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+
+ <script type="text/javascript">
+     function Form(ElementId) {
+          return document.getElementById(ElementId);
+     }
+     /* function to update encounter note */
+     function copyToEncounter() {
+          try {
+               if (window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+                    window.parent.opener.document.getElementById("newNoteImg").onclick();
+                    TextAreaId = window.parent.opener.document.getElementsByName("caseNote_note")[0];
+                    window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.document.getElementById(TextAreaId.id).value + Form("transferBox").value;
+                    window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+               } else if (window.parent.opener.window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+                    window.parent.opener.window.parent.opener.document.getElementById("newNoteImg").onclick();
+                    TextAreaId = window.parent.opener.window.parent.opener.document.getElementsByName("caseNote_note")[0];
+                    window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value + Form("transferBox").value;
+                    window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+               }
+          } catch(e) {
+               alert("The note could not be copied to the encounter note.");
+          }
+     }
+  </script>
+
+<script language="javascript" type="text/javascript" src="${oscar_image_path}OBCreateNote.js"></script>
+
+
+
+	
+	<script type="text/javascript" language="javascript">
+	
+function isNumber(ss){
+	var s = ss.value;
+        var i;
+        for (i = 0; i < s.length; i++){
+            // Check that current character is number.
+            var c = s.charAt(i);
+			if (c == '.') {
+				continue;
+			} else if (((c < "0") || (c > "9"))) {
+                alert('Invalid '+s+' in field ' + ss.name + '. Please use digits only, no letters.');
+                ss.focus();
+                return false;
+			}
+        }
+        // All characters are numbers.
+        return true;
+}
+
+	
+function wtEnglish2Metric(obj) {
+	if(isNumber(obj) ) {
+		weight = obj.value;
+		weightM = Math.round(weight * 10 * 0.4536) / 10 ;
+		if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?") ) {
+			obj.value = weightM;
+		}
+	}
+}
+
+
+	function htEnglish2Metric(obj) {
+	height = obj.value;
+	if(height.length > 1 && height.indexOf("'") > 0 ) {
+		feet = height.substring(0, height.indexOf("'"));
+		inch = height.substring(height.indexOf("'"));
+		if(inch.length == 1) {
+			inch = 0;
+		} else {
+			inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+			inch = inch.substring(1);
+		}
+		height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10 ;
+		if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+			obj.value = height;
+		}
+	}
+}
+
+function bmi(){
+var height = document.getElementById('HT').value;
+var weight = document.getElementById('WT').value;
+		if ((height.length>0)&&(weight.length>0)) {
+			document.getElementById('BMI').value=Math.round(100000*weight/(height*height))/10;
+		}
+}		
+</script>
+
+
+</head>
+<body onload = 'start();'>
+
+
+<form method="post" action="" name="FormName">
+
+<!-- ---------------------------Hidden inputs   ------ -->
+<input type="hidden" name="history1" id="history1"  oscarDB=OngoingConcerns>
+<input type="hidden" name="history2" id="history2"  oscarDB=Medical_History>
+<input type="hidden" name="history3" id="history3"  oscarDB=Other_Medications_History>
+<input class="nodisplay" type="hidden" name="counter" id = "counter" >
+<input type="hidden" name="date" id="date"  oscardb=today >
+<textarea name="transferBox" style="display:none;" id="transferBox" ></textarea>
+
+<!-- ---------------------- -->
+
+
+<p class="title"  title="Connect - Greet the patient - immediate eye  contact, smile and warm tone of voice
+  Make a personal introduction - ensure eye levels both the same
+  Make a non-clinical connecting comment
+  Match your voice and vocabulary
+Listen - Attend to entire monologue without interruption
+  Use minimal encouragers and open-ended prompts
+  Maintain eye contact and use appropriate body language
+Empathize - Summarize the patients story back to them, including some of their own words
+  Acknowledge the patients emotion the impact on them or any distress
+  Note and respond to cues
+Ask - Seek patient's ideas, concerns, and expectations
+  Respectfully ask permission to ask further questions or examine
+Review and Check - confirm patient understanding - collaborative tell-back
+  Correct misunderstandings
+  Ensure continuity">
+	Initial Obstetrical Consult<br>
+       <u>C</u>onnect <u>L</u>isten <u>E</u>mpathise <u>A</u>sk <u>R</u>eview and check
+</p>
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">OB/GYN History</td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2">
+			Age<input name="age" id="age" type="text" class="formtext" style="width:20;" oscarDB=age>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			G<input name="m$G#value" id="G" type="text" class="formtext" style="width:20;" oscarDB=m$G#value>
+			P<input name="m$P#value" id="P" type="text" class="formtext" style="width:20;" oscarDB=m$P#value>
+			T<input name="m$TERM#value" id="TERM" type="text" class="formtext" style="width:20;" oscarDB=m$TERM#value>
+			A<input name="m$OBA#value" id="A" type="text" class="formtext" style="width:20;" oscarDB=m$OBA#value>
+			(SA<input name="m$SA#value" id="SA" type="text" class="formtext" style="width:20;" oscarDB=m$SA#value>
+			TA<input name="m$TOP#value" id="TOP" type="text" class="formtext" style="width:20;"oscarDB=m$TOP#value>)
+			L<input name="m$LIVE#value" id="LIVE" type="text" class="formtext" style="width:20;"oscarDB=m$LIVE#value>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			LNMP(YYYY-MM-DD)<input name="m$LMP#value" id="LMP" type="text" class="formtext" style="width:100;"oscarDB=m$LMP#value>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			EDD(YYYY-MM-DD)<input name="m$EDD#value" id="EDD" type="text" class="formtext" style="width:100;"oscarDB=m$EDD#value>
+		</td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2">
+			US<input name="USdates" id="USdates" type="text" class="formtext" style="width:50;" > (=Dates / <>Dates) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			EGA<input name="m$EGA#value" id="EGA" type="text" class="formtext" style="width:50;" oscarDB=m$EGA#value> (wks+days)
+        </tr>
+	<tr>
+		<td class="heading2">Blood type</td>
+		<td><input name="m$BTYP#value" id="BloodType" class="formtext" type="text" oscarDB=m$BTYP#value></td>
+	</tr>
+	<tr>
+		<td class="heading2">GBS Status</td>
+		<td><input name="m$GBS#value" id="GBSStatus" class="formtext" type="text" oscarDB=m$GBS#value></td>
+	</tr>
+	<tr>
+		<td class="heading2">Problems in Pregnancy</td>
+		<td class="normaltext"><textarea name="Current" id="Current" class="formtext" style="height:50;"></textarea></td>
+	</tr>
+	<tr>
+		<td class="heading2">Calcium & Vitamin D</td>
+		<td><input name="CalciumVitD" class="formtext" type="text"></td>
+	</tr>
+</table>
+
+
+<table width="800">
+	<tr>
+		<td class="heading2">Chief Complaint</td>
+		<td class="normaltext"><input class="formtext" name="m$CC#value" id="CC" type="text" oscarDB=m$CC#value onblur="subject.value=CC.value";></td>
+	</tr>
+</table>
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">History of Present Illness </td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2"><textarea name="m$HPI#value" id="HPI" class="formtext" style="height: 200;" wrap="virtual" oscarDB=m$HPI#value></textarea></td>
+	</tr>
+</table>
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">Past History</td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2"><textarea name="MedicalHistory" id="MedicalHistory"  class="formtext" style="height: 200;" wrap="virtual"></textarea></td>
+	</tr>
+	<tr>
+		<td class="heading2">Anesthetic Problems</td>
+		<td><textarea name="AnestheticProblems" id="AnestheticProblems" class="formtext" style="height:20;"></textarea></td>
+	</tr>
+	<tr>
+		<td class="heading2">Transfusions?</td>
+		<td><textarea name="m$TRAN#value" id="transfusions" class="formtext" style="height:20;"oscarDB=m$TRAN#value></textarea></td><td>Yes/No</td>
+	</tr>
+	<tr>
+		<td class="heading2">Sleep Apnea?</td>
+		<td><textarea name="m$SLAP#value" id="SLAP" class="formtext" style="height:20;"oscarDB=m$SLAP#value></textarea></td><td>Yes/No</td>
+	</tr>
+</table>
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">Medications</td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2"><textarea name="druglist_generic" id="druglist_generic"  class="formtext" style="height: 200;" wrap="virtual"  oscarDB=druglist_generic ></textarea></td>
+	</tr>
+	<tr>
+		<td class="heading2">Allergies</td>
+		<td><textarea name="Allergies" id="Allergies" class="formtext" style="height:20;" oscarDB=allergies_des_no_archived></textarea></td>
+	</tr>
+	<tr>
+		<td class="heading2">Latex Allergy?</td>
+		<td><textarea name="m$LATX#value" id="Latex" class="formtext" style="height:20;"oscarDB=m$LATX#value></textarea></td><td>Yes/No</td>
+	</tr>
+	<tr>
+		<td class="heading2">Adverse Reactions</td>
+		<td><textarea name="AdverseReactions" id="AdverseReactions" class="formtext" style="height:20;"></textarea></td>
+	</tr>
+
+</table>
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">Family History</td>
+	</tr>
+	<tr>
+		<td class="normaltext">
+			<input name="Mom" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Mother-'">Mom
+			<input name="Dad" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Father-'">Dad
+			<input name="Wife" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Wife-'">Wife
+			<input name="Husband" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Husband-'">Husband
+			<input name="Son" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Son-'">Son
+			<input name="Daughter" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Daughter-'">Daughter
+			<input name="Sister" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Sister-'">Sis
+			<input name="Broher" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Brother-'">Bro
+			<input name="Aunt" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Aunt-'">Aunt
+			<input name="Uncle" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Uncle-'">Uncle
+			<input name="Grandmother" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Grandmother-'">Grandma
+			<input name="Grandfather" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Grandfather-'">Grandpa
+			<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="normaltext">
+			<input name="BP" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='High Blood Pressure, '">BP
+			<input name="CVA" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Cerebral Vascular Accidents, '">CVA
+			<input name="MI" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Myocardial Infarction, '">MI
+			<input name="Lipid" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Hyperlipidemia, '">Lipid
+			<input name="DM" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Diabetes, '">DM
+			<input name="Thyr" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Thyroid Disease, '">Thyr
+			<input name="Ca" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Cancer, '">Ca
+			<input name="BreastCa" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Breast Cancer, '">Breast Ca
+			<input name="Glauc" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Glaucoma, '">Glauc
+			<input name="GI" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Gastrointestinal Problems, '">GI
+			<input name="GU" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='GenitoUrinary Problems, '">GU
+			<input name="MSK" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='MusculoSkeletal Problems, '">MSK
+			<input name="Resp" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Respiratory Illness, '">Resp
+			<input name="Allegy" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Allergies, '">Allergy
+			<input name="EtOH" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Alcohol Abuse, '">EtOH
+			<input name="Psych" type="checkbox" onclick="document.getElementById('SocialFamilyHistory').value+='Psychiatric Illness, '">Psych
+			<br>
+			<textarea name="SocialFamilyHistory" id="SocialFamilyHistory" class="formtext" style="height:100;"></textarea>
+		</td>
+	</tr>
+</table>
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">Lifestyle</td>
+	</tr>
+	<tr>
+		<td class="heading2">Smoking</td>
+		<td class="normaltext">
+			<input name="m$SKST#value" id="SKST" type="text" class="formtext" style="width:50;" oscarDB=m$SKST#value> (YES/No)
+			<input name="NeverSmoked" type="checkbox" >Never
+			<input name="Quit" type="checkbox" >Quit
+			<input name="OccasionalSmoke" type="checkbox" >Occ
+			<input name="OccasionalSmoke" type="checkbox" >Now
+			<input name="m$NOSK#value" id="CigPerDay" type="text" class="formtext" style="width:30px;height:20px;" oscarDB=m$NOSK#value>/day
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start:<input name="StartSmoke" type="text" class="formtext" style="width:50px; height:20px;">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Quit:<input name="QuitSmoke" type="text" class="formtext" style="width:50px; height:20px;">
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Caffeine</td>
+		<td class="normaltext">
+			<input name="Caffeine" id="Caffeine" type="text" class="formtext" style="width:100;">/day
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Alcohol</td>
+		<td class="normaltext">
+			<input name="m$ALC#value" type="text" class="formtext" style="width:50;" oscarDB=m$ALC#value> (YES/No)
+			<input name="m$DRPW#value" id="DRPW" type="text" class="formtext" style="width:50;" oscarDB=m$DRPW#value> /wk
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Drugs</td>
+		<td class="normaltext">
+			<input name="IVDU" type="checkbox" onclick="document.getElementById('Drugs').value+='IV Drug Use, '">IVDU
+			<input name="Drugs" id="Drugs" type="text" class="formtext" style="width:500;">
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Diet</td>
+		<td class="normaltext"><input name="Diet" type="text" class="formtext"></td>
+	</tr>
+	<tr>
+		<td class="heading2">Fitness</td>
+		<td class="normaltext"><input name="Fitness" type="text" class="formtext"></td>
+	</tr>
+</table>
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">Social History</td>
+	</tr>
+	<tr>
+		<td class="heading2">Relationship Status</td>
+		<td class="normaltext">
+			<input name="Single" type="checkbox">Single
+			<input name="Married" type="checkbox">Married
+			<input name="CommonLaw" type="checkbox">Common Law
+			<input name="Separated" type="checkbox">Separated
+			<input name="Divorced" type="checkbox">Divorced
+			<input name="Widowed" type="checkbox">Widowed
+		</td>
+	</tr>
+	<tr> 
+		<td class="heading2">Partner's Name</td>
+		<td class="normaltext"><input name="PartnerName" type="text" class="formtext"></td>
+	</tr>
+	<tr>
+		<td class="heading2">Sexual Partners</td>
+		<td class="normaltext">
+			<input name="PartnerM" type="checkbox">M 
+			<input name="PartnerF" type="checkbox">F 
+			<input name="PartnerBoth" type="checkbox">Both 
+			<input name="PartnerNone" type="checkbox">None 
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Sexual Concern</td>
+		<td class="normaltext">
+			<input name="SexualConcerns" type="text" class="formtext">
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Assault/Abuse</td>
+		<td class="normaltext">
+			<input name="m$ASLT#value" id="ASLT" type="text" class="formtext" style="width:50;" oscarDB=m$ASLT#value>
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Counselling?</td>
+		<td class="normaltext">
+			<input name="Counselling" id="Counselling" type="text" class="formtext">
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Education</td>
+		<td class="normaltext">
+			<input name="Education" type="text" class="formtext">
+		</td>
+	</tr>
+	<tr>
+		<td class="heading2">Occupation</td>
+		<td class="normaltext">
+			<input name="Occupation" id="Occupation" type="text" class="formtext">
+		</td>
+	</tr>
+</table>
+
+
+
+<table width="800">
+	<tr>
+		<td class="heading1" colspan="2">Examination</td>
+	</tr>
+	<tr class="heading2">
+		<td class="heading2">Measurements</td>
+		<td class="normaltext">
+			HT<input name="m$HT#value" id="HT" type="text" class="formtext" style="width:50;"  title="doubleclick to convert ft and in to cm" onDblClick="htEnglish2Metric(this)" oscarDB=m$HT#value> (cm)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			WT<input name="m$WT#value" id="WT" type="text" class="formtext" style="width:50;" title="doubleclick to convert lbs to kg"  onDblClick="wtEnglish2Metric(this)"  oscarDB=m$WT#value> (kg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input value="BMI" name="calcBMI" id="calcBMI" type="button" onclick="bmi();"><input name="m$BMI#value" id="BMI" type="text" class="formtext" style="width:50;" oscarDB=m$BMI#value> (kg/m<sup>2</sup>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			BP<input name="m$BP#value" id="BP" type="text" class="formtext" style="width:50;" oscarDB=m$BP#value> (sitting) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</td>
+	</tr>
+	<tr class="heading2">
+		<td class="heading2">Routine Exam</td>
+		<td class="normaltext">
+					<table width="100%">
+						<tr><td class="normaltext"> H&N <input name="m$HN#value" id="HN" type="text" class="formtext" style="width:50;" oscarDB=m$HN#value> (N/Abn)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						Chest<input name="m$CHST#value" id="CHST" type="text" class="formtext" style="width:50;" oscarDB=m$CHST#value>(N/Abn)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						CVS<input name="m$CVS#value" id="CVS" type="text" class="formtext" style="width:50;" oscarDB=m$CVS#value>(N/Abn)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						Abd<input name="m$ABD#value" id="ABD" type="text" class="formtext" style="width:50;" oscarDB=m$ABD#value>(N/Abn)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+						<tr><td class="normaltext">Pelvic<input name="m$PELV#value" id="PELV" type="text" class="formtext" style="width:75%;" oscarDB=m$PELV#value>(N/Abn/Disc)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+					</table>	
+		</td>
+</tr>
+
+	<tr class="heading2">
+		<td class="heading2">OB Measurements</td>
+		<td class="normaltext">
+			SFH<input name="m$SFH#value" id="SFH" type="text" class="formtext" style="width:50;" oscarDB=m$SFH#value> (cm)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			FHR<input name="m$FHR#value" id="FHR" type="text" class="formtext" style="width:50;" oscarDB=m$FHR#value> (BPM)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</td>
+	</tr>
+
+</table>
+<table width="800">
+	<tr>
+		<td class="heading1"  colspan="2">Assessment:</td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2"><textarea name="m$SES#value" id="Assessment" class="formtext" style="height:100;"></textarea></td>
+	</tr>
+</table>
+<table width="800">
+	<tr>
+		<td class="heading1"  colspan="2">Plan:</td>
+	</tr>
+	<tr>
+		<td class="normaltext" colspan="2"><textarea name="m$PLAN#value" id="PLAN" class="formtext" style="height:100;"></textarea></td>
+	</tr>
+</table>
+
+
+
+<!-- The submit/print/reset buttons ------------------------------------------------------------->
+<div name="FunctionButtons" class="DoNotPrint">
+<table>
+<tr>
+	<td class="subjectline">
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" onclick="obnote(); copyToEncounter(); document.FormName.submit();" type="button">
+		<input value="Reset" name="ResetButton" type="reset">
+		<input value="Print" name="PrintButton" onclick="javascript:window.print()" type="button">
+	</td>
+</tr>
+</table>
+</div>
+
+</form>
+<!-- ------End of submit/print/reset buttons----------------------------------------------------->
+
+
+
+</body>
+</html>
+<!--
+<template>
+  <familyhistory> $t{SocialFamilyHistory} </familyhistory>
+ <medicalhistory> $t{MedicalHistory} </medicalhistory>
+ <ongoingconcerns> $t{Current} </ongoingconcerns>
+
+
+
+</template>
+-->

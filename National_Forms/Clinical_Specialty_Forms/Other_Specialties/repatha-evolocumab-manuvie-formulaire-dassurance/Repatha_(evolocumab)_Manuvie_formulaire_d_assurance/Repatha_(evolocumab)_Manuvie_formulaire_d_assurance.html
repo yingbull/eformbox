@@ -1,0 +1,450 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Repatha_(evolocumab)_Manuvie_formulaire_d_assurance</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	$("#CanvasSignature2").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+	var $sig=$("#CanvasSignature2");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature2").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+	$("#CanvasSignature2").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+	var $sig=$("#CanvasSignature2");
+	var data
+	data=document.getElementById("StoreSignature2").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="855-752-0404"',1000);
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="loadSig();setFaxNo();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-1.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="page1_txt_1" id="page1_txt_1" type="text" class=" noborder" style="position:absolute; left:231px; top:345px; width:130px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_2" id="page1_txt_2" type="text" class=" noborder" style="position:absolute; left:367px; top:345px; width:168px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_3" id="page1_txt_3" type="text" class=" noborder" style="position:absolute; left:548px; top:345px; width:245px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_4" id="page1_txt_4" type="text" class=" noborder" style="position:absolute; left:232px; top:381px; width:379px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:640px; top:381px; width:130px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="page1_txt_5" id="page1_txt_5" type="text" class=" noborder" style="position:absolute; left:234px; top:421px; width:251px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_6" id="page1_txt_6" type="text" class=" noborder" style="position:absolute; left:501px; top:421px; width:114px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_7" id="page1_txt_7" type="text" class=" noborder" style="position:absolute; left:624px; top:421px; width:66px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_8" id="page1_txt_8" type="text" class=" noborder" style="position:absolute; left:698px; top:421px; width:93px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:236px; top:457px; width:244px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=first_last_name>
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:493px; top:457px; width:147px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc>
+<input name="page1_txt_9" id="page1_txt_9" type="text" class=" noborder" style="position:absolute; left:695px; top:457px; width:101px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:235px; top:495px; width:153px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="page1_txt_10" id="page1_txt_10" type="text" class=" noborder" style="position:absolute; left:417px; top:495px; width:374px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_chk_11" id="page1_chk_11" class="" type="checkbox" style="position:absolute; left:681px; top:522px; ">
+<input name="page1_chk_12" id="page1_chk_12" class="" type="checkbox" style="position:absolute; left:737px; top:522px; ">
+<input name="page1_txt_13" id="page1_txt_13" type="text" class=" noborder" style="position:absolute; left:240px; top:589px; width:559px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_14" id="page1_txt_14" type="text" class=" noborder" style="position:absolute; left:240px; top:626px; width:266px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_txt_15" id="page1_txt_15" type="text" class=" noborder" style="position:absolute; left:517px; top:626px; width:266px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_chk_16" id="page1_chk_16" class="" type="checkbox" style="position:absolute; left:682px; top:650px; ">
+<input name="page1_chk_17" id="page1_chk_17" class="" type="checkbox" style="position:absolute; left:738px; top:650px; ">
+<input name="page1_chk_18" id="page1_chk_18" class="" type="checkbox" style="position:absolute; left:681px; top:686px; ">
+<input name="page1_chk_19" id="page1_chk_19" class="" type="checkbox" style="position:absolute; left:738px; top:686px; ">
+<input name="page1_chk_20" id="page1_chk_20" class="" type="checkbox" style="position:absolute; left:683px; top:717px; ">
+<input name="page1_chk_21" id="page1_chk_21" class="" type="checkbox" style="position:absolute; left:738px; top:717px; ">
+</div>
+
+<div id="page2" style="page-break-after:always;position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-2.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="page2_chk_22" id="page2_chk_22" class="" type="checkbox" style="position:absolute; left:683px; top:197px; ">
+<input name="page2_chk_23" id="page2_chk_23" class="" type="checkbox" style="position:absolute; left:740px; top:197px; ">
+<input name="page2_chk_24" id="page2_chk_24" class="" type="checkbox" style="position:absolute; left:683px; top:267px; ">
+<input name="page2_chk_25" id="page2_chk_25" class="" type="checkbox" style="position:absolute; left:741px; top:267px; ">
+<input name="page2_chk_26" id="page2_chk_26" class="" type="checkbox" style="position:absolute; left:684px; top:394px; ">
+<input name="page2_chk_27" id="page2_chk_27" class="" type="checkbox" style="position:absolute; left:738px; top:394px; ">
+<input name="page2_chk_28" id="page2_chk_28" class="" type="checkbox" style="position:absolute; left:230px; top:604px; ">
+<input name="page2_chk_29" id="page2_chk_29" class="" type="checkbox" style="position:absolute; left:393px; top:604px; ">
+<input name="page2_chk_30" id="page2_chk_30" class="" type="checkbox" style="position:absolute; left:554px; top:604px; ">
+<input name="page2_chk_31" id="page2_chk_31" class="" type="checkbox" style="position:absolute; left:231px; top:622px; ">
+<input name="page2_chk_32" id="page2_chk_32" class="" type="checkbox" style="position:absolute; left:554px; top:622px; ">
+<input name="page2_chk_33" id="page2_chk_33" class="" type="checkbox" style="position:absolute; left:693px; top:650px; ">
+<input name="page2_chk_34" id="page2_chk_34" class="" type="checkbox" style="position:absolute; left:748px; top:650px; ">
+<input name="page2_chk_35" id="page2_chk_35" class="" type="checkbox" style="position:absolute; left:235px; top:930px; ">
+<input name="page2_chk_36" id="page2_chk_36" class="" type="checkbox" style="position:absolute; left:385px; top:930px; ">
+<input name="page2_txt_37" id="page2_txt_37" type="text" class=" noborder" style="position:absolute; left:238px; top:238px; width:562px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_txt_38" id="page2_txt_38" type="text" class=" noborder" style="position:absolute; left:238px; top:307px; width:562px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<textarea name="page2_txt_39" id="page2_txt_39" type="text" class=" noborder" style="position:absolute; left:238px; top:479px; width:562px; height:60px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page2_txt_40" id="page2_txt_40" type="text" class=" noborder" style="position:absolute; left:238px; top:557px; width:562px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<textarea name="page2_txt_41" id="page2_txt_41" type="text" class=" noborder" style="position:absolute; left:238px; top:687px; width:558px; height:85px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page2_txt_42" id="page2_txt_42" type="text" class=" noborder" style="position:absolute; left:235px; top:815px; width:415px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_txt_43" id="page2_txt_43" type="text" class=" noborder" style="position:absolute; left:658px; top:815px; width:140px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_txt_44" id="page2_txt_44" type="text" class=" noborder" style="position:absolute; left:235px; top:851px; width:261px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_txt_45" id="page2_txt_45" type="text" class=" noborder" style="position:absolute; left:503px; top:851px; width:114px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_txt_46" id="page2_txt_46" type="text" class=" noborder" style="position:absolute; left:628px; top:851px; width:52px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_txt_47" id="page2_txt_47" type="text" class=" noborder" style="position:absolute; left:697px; top:851px; width:100px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+</div>
+
+<div id="page3" style="page-break-after:always;position:relative;" >
+<img id="BGImage3" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-3.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="page3_txt_48" id="page3_txt_48" type="text" class=" noborder" style="position:absolute; left:234px; top:52px; width:432px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="today1" id="today1" type="text" class=" noborder" style="position:absolute; left:687px; top:52px; width:91px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<textarea name="page3_txt_49" id="page3_txt_49" type="text" class=" noborder" style="position:absolute; left:234px; top:190px; width:563px; height:136px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page3_chk_50" id="page3_chk_50" class="" type="checkbox" style="position:absolute; left:693px; top:140px; ">
+<input name="page3_chk_51" id="page3_chk_51" class="" type="checkbox" style="position:absolute; left:749px; top:140px; ">
+<input name="page3_chk_52" id="page3_chk_52" class="" type="checkbox" style="position:absolute; left:695px; top:352px; ">
+<input name="page3_chk_53" id="page3_chk_53" class="" type="checkbox" style="position:absolute; left:749px; top:352px; ">
+<input name="page3_chk_54" id="page3_chk_54" class="" type="checkbox" style="position:absolute; left:695px; top:402px; ">
+<input name="page3_chk_55" id="page3_chk_55" class="" type="checkbox" style="position:absolute; left:749px; top:402px; ">
+<input name="page3_chk_56" id="page3_chk_56" class="" type="checkbox" style="position:absolute; left:695px; top:450px; ">
+<input name="page3_chk_57" id="page3_chk_57" class="" type="checkbox" style="position:absolute; left:749px; top:450px; ">
+<input name="page3_chk_58" id="page3_chk_58" class="" type="checkbox" style="position:absolute; left:695px; top:578px; ">
+<input name="page3_chk_59" id="page3_chk_59" class="" type="checkbox" style="position:absolute; left:749px; top:578px; ">
+<input name="page3_chk_60" id="page3_chk_60" class="" type="checkbox" style="position:absolute; left:695px; top:700px; ">
+<input name="page3_chk_61" id="page3_chk_61" class="" type="checkbox" style="position:absolute; left:749px; top:700px; ">
+<input name="page3_chk_62" id="page3_chk_62" class="" type="checkbox" style="position:absolute; left:695px; top:741px; ">
+<input name="page3_chk_63" id="page3_chk_63" class="" type="checkbox" style="position:absolute; left:749px; top:741px; ">
+<input name="page3_chk_64" id="page3_chk_64" class="" type="checkbox" style="position:absolute; left:695px; top:818px; ">
+<input name="page3_chk_65" id="page3_chk_65" class="" type="checkbox" style="position:absolute; left:749px; top:818px; ">
+</div>
+
+<div id="page4" style="page-break-after:always;position:relative;" >
+<img id="BGImage4" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-4.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="page4_chk_66" id="page4_chk_66" class="" type="checkbox" style="position:absolute; left:230px; top:31px; ">
+<input name="page4_chk_67" id="page4_chk_67" class="" type="checkbox" style="position:absolute; left:673px; top:152px; ">
+<input name="page4_chk_68" id="page4_chk_68" class="" type="checkbox" style="position:absolute; left:730px; top:152px; ">
+<input name="page4_chk_69" id="page4_chk_69" class="" type="checkbox" style="position:absolute; left:231px; top:251px; ">
+<input name="page4_chk_70" id="page4_chk_70" class="" type="checkbox" style="position:absolute; left:231px; top:281px; ">
+<input name="page4_chk_71" id="page4_chk_71" class="" type="checkbox" style="position:absolute; left:386px; top:281px; ">
+<input name="page4_chk_72" id="page4_chk_72" class="" type="checkbox" style="position:absolute; left:675px; top:410px; ">
+<input name="page4_chk_73" id="page4_chk_73" class="" type="checkbox" style="position:absolute; left:730px; top:410px; ">
+<input name="page4_chk_74" id="page4_chk_74" class="" type="checkbox" style="position:absolute; left:674px; top:595px; ">
+<input name="page4_chk_75" id="page4_chk_75" class="" type="checkbox" style="position:absolute; left:729px; top:595px; ">
+<input name="page4_chk_76" id="page4_chk_76" class="" type="checkbox" style="position:absolute; left:674px; top:641px; ">
+<input name="page4_chk_77" id="page4_chk_77" class="" type="checkbox" style="position:absolute; left:729px; top:641px; ">
+<input name="page4_chk_78" id="page4_chk_78" class="" type="checkbox" style="position:absolute; left:674px; top:687px; ">
+<input name="page4_chk_79" id="page4_chk_79" class="" type="checkbox" style="position:absolute; left:729px; top:687px; ">
+<input name="page4_chk_80" id="page4_chk_80" class="" type="checkbox" style="position:absolute; left:674px; top:808px; ">
+<input name="page4_chk_81" id="page4_chk_81" class="" type="checkbox" style="position:absolute; left:729px; top:808px; ">
+<input name="page4_chk_82" id="page4_chk_82" class="" type="checkbox" style="position:absolute; left:674px; top:930px; ">
+<input name="page4_chk_83" id="page4_chk_83" class="" type="checkbox" style="position:absolute; left:729px; top:930px; ">
+<input name="page4_chk_84" id="page4_chk_84" class="" type="checkbox" style="position:absolute; left:674px; top:973px; ">
+<input name="page4_chk_85" id="page4_chk_85" class="" type="checkbox" style="position:absolute; left:729px; top:973px; ">
+<input name="page4_txt_86" id="page4_txt_86" type="text" class=" noborder" style="position:absolute; left:248px; top:113px; width:230px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page4_txt_87" id="page4_txt_87" type="text" class=" noborder" style="position:absolute; left:493px; top:113px; width:281px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page4_txt_88" id="page4_txt_88" type="text" class=" noborder" style="position:absolute; left:236px; top:214px; width:533px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page4_txt_89" id="page4_txt_89" type="text" class=" noborder" style="position:absolute; left:236px; top:317px; width:435px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="today2" id="today2" type="text" class=" noborder" style="position:absolute; left:684px; top:317px; width:101px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="page4_txt_90" id="page4_txt_90" type="text" class=" noborder" style="position:absolute; left:235px; top:383px; width:281px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<textarea name="page4_txt_91" id="page4_txt_91" type="text" class=" noborder" style="position:absolute; left:235px; top:452px; width:558px; height:133px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+</div>
+
+<div id="page5" style="page-break-after:always;position:relative;" >
+<img id="BGImage5" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-5.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="page5_txt_92" id="page5_txt_92" type="text" class=" noborder" style="position:absolute; left:235px; top:206px; width:243px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page5_txt_93" id="page5_txt_93" type="text" class=" noborder" style="position:absolute; left:491px; top:206px; width:279px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page5_txt_94" id="page5_txt_94" type="text" class=" noborder" style="position:absolute; left:236px; top:317px; width:539px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page5_txt_95" id="page5_txt_95" type="text" class=" noborder" style="position:absolute; left:236px; top:418px; width:436px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="today3" id="today3" type="text" class=" noborder" style="position:absolute; left:686px; top:418px; width:101px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="page5_chk_96" id="page5_chk_96" class="" type="checkbox" style="position:absolute; left:674px; top:86px; ">
+<input name="page5_chk_97" id="page5_chk_97" class="" type="checkbox" style="position:absolute; left:730px; top:86px; ">
+<input name="page5_chk_98" id="page5_chk_98" class="" type="checkbox" style="position:absolute; left:674px; top:246px; ">
+<input name="page5_chk_99" id="page5_chk_99" class="" type="checkbox" style="position:absolute; left:728px; top:246px; ">
+<input name="page5_chk_100" id="page5_chk_100" class="" type="checkbox" style="position:absolute; left:232px; top:353px; ">
+<input name="page5_chk_101" id="page5_chk_101" class="" type="checkbox" style="position:absolute; left:235px; top:384px; ">
+<input name="page5_chk_102" id="page5_chk_102" class="" type="checkbox" style="position:absolute; left:386px; top:384px; ">
+<input name="page5_chk_103" id="page5_chk_103" class="" type="checkbox" style="position:absolute; left:675px; top:481px; ">
+<input name="page5_chk_104" id="page5_chk_104" class="" type="checkbox" style="position:absolute; left:729px; top:481px; ">
+<input name="page5_chk_105" id="page5_chk_105" class="" type="checkbox" style="position:absolute; left:675px; top:502px; ">
+<input name="page5_chk_106" id="page5_chk_106" class="" type="checkbox" style="position:absolute; left:729px; top:502px; ">
+<input name="page5_chk_107" id="page5_chk_107" class="" type="checkbox" style="position:absolute; left:675px; top:522px; ">
+<input name="page5_chk_108" id="page5_chk_108" class="" type="checkbox" style="position:absolute; left:729px; top:522px; ">
+<input name="page5_chk_109" id="page5_chk_109" class="" type="checkbox" style="position:absolute; left:675px; top:545px; ">
+<input name="page5_chk_110" id="page5_chk_110" class="" type="checkbox" style="position:absolute; left:729px; top:545px; ">
+<input name="page5_chk_111" id="page5_chk_111" class="" type="checkbox" style="position:absolute; left:675px; top:569px; ">
+<input name="page5_chk_112" id="page5_chk_112" class="" type="checkbox" style="position:absolute; left:729px; top:569px; ">
+<input name="page5_chk_113" id="page5_chk_113" class="" type="checkbox" style="position:absolute; left:675px; top:590px; ">
+<input name="page5_chk_114" id="page5_chk_114" class="" type="checkbox" style="position:absolute; left:729px; top:590px; ">
+<input name="page5_chk_115" id="page5_chk_115" class="" type="checkbox" style="position:absolute; left:675px; top:610px; ">
+<input name="page5_chk_116" id="page5_chk_116" class="" type="checkbox" style="position:absolute; left:729px; top:610px; ">
+<input name="page5_chk_117" id="page5_chk_117" class="" type="checkbox" style="position:absolute; left:675px; top:633px; ">
+<input name="page5_chk_118" id="page5_chk_118" class="" type="checkbox" style="position:absolute; left:729px; top:633px; ">
+<input name="page5_chk_119" id="page5_chk_119" class="" type="checkbox" style="position:absolute; left:675px; top:677px; ">
+<input name="page5_chk_120" id="page5_chk_120" class="" type="checkbox" style="position:absolute; left:729px; top:677px; ">
+<input name="page5_chk_121" id="page5_chk_121" class="" type="checkbox" style="position:absolute; left:675px; top:719px; ">
+<input name="page5_chk_122" id="page5_chk_122" class="" type="checkbox" style="position:absolute; left:729px; top:719px; ">
+<input name="page5_chk_123" id="page5_chk_123" class="" type="checkbox" style="position:absolute; left:675px; top:763px; ">
+<input name="page5_chk_124" id="page5_chk_124" class="" type="checkbox" style="position:absolute; left:729px; top:763px; ">
+<input name="page5_chk_125" id="page5_chk_125" class="" type="checkbox" style="position:absolute; left:675px; top:878px; ">
+<input name="page5_chk_126" id="page5_chk_126" class="" type="checkbox" style="position:absolute; left:729px; top:878px; ">
+</div>
+
+<div id="page6" style="page-break-after:always;position:relative;" >
+<img id="BGImage6" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-6.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="page6_chk_127" id="page6_chk_127" class="" type="checkbox" style="position:absolute; left:674px; top:52px; ">
+<input name="page6_chk_128" id="page6_chk_128" class="" type="checkbox" style="position:absolute; left:729px; top:52px; ">
+<input name="page6_chk_129" id="page6_chk_129" class="" type="checkbox" style="position:absolute; left:674px; top:91px; ">
+<input name="page6_chk_130" id="page6_chk_130" class="" type="checkbox" style="position:absolute; left:729px; top:91px; ">
+<input name="page6_chk_131" id="page6_chk_131" class="" type="checkbox" style="position:absolute; left:674px; top:163px; ">
+<input name="page6_chk_132" id="page6_chk_132" class="" type="checkbox" style="position:absolute; left:729px; top:163px; ">
+<input name="page6_chk_133" id="page6_chk_133" class="" type="checkbox" style="position:absolute; left:674px; top:316px; ">
+<input name="page6_chk_134" id="page6_chk_134" class="" type="checkbox" style="position:absolute; left:729px; top:316px; ">
+<input name="page6_chk_135" id="page6_chk_135" class="" type="checkbox" style="position:absolute; left:234px; top:420px; ">
+<input name="page6_chk_136" id="page6_chk_136" class="" type="checkbox" style="position:absolute; left:231px; top:577px; ">
+<input name="page6_chk_137" id="page6_chk_137" class="" type="checkbox" style="position:absolute; left:489px; top:577px; ">
+<input name="page6_chk_138" id="page6_chk_138" class="" type="checkbox" style="position:absolute; left:231px; top:598px; ">
+<input name="page6_chk_139" id="page6_chk_139" class="" type="checkbox" style="position:absolute; left:369px; top:753px; ">
+<input name="page6_chk_140" id="page6_chk_140" class="" type="checkbox" style="position:absolute; left:594px; top:753px; ">
+<input name="page6_chk_141" id="page6_chk_141" class="" type="checkbox" style="position:absolute; left:656px; top:781px; ">
+<input name="page6_chk_142" id="page6_chk_142" class="" type="checkbox" style="position:absolute; left:712px; top:781px; ">
+<input name="page6_chk_143" id="page6_chk_143" class="" type="checkbox" style="position:absolute; left:369px; top:850px; ">
+<input name="page6_chk_144" id="page6_chk_144" class="" type="checkbox" style="position:absolute; left:594px; top:850px; ">
+<input name="page6_chk_145" id="page6_chk_145" class="" type="checkbox" style="position:absolute; left:655px; top:877px; ">
+<input name="page6_chk_146" id="page6_chk_146" class="" type="checkbox" style="position:absolute; left:711px; top:877px; ">
+<input name="page6_chk_147" id="page6_chk_147" class="" type="checkbox" style="position:absolute; left:369px; top:947px; ">
+<input name="page6_chk_148" id="page6_chk_148" class="" type="checkbox" style="position:absolute; left:594px; top:947px; ">
+<input name="page6_chk_149" id="page6_chk_149" class="" type="checkbox" style="position:absolute; left:656px; top:974px; ">
+<input name="page6_chk_150" id="page6_chk_150" class="" type="checkbox" style="position:absolute; left:712px; top:974px; ">
+<input name="page6_txt_151" id="page6_txt_151" type="text" class=" noborder" style="position:absolute; left:235px; top:277px; width:240px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page6_txt_152" id="page6_txt_152" type="text" class=" noborder" style="position:absolute; left:493px; top:277px; width:240px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page6_txt_153" id="page6_txt_153" type="text" class=" noborder" style="position:absolute; left:236px; top:381px; width:539px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<textarea name="page6_txt_154" id="page6_txt_154" type="text" class=" noborder" style="position:absolute; left:235px; top:483px; width:556px; height:45px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<textarea name="page6_txt_155" id="page6_txt_155" type="text" class=" noborder" style="position:absolute; left:234px; top:649px; width:561px; height:32px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_156" id="page6_txt_156" type="text" class=" noborder" style="position:absolute; left:235px; top:729px; width:317px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_157" id="page6_txt_157" type="text" class=" noborder" style="position:absolute; left:560px; top:729px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_158" id="page6_txt_158" type="text" class=" noborder" style="position:absolute; left:684px; top:729px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_159" id="page6_txt_159" type="text" class=" noborder" style="position:absolute; left:235px; top:829px; width:315px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_160" id="page6_txt_160" type="text" class=" noborder" style="position:absolute; left:560px; top:829px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_161" id="page6_txt_161" type="text" class=" noborder" style="position:absolute; left:684px; top:829px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_162" id="page6_txt_162" type="text" class=" noborder" style="position:absolute; left:234px; top:923px; width:315px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_163" id="page6_txt_163" type="text" class=" noborder" style="position:absolute; left:560px; top:923px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="page6_txt_164" id="page6_txt_164" type="text" class=" noborder" style="position:absolute; left:684px; top:923px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+</div>
+
+<div id="page7" style="page-break-after:always;position:relative;" >
+<img id="BGImage7" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-7.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="current_user_fname_lname" id="current_user_fname_lname" type="text" class=" noborder" style="position:absolute; left:236px; top:40px; width:342px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_fname_lname>
+<input name="current_user_specialty" id="current_user_specialty" type="text" class=" noborder" style="position:absolute; left:605px; top:40px; width:116px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_specialty>
+<input name="clinic_addressLine" id="clinic_addressLine" type="text" class=" noborder" style="position:absolute; left:236px; top:80px; width:250px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_addressLine>
+<input name="clinic_city" id="clinic_city" type="text" class=" noborder" style="position:absolute; left:506px; top:80px; width:100px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_city>
+<input name="clinic_province" id="clinic_province" type="text" class=" noborder" style="position:absolute; left:630px; top:80px; width:51px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_province>
+<input name="clinic_postal" id="clinic_postal" type="text" class=" noborder" style="position:absolute; left:700px; top:80px; width:92px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_postal>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:238px; top:116px; width:175px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="page7_txt_165" id="page7_txt_165" type="text" class=" noborder" style="position:absolute; left:457px; top:116px; width:88px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:570px; top:116px; width:175px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<input name="today4" id="today4" type="text" class=" noborder" style="position:absolute; left:651px; top:237px; width:142px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:342px; top:227px; width:120px; height:30; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+</div>
+
+<div id="page8" style="position:relative;" >
+<img id="BGImage8" src="${oscar_image_path}Repatha_(evolocumab)_Manuvie_formulaire_d_assurance-8.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+	<div id="CanvasSignature2" class="sig" style="position:absolute; left:342px; top:444px; width:120px; height:30; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+<input name="today5" id="today5" type="text" class=" noborder" style="position:absolute; left:651px; top:461px; width:140px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1068px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+	Calendar.setup( { inputField : "today1", ifFormat : "%Y-%m-%d",  button : "today1" } );
+	Calendar.setup( { inputField : "today2", ifFormat : "%Y-%m-%d",  button : "today2" } );
+	Calendar.setup( { inputField : "today3", ifFormat : "%Y-%m-%d",  button : "today3" } );
+	Calendar.setup( { inputField : "today4", ifFormat : "%Y-%m-%d",  button : "today4" } );
+	Calendar.setup( { inputField : "today5", ifFormat : "%Y-%m-%d",  button : "today5" } );
+</script>
+
+</body>
+</html>

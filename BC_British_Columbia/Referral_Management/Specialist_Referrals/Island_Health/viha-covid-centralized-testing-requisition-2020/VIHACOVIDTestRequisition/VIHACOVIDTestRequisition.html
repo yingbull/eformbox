@@ -1,0 +1,278 @@
+<html>
+<head>
+
+<!-- V1: VIHA Covid Testing Requisition adapted for OSCAR eForm by Gunther Klein on 11-Apr-2020  --> 
+<!--  V2_11_Apr_2020_gk_jy: move Xbox to CSS, and increase font size; John Yap  -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>COVID19_Testing_req</title>
+<style type="text/css" media="screen" >
+ .input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+
+ a {text-decoration: none;
+ 	color: blue; 
+ 	border: 2px solid gray;
+ 	border-radius: 5px;
+}
+ a:hover { border: 2px solid gray; border-style:outset; background:pink; opacity:0.7;}
+ a:active { border: 3px solid #000000; border-style: inset;}
+
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width:16px;
+	height:16px;
+	font-size: 16px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.box2 {
+	position: absolute;
+	width:20px;
+	height:20px;
+	font-size: 20px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+});
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="document.FormName.indicateneed.focus();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="position:relative;">
+<img id="BGImage1" src="${oscar_image_path}COVID testing req.png" style="position:relative; left:0px; top:0px; width:750px;">
+
+<!-- Patient Info -->
+<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position:absolute; left:128px; top:353px; width:242px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=patient_nameL>
+
+<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position:absolute; left:128px; top:376px; width:242px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=patient_nameF>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:134px; top:398px; width:236px; font-family:sans-serif; font-size:14px; background:white;" oscarDB=dob>
+
+<textarea name="address" id="address" type="text" class="noborder" style="position:absolute; left:56px; top:439px; width:312px; height:44px; resize:none; font-family:sans-serif; font-size:14px; background:white;" oscarDB=address></textarea>
+
+<input name="hinc" id="hinc" type="text" class="noborder" style="position:absolute; left:98px; top:486px; width:272px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=hinc>
+
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:202px; top:509px; width:168px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=phone>
+
+<input name="email" id="email" type="text" class="noborder" style="position:absolute; left:94px; top:530px; width:276px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=email>
+
+<!-- Provider Info -->
+<input name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:435px; top:353px; width:261px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=current_user>
+
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position:absolute; left:435px; top:376px; width:261px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;" oscarDB=current_user_ohip_no>
+
+<textarea name="clinic_label" id="clinic_label" type="text" class="noborder" style="position:absolute; left:383px; top:395px; width:312px; height:65px; resize:none; font-family:sans-serif; font-size:11px; background:white;" oscarDB=clinic_label></textarea>
+
+<input name="PCP" id="PCP" type="text" class="noborder" style="position:absolute; left:518px; top:468px; width:178px; font-family:sans-serif; font-size:12px; background:transparent;">
+
+<input name="PCP1" id="PCP1" type="text" class="Xbox box1" style="left:384px; top:485px;">
+
+<input name="copyto" id="copyto" type="text" class="noborder" style="position:absolute; left:497px; top:510px; width:199px; font-family:sans-serif; font-weight:bold; font-size:12px; background:transparent;">
+
+<input name="publichealthRN" id="publichealthRN" type="text" class="noborder" style="position:absolute; left:563px; top:531px; width:133px; font-family:sans-serif; font-weight:bold; font-size:12px; background:transparent;">
+
+<!-- Testing Criteria -->
+<span style="position:absolute; left:400px; top:562px;font-family:sans-serif; font-size:16px;">Date: </span>
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:445px; top:562px; width:141px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=today>
+
+<input name="Criteria3" id="Criteria3" type="text" class="Xbox box1" style="left:65px; top:587px;">
+
+<input name="Criteria4" id="Criteria4" type="text" class="Xbox box1" style="left:65px; top:606px;">
+
+<input name="Criteria5" id="Criteria5" type="text" class="Xbox box1" style="left:65px; top:624px;">
+
+<input name="Criteria6" id="Criteria6" type="text" class="Xbox box1" style="left:65px; top:642px;">
+
+<input name="Criteria7" id="Criteria7" type="text" class="Xbox box1" style="left:65px; top:660px;">
+
+<input name="Criteria8" id="Criteria8" type="text" class="Xbox box1" style="left:65px; top:678px;">
+
+<input name="Criteria9" id="Criteria9" type="text" class="Xbox box1" style="left:65px; top:696px;">
+
+<input name="Criteria10" id="Criteria10" type="text" class="Xbox box1" style="left:65px; top:714px;">
+
+<input name="Criteria11" id="Criteria11" type="text" class="Xbox box1" style="left:65px; top:732px;">
+
+<input name="Criteria12" id="Criteria12" type="text" class="Xbox box1" style="left:65px; top:750px;">
+
+<input name="Criteria13" id="Criteria13" type="text" class="Xbox box1" style="left:65px; top:769px;">
+
+<input name="other" id="other" type="text" class="noborder" style="position:absolute; left:118px; top:768px; width:360px; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;">
+
+<textarea name="indicateneed" id="indicateneed" type="text" class="noborder" style="position:absolute; left:485px; top:618px; width:209px; height:171px; resize:none; font-family:sans-serif; font-weight:bold; font-size:14px; background:transparent;"></textarea>
+
+<!-- Current Symptoms -->
+<input name="CurrentSxL14" id="CurrentSxL14" type="text" class="Xbox box1" style="left:65px; top:828px;">
+
+<input name="CurrentSxL15" id="CurrentSxL15" type="text" class="Xbox box1" style="left:65px; top:846px;">
+
+<input name="CurrentSxL16" id="CurrentSxL16" type="text" class="Xbox box1" style="left:65px; top:864px;">
+
+<input name="CurrentSxL17" id="CurrentSxL17" type="text" class="Xbox box1" style="left:65px; top:882px;">
+
+<input name="CurrentSxL18" id="CurrentSxL18" type="text" class="Xbox box1" style="left:65px; top:900px;">
+
+<input name="CurrentSxMid19" id="CurrentSxMid19" type="text" class="Xbox box1" style="left:278px; top:828px;">
+
+<input name="CurrentSxMid20" id="CurrentSxMid20" type="text" class="Xbox box1" style="left:278px; top:846px;">
+
+<input name="CurrentSxMid21" id="CurrentSxMid21" type="text" class="Xbox box1" style="left:278px; top:864px;">
+
+<input name="CurrentSxMid22" id="CurrentSxMid22" type="text" class="Xbox box1" style="left:278px; top:882px;">
+
+<input name="CurrentSxMid23" id="CurrentSxMid23" type="text" class="Xbox box1" style="left:278px; top:900px;">
+
+<input name="CurrentSxR24" id="CurrentSxR24" type="text" class="Xbox box1" style="left:492px; top:828px;">
+
+<input name="CurrentSxR25" id="CurrentSxR25" type="text" class="Xbox box1" style="left:492px; top:846px;">
+
+<input name="CurrentSxR26" id="CurrentSxR26" type="text" class="Xbox box1" style="left:492px; top:864px;">
+
+<input name="CurrentSxR27" id="CurrentSxR27" type="text" class="Xbox box1" style="left:492px; top:882px;">
+
+<input name="CurrentSxR28" id="CurrentSxR28" type="text" class="Xbox box1" style="left:492px; top:900px;">
+
+<div class="DoNotPrint" id="LinksAndButtons">
+	<a name="GuidelinesURL" id="GuidelinesURL" class="DoNotPrint" style="position:absolute; left:290px; top:120px; font-size:20px;" target="_blank" href="http://www.bccdc.ca/resource-gallery/Documents/Statistics%20and%20Research/Statistics%20and%20Reports/Epid/Influenza%20and%20Respiratory/ERV/BCCDC_PHL_Updated_nCoV_Lab_Guidance.pdf">&nbsp; Guidelines PDF &nbsp;</a>
+
+	<input type="button" name="CovidAssessment" id="CovidAssessment" class="DoNotPrint" style="position:absolute; left:710px; top:285px; font-size:16px; color:red;" value="COVID MD Assessment Clinic" oscarOPEN="VIHA COVID Assessment Clinic" >
+
+	<span style="position:absolute; left:770; top:318px; width:140px; font-size:12px; color:grey;">(import missing eForm <a target="_blank" href="https://worldoscar.org/?wpdmpro=covid-19-clinic-for-campbell-river-vancouver-island-health-authority" style="border: 0px;">here</a>)</span>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:40px; top:971px;">
+	<table><tr style="background:#e5f2ff;"><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',2000);"> 
+	 </td></tr></table>
+ </div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%d-%b-%Y",  button : "today" } );
+</script>
+
+</body>
+</html>

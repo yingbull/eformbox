@@ -1,0 +1,517 @@
+<html ng-app="paxlovidComponent">
+<!-- author origional for OntarioMD -->
+<!-- v3.1b (c) Peter Hutten-Czapski 2023 -->
+
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Paxlovid Prescription Form</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous" ></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js" integrity="sha256-zBy1l2WBAh2vPF8rnjFMUXujsfkKjya0Jy5j6yKj0+Q=" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-resource.min.js" integrity="sha256-J9EYt6krcoClMPGCdI0BA5vhMVHU/lu9vSnhbx0vfAI=" crossorigin="anonymous"></script>
+<!-- <script src="../library/angular.js"></script> -->
+<!-- <script src="../library/angular-resource.js"></script> -->
+
+
+<!-- Classic Signatures -->
+
+<script type="text/javascript">
+function SignForm2() {
+	//stamp by delegation model 
+	var provNum = '';
+	var userBillingNo = document.getElementById('user_ohip_no').value;
+	if (parseInt(userBillingNo) > 100) {
+		// then a valid billing number so use the current user id 
+		provNum = document.getElementById('user_id').value; 
+		if (provNum != document.getElementById('doctor_no').value && !!document.getElementById('doctor')) {
+			document.getElementById('doctor').value=document.getElementById('CurrentUserName').value + ' CC: ' + document.getElementById('doctor').value;
+		}
+	} else { 
+		provNum = document.getElementById('doctor_no').value; 
+	}
+	document.getElementById('Stamp').src = '../eform/displayImage.do?imagefile=consult_sig_'+provNum+'.png';
+}
+function toggleMe(){
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		SignForm2()
+	} else {
+		document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile=BNK.png";
+	}
+}
+</script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+
+</script>
+
+
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+<script language="javascript">
+
+var rxInstructions = "" ;
+var rxDuration ;
+var rxAmount ;
+
+function setN(){
+        rxInstructions = "Take 2 pink tablets of nirmatrelvir and 1 white tablet of ritonavir once in the morning and once in the evening for 5 days" 
+        rxDuration = 5;
+        rxAmount = 30;
+                console.log("usual instructions "+rxInstructions);
+}
+function setStage3CKD(){
+        rxInstructions = "Take 1 pink tablet of nirmatrelvir and 1 white tablet of ritonavir once in the morning and once in the evening for 5 days" 
+        rxDuration = 5;
+        rxAmount = 20;
+                console.log("Stage 3 CKD "+rxInstructions);
+}
+
+function setStage4CKD(){
+        rxInstructions = "Take 2 pink tablets of nirmatrelvir and 1 white tablet of ritonavir today then take 1 pink tablet of nirmatrelvir and 1 white tablet of ritonavir for 4 more days";
+        rxDuration = 5;
+        rxAmount = 11;
+                console.log("Stage 4 CKD "+rxInstructions);
+}
+
+function addDialysis(){
+        rxInstructions += "; give after dialysis on dialysis days";
+        console.log("addDialysis "+rxInstructions);
+}
+
+function lowWtStage4CKD(){
+        rxInstructions = "Take 1pink tablets of nirmatrelvir and 1 white tablet of ritonavir every 48h for 3 doses" 
+        rxDuration = 6;
+        rxAmount = 6;
+                console.log("lowWt "+rxInstructions);
+}
+
+
+var app = angular.module("paxlovidComponent", ['ngResource']);
+
+app.controller("paxlovidComponent", function($scope,$http,$window,$sce){
+
+
+        $scope.onPrescribe = function(){
+
+                var patient_id = document.getElementById("patient_id").value;
+                var doctor_provider_no = document.getElementById("user_id").value;
+
+                var brand = "PAXLOVID 100MG/150MG";
+
+                var queryPath = '../ws/rs/rx/prescribe?demographicNo=' + patient_id;
+                var today = new Date();
+                var endDate = new Date();
+                endDate.setDate(today.getDate() + rxDuration);
+
+                // keys taken from DrugTransfer.java DrugTo1.java
+
+                var drug={
+                        drugId:0,
+                        demographicNo:patient_id,
+                        providerNo:"101",
+                        takeMin:1,
+                        takeMax:1,
+                        rxDate:"2023-01-24T05:00:00.000Z",
+                        endDate:"2023-02-02T05:00:00.000Z",
+                        duration: rxDuration,
+                        durationUnit:"D",
+                        route:"po",
+                        prn:false,
+                        repeats:0,
+                        quantity:rxAmount,
+                        archived:false,
+                        noSubstitutions:false,
+                        brandName: brand,
+                        genericName:"RITONAVIR 100MG / NIRMATRELVIR 150MG",
+                        atc:null,
+                        gcnSeqNo:"261",
+                        regionalIdentifier:"02524031",
+                        instructions: brand + " " + rxInstructions,
+                        frequency: "bid",
+                        method: "Take"
+                };
+
+                meds = [];
+                meds.push(drug); 
+                var queryPath = '../ws/rs/rx/prescribe?demographicNo=' + patient_id;
+
+                $http.post(queryPath, meds).then(function (data) {
+                        console.log('dataata',data);
+                        alert("druglist updated");
+                });        
+
+
+        }
+
+});
+
+
+</script>
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value=""',1000);
+} 
+</script>
+</head>
+
+<body ng-controller="paxlovidComponent" onload="SignForm2();setFaxNo();">
+
+<form method="post" action="" name="FormName" id="FormName" >
+    <!--*******************************************-->
+	<!-- Hidden input elements -->
+	<!--*******************************************-->
+	<!-- Preloaded elements to access information from Oscar DB-->
+        <input type="hidden" id="patientGender" oscarDB="sex"/>
+        <input type="hidden" id="patient_id" oscarDB=patient_id>
+        <input type="hidden" id="age" oscarDB=age>
+        
+        <div id="page1" style="position:relative;" >
+            <img id="BGImage1" src="${oscar_image_path}Paxlovid Prescription Form -2022_12_19v3-1.jpg" style="position: relative; left: 0px; top: 0px; width:750px">
+					
+            <!-- Medication list Checkbox-->
+            <input name="medicationList" id="medicationList" class="" type="checkbox" style="position:absolute; left:308px; top:49px; ">
+            <label for="medicationList" style="position:absolute; left:312px; top:49px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>   
+            <!-- Prescriber information-->
+            <input name="prescriberFirstName" oscarDB="current_user_fname" id="prescriberFirstName" type="text" class=" noborder" style="position:absolute; left:71px; top:110px; width:110px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="prescriberLastName" oscarDB="current_user_lname" id="prescriberLastName" type="text" class=" noborder" style="position:absolute; left:252px; top:110px; width:105px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="prescriberAddress" id="prescriberAddress" type="text" class=" noborder" style="position:absolute; left:64px; top:137px; width:294px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB="clinic_address">
+            <input name="prescriberCity" id="prescriberCity" type="text" class=" noborder" style="position:absolute; left:43px; top:168px; width:141px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=clinic_city>
+            <input name="prescriberPhone" id="prescriberPhone" type="text" class=" noborder" style="position:absolute; left:70px; top:194px; width:114px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=clinic_phone>
+            <input name="prescriberFax" id="prescriberFax" type="text" class=" noborder" style="position:absolute; left:223px; top:194px; width:136px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=clinic_fax >
+            <input name="prescriberPostalCode" id="prescriberPostalCode" type="text" class=" noborder" style="position:absolute; left:261px; top:168px; width:96px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=clinic_postal >
+            <!-- Patient information-->
+            <input name="patientFirstName" oscarDB="patient_nameF" id="patientFirstName" type="text" class=" noborder" style="position:absolute; left:374px; top:118px; width:78px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientLastName" oscarDB="patient_nameL" id="patientLastName" type="text" class=" noborder" style="position:absolute; left:467px; top:118px; width:83px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientSex" id="patientSexMale" class="" type="radio" style="position:absolute; left:556px; top:116px; ">
+            <label for="patientSexMale" style="position:absolute; left:560px; top:116px; width:10px; height:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="patientSex" id="patientSexFemale" class="" type="radio" style="position:absolute; left:592px; top:116px; ">
+            <label for="patientSexFemale" style="position:absolute; left:596px; top:116px; width:10px; height:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="patientDob" oscarDB="dob" id="patientDob" type="text" class=" noborder" style="position:absolute; left:665px; top:118px; width:66px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientAddress" oscarDB="address" id="patientAddress" type="text" class=" noborder" style="position:absolute; left:419px; top:134px; width:130px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientHn" oscarDB="hinc" id="patientHn" type="text" class=" noborder" style="position:absolute; left:560px; top:140px; width:97px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientHnVer" oscarDB="hinversion" id="patientHnVer" type="text" class=" noborder" style="position:absolute; left:666px; top:140px; width:66px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientCity" oscarDB="city" id="patientCity" type="text" class=" noborder" style="position:absolute; left:402px; top:154px; width:146px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientPostalCode" oscarDB="postal" id="patientPostalCode" type="text" class=" noborder" style="position:absolute; left:626px; top:154px; width:106px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientPhone" oscarDB="phone" id="patientPhone" type="text" class=" noborder" style="position:absolute; left:429px; top:169px; width:120px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientLanguage" id="patientLanguageEn" type="radio" class="" style="position:absolute; left:558px; top:174px;" >
+            <label for="patientLanguageEn" style="position:absolute; left:562px; top:174px; width:10px; height:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="patientLanguage" id="patientLanguageOther" type="radio" class="" style="position:absolute; left:590px; top:174px;" >
+            <label for="patientLanguageOther" style="position:absolute; left:594px; top:174px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="patientOtherLanguage" id="patientOtherLanguage" type="text" class=" noborder" style="position:absolute; left:640px; top:178px; width:92px; height:9px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientHeight" oscarDB="m$HT#value" id="patientHeight" type="text" class=" noborder" style="position:absolute; left:434px; top:194px; width:114px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="patientWeight" oscarDB="m$WT#value" id="patientWeight" type="text" class=" noborder" style="position:absolute; left:622px; top:194px; width:110px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <!-- Screening information-->
+            <input name="dateCovidTest" id="dateCovidTest" type="text" class="noborder" style="position:absolute; left:147px; top:232px; width:75px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name=dateSymptoms" id="dateSymptoms" type="text" class="noborder" style="position:absolute; left:610px; top:232px; width:120px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="ageGroup" id="age60Rb" type="radio" class=" noborder" style="position:absolute; left:33px; top:266px;" >
+            <label for="age60Rb" style="position:absolute; left:37px; top:266px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="ageGroup" id="age18ImmunoRb" type="radio" class=" noborder" style="position:absolute; left:196px; top:266px;" >
+            <label for="age18ImmunoRb" style="position:absolute; left:200px; top:266px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="ageGroup" id="age18To59Rb" type="radio" class=" noborder" style="position:absolute; left:462px; top:267px;" >
+            <label for="age18To59Rb" style="position:absolute; left:466px; top:267px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            
+            <input name="drugTherapyNameCb" id="drugTherapyNameCb" class="" type="checkbox" style="position:absolute; left:202px; top:282px; ">
+            <label for="drugTherapyNameCb" style="position:absolute; left:206px; top:282px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="drug" id="drug" class="" type="text" style="position:absolute; left:280px; top:298px; width:100px; height: 12px;">
+            <textarea name="drugTherapyName" id="drugTherapyName" type="text" class=" noborder" style="position:absolute; left:20px; top:316px; width:460px; height:73px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB="druglist_line"></textarea>
+            
+            <input name="unvaccinated" id="comorbidity" class="age18To59Rb" type="checkbox" style="position:absolute; left:478px; top:282px; ">
+            <label for="comorbidity" style="position:absolute; left:482px; top:288px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="unvaccinated" id="unvaccinated" class="age18To59Rb" type="checkbox" style="position:absolute; left:478px; top:308px; ">
+            <label for="unvaccinated" style="position:absolute; left:482px; top:308px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="noPrimarySeries" id="noPrimarySeries" class="age18To59Rb" type="checkbox" style="position:absolute; left:478px; top:332px; ">
+            <label for="noPrimarySeries" style="position:absolute; left:482px; top:332px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="noRecentExposure" id="noRecentExposure" class="age18To59Rb" type="checkbox" style="position:absolute; left:478px; top:358px; ">
+            <label for="noRecentExposure" style="position:absolute; left:482px; top:358px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <!-- Paxlovid Assessment-->
+            <input name="currentMedHerbListCb" id="currentMedHerbListCb" class="" type="checkbox" style="position:absolute; left:24px; top:405px; ">
+            <label for="currentMedHerbListCb" style="position:absolute; left:28px; top:405px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="homePharmacyCb" id="homePharmacyCb" class="" type="checkbox" style="position:absolute; left:24px; top:418px; ">
+            <label for="homePharmacyCb" style="position:absolute; left:28px; top:418px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="homePharmacyPhoneCb" id="homePharmacyPhoneCb" class="" type="checkbox" style="position:absolute; left:24px; top:430px; ">
+            <label for="homePharmacyPhoneCb" style="position:absolute; left:28px; top:430px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="allergiesCb" id="allergiesCb" class="" type="checkbox" style="position:absolute; left:24px; top:444px; ">
+            <label for="allergiesCb" style="position:absolute; left:28px; top:444px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="allergies" id="allergies" class="" type="text" style="position:absolute; left:80px; top:444px; width:250px; height:12px; " oscarDB=allergies_des_no_archived>
+                        
+            <input name="homePharmacyName" id="homePharmacyName" type="text" class=" noborder" style="position:absolute; left:160px; top:420px; width:205px; height:8px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="homePharmacyNumber" id="homePharmacyNumber" type="text" class=" noborder" style="position:absolute; left:186px; top:434px; width:178px; height:7px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+
+            <input name="pregnancy" id="pregnancyYesRb" class="" type="radio" style="position:absolute; left:148px; top:454px; ">
+            <label for="pregnancyYesRb" style="position:absolute; left:152px; top:454px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="pregnancy" id="pregnancyNoRb" class="" type="radio" style="position:absolute; left:185px; top:454px; ">
+            <label for="pregnancyNoRb" style="position:absolute; left:189px; top:454px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="pregnancy" id="pregnancyNaRb" class="" type="radio" style="position:absolute; left:220px; top:454px; ">
+            <label for="pregnancyNaRb" style="position:absolute; left:224px; top:454px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            
+            <input name="liver" id="liverYesRb" class="" type="radio" style="position:absolute; left:490px; top:405px; ">
+            <label for="liverYesRb" style="position:absolute; left:494px; top:405px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="liver" id="liverNoRb" class="" type="radio" style="position:absolute; left:526px; top:405px; ">
+            <label for="liverNoRb" style="position:absolute; left:530px; top:405px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="liver" id="liverUnknownRb" class="" type="radio" style="position:absolute; left:558px; top:405px; ">
+            <label for="liverUnknownRb" style="position:absolute; left:562px; top:405px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+            <input name="renal" id="renalYesRb" class="" type="radio" style="position:absolute; left:493px; top:417px; ">
+            <label for="renalYesRb" style="position:absolute; left:497px; top:417px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="renal" id="renalNoRb" class="" type="radio" style="position:absolute; left:527px; top:417px; ">
+            <label for="renalNoRb" style="position:absolute; left:531px; top:417px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="renal" id="renalUnknownRb" class="" type="radio" style="position:absolute; left:557px; top:417px;">
+            <label for="renalUnknownRb" style="position:absolute; left:561px; top:417px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+            <input name="creatinineCb" id="creatinineCb" class="" type="checkbox" style="position:absolute; left:406px; top:442px; ">
+            <label for="creatinineCb" style="position:absolute; left:410px; top:442px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <input name="egfrCb" id="egfrCb" class="" type="checkbox" style="position:absolute; left:406px; top:452px; ">
+            <label for="egfrCb" style="position:absolute; left:410px; top:452px; width:10px; height:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+            <input name="creatinineValue" id="creatinineValue" oscarDB="m$SCR#value" type="text" class=" noborder" style="position:absolute; left:553px; top:444px; width:45px; height:10px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="creatinineValueDate" id="creatinineValueDate" oscarDB="m$SCR#dateObserved" type="text" class=" noborder" style="position:absolute; left:634px; top:444px; width:92px; height:8px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            
+            <input name="egfrValue" id="egfrValue" oscarDB="m$EGFR#value" type="text" class=" noborder" style="position:absolute; left:502px; top:458px; width:96px; height:8px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            <input name="egfrValueDate" id="egfrValueDate" oscarDB="m$EGFR#dateObserved" type="text" class=" noborder" style="position:absolute; left:636px; top:458px; width:90px; height:8px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+            
+            <!-- Medication Order-->
+            <input name="standardDoseCb" id="standardDoseCb" class="" type="checkbox" style="position:absolute; left:8px; top:548px; " onclick="setN();">
+            <label for="standardDoseCb" style="position:absolute; left:12px; top:548px; width:10px; height:13px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+            
+            <input name="reducedDoseCb" id="reducedDoseCb" class="" type="checkbox" style="position:absolute; left:12px; top:590px; "onclick="setStage3CKD();">
+            <label for="reducedDoseCb" style="position:absolute; left:16px; top:590px; width:10px; height:13px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+
+            <input name="reducedDoseDay1Cb" id="reducedDoseDay1Cb" class="" type="checkbox" style="position:absolute; left:12px; top:632px; " onclick="setStage4CKD();">
+            <label for="reducedDoseDay1Cb" style="position:absolute; left:16px; top:632px; width:10px; height:13px;">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+            <input name="reducedDoseDialysisCb" id="reducedDoseDialysisCb" class="" type="checkbox" style="position:absolute; left:12px; top:646px; " onclick="setStage4CKD(); addDialysis();">
+            <label for="reducedDoseDialysisCb" style="position:absolute; left:16px; top:646px; width:10px; height:13px;">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+            <input name="reducedDoseDialysisWeightCb" id="reducedDoseDialysisWeightCb" class="" type="checkbox" style="position:absolute; left:12px; top:660px; " onclick="lowWtStage4CKD();addDialysis();">
+            <label for="reducedDoseDialysisWeightCb" style="position:absolute; left:16px; top:660px; width:10px; height:13px;">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+
+            <textarea name="additionalMedNotes" id="additionalMedNotes" type="text" class=" noborder" style="position:absolute; left:17px; top:706px; width:706px; height:92px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+            
+            <!-- Link section -->
+            <a href="https://hivclinic.ca/downloads/paxlovid/paxlovid_guide_live.pdf" target="_blank"
+            style="position:absolute; left:252px; top:623px; width:550px; height:10px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:11px; text-align:left; background-color:transparent;">
+                (off-label use, Paxlovid - What Pharmacists and Prescribers Need to Know(December 14, 2022))
+            </a>
+
+            <!-- Signature section -->
+                <input name="current_user_cpsid" id="current_user_cpsid" type="text" class="noborder" style="position:absolute; left:50px; top:832px; width:163px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_cpsid>
+                <input name="today" id="today" type="text" class="noborder" style="position:absolute; left:578px; top:832px; width:115px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+                <input name="current_user_work_phone" id="current_user_work_phone" type="text" class="noborder" style="position:absolute; left:51px; top:884px; width:170px; height:32px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_work_phone>
+
+                <div style="position:absolute; left:300px; top:818px;">
+                <img id="Stamp" src="../eform/displayImage.do?imagefile=BNK.png" width="240" height="39" onclick="toggleMe();">
+                </div>
+
+                <input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+                <input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+                <input type="hidden" name="SubmittedBy" id="SubmittedBy">
+                <input type="hidden" name="user_id" id="user_id" oscarDB=current_user_id>
+                <input type="hidden" name="user_ohip_no" id="user_ohip_no" oscarDB=current_user_ohip_no>
+                <input type="hidden" name="doctor_no" id="doctor_no" oscarDB=doctor_provider_no>
+                <div id="signatureDisplay"></div>
+                <input type="hidden" name="signatureValue" id="signatureValue">
+
+            <!-- Default buttons -->
+            <div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+                <table><tr><td>
+                    Subject: <input name="subject" size="40" type="text"> <br> 
+                    <input value="Submit" name="SubmitButton" id="SubmitButton" type="submit"  onclick=" releaseDirtyFlag();"> 
+
+                    <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+                        <input value="Print" name="PrintButton" id="PrintButton" type="button"  onclick="formPrint();"> 
+                        <input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" ng-click="onPrescribe()" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+                </td></tr></table>
+
+
+
+
+
+<input type="button" id="rx" value="save this Rx to Druglist" ng-click="onPrescribe()" style="color:blue;">
+                <!-- Copy Left -->
+                <a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+            </div>
+        </div>
+
+    </form>
+</body>
+<script>
+    $(document).ready(function() {
+        // window.resizeTo(1380, 800);
+        prepareForm();
+        checkGFR();
+        checkAge();
+        listen();
+    });
+
+    function prepareForm(){
+        if (getGender()){
+            $("#patientSexMale").prop('checked', true);
+        } else {
+            $("#patientSexFemale").prop('checked', true);
+        }
+    }
+    
+    function checkGFR(){
+        var gfr = $("#egfrValue").val();
+        if (!isNaN(gfr) && gfr > 60){
+            $("#standardDoseCb").prop('checked', true);
+            setN();
+        }
+    }
+
+    function checkAge(){
+        var age = $("#age").val();
+        if (!isNaN(age) && age > 60){
+            $("#age60Rb").prop('checked', true);
+        }
+    }
+
+    function getGender(){
+        var gender = $("#patientGender").val();
+
+        if (gender=="M"){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    function listen(){
+        console.log("test dafasaf");
+        $("#age60Rb").on('change', function() {
+                clearAgeGroup18Immuno();
+                clearAgeGroup18To59();
+		});
+        $("#age18ImmunoRb").on('change', function() {
+                clearAgeGroup18To59();
+		});
+        $("#age18To59Rb").on('change', function() {
+		clearAgeGroup18Immuno();
+		});
+        $("#drugTherapyNameCb").on('change', function() {
+		$("#age18ImmunoRb").prop('checked', true);
+                clearAgeGroup18To59();
+		});
+        $("#comorbidity").on('change', function() {
+		$("#age18To59Rb").prop('checked', true);
+                clearAgeGroup18Immuno();
+		});
+        $("#unvaccinated").on('change', function() {
+                $("#age18To59Rb").prop('checked', true);
+                clearAgeGroup18Immuno();
+		});
+        $("#noPrimarySeries").on('change', function() {
+                $("#age18To59Rb").prop('checked', true);
+                clearAgeGroup18Immuno();
+		});
+        $("#noRecentExposure").on('change', function() {
+            $("#age18To59Rb").prop('checked', true);
+                clearAgeGroup18Immuno();
+		});
+    }
+
+    function clearAgeGroup18Immuno(){
+        $("#drugTherapyNameCb").prop('checked', false);
+    }
+
+    function clearAgeGroup18To59(){
+        $("#comorbidity").prop('checked', false);
+        $("#unvaccinated").prop('checked', false);
+        $("#noPrimarySeries").prop('checked', false);
+        $("#noRecentExposure").prop('checked', false);
+    }
+</script>
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "dateCovidTest", ifFormat : "%Y-%m-%d",  button : "dateCovidTest" } );
+	Calendar.setup( { inputField : "dateSymptoms", ifFormat : "%Y-%m-%d",  button : "dateSymptoms" } );
+</script>
+</html>

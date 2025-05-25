@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Basic Page Needs -->
+		<meta charset="utf-8" />
+		<title>Dementia Toolkit V3</title>
+
+		<!-- Version History:
+			v0.1.0: Initial Prototype Layout; based on CYMH eForm developed by J Ho, U Vic, LEAD  - see below
+		-->
+
+		<!-- Child and Youth Mental Health Toolkit eForm v0.9.0
+			Copyright 2015-2016 TBD, Jeremy Ho
+			Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported License -->
+
+		<!-- LeadLab eForm Bootstrap Template v1.0.1
+			Copyright 2016 LeadLab
+			Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported License -->
+
+		<!-- Dementia template (PDF version, V1_Sep28_2018), developed by:
+			Dr. Leena Jain, Dr. Peter O’Connor and the Dementia Working Group for health care providers in British Columbia. Funding for this
+			initiative was provided for by the Specialist Services Committee (SSC), a joint collaborative committee of the Doctors of BC and 
+			the BC Ministry of Health.
+			Contact: Dr. Peter O’Connor, Peter.Oconnor@fraserhealth.ca
+			Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported License -->
+
+		<!-- V2_Dec1_2018: refinements post-discussion with authors above. -->
+
+		<!-- v0.1.3_Dec16_2018: additional references with available web links.  Hardcopy still available in bmp if needed. 
+				Change bootstrap buttons to more conventional hover-highlight hyperlinks for cosmetic reasons, includes eForm links
+				Adjust text-area width to allow for proper print - cannot be unlimited width
+				Remind to paste sequentially, or notes will be in reverse order
+				Remove Tickler link except for final save to reduce risk of losing eForm data -->
+
+		<!-- V3_Dec11_2022: updates to eFORM and web links that have gone stale since 2018.  John Yap -->
+		
+		<!-- E-FORM DISCLAIMER:
+			As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+
+			No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+
+			Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+
+			This applies to both eForms shared by others, and those created by users themselves. Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+
+			Free: eForms so shared may not be sold or purchased. Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms. 
+
+			eForms are not part of the OSCAR core program functionality and code base. For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+
+			eForms are also not subject to the ISO production process for OSCAR. -->
+
+		<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217;
+			.hidden-print 			Class hides element from printing
+			.visible-print-block 	Class only shows element when printing -->
+
+		<!-- Mobile Page Metas -->
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- CSS -->
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="${oscar_image_path}bootstrap.min.css" />
+
+		<!-- LeadLab eForm Template CSS -->
+		<link rel="stylesheet" type="text/css" href="leadlab-eform-bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="${oscar_image_path}leadlab-eform-bootstrap.css" />
+
+
+		<!-- script to link to other pages within Oscar -->
+		<script language="javascript" src="${oscar_image_path}onBodyLoad.js"></script>
+		<script language="javascript1.2" type="text/javascript" src="onBodyLoad.js"></script>
+
+		<!-- Custom CSS -->
+		<style type="text/css">
+	@media print {
+	/* Bold Visited Buttons */
+	label.btn.btn-success {
+		font-weight: bold;
+	}
+}
+a:hover {
+	border: 1px solid #000000;
+	background:pink;
+	opacity:0.8;
+}
+		</style>
+
+		<!-- Scripts -->
+		<!-- jQuery JS -->
+		<script type="text/javascript" src="jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="${oscar_image_path}jquery-1.12.0.min.js"></script>
+
+		<!-- Bootstrap JS -->
+		<script type="text/javascript" src="bootstrap.min.js"></script>
+		<script type="text/javascript" src="${oscar_image_path}bootstrap.min.js"></script>
+
+		<!-- LeadLab eForm Template JS -->
+		<script type="text/javascript" src="leadlab-eform-bootstrap.js"></script>
+		<script type="text/javascript" src="${oscar_image_path}leadlab-eform-bootstrap.js"></script>
+
+<!-- Custom JS initial load -->
+<script type="text/javascript">
+			/* this function required to show bmp pdfs */
+			$(document).ready(function(){
+});
+
+// Darius code to open PDF from images
+var theDocuments=[];
+theDocuments['DementiaAppendix1']='${oscar_image_path}/'+'DementiaAppendix1.pdf.bmp';
+theDocuments['DementiaAppendix2']='${oscar_image_path}/'+'DementiaAppendix2.pdf.bmp';
+theDocuments['7numbersforearlydementia']='${oscar_image_path}/'+'7numbersforearlydementia.pdf.bmp';
+theDocuments['Keep_your_brain_healthy_getting_to_know_dementia_brochure']='${oscar_image_path}/'+'Keep_your_brain_healthy_getting_to_know_dementia_brochure.pdf.bmp';
+theDocuments['MoCA_Hindi']='${oscar_image_path}/'+'MoCA_Hindi.pdf.bmp';
+theDocuments['MoCAandInstructions_FINAL_PUNJABI_REV_18_01_12_V.02']='${oscar_image_path}/'+'MoCAandInstructions_FINAL_PUNJABI_REV_18_01_12_V.02.pdf.bmp';
+theDocuments['DaysofWeek_Hindi_17_05_26']='${oscar_image_path}/'+'DaysofWeek_Hindi_17_05_26.png';
+theDocuments['DaysofWeek_Punjabi_17_05_26']='${oscar_image_path}/'+'DaysofWeek_Punjabi_17_05_26.png';
+theDocuments['MonthsofYear_Punjabi']='${oscar_image_path}/'+'MonthsofYear_Punjabi.png';
+
+function openDocument(theDocumentName){
+	var theViewer=window.open('about:blank');
+	var pdfLoader='<object data="'+theDocuments[theDocumentName]+'" type="application/pdf" width="100%" height="100%"></object><object id="target" type="application/pdf" width="100%" height="100%"></object></object><script>var theXMLHttpRequest=new XMLHttpRequest();theXMLHttpRequest.open("GET","'+theDocuments[theDocumentName]+'",true);theXMLHttpRequest.responseType="arraybuffer";theXMLHttpRequest.onload=function(){if(this.status==200)document.getElementById("target").data=window.URL.createObjectURL(new Blob([this.response],{type:"application/pdf"}));};theXMLHttpRequest.send();</scrip'+'t>';
+	theViewer.document.write(pdfLoader);
+	theViewer.document.close();
+}
+</script>
+		
+		<!-- Commented PDF images included for zip exporting -->
+		<script>
+		// "${oscar_image_path}DementiaAppendix1.pdf.bmp"
+		// "${oscar_image_path}DementiaAppendix2.pdf.bmp"
+		// "${oscar_image_path}7numbersforearlydementia.pdf.bmp"
+		// "${oscar_image_path}Keep_your_brain_healthy_getting_to_know_dementia_brochure.pdf.bmp"
+		// "${oscar_image_path}MoCA_Hindi.pdf.bmp"
+		// "${oscar_image_path}MoCAandInstructions_FINAL_PUNJABI_REV_18_01_12_V.02.pdf.bmp"
+		// "${oscar_image_path}DaysofWeek_Hindi_17_05_26.png"
+		// "${oscar_image_path}DaysofWeek_Punjabi_17_05_26.png"
+		// "${oscar_image_path}MonthsofYear_Punjabi.png"
+		</script>
+
+	</head>
+
+	<body>
+		<!-- Javascript Required Modal -->
+		<noscript class="hidden-print">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title text-danger">Javascript not enabled!</h3>
+					</div>
+					<div class="modal-body">
+						<p>You need Javascript enabled in order to use this eForm!</p>
+					</div>
+				</div>
+			</div>
+		</noscript>
+
+		<!-- eForm -->
+		<form method="post" action="" class="hidden" name="Dementia_Algorithm" id="eform-form">
+			<div class="eform container-fluid">
+
+				<!-- Hidden Fields -->
+				<input type="hidden" name="DemographicNo" id="DemographicNo" oscardb="patient_id" />
+				<input type="hidden" name="SexGender" id="SexGender" oscardb="sex" />
+
+				<!-- Header and Patient Info -->
+				<header class="eform-header">
+					<h2 title="Pathway for recognition, diagnosis, and management of early dementia in Primary Care">Early Dementia Toolkit</h2>
+					<div class="row">
+						<div class="col-sm-4 col-lg-3">
+							<label for="PtName">Name</label>
+							<input type="text" class="form-control input-sm" name="PatientName" id="PatientName" placeholder="Name" oscardb="patient_name" />
+						</div>
+						<div class="col-sm-2">
+							<label for="TodaysDate">Initial Date</label>
+							<input type="text" class="form-control input-sm" name="TodayDate" id="TodayDate" placeholder="Date" oscardb="today" />
+						</div>
+						<div class="col-sm-2 col-md-1">
+							<label for="Age">Age</label>
+							<input type="text" class="form-control input-sm" name="Age" id="Age" placeholder="Age" oscardb="age" />
+						</div>
+					</div><br>
+					<div class="row">
+						<div class="col-sm-2 col-md-1">
+							<label for="MMSE">MMSE</label>
+							<input type="text" class="form-control input-sm" name="MMSE" id="MMSE" placeholder="MMSE" oscarDB=m$MMSE#value />
+						</div>
+						<div class="col-sm-2">
+							<label for="MMSE_date">MMSE date</label>
+							<input type="text" class="form-control input-sm" name="MMSE_date" id="MMSE_date" placeholder="MMSE date" oscarDB=m$MMSE#dateObserved />
+						</div>
+						<div class="col-sm-2 col-md-1">
+							<label for="MoCA">MoCA</label>
+							<input type="text" class="form-control input-sm" name="MoCA" id="MoCA" placeholder="MoCA" oscarDB=m$MoCA#value />
+						</div>
+						<div class="col-sm-2">
+							<label for="MoCA_date">MoCA date</label>
+							<input type="text" class="form-control input-sm" name="MoCA_date" id="MoCA_date" placeholder="MMSE date" oscarDB=m$MoCA#dateObserved />
+						</div>
+					</div>
+				</header>
+
+				<!-- Main Content -->
+				<section class="eform-panel">
+
+					<!-- Definitions -->
+					<article class="panel panel-default hidden-print">
+						<header class="panel-heading" data-toggle="collapse" data-target="#related-eform-panel">
+							<h4 class="panel-title"><b>DEFINITIONS</b></h4>
+						</header>
+						<section class="panel-collapse collapse" id="related-eform-panel">
+							<div class="panel-body">
+								<a type="button" class="btn btn-info btn-sm" name="MCI" data-toggle="tooltip" title="Cognitive decline that does not significantly impact daily function." href="https://psychcentral.com/disorders/symptoms-of-minor-neurocognitive-disorder/" target="_blank">Mild Cognitive Impairment</a>
+								<a type="button" class="btn btn-info btn-sm" name="Early_Dementia" data-toggle="tooltip" title="Cognitive impairment that begins to impact daily function i.e. ADL's, iADL's" href="https://psychcentral.com/disorders/symptoms-of-major-neurocognitive-disorder/" target="_blank">Dementia</a>
+
+								<!--
+								<a type="button" class="btn btn-info btn-sm" name="ADL" data-toggle="tooltip" title="Basic activities of daily living" href="http://www-tc.pbs.org/wgbh/caringforyourparents/caregiver/pdf/cfyp_adl_checklist.pdf" target="_blank">ADLs</a>
+								<a type="button" class="btn btn-info btn-sm" name="Early_Dementia" data-toggle="tooltip" title="Instrumental activities of daily living" href="https://www.abramsoncenter.org/media/1197/instrumental-activities-of-daily-living.pdf" target="_blank">iADLs</a>
+								-->
+
+								<span>N.B. <b>Major and Mild Neurocognitive Disorders</b> are the new DSM-5 Terms for <b>Dementia and Mild Cognitive Impairment</b></span>
+							</div>
+						</section>
+					</article>
+					<!-- End Definitions -->
+
+					<!-- Main Accordion -->
+					<div class="panel-group" id="accordion">
+
+						<!-- Title -->
+								<h2 style="font-size:22px;">Checklist for Recognizing and Diagnosing Dementia</h2>
+
+						<!-- Panel 1 for Dementia Algorithm - Diagnostic criteria -->
+						<article class="panel panel-default" id="DiagnosticCriteria">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-1">
+								<h4 class="panel-title" style="color:green;">Diagnostic criteria</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-1">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b>Mild Cognitive Impairment (MCI) requires impairment:</b>
+												<ol>
+													<li>in <b>ONE</b> of the following cognitive domains: memory, language, visuospatial, executive function and behaviour</li>
+													<li>that does not significantly affect their usual activities or work</li>
+													<li>that is not explained by delirium or other major psychiatric disorder</li>
+												</ol>
+											</ul>
+
+											<ul><b>EARLY dementia requires impairment:</b>
+												<ol>
+													<li>in at least <b>TWO</b> of the following cognitive domains: memory, language, 	visuospatial, executive function and behaviour &#x2731;</li>
+													<li>that causes a functional decline usual activities or work</li>
+													<li>that is not explained by delirium or other major psychiatric disorder</li>
+												</ol>
+											</ul>
+
+											<ul><b>&#x2731; Typical behaviours in early dementia include irritability, social withdrawal and impaired self-esteem.</b></ul>
+											<ul>&#x2731; See reference:  <a type="button" name="Reference" data-toggle="tooltip" title="BC Guildelines reference" href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cogimp-appendix-b.pdf" target="_blank">clinical features of dementia vs delirium vs depression</a></ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="DiagnosticCriteria-text" id="DiagnosticCriteria-text" rows="1" style="max-width:840px; min-width:840px;" placeholder="Diagnostic Criteria Notes"></textarea>
+
+								<footer class="panel-footer hidden-print" id="DiagnosticCriteria-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="DiagnosticCriteriaCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('DiagnosticCriteria-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="DiagnosticCriteriaResetButton" value="Reset" onClick="$('#DiagnosticCriteria-text').val(resetText['DiagnosticCriteria-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="DiagnosticCriteriaTimeButton" value="Add Time" onClick="AppendLocalTime('DiagnosticCriteria-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 1 -->
+
+						<!-- Title Panels 2-7 -->
+								<h2 style="font-size:22px;">Diagnostic Algorithm</h2>
+
+						<!-- Panel 2 Dementia Algorithm - Symptoms -->
+						<article class="panel panel-default" id="Symptoms">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-2">
+								<h4 class="panel-title" style="color:green;">Symptoms</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-2">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b style="color:blue;">Symptoms of cognitive impairment, such as:</b>
+												<ol>
+													<li>missed office appointments</li>
+													<li>frequent or inappropriate calls to the office</li>
+													<li>medication issues: compliance or adherence problems and errors</li>
+													<li>repetitive in conversation</li>
+													<li>repeatedly misplacing items</li>
+													<li>unable to recall treatment instructions from prior visits</li>
+													<li>defers to family members in answering questions (consider possible hearing impairment or language barriers also) - e.g. head-turning sign</li>
+													<li>presents with signs of declined self-care (example: poor hygiene, grooming, unexplained weight loss)</li>
+													<li>frequent visits to the emergency department</li>
+													<li>late life depression or anxiety </li>
+													<li>motor vehicle accidents, fender benders or wayfinding problems</li>
+												</ol>
+											</ul>
+											<ul><b style="color:blue;">Areas of difficulty in <a type="button" name="Reference" data-toggle="tooltip" title="Reference" href="https://www.seniorplanningservices.com/files/2013/12/Santa-Barbara-ADL-IADL-Checklist.pdf" target="_blank">ADLs and iADLs</a></b></ul>
+											<ul><b style="color:blue;">Obtain collateral history from family and caregivers</b></ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Symptoms-text" id="Symptoms-text" rows="1" style="max-width:840px; min-width:840px;">Subjective: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Symptoms-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="SymptomsCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Symptoms-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="SymptomsResetButton" value="Reset" onClick="$('#Symptoms-text').val(resetText['Symptoms-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="SymptomsTimeButton" value="Add Time" onClick="AppendLocalTime('Symptoms-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 2 -->
+
+						<!-- Panel 3 for Dementia Algorithm - Complete History -->
+						<article class="panel panel-default" id="CompleteHx">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-3">
+								<h4 class="panel-title" style="color:green;">Medical history</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-3">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b style="color:blue;">Consider:</b>
+												<ol>
+													<li>comorbidities:
+														<ul><li>REM sleep disorder, sleep apnea</li>
+															<li>contra-indications to AChEIs: CHF, brady-arrhythmia, COPD, asthma, ulcer, seizures, urinary retention, BPH, etc</li>
+														</ul>
+													</li>
+													<li>medication list (assess for polypharmacy)
+														<ul><li>AChEIs interact with: beta-blockers, Verapamil, Diltiazem, Digoxin, other anti-arrhythmics (risk of bradyarrhythmia)</li>
+														</ul>
+													</li>
+													<li>alcohol and illicit drug use/smoking history</li>
+													<li>education and employment history</li>
+													<li>family history (e.g. early dementia)</li>
+												</ol>
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="CompleteHx-text" id="CompleteHx-text" rows="1" style="max-width:840px; min-width:840px;">PMHx: </textarea>
+
+								<footer class="panel-footer hidden-print" id="CompleteHx-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="CompleteHxCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('CompleteHx-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="CompleteHxResetButton" value="Reset" onClick="$('#CompleteHx-text').val(resetText['CompleteHx-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="CompleteHxTimeButton" value="Add Time" onClick="AppendLocalTime('CompleteHx-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 3 -->
+
+						<!-- Panel 4 for Dementia Algorithm - Cognitive Assessment -->
+						<article class="panel panel-default" id="CognitiveAssessment">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-4">
+								<h4 class="panel-title" style="color:green;">Cognitive Assessment</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-4">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b style="color:blue;">Cognitive assessment tools:</b>
+												<ul>
+													<ol>
+														<li>
+															<input name="MoCA_eForm" type="button" style="color:green;" value="MoCA" oscaropen="MoCA" data-toggle="tooltip" title="to eForm" />
+															- preferential in MCI/early dementia. Further info: 
+															<a name="Reference" data-toggle="tooltip" title="MoCA Website" href="https://www.mocatest.org/" target="_blank">www.mocatest.org</a>
+														</li>
+														<li>
+															<input name="MMSE_eForm" type="button" style="color:green;" value="SMMSE" oscaropen="MMSE" data-toggle="tooltip" title="to eForm" />
+															- quicker alternative if one cannot complete MoCA; however conducting a MoCA test before giving a diagnosis is best practice
+														</li>
+														<li>
+															<a name="Reference" type="button" data-toggle="tooltip" title="BC Guildelines reference" href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cogimp-clock-drawing-test.pdf" target="_blank">Clock drawing test (CDT)</a> 
+															- acts as a screening test; conduct when time is restricted but signs of memory loss are apparent
+														</li>
+														<li>Consider alternate tests in South Asian or others with language and/or educational barriers, as standard tests may have limited diagnostic value. Examples: translated 
+															<a type="button" name="Reference" data-toggle="tooltip" title="website" href="https://www.mocatest.org/" target="_blank">MoCA</a>, 
+															<a name="Reference" type="button" data-toggle="tooltip" title="RUDAS web-Form" href="https://www.dementia.org.au/sites/default/files/20110311_2011NSWRUDASscoring_sheet.pdf" target="_blank">RUDAS</a> and 
+															<a name="Reference" type="button" data-toggle="tooltip" title="RUDAS instructions" href="https://www.dementia.org.au/sites/default/files/20110311_2011RUDASAdminScoringGuide.pdf" target="_blank">instructions</a>. &nbsp; &nbsp; 
+															<input name="MoCA_Punjabi" type="button" style="color:green;" value="Punjabi MoCA" data-toggle="tooltip" title="Punjabi MoCA form + instructions" onclick="openDocument('MoCAandInstructions_FINAL_PUNJABI_REV_18_01_12_V.02')" /> &nbsp; &nbsp; 
+															<input name="MoCA_Hindi" type="button" style="color:green;" value="Hindi MoCA" data-toggle="tooltip" title="Punjabi MoCA form + instructions" onclick="openDocument('MoCA_Hindi')" />
+														</li>
+													</ol>
+												</ul>
+
+												Language and cultural differences, educational level, and health literacy are major challenges for many ethnic groups impacting the adminstration of cognitive assessments, and subsequently the diagnosis. &nbsp;Whenever applicable, use translated resourcs such as the MoCA test and the accompnaying instructions availabe in 50+ languages online (<a name="Reference" data-toggle="tooltip" title="MoCA Website" href="https://www.mocatest.org/" target="_blank">www.mocatest.org</a>) or administer tests in the presence of an interpreter.  Translated MoCA tests: Pumjabi, Hindi, Urdu, Arabic, Tamil, Telugu, Bengali, and more on www.mocatest.org. Days of a week (Punjabi), Days of a week (Hindi), months of a year (Punjabi & Hindi).
+												<input name="Days_Punjabi" type="button" style="color:green;" value="Days of a week (Punjabi)" data-toggle="tooltip" title="Translations" onclick="openDocument('DaysofWeek_Punjabi_17_05_26')" /> &nbsp; &nbsp; 
+												<input name="Days_Punjabi" type="button" style="color:green;" value="Days of a week (Hindi)" data-toggle="tooltip" title="Translations" onclick="openDocument('DaysofWeek_Hindi_17_05_26')" /> &nbsp; &nbsp; 
+												<input name="Months_Punjabi" type="button" style="color:green;" value="Months of a year (Punjabi & Hindi)" data-toggle="tooltip" title="Translations" onclick="openDocument('MonthsofYear_Punjabi')" /> 
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="CognitiveAssessment-text" id="CognitiveAssessment-text" rows="1" style="max-width:840px; min-width:840px;">Cognitive testing: </textarea>
+
+								<footer class="panel-footer hidden-print" id="CognitiveAssessment-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="CognitiveAssessmentCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('CognitiveAssessment-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="CognitiveAssessmentResetButton" value="Reset" onClick="$('#CognitiveAssessment-text').val(resetText['CognitiveAssessment-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="CognitiveAssessmentTimeButton" value="Add Time" onClick="AppendLocalTime('CognitiveAssessment-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 4 -->
+
+						<!-- Panel 5 for Dementia Algorithm - Physical examination -->
+						<article class="panel panel-default" id="PhysicalExam">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-5">
+								<h4 class="panel-title" style="color:green;">Physical exam</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-5">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b style="color:blue;">Focus physical examination to:</b>
+												<ol>
+													<li>rule out visual or hearing deficits - <a name="Reference" data-toggle="tooltip" title="MoCA Website" href="http://www.mocatest.org/paper-tests/moca-test-blind/" target="_blank">Blind MoCA</a></li>
+													<li>assess for <input type="button" style="color:green;" name="DementiaAppendix1_ref" value="atypical clinical signs" data-toggle="tooltip" title="Reference" onclick="openDocument('DementiaAppendix1')" /> that raise red flag of alternate diagnosis and consider need to refer to specialist - e.g. Parkinsonian features, focal neurological deficits, gait issues</li>
+													<li>assess for cardio/cerebrovascular disease - e.g. rhythm, pulses, etc</li>
+												</ol>
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="PhysicalExam-text" id="PhysicalExam-text" rows="1" style="max-width:840px; min-width:840px;">Exam: </textarea>
+
+								<footer class="panel-footer hidden-print" id="PhysicalExam-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="PhysicalExamCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('PhysicalExam-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="PhysicalExamResetButton" value="Reset" onClick="$('#PhysicalExam-text').val(resetText['PhysicalExam-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="PhysicalExamTimeButton" value="Add Time" onClick="AppendLocalTime('PhysicalExam-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 5 -->
+
+						<!-- Panel 6 for Dementia Algorithm - Lab investigations -->
+						<article class="panel panel-default" id="LabInvestigation">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-6">
+								<h4 class="panel-title" style="color:green;">Lab tests</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-6">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul>
+												<input type="button" name="LabReq" style="color:green;" value="Lab Requisition" oscaropen="1.1 Lab Requisition" data-toggle="tooltip" title="to eForm" />
+												<br>
+												Consider tests to rule out <b>reversible causes</b> of cognitive change and establish <b>baseline</b>.
+												<ul>
+													<li><b>Rule out remedial contributary medical illnesses:</b>
+														<ol>
+															<li>Complete Blood Count (CBC) + Ferritin</li>
+															<li>B12</li>
+															<li>Urinalysis</li>
+															<li>Glucose - fasting</li>
+															<li>HgbA1c</li>
+															<li>TSH</li>
+															<li>Sodium</li>
+															<li>Albumin/Calcium</li>
+															<li>Creatinine/eGFR</li>
+															<li>ECG (AV block, QT prolongation - may be contra-indication to AChEI use)</li>
+														</ol>
+													</li>
+
+													<li><b>In patients with risk factors, check:</b>
+														<ol>
+															<li>Liver enzymes</li>
+															<li>Syphilis (T pall EIA)</li>
+															<li>HIV</li>
+															<li>Drug levels (e.g. Digoxin, Phenytoin)</li>
+														</ol>
+													</li>
+												</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="LabInvestigation-text" id="LabInvestigation-text" rows="1" style="max-width:840px; min-width:840px;">Lab investigations: </textarea>
+
+								<footer class="panel-footer hidden-print" id="LabInvestigation-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="LabInvestigationCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('LabInvestigation-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="LabInvestigationResetButton" value="Reset" onClick="$('#LabInvestigation-text').val(resetText['LabInvestigation-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="LabInvestigationTimeButton" value="Add Time" onClick="AppendLocalTime('LabInvestigation-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 6 -->
+
+						<!-- Panel 7 for Dementia Algorithm - Imaging -->
+						<article class="panel panel-default" id="Imaging">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-7">
+								<h4 class="panel-title" style="color:green;">Imaging</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-7">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b style="color:blue;">Head imaging is not routinely necessary. </b> &nbsp;
+												<input type="button" name="ImagingReq" style="color:green;" value="Imaging Requisition" oscaropen="FHA imaging" data-toggle="tooltip" title="to eForm" />
+												<br>Request CT head if:<br>
+													<ul>
+														<li>Age &lt; 60 yrs old</li>
+														<li>Abrupt onset</li>
+														<li>Rapid progression</li>
+														<li>Recent head injury</li>
+														<li>History of cancer (especially breast and lung)</li>
+														<li>Suggestion of stroke</li>
+														<li>Any localizing neurological sign or symptom</li>
+														<li>Patient is on anticoagulation or has a bleeding disorder</li>
+													</ul>
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Imaging-text" id="Imaging-text" rows="1" style="max-width:840px; min-width:840px;">Imaging requested: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Imaging-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="ImagingCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Imaging-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="ImagingResetButton" value="Reset" onClick="$('#Imaging-text').val(resetText['Imaging-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="ImagingTimeButton" value="Add Time" onClick="AppendLocalTime('Imaging-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 7 -->
+
+						<!-- Title Panels 8 -->
+								<h2 style="font-size:22px;">Differential Diagnosis</h2>
+
+						<!-- Panel 8 for Dementia Algorithm - Differential -->
+						<article class="panel panel-default" id="Differential">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-8">
+								<h4 class="panel-title" style="color:green;">Contributory causes/Differential diagnosis</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-8">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ol>
+												<li>depression - 
+													<input type="button" name="ImagingReq" style="color:green;" value="GDS15" oscaropen="Geriatric Depression Scale" data-toggle="tooltip" title="Geriatric Depression Scale - eForm" />, 
+													<input type="button" name="PHQ9" style="color:green;" value="PHQ-9" oscaropen="PHQ-9" data-toggle="tooltip" title="Personal Health Questionnaire-9 - eForm" />
+													<a type="button" name="Reference" data-toggle="tooltip" title="BC Guildelines reference" href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cogimp-appendix-b.pdf" target="_blank">clinical features: dementia vs delirium vs depression</a>
+												</li>
+												<li>delirium - 
+													<a type="button" name="Reference" data-toggle="tooltip" title="BC Guildelines reference" href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cogimp-appendix-c.pdf" target="_blank">BC Guidelines: Delirium Screening and Assessment Tools</a>
+												</li>
+												<li>alcohol dependence - 
+													<input type="button" name="Alcohol" style="color:green;" value="alcohol screening" oscaropen="Alcohol Screening Assessment" data-toggle="tooltip" title="to eForm" />, 
+													<a type="button" name="Reference" data-toggle="tooltip" title="BC Guildelines reference" href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/problem-drinking#part1" target="_blank">Problem Drinking</a>
+												</li>
+												<li>adverse drug effects and polypharmacy, e.g. narcotics, benzodiazepines, HS sedation</li>
+												<li>co-morbid diseases, including sleep apnea</li>
+												<li><a type="button" name="Reference" data-toggle="tooltip" title="Web Reference" href="http://www.miltonkeynesccg.nhs.uk/resources/uploads/ACB_scale_-_legal_size.pdf" target="_blank">Anticholinergic burden</a></li>
+											</ol>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Differential-text" id="Differential-text" rows="1" style="max-width:840px; min-width:840px;">Differential Dx: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Differential-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="DifferentialCopyButton" value="Copy to Encounter &#x2731; " onClick="UpdateEncounter('Differential-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="DifferentialResetButton" value="Reset" onClick="$('#Differential-text').val(resetText['Differential-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="DifferentialTimeButton" value="Add Time" onClick="AppendLocalTime('Differential-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 8 -->
+
+						<!-- Title Panels 9 -->
+								<h2 style="font-size:22px;">Referral</h2>
+
+						<!-- Panel 9 for Dementia Algorithm - Referral -->
+						<article class="panel panel-default" id="Referral">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-9">
+								<h4 class="panel-title" style="color:green;">Consider referral to aid in diagnosis</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-9">
+								<div class="panel-body">
+									<div class="hidden-print">
+											<ul><li>Abnormal imaging</li></ul>
+											<ul><li>Abnormal neurological exam, focal neurological signs or symptoms:
+													<ul>
+														<li>Urinary incontinence, gait dysfunction - consider normal pressure hydrocephalus <b>(NPH)</b></li>
+														<li>Rigidity, bradykinesia, postural instability, tremor - consider Parkinson&#8217;s Disease Dementia <b>(PDD)</b></li>
+														<li>Early falls, eye movement abnormalities - consider Progressive Supranuclear Palsy <b>(PSP)</b></li>
+														<li>Early psychosis (visual hallucinations) and REM sleep disorders - consider Dementia with Lewy Bodies <b>(DLB)</b></li>
+													</ul>
+											</li></ul>
+											<ul><li>Rapid progression</li></ul>
+											<ul><li>Abrupt progression</li></ul>
+											<ul><li>Age &lt; 60 yrs old</li></ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Referral-text" id="Referral-text" rows="1" style="max-width:840px; min-width:840px;">Referral: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Referral-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="ReferralCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Referral-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="ReferralResetButton" value="Reset" onClick="$('#Referral-text').val(resetText['Referral-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="ReferralTimeButton" value="Add Time" onClick="AppendLocalTime('Referral-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" />
+										<input type="button" class="btn btn-info btn-sm" name="consult_link" value="Consult" data-toggle="tooltip" onclick="onBodyLoad(); consult();" title="to Consult page" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 9 -->
+
+						<!-- Title Panels 10 -->
+								<h2 style="font-size:22px;">Disclosure</h2>
+
+						<!-- Panel 10 for Dementia Algorithm - Diagnosis Disclosure -->
+						<article class="panel panel-default" id="Disclosure">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-10">
+								<h4 class="panel-title" style="color:green;">Diagnosis disclosure</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-10">
+								<div class="panel-body">
+									<div class="hidden-print">
+										Diagnosis of MCI or early dementia should be disclosed to the patient as soon as possible, preferably with a family member or caregiver present. &nbsp;To minimize stress, the timing and extent of disclosure should be individualized and carried out over several visits.
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Disclosure-text" id="Disclosure-text" rows="1" style="max-width:840px; min-width:840px;">Disclosure: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Disclosure-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="DisclosureCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Disclosure-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="DisclosureResetButton" value="Reset" onClick="$('#Disclosure-text').val(resetText['Disclosure-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="DisclosureTimeButton" value="Add Time" onClick="AppendLocalTime('Disclosure-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 10 -->
+
+						<!-- Title Panels 11-14 -->
+								<h2 style="font-size:22px;">Management (General Care and Support)</h2>
+
+						<!-- Panel 11 for Dementia Algorithm - Management -->
+						<article class="panel panel-default" id="Management">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-11">
+								<h4 class="panel-title" style="color:green;">Overview</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-11">
+								<div class="panel-body">
+									<div class="hidden-print">
+										The following <b>MANAGEMENT</b> information is abstracted and adapted from the <a type="button" name="Reference" data-toggle="tooltip" href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cogimp-full-guideline.pdf" target="_blank">BC Guidelines</a> Cognitive Impairment: Recognition, Diagnosis and Management in Primary Care (2016).
+											<ul>
+												<li>Establish a register of patients (ICD9 code 290)</li>
+												<li>Reassess cognition and function at planned visits.</li>
+												<li>Involve the patient and caregiver in setting goals. See <a type="button" name="ActionPlan" data-toggle="tooltip" title="Web resource" href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cogimp-clinical-action-plan.pdf" target="_blank">Associated Document: Clinical Action Plan</a> (flow sheet); and...</li>
+												<li>Consider vaccinations, vitamin D supplementation, falls risk assessment, and exercise prescriptions. &nbsp;Refer to <a type="button" name="Reference" data-toggle="tooltip" title="BC Guidelines" href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines" target="_blank">BCGuidelines.ca</a> for other chronic disease guidelines which may be useful.</li>
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Management-text" id="Management-text" rows="1" style="max-width:840px; min-width:840px;" placeholder="Overview Notes"></textarea>
+
+								<footer class="panel-footer hidden-print" id="Management-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="ManagementCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Management-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="ManagementResetButton" value="Reset" onClick="$('#Management-text').val(resetText['Management-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="ManagementTimeButton" value="Add Time" onClick="AppendLocalTime('Management-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 11 -->
+
+						<!-- Panel 12 for Dementia Algorithm - Non-Pharmacological Management -->
+						<!-- Consider adding toggle-enabled addition of text to textarea: Non_Pharmacological-text -->
+						<article class="panel panel-default" id="Non_Pharmacological">
+							<header class="panel-heading acordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-12">
+								<h4 class="panel-title" style="color:green;">Non-pharmacological Management of Dementia</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-12">
+								<div class="panel-body">
+									<div class="hidden-print">
+										<ul><b style="color:blue;">Memory</b>
+											<ul>
+												<li>Aids like calendars, diaries and telephone reminders</li>
+												<li>Keeping keys, glasses, wallet in same designated place (&quot;landing spot&quot;)</li>
+												<li>Accompaniment to appointments</li>
+												<li>Exercise</li>
+												<li>Healthy brain games. Example: Sudoku puzzles, crossword puzzles, games (cribbage), jigsaw puzzles and word searches</li>
+											</ul>
+
+											<b style="color:blue;">Medication Management</b>
+											<ul>
+												<li>User blister packages/dossette trays and suggest caregiver supervision to improve safety and compliance or daily medication dispensing through local pharmacy</li>
+												<li>Medication monitoring through 
+													<input type="button" name="HomeHealth" style="color:green;" value="Home & Community Care" oscaropen="FHA Home Health" data-toggle="tooltip" title="to eForm" />
+												</li>
+											</ul>
+
+											<b style="color:blue;">Household Safety</b>
+											<ul>
+												<li>Monitor kitchen for mishaps (fires, burned pots); unplug stove  or install automatic stove turn-off device</li>
+												<li>Functioning smoke detectors</li>
+												<li>Assess home for other safety hazards (unsafe smoking, firearms in the home)</li>
+												<li>Check for spoiled food in fridge</li>
+												<li>911 stickers for telephones</li>
+												<li>A personal alarm service in case of patient accident (Life Line)</li>
+												<li>Referral for home assessment through 
+													<input type="button" name="HomeHealth" style="color:green;" value="Home & Community Care" oscaropen="FHA Home Health" data-toggle="tooltip" title="to eForm" />
+												</li>
+											</ul>
+
+											<b style="color:blue;">Shopping</b>
+											<ul>
+												<li>Use of lists when shopping</li>
+												<li>Shopping assistance from caregiver</li>
+												<li>Use of shop by phone program, if available</li>
+											</ul>
+
+											<b style="color:blue;">Behavioural Symptoms</b>
+											<ul>
+												<li>Common early dementia behavioural manifestations include changes in mood or personality, such as becoming confused, suspicious, depressed, fearful or anxious. &nbsp;They may be easily upset at work, at home, with friends or in places where they are out of their comfort zone and feel loss of control. &nbsp;Education of the patient and family is extremely important in management of behavioural symptoms of early dementia. &nbsp;Consider referral to First Link and Alzheimer Society</li>
+												<li>Carrying identification when out alone; use of ID bracelet or registering with the 
+													<a type="button" name="ActionPlan" data-toggle="tooltip" title="Web resource" href="http://alzheimer.ca/en/Home/Living-with-dementia/Day-to-day-living/Safety/Safely-Home" target="_blank">MedicAlert&reg; Safely Home&reg; Program</a>
+												</li>
+											</ul>
+
+											<b style="color:blue;">Nutrition</b>
+											<ul>
+												<li>Monitor for weight loss</li>
+												<!-- add weight field? -->
+												<li>Meal support services - healthy delivered prepared meals or pre-preapred frozen foods</li>
+											</ul>
+
+											<b style="color:blue;">Socialization</b>
+											<ul>
+												<li>Awareness that patients with dementia may become socially withdrawn</li>
+												
+												<li>Referral to 
+													<a type="button" name="ActionPlan" data-toggle="tooltip" title="Web resource" href="https://alzheimer.ca/sites/default/files/%5Bzaboutme%3Adirectory%5D/generic_formalrefform_fillable_2018-03-13.pdf" target="_blank">First Link&reg;</a> 
+													and Alzheimer Society for their education, services, support and contact with resources
+												</li>
+												<ol>
+													<li>Ask the individual or familiy member for permission to forward their name to First Link&reg;</li>
+													<li>Complete a 
+														<a type="button" name="FirstLinkRef" data-toggle="tooltip" title="Web form" href="https://alzheimer.ca/sites/default/files/%5Bzaboutme%3Adirectory%5D/generic_formalrefform_fillable_2018-03-13.pdf" target="_blank">referral form</a> and fax it to:
+													<ul>Alzheimer Society of B.C. (604-669-6907)</ul>
+													</li>
+												</ol>
+											</ul>
+												<ul>Contact will be made within five business days or after three weeks for those who are adjusting to the diagnosis. &nbsp;You will receive a confirmation note when contact has been made.</ul><br>
+
+												<ul>First Link&reg; offers your patients:
+													<ul>
+														<li> Proactive contact and follow up</li>
+														<li> Ongoing access to learning opportunities and support</li>
+														<li> Connection to a supportive community of others living with dementia</li>
+														<li> Knowledge, confidence and skills to live well with the challenges of dementia</li>
+													</ul>
+												</ul>
+
+											<b style="color:blue;">Financial & Legal Issues</b>
+											<ul>
+												<li>
+													Discuss advance care planning as early as possible (refer to 
+													<a type="button" name="MyVoiceRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/gov/content/family-social-supports/seniors/health-safety/advance-care-planning" target="_blank">My Voice</a> 
+													Advance Care Planning Guide for aid in discussing sensitive topics like tube feeding. &nbsp;Available in English, Punjabi, and Simplified Chinese. &nbsp;See also 
+													<input type="button" name="DNR" style="color:green;" value="No Cardiopulmonary Resuscitation (DNR)" oscaropen="DNR" data-toggle="tooltip" title="to eForm" /> form)
+												</li>
+												<li>Encourage patient to have an up-to-date will, a power of attorney agreement for financial management, a representation agreement for health management and/or an advance directive</li>
+											</ul>
+
+											<b style="color:blue;">Driving</b>
+											<ul>
+												Dementia is a medical condition that impacts fitness for driving (see <a type="button" name="DrivingRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/driver-medical/driver-medical-fitness/driver-medical-fitness-information-for-medical-professionals" target="_blank">BC Driver Fitness Handbook</a> for Medical Professionals).<br>
+
+												Start early to engage the patient on the topic of driving as part of their future planning. &nbsp;Discussion with patient about the importance of memory and cognitive skills for driving and signals/concerns about driving safety.<br>
+
+												If there are concerns about a patient&#8217;s functional ability to drive, consider <input type="button" name="ReportOSMV" style="color:green;" value="referral" oscaropen="OSMV Report" data-toggle="tooltip" title="to eForm" /> to RoadSafetyBC to have their skills assessed.<br>
+
+												Under Section 230 of the Motor Vehicle Act, a primary care provider <b>must</b> report to RoadSafetyBC if a patient:
+													<ul>
+														<li>has a medical condition that makes it dangerous to the patient or to the public for the patient to drive a motor vehicle; and </li>
+														<li>continues to drive after being warned of the danger.</li>
+													</ul>
+
+												Revoking a driver&#8217;s license is not te health care provider&#8217;s responsibility, but when significant deficits are seen, reporting it is part of our duty. (UBC Dementia Management in Family Practice Facilitator Syllabus, used with permission).<br>
+
+												To supplement or replace driving, encourage patient to register with 
+													<a type="button" name="HandyDartTaxiSaverRef" data-toggle="tooltip" title="Web reference" href="https://www.translink.ca/en/Rider-Guide/Accessible-Transit/HandyCard.aspx" target="_blank">HandyDart</a> and TaxiSavers (see see 
+													<a type="button" name="GuideRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/assets/gov/health/managing-your-health/patient-information-guides/cogimp-patient-guide.pdf" target="_blank">Guide for Patients and Caregivers</a>). &nbsp; &nbsp;
+													<input name="HandyDartCard_eForm" type="button" style="color:green;" value="HandyDart HandyCard Form" oscaropen="HandyDartCard Application" data-toggle="tooltip" title="to eForm" />
+													<br><br>
+
+												For patients who need assistance with the HandyDart and HandyCard application form, direct them to the HandyDART & HandyCard: Simplified Form Instructions.
+											</ul>
+
+											<b style="color:blue;">Mental Health & Specialty Services</b>
+											<ul>
+												<li>Be aware that dementia may co-exist with other complex mental health conditions</li>
+												<li>Involve mental health teams and resources, such as Community Mental Health Services, to help in distinguishing depression from dementia, and assessing and treating significant behavioural problems and managing caregiver stress; and</li>
+												<li>Involve allied health professionals (e.g., Home & Community Care
+												mental health teams, counsellors, pharmacists, occupational therapists, physiotherapists, dietitians).</li>
+											</ul>				
+
+											<b style="color:blue;">Caregiver Support</b>
+											<ul>
+												<li>Discuss needs, coping strategies, support system and stress management with caregiver; </li>
+												<li>Aid in co-ordination, communication, planning, education and connecting with resources; and</li>
+												<li>Assess the caregiver for caregiver burden and burn out. Monitor and check in with caregiver with each visit.</li>
+												<li>Consider screening tool: 
+													<a type="button" name="DrivingRef" data-toggle="tooltip" title="Web reference" href="http://dementiapathways.ie/_filecache/edd/c3c/89-zarit_burden_interview.pdf" target="_blank">Zarit Burden Interview</a></li>
+											</ul>
+										</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Non_Pharmacological-text" id="Non_Pharmacological-text" rows="1" style="max-width:840px; min-width:840px;">Non-pharmacological Rx: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Non_Pharmacological-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="Non_PharmacologicalCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Non_Pharmacological-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="Non_PharmacologicalResetButton" value="Reset" onClick="$('#Non_Pharmacological-text').val(resetText['Non_Pharmacological-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="Non_PharmacologicalTimeButton" value="Add Time" onClick="AppendLocalTime('Non_Pharmacological-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 12 -->
+
+						<!-- Panel 13 for Dementia Algorithm - Pharmacological Management of Dementia -->
+						<article class="panel panel-default" id="Pharmacological">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-13">
+								<h4 class="panel-title" style="color:green;">Pharmacological Management of Dementia</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-13">
+							<div class="panel-body">
+									<div class="hidden-print">
+											<ul><b style="color:blue;">Overview</b>
+													<ul>The following information has been abstracted from the UBC Dementia Management in Family Practice Facilitator Syllabus, used with permission, and the Ministry of Health&#8217;s Cognitive Impairment: Recognition, Diagnosis and Management in Primary Care.
+													<a type="button" name="GuideLineRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/cognitive-impairment" target="_blank">BCGuidelines</a></ul>
+													<ul>The use of acetylcholinesterase inhibitors/memantine is controversial. &nbsp;While data from clinical trials report statistical evidence of benefit, clinical benefits are unclear. &nbsp;It should be noted that drugs may benefit only a small minority of patients, and the evidence for long term use is insufficient. &nbsp;Short term benefits (6-12 months) <b>may</b> include cognitive, functional, and global improvement. However, patients and their caregivers should be advised that benefits are limited, and that side effects and drug interactions are common. &nbsp;End points for discontinuation of medication should be discussed.</ul>
+
+												<b style="color:blue;">Pharmacotherapy in Early Dementia</b>
+													<ul>The most commonly prescribed drugs for Alzheimer&#8217;s disease and some of the other dementias are known as <b>Acetylcholinesterase inhibitors (AChEIs)</b>. &nbsp;They inhibit an enzyme in the brain thereby increasing neurotransmitter acetylcholine. There are three such drugs on the market:
+														<ul>
+															<li>Donepezil (or Aricept&trade;)</li>
+															<li>Galantamine (or Reminyl&trade;)</li>
+															<li>Rivastigmine (or Exelon&trade;): comes in pills and in transdermal patches (patches are not normally covered by Pharmacare but might be in special case appeals).</li>
+													<br>
+
+															<li>AChEIs are approved for the symptomatic treatment of mild to moderate Alzheimer&#8217;s, with Donepezil being the only AChEI indicated for severe Alzheimer&#8217;s disease.</li>
+													<br>
+
+															<li>Shown in RCTs and meta-analyses to:
+																<ul>											<li>Decrease cognitive decline</li>
+																	<li>Improve or maintain ADL function</li>
+																	<li>Improve behavior
+																		<ul>
+																			<li>Improve overall subjective clinical ratings</li>
+																		</ul>
+																	</li>
+																	<li>Possibly delay institutionalization.</li>
+																</ul>
+															</li>
+													<br>
+
+														<li>Benefits are seen in those with Alzheimer&#8217;s Dementia, Vascular Dementia, Mixed AD/VaD, Parkinson&#8217;s Dementia, Diffuse Lewy Body Dementia.</li>
+													<br>
+
+														<li>Not seen to benefit those with other forms of dementia (such as Fronto-temporal Dementia, Alcohol Dementia, NormoPressure Hydrocephalus, or more rare forms of dementia).</li>
+													<br>
+
+														<li>Under current BC Special Authority coverage, they must have: 
+															<ul>
+																<li>SMMSE score of &ge; 10 and &le; 26 <b>AND</b></li>
+																<li>
+																	<a type="button" name="GDSRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/assets/gov/health/health-drug-coverage/pharmacare/gds.pdf" target="_blank">Global Deterioration Score (GDS)</a> of &ge; 4 and &le; 6 <b>AND</b>
+																</li>
+																<li>Diagnosis to include a component of Alzheimer&#8217;s Disease.</li>
+																<li>Patient must be registered with Fair Pharmacare and meet the specified requirements for coverage (eg: certain income level, meet the deductible, applicable limits in place).</li>
+															</ul>
+														</li>
+													<br>
+
+														<li><b>NOTE: </b> New BC Special Authority Rules (April 2016) can be found here: 
+															<input type="button" name="SA_CI" style="color:green;" value="SA CI eForm" oscaropen="SA CI" data-toggle="tooltip" title="to eForm" />
+														</li>
+													<br>
+
+														<li>&#x2731; The medications section was current as of September 2017 and is subject to change. &nbsp;For updated information including prescribing and Pharmacare, please view the 
+															<a type="button" name="PharmaCareRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/gov/content/health/health-drug-coverage/pharmacare-for-bc-residents/what-we-cover/drug-coverage/drugs-requiring-pre-approval/alzheimersdrugs" target="_blank">Ministry of Health website</a>
+														</li>
+													</ul>
+												</ul>
+											</ul>
+
+											<ul><b style="color:blue;">Considerations for Pharmacotherapy</b>
+												<ul>
+													<li>Goal of treatment - slowing down cognitive, social and functional decline</li>
+													<li>Not curative and improvement on cognitive testing is not expected</li>
+													<li>If patient stops and restarts, benefits are not regained</li>
+												</ul>
+													<br>
+
+												Decision to initiate AChEI therapy requires an individualized patient assessment, involving the patient and caregivers in the following discussion points:
+												<ul>
+													<li>Clinician, patient, and caregiver expectations of benefit with AChEI therapy.</li>
+													<li>Presence of comorbidities and life expectancy.</li>
+													<li>Potential drug interactions with concurrent medications.</li>
+													<li>Ability of the patient or caregiver to adhere to pharmacotherapy.</li>
+													<li>Potential benefits as compared to potential harms of AChEI therapy.</li>
+													<li>Patient and caregiver preferences, including cost of therapy.</li>
+												</ul>
+											</ul>
+												
+											<ul><b style="color:blue;">Relative Contraindications</b>
+												<ul>
+													<li>Severe Cardiac disease (CAD, CHF)</li>
+													<li>Cardiac conduction abnormalities (slows AV nodal conduction)</li>
+														<ul>
+															<li>Pulse check for bradycardia and/or ECG prior to start and soon after start of these meds</li>
+														</ul>
+													<li>Severe respiratory disease (increases bronchospasm)</li>
+													<li>Recent peptic ulcer disease or increased risk of same (increases gastric acid secretion)</li>
+													<li>Significant GI symptoms or weight loss (most common side effects are nausea, diarrhea, decreased appetite and weight loss). GI intolerance rate is quite high.</li>
+													<li>Severe renal or liver disease</li>
+													<li>Seizure disorder or history of seizures (lowers seizure threshold)</li>
+													<li>Obstructive Urinary disease (may worsen symptoms)</li>
+													<li>Certain medications (see BC Guidelines)
+														<ul>
+															<li>Many drug interactions exist through the cytochrome (CYP) liver enzyme system.</li>
+															<li>Important to consider drug interactions with additive potential to cause bradycardia (B-blockers, verapamil, diltiazem, digoxin and other anti-arrhythmics).</li>
+															<li>Make sure no drugs on board with opposing anticholinergic pharmacology.</li>
+														</ul>
+													</li>
+													<br>
+
+													<li>There are some advantages and disadvantages that come with starting AChEIs later in the progression of dementia:
+														<ul>
+															<li>Advantages: cost savings, side effects avoided.</li>
+															<li>Disadvantages: have lost ground already (have missed the opportunity to maintain the patient at a potentially higher level of cognition and functioning for longer)</li>
+														</ul>
+													</li>
+													<br>
+
+													<li>NOTE: When increasing the dose or tapering someone off the medications, it is important to do so slowly (dose change every 4-6 weeks)</li>
+												</ul>
+													<br>
+
+													<ul>
+														<a type="button" name="PharmaCareRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/assets/gov/health/health-drug-coverage/pharmacare/adti-health-professional-infosheet.pdf" target="_blank">Further information: BC Pharmacare Cholinesterase Inhibitors Info Sheet 2016</a>
+													<br><br>
+
+													It is worthy to note:
+														<ul>
+															<li>Medications are not indicated for Mild Cognitive Impairment (MCI)</li>
+															<li>Behavioural and Psychological Symptoms occurring in early dementia (confusion, suspiciousness, depression, fear or anxiety) should be treated using a combination of behaviour or environment modification, together with directed pharmacotherapy (e.g. antidepressant for concurrent depression)</li>
+														</ul>
+													<br>
+													&#x2731; The medications section was current as of September 2017 and is subject to change. For updated information including prescribing and Pharmacare, please view the Ministry of Health website
+												</ul>
+											</ul>
+											
+											<ul><b style="color:blue;">Cognitive Impairment in Culturally and Linguistically Diverse Groups</b>
+												<ul>
+													The assessment and management of cognitive impairment in diverse individuals can be challenging for several reasons: 
+													<ul>
+														<li>Communication difficulties, cultural factors, low education, and literacy impact formal cognitive screening, with poor inter-rater reliability – use interpreter services (where available) and translated/adapted cognitive assessment tools to assist in more accurate patient screening and assessment. &nbsp;Whenever applicable, use translated resources such as the MoCA test and the accompanying instructions available in 50&plus; languages online (www.mocatest.org). &nbsp;Translated MoCA tests: Punjabi, Hindi, Urdu, Arabic, Tamil, Telugu, Bengali, and more on mocatest.org; Days of a week (Punjabi), Days of a week (Hindi), months of a year (Punjabi & Hindi). </li>
+														<li>Dementia symptoms may be unfamiliar or viewed as a normal part of the aging process, and there may be stigma to mental health issues, resulting in diagnosis delay – provide culturally sensitive patient information on dementia to patients and families.</li>
+														<li>Language barriers may result in a lack of awareness of community supports – provide 
+															<a type="button" name="GuideRef" data-toggle="tooltip" title="Web reference" href="https://www2.gov.bc.ca/assets/gov/health/managing-your-health/patient-information-guides/cogimp-patient-guide.pdf" target="_blank">Guide for Patients and Caregivers</a>. 
+														</li>
+														<li>Community supports may not provide culturally appropriate care, resulting in lack of adoption of these services and increase in caregiver stress; and </li>
+														<li>Families may share caregiver responsibilities by rotating the residence of the patient amongst family members – this is generally discouraged as it confuses the patient with dementia and complicates the provision of services between the staff of many agencies and the extended family. &nbsp;One familiar, safe and secure environment is encouraged. </li>
+													</ul>
+												</ul>
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Pharmacological-text" id="Pharmacological-text" rows="1" style="max-width:840px; min-width:840px;">Pharmacological Rx: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Pharmacological-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="PharmacologicalCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Pharmacological-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="PharmacologicalResetButton" value="Reset" onClick="$('#Pharmacological-text').val(resetText['Pharmacological-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="PharmacologicalTimeButton" value="Add Time" onClick="AppendLocalTime('Pharmacological-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 13 -->
+
+						<!-- Panel 14 for Dementia Algorithm - Resources -->
+						<article class="panel panel-default" id="Resources">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-14">
+								<h4 class="panel-title" style="color:green;">Resources</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-14">
+								<div class="panel-body">
+									<div class="hidden-print">
+													Make an early referral to support resources:
+														<ul>
+															<li><a id="AlzheimerSociety" href="http://alzheimer.ca/en/bc" target="_blank" title="Website">Alzheimer Society of BC</a></li>
+															<li><a id="AlzheimerHelpline" href="http://alzheimer.ca/en/bc/We-can-help/Resources/First-Link-dementia-helpline" target="_blank" title="Website">First Link Dementia Helpline</a></li>
+															<li><a id="HandyDart" href="https://www.translink.ca/rider-guide/transit-accessibility/handydart" target="_blank" title="Website">HandyDart</a> &nbsp; &nbsp;
+																<input name="HandyDartCard_eForm" type="button" style="color:green;" value="HandyDart HandyCard Form" oscaropen="HandyDartCard Application" data-toggle="tooltip" title="to eForm" /> &nbsp; &nbsp;
+																<a name="HandyDartCard_Instructions" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/HandyDART_simplified_instructions.pdf?la=en&hash=10578F06BA3206F6AC6A05D145E854769EBC6E9B" target="_blank" title="Reference - English">Instructions (English)</a> &nbsp; &nbsp;
+																<a name="HandyDartCard_Instructions" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/HandyDART_simplified_instructions_punjabi.pdf?la=en&hash=391F2868162B68881BAE310DAAA293DBCFD76315" target="_blank" title="Reference - Punjabi">
+																(Punjabi)</a> &nbsp; &nbsp;
+																<a name="HandyDartCard_Instructions" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/HandyDART_simplified_instructions_hindi.pdf?la=en&hash=EE7E5CF98E5E441632205E6EFF82E47BA32A3663" target="_blank" title="Reference - Hindi">
+																(Hindi)</a>
+															</li>
+															<li><a id="BC211" href="http://www.bc211.ca/" target="_blank" title="Website">BC211</a></li>
+															<li><a id="BetterAtHome" href="http://betterathome.ca/" target="_blank" title="Website">Better at Home</a></li>
+															<li><a id="HealthLinkBC" href="https://www.healthlinkbc.ca/" target="_blank" title="Website">HealthLink BC</a></li>
+															<li><a id="CrisisLine" href="https://www.options.bc.ca/program/fraser-health-crisis-line" target="_blank" title="Website">Fraser Health Crisis Line</a></li>
+															<li>
+																<a name="SevenNumbers_ref" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/7_numbers_for_early_dementia.pdf?la=en&hash=2D5FE16F0AC83A49894DCCA022A14631A4E4FCEE" target="_blank" title="Reference - English">Seven Numbers for Early Dementia (English)</a> &nbsp; &nbsp;
+																<a name="SevenNumbers_ref" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/7_numbers_for_early_dementia_punjabi.pdf?la=en&hash=A99B76C8C65CE4F431CCEFCEE4C10B88370C3505" target="_blank" title="Reference - Punjabi">(Punjabi)</a> &nbsp; &nbsp;
+																<a name="SevenNumbers_ref" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/7_numbers_for_early_dementia_hindi.pdf?la=en&hash=F42480FC8F591A7C29A8D831B37A847F02F69522" target="_blank" title="Reference - Hindi">(Hindi)</a>
+															</li>
+												<!-- removed as web linked resources available
+															<li><input type="button" class="btn btn-info btn-sm" name="SevenNumbers_ref" value="Seven Numbers for Early Dementia" data-toggle="tooltip" title="Reference" onclick="openDocument('7numbersforearlydementia')" /></li>
+												-->
+															<li>
+																<a name="BrainHealthy_ref" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/Keep_your_brain_healthy_getting_to_know_dementia_brochure.pdf?la=en&hash=EDDABDD71C72CB624F2843ECC489DF406D16D9E8" target="_blank" title="Reference - English">Keep your Brain Healthy brochure (English)</a> &nbsp; &nbsp;
+																<a name="SevenNumbers_ref" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/Keep_your_brain_healthy_getting_to_know_dementia_brochure_punjabi.pdf?la=en&hash=BB897AA204F540E58E1A878F21382085229857A8" target="_blank" title="Reference - Punjabi">(Punjabi)</a> &nbsp; &nbsp;
+																<a name="SevenNumbers_ref" href="https://www.fraserhealth.ca/-/media/Project/FraserHealth/FraserHealth/Health-Topics/Mental-Health-Substance-Use/Keep_your_brain_healthy_getting_to_know_dementia_brochure_hindi.pdf?la=en&hash=490697FB738FD147F4EAB9CF26102E68071CA82A" target="_blank" title="Reference - Hindi">(Hindi)</a>
+															</li>
+												<!-- removed as web linked resources available
+															<li><input type="button" class="btn btn-info btn-sm" name="BrainHealthy_ref" value="Keep your Brain Healthy brochure" data-toggle="tooltip" title="Reference" onclick="openDocument('Keep_your_brain_healthy_getting_to_know_dementia_brochure')" /></li>
+												-->
+															<li><a id="MedicAlert" href="https://www.medicalert.ca/" target="_blank" title="Website">MedicAlert</a></li>
+															<li><a id="Lifeline" href="https://www.lifeline.ca/en/" target="_blank" title="Website">Lifeline</a></li>
+															<li><a id="GetUpGo" href="https://patienteduc.fraserhealth.ca/file/get-up-go-1071.pdf" target="_blank" title="Brochure">Get up & Go</a></li>
+															<li><a id="HomeHealth" href="https://www2.gov.bc.ca/gov/content/health/accessing-health-care/home-community-care/how-to-arrange-for-care" target="_blank" title="Brochure">Home Health</a></li>
+														</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="Resources-text" id="Resources-text" rows="1" style="max-width:840px; min-width:840px;">Resources used: </textarea>
+
+								<footer class="panel-footer hidden-print" id="Resources-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="ResourcesCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('Resources-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="ResourcesResetButton" value="Reset" onClick="$('#Resources-text').val(resetText['Resources-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="ResourcesTimeButton" value="Add Time" onClick="AppendLocalTime('Resources-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 14 -->
+
+						<!-- Panel 15 for Dementia Algorithm - Workflow -->
+						<article class="panel panel-default" id="Workflow">
+							<header class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" data-target="#accordion-panel-15">
+								<h4 class="panel-title" style="color:green;">Workflow and Appendices</h4>
+							</header>
+							<section class="panel-collapse collapse" id="accordion-panel-15">
+								<div class="panel-body">
+									<div class="hidden-print">
+										Possible <b>Workflow and Fee items</b> (3 visit suggested, but can extend to more):
+											<ul>
+												<li>Consider use of <a id="GPSC" href="http://www.gpscbc.ca/what-we-do/longitudinal-care/billing-guides" target="_blank" title="Web resource">GPSC code(s)</a> (Current as of September 2018):
+													<ul>
+														<li>GP Annual Complex Care Management Fee (2 Diagnoses) &rarr; 14033</li>
+														<li>...or GP Frailty Complex Care Planning and Management &rarr; 14075 <b>(cannot bill BOTH 14033 and 14075)</b></li>
+														<li>GP Mental Health Planning fees &rarr; 14043</li>
+														<li>GP Mental Health Management fee &rarr; 14046-8</li>
+														<li>GP-Patient Telephone Management Fee &rarr; 14076</li>
+														<li>GP-Allied Care Provider Conference Fee &rarr; 14077 (per 15 min)</li>
+														<li>GP Email/Text/Telephone Advice Relay Fee &rarr; 14078</li>
+													</ul>
+												</li>
+
+												<li>Visit 1 suggestion:
+													<ul>
+														<li>Obtain presenting History</li>
+														<li>General physical exam</li>
+														<li>Labs to rule out reversible causes</li>
+														<li>Remind patient to bring historian/family/friend to next appointment</li>
+														<li>Remind patient to bring all medications to next appointment (including over the counter)</li>
+													</ul>
+												</li>
+
+												<li>Visit 2 suggestion:
+													<ul>
+														<li>History and corroborative history</li>
+														<li>Medications review</li>
+														<li>Lab result review</li>
+														<li>Dementia specific physical exam</li>
+														<li>Cognitive testing (MD or other)</li>
+														<li>Establish likely diagnosis</li>
+													</ul>
+												</li>
+
+												<li>Visit 3 suggestion:
+													<ul>
+														<li>Disclosure</li>
+														<li>Referral to specialist if necessary</li>
+														<li>Connection to resources</li>
+														<li>Power of Attorney POA/Representation agreement</li>
+														<li>Driving considerations</li>
+													</ul>
+												</li>
+											</ul>
+
+											<ul>Appendix 1: Clinical relevance of neurological exam in patients with cognitive impairment:
+												<ul><li><input type="button" name="DementiaAppendix1_ref" style="color:green;" value="Appendix 1" data-toggle="tooltip" title="Reference" onclick="openDocument('DementiaAppendix1')" /></li></ul>
+											</ul>
+
+											<ul>Appendix 2: Neurological exam findings in different causes of cognitive impairment:
+												<ul><li><input type="button" name="DementiaAppendix2_ref" style="color:green;" value="Appendix 2" data-toggle="tooltip" title="Reference" onclick="openDocument('DementiaAppendix2')" /></li></ul>
+											</ul>
+									</div>
+								</div>
+									<textarea type="text" class="form-control autoExpand" name="WorkFlow-text" id="WorkFlow-text" rows="1" style="max-width:840px; min-width:840px;">Additional considerations: </textarea>
+
+								<footer class="panel-footer hidden-print" id="WorkFlow-button-list">
+									<div class="btn-group">
+										<input type="button" class="btn btn-primary btn-sm" id="WorkFlowCopyButton" value="Copy to Encounter &#x2731;" onClick="UpdateEncounter('WorkFlow-text')" title="In the Encounter field, if you wish to add/paste further to your note, click CANCEL, and continue." />
+										<input type="button" class="btn btn-default btn-sm" id="WorkFlowResetButton" value="Reset" onClick="$('#WorkFlow-text').val(resetText['WorkFlow-text'])" />
+										<input type="button" class="btn btn-default btn-sm" id="WorkFlowTimeButton" value="Add Time" onClick="AppendLocalTime('WorkFlow-text')" />
+									</div>
+									<div class="btn-group">
+										<input type="button" class="btn btn-default btn-sm btn-oscarmsg" value="To OscarMsg" /> &nbsp; 
+										 &#x2731; Click cancel in eChart prompt to copy in preferred order. 
+									</div>
+								</footer>
+							</section>
+						</article>
+						<!-- End Panel 15 -->
+					</div>
+				</section>
+
+				<!-- Footer Functions and Buttons -->
+				<nav class="eform-footer navbar navbar-fixed-bottom hidden-print">
+					<div class="container-fluid row">
+						<div class="col-xs-12 col-sm-8 col-md-7 col-lg-6">
+							<div class="input-group">
+								<input type="text" class="form-control input-sm" name="subject" id="subject" placeholder="Subject" />
+								<span class="input-group-btn">
+									<input type="submit" class="btn btn-primary btn-sm btn-save" value="Save" />
+									<input type="reset" class="btn btn-default btn-sm btn-reset" value="Reset" />
+									<input type="button" class="btn btn-default btn-sm btn-print" value="Print" />
+									<input type="button" class="btn btn-default btn-sm btn-tickler" value="To Tickler" data-toggle="tooltip" title='Save this eForm first before saving your Tickler!' />
+
+								</span>
+							</div>
+						</div>
+						<div class="col-sm-1 hidden-xs pull-right text-right">
+							<input type="button" class="btn btn-info btn-sm btn-about" value="About" />
+						</div>
+					</div>
+				</nav>
+
+				<!-- About Modal -->
+				<div class="modal fade hidden-print" id="about-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3 class="modal-title">About Dementia Toolkit v0.1.3</h3>
+							</div>
+							<div class="modal-body">
+								<h4 class="text-warning">Use This Tool At Your Own Risk!</h4>
+								<p>Ideally, users of this tool will have attended the SGLS on Dementia.<br />
+								Please notify the authors of any errors you find.<br />
+								Use of this eForm constitutes your acceptance of these conditions.</p>
+								<h4 class="text-info">Authors</h4>
+								<ul>
+									<li>Development: Dr. Leena Jain, Dr. Peter O’Connor and the Dementia Working Group for health care providers in British Columbia. Funding for this initiative was provided for by the Specialist Services Committee (SSC), a joint collaborative committee of the Doctors of BC and the BC Ministry of Health.</li>
+									<li>eForm Adaption: Dr. J.C.P Yap</li>
+									<li>Layout Design: Jeremy Ho</li>
+								</ul>
+								<h4 class="text-info">License</h4>
+								The <strong> Dementia Toolkit v0.1.3</strong> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>. <img src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /><br />
+								The <strong>LeadLab eForm Bootstrap Template v1.0.1</strong> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>. <img src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /><br />
+								<strong>V3_Dec11_2022</strong> to update weblinks and eFORM names, by John Yap, is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>. <img src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /><br />
+								Permissions beyond the scope of this license may be available at <a href="http://www.oscarcanada.org">http://www.oscarcanada.org</a>.
+							</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-primary" data-dismiss="modal" value="Close" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

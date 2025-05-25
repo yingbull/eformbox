@@ -1,0 +1,419 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Geriatric Clinic Referral Form</title>
+<!-- Updated 2019-Nov-23 02:49
+Moved second page to the side - do not print - to save ink and paper
+Updated Code for X boxes
+Added Radio X boxes
+Converted 2 "other" inputs to 1 text area
+Photoshopped out boxes and some lines on image
+added <span></span> with text to clarify some inputs
+corrected DOB to conform with requested format
+Parsed Referring Physician Name
+Pre-Checked some boxes on initial opening
+Added some cosmetics
+-->
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+input#SubmitButton {
+		color: black;
+		text-shadow: 0px 1px 1px #ffffff;
+		border-bottom: 2px solid #b2b2b2;
+		background-color: #a2dce7;
+		background: -webkit-gradient(linear, left top, left bottom, from(rebeccapurple), to(#a2dce7;));
+		background: -moz-linear-gradient(top, rebeccapurple, #a2dce7;);
+		background: -o-linear-gradient(top, rebeccapurple, #a2dce7;);
+		background: -ms-linear-gradient(top, rebeccapurple, #a2dce7;);}
+	input#SubmitButton:hover {
+		color: fcf4fc;
+		border: 1px solid #a4a4a4;
+		border-top: 2px solid #b2b2b2;
+		background-color: rebeccapurple;;
+		background: -webkit-gradient(linear, left top, left bottom, from(#a2dce7;), to(rebeccapurple));
+		background: -moz-linear-gradient(top, #a2dce7;, rebeccapurple);
+		background: -o-linear-gradient(top, #a2dce7;, rebeccapurple);
+		background: -ms-linear-gradient(top, #a2dce7;, rebeccapurple);}
+ 
+	input#PrintSubmitButton {
+		color: black;
+		text-shadow: 0px 1px 1px #ffffff;
+		border-bottom: 2px solid #b2b2b2;
+		background-color: #a2dce7;
+		background: -webkit-gradient(linear, left top, left bottom, from(rebeccapurple), to(#a2dce7;));
+		background: -moz-linear-gradient(top, rebeccapurple, #a2dce7;);
+		background: -o-linear-gradient(top, rebeccapurple, #a2dce7;);
+		background: -ms-linear-gradient(top, rebeccapurple, #a2dce7;);}
+	input#PrintSubmitButton:hover {
+		color: fcf4fc;
+		border: 1px solid #a4a4a4;
+		border-top: 2px solid #b2b2b2;
+		background-color: rebeccapurple;;
+		background: -webkit-gradient(linear, left top, left bottom, from(#a2dce7;), to(rebeccapurple));
+		background: -moz-linear-gradient(top, #a2dce7;, rebeccapurple);
+		background: -o-linear-gradient(top, #a2dce7;, rebeccapurple);
+		background: -ms-linear-gradient(top, #a2dce7;, rebeccapurple);}
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<script language="javascript" type="text/javascript">
+	/****************************
+	startup functions 
+	****************************/
+		function startUp() {			
+			setDocumentTitle('Providence Health Care Elder Care Geriatric Outpatient Clinic Referral 2019',document.getElementById('Patient_Name').value);
+			setDefaults();
+		
+		function setDocumentTitle(Title, PatientName) {
+			// set document title
+			document.title = Title + '_' + PatientName;							
+			}
+
+		function setDefaults() {	            
+			// checks the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				document.getElementById('contact_patient').value = 'X';
+				document.getElementById('referring_FP').value = 'X';
+				reImg();
+				parseName('current_user');
+			}
+		}
+}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+<script>
+$(document).ready(function() {
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- Xbox styling -->
+<style type="text/css">
+	.box1 {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+		[class^="only-one-radio_"] {
+			position: absolute;
+			width: 12px;
+			height: 12px;
+			font-size: 12px;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			font-family:sans-serif;
+			text-align: center;
+			background: aquamarine;
+}
+</style>
+
+    <script language="javascript">
+
+	function parseName(id) {
+		// Get the name
+		
+		var fullName = document.getElementById(id).value;
+
+		// Split the value
+		var splitName = fullName.split(",");
+		var firstName = "";
+		var lastName  = "";
+
+		// Check for last name
+		if(splitName.length >= 1) {
+			lastName = splitName[0].trim();
+		}
+		if(splitName.length >= 2) {
+			firstName = splitName[1].trim();
+		}
+		var First_Last_Name = firstName + " " + lastName;
+
+		// Show the fields on the page
+		document.getElementById(id).value = "Dr. " + First_Last_Name ;
+	}
+</script>
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="startUp();">
+<form method="post" action="" name="FormName" id="FormName" >
+</div>
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}Geriatric-Clinic-referral-page-1.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<span style="position:absolute; left:181px; top:197px;"><input name="date" id="date" type="text" class=" noborder" style="width:209px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>y-m-d</span>
+
+<!-- Demographics -->
+
+<input name="Patient_Name" id="Patient_Name" type="text" class=" noborder" style="position:absolute; left:112px; top:237px; width:318px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:491px; top:232px; width:220px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="address" id="address" type="text" class=" noborder" style="position:absolute; left:121px; top:257px; width:590px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address>
+<span style="position:absolute; left:175px; top:276px; font-family:sans-serif; font-style:normal; font-weight:normal; "><input name="dobM" id="dobM" type="text" class=" noborder" style="width:20px; height:14px;font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob_month>/<input name="dobD" id="dobD" type="text" class=" noborder" style="width:20px; height:14px;font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob_day>/<input name="dobY" id="dobY" type="text" class=" noborder" style="width:40px; height:14px;font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob_year></span>
+<input name="phn" id="phn" type="text" class=" noborder" style="position:absolute; left:354px; top:276px; width:153px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="paris" id="paris" type="text" class=" noborder" style="position:absolute; left:573px; top:276px; width:136px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=chartno>
+
+<!-- Contact -->
+
+<input name="contact_patient" id="contact_patient" type="text" class="Xbox box1" style="left:72px; top:318px;" >
+<input name="contact_other" id="contact_other" type="text" class="Xbox box1" style="left:141px; top:318px;" >
+<input name="contact_name" id="contact_name" type="text" class=" noborder" style="position:absolute; left:236px; top:314px; width:151px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="contact_phone" id="contact_phone" type="text" class=" noborder" style="position:absolute; left:445px; top:313px; width:126px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="contact_relationship" id="contact_relationship" type="text" class=" noborder" style="position:absolute; left:652px; top:315px; width:61px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Interpreter" id="Interpreter" type="text" class="Xbox box1" style="left:72px; top:337px;"   onclick="getElementById('language').required = true;">
+<input name="language" id="language" type="text" class=" noborder" style="position:absolute; left:305px; top:332px; width:407px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+
+<!-- Referring Source -->
+
+<input name="referring_FP" id="referring_FP" type="text" class="Xbox box1" style="left:72px; top:375px;" >
+<span style="position:absolute; left:289px; top:373px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">Name:<input name="current_user" id="current_user" type="text" class=" noborder" style="width:220px; height:16px; background-color:transparent;"  oscarDB=current_user>
+Ph #:<input name="current_userphone" id="current_userphone" type="text" class=" noborder" style="width:120px; height:16px; background-color:transparent;"  oscarDB=clinic_phone></span>
+<input name="referring_ER" id="referring_ER" type="text" class="Xbox box1" style="left:72px; top:394px;" >
+<input name="ERnurse" id="ERnurse" type="text" class=" noborder" style="position:absolute; left:390px; top:393px; width:321px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="RA_Apt" id="RA_Apt" type="text" class="Xbox box1" style="left:102px; top:412px;"  onclick="getElementById('rapid_access_D').required = true;getElementById('rapid_access_T').required = true;">
+<span style="position:absolute; left:389px; top:410px;">D<input name="rapid_access_D" id="rapid_access_D" type="text" class=" noborder" style="width:130px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" > ; T<input name="rapid_access_T" id="rapid_access_T" type="text" class=" noborder" style="width:130px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></span>
+<input name="referring_Other" id="referring_Other" type="text" class="Xbox box1" style="left:72px; top:430px;" >
+<input name="other" id="other" type="text" class=" noborder" style="position:absolute; left:287px; top:426px; width:424px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="FPNotified" id="FPNotified" type="text" class="Xbox box1" style="left:503px; top:449px;" >
+
+<!-- Reason for Referral -->
+
+<input name="reason_Cognative" id="reason_Cognative" type="text" class="Xbox box1" style="left:210px; top:469px;" >
+<input name="reason_Functional" id="reason_Functional" type="text" class="Xbox box1" style="left:336px; top:469px;" >
+<input name="reason_Multiple" id="reason_Multiple" type="text" class="Xbox box1" style="left:459px; top:469px;" >
+<input name="reason_Poly" id="reason_Poly" type="text" class="Xbox box1" style="left:600px; top:469px;" >
+<input name="reason_Tenuous" id="reason_Tenuous" type="text" class="Xbox box1" style="left:210px; top:485px;" >
+<input name="reason_Behaviour" id="reason_Behaviour" type="text" class="Xbox box1" style="left:356px; top:485px;" >
+<input name="reason_Incontinence" id="reason_Incontinence" type="text" class="Xbox box1" style="left:491px; top:485px;" >
+<input name="reason_Falls" id="reason_Falls" type="text" class="Xbox box1" style="left:580px; top:485px;" >
+<input name="reason_Other" id="reason_Other" type="text" class="Xbox box1" style="left:628px; top:485px;" >
+<input name="reason_other_text" id="reason_other_text" type="text" class=" noborder" style="position:absolute; left:675px; top:485px; width:40px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<textarea name="reason_other1" id="reason_other1" type="text" class=" noborder" style="position:absolute; left:210px; top:505px; width:510px; height:40px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<!-- Medical Services -->
+
+<input name="geri_Comp" id="geri_Comp" type="text" class="Xbox box1" style="left:86px; top:578px;" >
+<input name="geri_Cognative" id="geri_Cognative" type="text" class="Xbox box1" style="left:86px; top:595px;" >
+<input name="geri_Falls" id="geri_Falls" type="text" class="Xbox box1" style="left:86px; top:612px;" >
+<input name="geri_Preop" id="geri_Preop" type="text" class="Xbox box1" style="left:86px; top:628px;" >
+<input name="geri_Preop_Urgent" id="geri_Preop_Urgent" type="text" class="only-one-radio_Preop" style="left:115px; top:643px;" >
+<input name="Preop_Date" id="Preop_Date" type="text" class=" noborder" style="position:absolute;left:173px; top:659px; width:148px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="geri_Preop_Reg" id="geri_Preop_Reg" type="text" class="only-one-radio_Preop" style="left:115px; top:660px;"  onclick="getElementById('Preop_Date').required = true;">
+<input name="geri_Home" id="geri_Home" type="text" class="Xbox box1" style="left:86px; top:687px;" >
+<input name="geri_Other" id="geri_Other" type="text" class="Xbox box1" style="left:86px; top:706px;"  onclick="getElementById('geri_Other_Text').required = true;">
+<input name="geri_Other_Text" id="geri_Other_Text" type="text" class=" noborder" style="position:absolute;left:143px; top:703px; width:149px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="psych_Cognative" id="psych_Cognative" type="text" class="Xbox box1" style="left:86px; top:741px;" >
+<input name="psych_Behavioural" id="psych_Behavioural" type="text" class="Xbox box1" style=" left:86px; top:758px;" >
+<input name="psych_Mood" id="psych_Mood" type="text" class="Xbox box1" style=" left:86px; top:775px;" >
+<input name="psych_Outreach" id="psych_Outreach" type="text" class="Xbox box1" style=" left:86px; top:793px;" >
+<input name="psych_Caregiver" id="psych_Caregiver" type="text" class="Xbox box1" style=" left:86px; top:821px;" >
+<input name="psych_Other" id="psych_Other" type="text" class="Xbox box1" style="left:86px; top:839px;" onclick="getElementById('psych_Other_text').required = true;">
+<input name="psych_Other_text" id="psych_Other_text" type="text" class=" noborder" style="position:absolute; left:141px; top:836px; width:192px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+
+<!-- Other Services -->
+
+<input name="other_Continence" id="other_Continence" type="text" class="Xbox box1" style="left:380px; top:565px;" >
+<input name="other_Nurse" id="other_Nurse" type="text" class="Xbox box1" style="left:380px; top:584px;" >
+<input name="OT_Cognative" id="OT_Cognative" type="text" class="Xbox box1" style="left:394px; top:619px;" >
+<input name="OT_Optimize" id="OT_Optimize" type="text" class="Xbox box1" style="left:394px; top:636px;" >
+<input name="OT_Sleep" id="OT_Sleep" type="text" class="Xbox box1" style="left:394px; top:653px;" >
+<input name="OT_Caregiver" id="OT_Caregiver" type="text" class="Xbox box1" style="left:394px; top:670px;" >
+<input name="physio_Balance" id="physio_Balance" type="text" class="Xbox box1" style="left:394px; top:707px;" >
+<input name="physio_MSK" id="physio_MSK" type="text" class="Xbox box1" style="left:394px; top:724px;" >
+<input name="physio_Vestibular" id="physio_Vestibular" type="text" class="Xbox box1" style="left:394px; top:741px;" >
+<input name="socialwork_Patient" id="socialwork_Patient" type="text" class="Xbox box1" style="left:394px; top:777px;" >
+<input name="socialwork_Advance" id="socialwork_Advance" type="text" class="Xbox box1" style="left:394px; top:794px;" >
+<input name="socialwork_Community" id="socialwork_Community" type="text" class="Xbox box1" style="left:394px; top:811px;" >
+<input name="socialwork_Financial" id="socialwork_Financial" type="text" class="Xbox box1" style="left:394px; top:828px;" >
+
+<span class="DoNotPrint" id="ArrowToP2" style="position: absolute; top:519px; left:710px; font-size:100px; color: #a2dce7;"><b>&nearr;</b></span>
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:966px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> 
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();setFlag();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setFlag();setTimeout('SubmitButton.click()',2000);"> 
+	 </td></tr></table>
+ </div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "date", ifFormat : "%Y-%m-%d y-m-d",  button : "date" } );
+	Calendar.setup( { inputField : "rapid_access_D", ifFormat : "%Y-%m-%d y-m-d",  button : "rapid_access_D" } );
+	Calendar.setup( { inputField : "rapid_access_T", ifFormat : "%I:%M %p",  button : "rapid_access_T" } );
+	Calendar.setup( { inputField : "Preop_Date", ifFormat : "%Y-%m-%d y-m-d",  button : "Preop_Date" } );
+</script>
+
+<!-- -----------Referral Criteria ------------------------ -->
+<div id="ReferralCriteria1" class="DoNotPrint" style="position:absolute; left:800px; top:5px; width:450px; background:#a2dce7; border-style:solid; border-color:black; border-width:1px; font-family:sans-serif; font-size:14;">
+
+
+
+   <table style='border:.75pt solid black; text-align:left; border-collapse: collapse;'>
+
+    <tr><td>The Geriatric Ambulatory Clinics at St. Paul’s Hospital and Mount Saint Joseph Hospital provide an interdisciplinary 
+approach to older adults (65+), living in the Vancouver region, who are experiencing health changes that impact their physical, cognitive or psychosocial well being. <br><br>
+Referrals to geriatricians and geriatric psychiatrists must be approved by a family physician or hospital based physician. Referrals to other members of the interdisciplinary team can be made by any health care provider. 
+</td></tr>
+<tr>
+	<th  style='border:.75pt solid black;'>INFORMATION FOR THE FIRST VISIT:</th>
+</tr>
+<tr><td>
+<li>This visit may take up to 2 hours. </li>  
+<li>Please instruct patient to bring their care card, medications, and a family member or friend to help them understand and remember information.</li>
+</td></tr>
+<tr>
+	<th  style='border:.75pt solid black;'>SERVICES OFFERED:</th>
+</tr>
+<tr><td>
+<b><u>Geriatric Medicine</u></b>
+<li>Comprehensive geriatric assessment, cognitive assessment diagnosis and management, medical review, 
+pre-operative assessment, falls assessment, medical assessment of homebound elders</li>
+<b><u>Geriatric Psychiatry</u></b>
+<li>Cognitive assessment, treatment of behavioural features of dementia, assessment and treatment of mood, anxiety and psychosis, geriatric psychiatry outreach to homebound elders.  </li>
+<b><u>Continence Clinic</u></b>
+<li>The multidisciplinary Continence Clinic includes a geriatrician, a nurse continence advisor and a pelvic floor physiotherapist, who treat patients with urinary incontinence, bowel incontinence and pelvic organ prolapse.</li>
+<b><u>Nurse Continence Advisor</u></b>
+<li>Assessment and management of urinary and bowel incontinence and their related symptoms.</li>
+<b><u>Physiotherapy</u></b>
+<li>Balance and gait retraining, vestibular rehabilitation for inner ear dysfunction and dizziness, fall prevention, musculoskeletal assessment and management to optimize function.</li>
+<b><u>Occupational Therapy</u></b>
+<li>Cognitive assessment and treatment, mild cognitive impairment and dementia education for patients and families, individualized memory, brain health and sleep strategies, assessment of day to day function to optimize safety and independence, caregiver support and skill building.</li>
+<b><u>Social Work</u></b>
+<li>Future planning for patient and caregiver support, linking with community resources and psychosocial stressors.</li>
+</td></tr>
+<tr style="text-align:center"><td>
+<b>&#10033;Access to neuropsychologists available via internal clinic referral only&#10033;</b>
+</td></tr>
+
+</table>
+
+</div>
+
+</body>
+</html>
