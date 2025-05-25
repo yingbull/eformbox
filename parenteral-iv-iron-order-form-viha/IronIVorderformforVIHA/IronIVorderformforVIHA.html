@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>VIHA iron IV booking form</title>
+
+	<!-- E-FORM DISCLAIMER: 
+		Licensing: This eForm was shared by  Gunther Klein, and is distributed under the Creative Commons, Attribution-ShareAlike 3.0 Unported Licensse (CC BY-SA 3.0)
+		As is: eForms are shared as-is, free of charge on a share-alike basis 
+		with absolutely no guarantee or warranty. 
+		No Quality Control: The author does not vet any eForms 
+		and does not purport to apply any manner of quality control. 
+		Responsibility: The responsibility for the clinical and medical-legal consequences 
+		of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. 
+		This applies to both eForms shared by others, and those created by users themselves. 
+		Attribution: eForms are shared freely among the user community, 
+		with attribution to the original author of the eForm. 
+		Free: eForms so shared may not be sold or purchased. 
+		Provincial validation:  eForms are optional and non-essential add-ons, 
+		separate from OSCAR, and with their own license terms.
+		eForms are not part of the OSCAR core program functionality and code base. 
+		For this reason eForms are not subject to provincial validation testing and conformance criteria.
+		eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- 30-Oct-2022 new build of this update of the Island Health IV Iron outpatient infusion requisition by Gunther Klein -->
+
+
+
+	<style type="text/css" media="screen" >
+
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+
+	 input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	 }
+
+	 .noborder {
+		border : 0px solid black;
+		background-color: transparent;
+		padding: 3px;
+		overflow: hidden;
+		font: bold 13px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 1px solid lightgray;
+		background-color: #e6f2ff;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+	 }
+	 .sig {
+		border: 2px dotted blue;
+		color: Black;
+		background-color: transparent;
+		cursor: crosshair;
+	 }
+	/* Drawing the 'gripper' for touch-enabled devices */
+	 html.touch #content {
+		float:left;
+		width:92%;
+	}
+	 html.touch #scrollgrabber {
+		float:right;
+		width:4%;
+		margin-right:2%;
+		background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+	 }
+	 html.borderradius #scrollgrabber {
+		border-radius: 1em;
+	 }
+
+	input[class*='button']:active {
+		background: red;
+		opacity: 0.1;
+	}
+	 textarea {
+	    resize: none;
+	}
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 13px;
+		height: 13px;
+		font-size: 13px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		cursor: pointer;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+
+	label {	cursor: pointer;}
+	label:hover {
+		text-decoration: underline;
+		color: blue;}
+	label:active {
+		color: red;
+	}
+
+	</style>
+
+	<style type="text/css" media="print">
+
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+	 .NotPrint {
+		display: none;
+	 }
+	 .noborder {
+		border : 0px;
+		background: transparent;
+		padding: 2px;
+		overflow: hidden;		
+		font: bold 13px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 0px;
+		background-color: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+	 }
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 13px;
+		height: 13px;
+		font-size: 13px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+
+	 .sig {
+		border-style: solid;
+		border-color: transparent;
+		color: Black;
+		background-color: transparent;
+	}
+ 	textarea {
+ 		   resize: none;
+	}
+	 </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+	<!-- jQuery for parent-child and radio fields -->
+	<script>
+	$(document).ready(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').click(function() {
+			$('[class^="child-"]').hide();
+			$('.parent-field').each(function() {
+				if ( $(this).is('input:checkbox') ){
+					if(this.checked){
+						$('.child-' +  $(this).prop('id')).show();
+					}else{
+					$('.child-' + $(this).val()).show();
+					}
+				}
+				if ( $(this).is('input:text') ){
+					if($(this).val()=='X'){
+						$('.child-' +  $(this).prop('id')).show();
+					}else{
+					$('.child-' + $(this).val()).show();
+					}
+				}
+			});
+		});
+		$('[class^="only-one-"]').click(function() {
+			if ( $(this).is('input:checkbox') ){
+				$('.'+$(this).attr('class')).prop('checked', false);
+				$(this).prop('checked', true);
+			}
+
+			if ( $(this).is('input:text') ){
+				$('.'+$(this).attr('class')).val('');
+				$( this ).val('X');
+			}
+		});
+	});
+	</script>
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	$("#CanvasSignature2").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+	var $sig=$("#CanvasSignature2");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature2").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+	$("#CanvasSignature2").jSignature("reset");
+}
+function clearSig1(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function clearSig2(){
+	$("#CanvasSignature2").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+	var $sig=$("#CanvasSignature2");
+	var data
+	data=document.getElementById("StoreSignature2").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+	function reImg(){
+	// for stand alone development without uploading to OSCAR
+		var strLoc = window.location.href.toLowerCase();
+		if(strLoc.indexOf("https") == -1) {
+			var src1 = document.getElementById("BGImage1").src;
+			document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+			var src2 = document.getElementById("BGImage2").src;
+			document.getElementById("BGImage2").src = src2.replace("$%7Boscar_image_path%7D","");
+		}
+	}
+	</script>
+</head>
+
+<body onload="reImg();loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}VIHA-iron-iv-form-Oct2022-pg1.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:374px; top:874px; width:228px; height:57px; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+	<input value="Clear Sig" name="ClearButton1" id="ClearButton1" type="button" class="NotPrint" style="position:absolute; left:730px; top:910px;"  onclick="clearSig1();"> 
+
+<input name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:491px; top:40px; width:202px; height:17px; text-transform:capitalize; "  oscarDB=first_last_name>
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:489px; top:63px; width:124px; height:17px; "  oscarDB=dobc>
+<input name="sex" id="sex" type="text" class=" noborder" style="position:absolute; left:648px; top:63px; width:32px; height:17px; "  oscarDB=sex>
+<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:489px; top:86px; width:146px; height:17px; "  oscarDB=hinc>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:547px; top:108px; width:83px; height:17px; "  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:642px; top:108px; width:87px; height:17px; "  oscarDB=cell>
+<input name="diagnosis" id="diagnosis" type="text" class="border" style="position:absolute; left:122px; top:140px; width:244px; height:17px; " >
+<input name="allergies_des_no_archived" id="allergies_des_no_archived" type="text" class="border" style="position:absolute; left:445px; top:140px; width:278px; height:17px; "  oscarDB=allergies_des_no_archived>
+<input name="page1_3" id="page1_3" type="text" class="Xbox" style="position:absolute; left:125px; top:231px; width:10px; height:10px; font-size:10px;" >
+<input name="page1_4" id="page1_4" type="text" class="Xbox" style="position:absolute; left:368px; top:228px;" >
+<input name="page1_5" id="page1_5" type="text" class="border" style="position:absolute; left:420px; top:226px; width:296px; height:17px; " >
+<input name="page1_6" id="page1_6" type="text" class="border" style="position:absolute; left:139px; top:249px; width:577px; height:17px; " >
+<input name="page1_7" id="page1_7" type="text" class="Xbox" style="position:absolute; left:61px; top:305px;" >
+<input name="page1_8" id="page1_8" type="text" class="Xbox" style="position:absolute; left:61px; top:326px;" >
+<input name="page1_9" id="page1_9" type="text" class="Xbox" style="position:absolute; left:61px; top:370px;" >
+<input name="page1_10" id="page1_10" type="text" class="Xbox" style="position:absolute; left:61px; top:390px;" >
+<input name="page1_11" id="page1_11" type="text" class="Xbox" style="position:absolute; left:61px; top:409px;" >
+<input name="page1_12" id="page1_12" type="text" class="Xbox" style="position:absolute; left:61px; top:456px;" >
+<input name="page1_13" id="page1_13" type="text" class="Xbox" style="position:absolute; left:61px; top:475px;" >
+<input name="page1_14" id="page1_14" type="text" class="Xbox" style="position:absolute; left:61px; top:493px;" >
+<input name="page1_15" id="page1_15" type="text" class="Xbox" style="position:absolute; left:61px; top:513px;" >
+<input name="page1_16" id="page1_16" type="text" class="border" style="position:absolute; left:126px; top:510px; width:304px; height:17px; " >
+<input name="Hbvalue" id="Hbvalue" type="text" class=" noborder" style="position:absolute; left:174px; top:574px; width:39px; height:17px; "  oscarDB=m$Hb#value>
+<input name="Hbdate" id="Hbdate" type="text" class="border" style="position:absolute; left:73px; top:597px; width:80px; height:17px; "  oscarDB=m$Hb#dateObserved>
+<input name="Fervalue" id="Fervalue" type="text" class=" noborder" style="position:absolute; left:548px; top:587px; width:35px; height:17px; "  oscarDB=m$Fer#value>
+<input name="Ferdate" id="Ferdate" type="text" class="border" style="position:absolute; left:440px; top:607px; width:80px; height:17px; "  oscarDB=m$Fer#dateObserved>
+<input name="ironsat" id="ironsat" type="text" class="border" style="position:absolute; left:569px; top:624px; width:42px; height:17px; " >
+<input name="ironsatdate" id="ironsatdate" type="text" class="border" style="position:absolute; left:438px; top:642px; width:80px; height:17px; " >
+<textarea name="prescriberorder" id="prescriberorder" type="text" class="border" style="position:absolute; left:42px; top:743px; width:670px; height:40px; " ></textarea>
+<textarea name="summarize" id="summarize" type="text" class="border" style="position:absolute; left:42px; top:808px; width:670px; height:55px; " ></textarea>
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:42px; top:889px; width:238px; height:17px; "  oscarDB=current_user>
+<input name="current_user_cpsid" id="current_user_cpsid" type="text" class=" noborder" style="position:absolute; left:284px; top:889px; width:85px; height:17px; "  oscarDB=current_user_cpsid>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:610px; top:889px; width:107px; height:17px; "  oscarDB=today>
+
+</div>
+
+<div id="page2" style="page-break-after:always;position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}VIHA-iron-iv-form-Oct2022-pg2.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+	<div id="CanvasSignature2" class="sig" style="position:absolute; left:378px; top:398px; width:212px; height:53px; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+	<input value="Clear Sig" name="ClearButton2" id="ClearButton2" type="button" class="NotPrint" style="position:absolute; left:730px; top:430px;"  onclick="clearSig2();"> 
+
+<input name="first_last_name2" id="first_last_name2" type="text" class=" noborder" style="position:absolute; left:471px; top:60px; width:202px; height:17px; text-transform:capitalize;"  oscarDB=first_last_name>
+<input name="dobc2" id="dobc2" type="text" class=" noborder" style="position:absolute; left:471px; top:84px; width:104px; height:17px; "  oscarDB=dobc>
+<input name="hinc2" id="hinc2" type="text" class=" noborder" style="position:absolute; left:471px; top:109px; width:167px; height:17px; "  oscarDB=hinc>
+<input name="phone2" id="phone2" type="text" class=" noborder" style="position:absolute; left:512px; top:134px; width:99px; height:17px; "  oscarDB=phone>
+<input name="cell2" id="cell2" type="text" class=" noborder" style="position:absolute; left:613px; top:134px; width:104px; height:17px; "  oscarDB=cell>
+<input name="page2_2" id="page2_2" type="text" class="Xbox" style="position:absolute; left:63px; top:121px;" >
+<input name="page2_3" id="page2_3" type="text" class="Xbox" style="position:absolute; left:63px; top:144px;" >
+<input name="page2_4" id="page2_4" type="text" class="border" style="position:absolute; left:256px; top:140px; width:20px; height:17px; " >
+<input name="page2_5" id="page2_5" type="text" class="Xbox" style="position:absolute; left:63px; top:236px;" >
+<input name="page2_6" id="page2_6" type="text" class="border" style="position:absolute; left:241px; top:234px; width:50px; height:17px; " >
+<input name="page2_7" id="page2_7" type="text" class="border" style="position:absolute; left:360px; top:234px; width:30px; height20px; " >
+<input name="page2_8" id="page2_8" type="text" class="Xbox" style="position:absolute; left:63px; top:355px;" >
+<input name="page2_9" id="page2_9" type="text" class="border" style="position:absolute; left:412px; top:351px; width:70px; height:17px; " >
+<input name="page2_10" id="page2_10" type="text" class="border" style="position:absolute; left:516px; top:351px; width:30px; height:17px; " >
+<input name="current_user2" id="current_user2" type="text" class=" noborder" style="position:absolute; left:40px; top:420px; width:240px; height:17px; "  oscarDB=current_user>
+<input name="current_user_cpsid2" id="current_user_cpsid2" type="text" class=" noborder" style="position:absolute; left:286px; top:420px; width:81px; height:17px; "  oscarDB=current_user_cpsid>
+<input name="today" id="today2" type="text" class=" noborder" style="position:absolute; left:610px; top:420px; width:108px; height:17px; "  oscarDB=today>
+<input name="page2_11" id="page2_11" type="text" class="border" style="position:absolute; left:135px; top:478px; width:242px; height:17px; " >
+<input name="page2_12" id="page2_12" type="text" class="Xbox" style="position:absolute; left:158px; top:504px;" >
+<input name="page2_13" id="page2_13" type="text" class="Xbox" style="position:absolute; left:204px; top:504px;" >
+<input name="page2_14" id="page2_14" type="text" class="Xbox" style="position:absolute; left:242px; top:504px;" >
+<input name="page2_15" id="page2_15" type="text" class="Xbox" style="position:absolute; left:288px; top:504px;" >
+<input name="page2_16" id="page2_16" type="text" class="Xbox" style="position:absolute; left:325px; top:504px;" >
+<input name="page2_17" id="page2_17" type="text" class="Xbox" style="position:absolute; left:359px; top:505px;" >
+<input name="page2_18" id="page2_18" type="text" class="Xbox" style="position:absolute; left:396px; top:504px;" >
+<input name="page2_19" id="page2_19" type="text" class="border" style="position:absolute; left:204px; top:523px; width:203px; height:17px; " >
+<input name="pregno" id="pregno" type="text" class="only-one-pregbox" style="position:absolute; left:484px; top:479px;" >
+<input name="preg17w" id="preg17w" type="text" class="only-one-pregbox" style="position:absolute; left:484px; top:503px;" >
+<input name="pregunder17w" id="pregunder17w" type="text" class="only-one-pregbox" style="position:absolute; left:484px; top:525px;" >
+
+<div class="NotPrint" id="BottomButtons" style="position: absolute; top:900px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Signatures" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+
+<!-- Copy Left -->
+	<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+
+ </div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "Hbdate", ifFormat : "%Y-%m-%d",  button : "Hbdate" } );
+	Calendar.setup( { inputField : "Ferdate", ifFormat : "%Y-%m-%d",  button : "Ferdate" } );
+	Calendar.setup( { inputField : "ironsatdate", ifFormat : "%Y-%m-%d",  button : "ironsatdate" } );
+	Calendar.setup( { inputField : "today", ifFormat : "%d-%b-%Y",  button : "today" } );
+	Calendar.setup( { inputField : "today2", ifFormat : "%d-%b-%Y",  button : "today2" } );
+</script>
+
+</body>
+</html>

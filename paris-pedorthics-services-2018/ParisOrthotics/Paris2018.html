@@ -1,0 +1,345 @@
+<html>
+<head>
+<!-- 2018-02-26 Updated by Herb Chang for colour background.  Updated Vancouver Address.  Added DB tags. Added link to SportMed form. -->
+
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Paris Orthotics Referral Form</title>
+<style>
+ input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+ .sig {
+	 border: 2px dotted blue;
+	 background-color: lightgrey;
+ }
+ </style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background-color: transparent;
+ }
+ </style>
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Freeform Signatures -->
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_image_pathflashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature2").jSignature()
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature2");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature2").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature2").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature2");
+	var data
+	data=document.getElementById("StoreSignature2").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- scripts for scaling up checkboxes -->
+<style type="Text/css">
+input.largerCheckbox {
+	-moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+}
+</style>
+<style type="text/css" media="print">
+input.largerCheckbox { 
+	-moz-transform:scale(1.8);         /*scale up image 1.8x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+} 
+</style>
+<!--[if IE]>
+<style type="text/css">
+input.largerCheckbox { 
+	height: 30px;                     /*30px checkboxes for IE 5 to IE 7 */ 
+	width: 30px; 
+} 
+</style> 
+<![endif]--> 
+
+<!-- Stamped Signatures -->
+<script type="text/javascript">
+//autoloading signature images
+var ImgArray = [
+	"anonymous|BNK.png",
+	"zapski|PHC.png",
+	"hurman|MCH.png",
+	"mith|PJS.png",
+	"lokod|FAO.png",
+	"urie|LNC.png"
+	];
+
+function SignForm(){
+	//first look for the current users stamp
+	for (i=0; i<ImgArray.length;i++){
+		var ListItemArr =  ImgArray[i].split("|");
+		var UserName = ListItemArr[0];
+		var FileName = ListItemArr[1];
+		if (document.getElementById("CurrentUserName").value.indexOf(UserName)>0){
+			document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile="+FileName;
+		}
+	}
+	//hmm not found so lets try the MRPs stamp
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		for (i=0; i<ImgArray.length;i++){
+			var ListItemArr =  ImgArray[i].split("|");
+			var UserName = ListItemArr[0];
+			var FileName = ListItemArr[1];
+			if (document.getElementById("DoctorName").value.indexOf(UserName)>0){
+				document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile="+FileName;
+			}
+		}
+	// Optimize window size/width
+			top.window.resizeTo(900, screen.availHeight) ;
+	}
+}
+function toggleMe(){
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		SignForm()
+	} else {
+		document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile=BNK.png";
+	}
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		var src2 = document.getElementById("BGImage2").src;
+		document.getElementById("BGImage2").src = src2.replace("$%7Boscar_image_path%7D","");
+		var src3 = document.getElementById("BGImage3").src;
+		document.getElementById("BGImage3").src = src3.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();SignForm();loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div>
+</div>
+
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+
+<img id="BGImage1" src="${oscar_image_path}ParisPedorthic_Rx_2015.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+</div>
+
+<input name="SportMed_Link" type="button" class="DoNotPrint" title="SportMed" style="position:absolute; left:490px; top:26px; color:green; background-color:yellow; font-size:16px; cursor:pointer;" value="to SportMed Form" oscarOPEN="SportMed">
+
+
+
+<input name="PtName" id="PtName" type="text" class="noborder" style="position:absolute; left:36px; top:164px; width:335px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:center; background-color:transparent;" oscarDB=patient_name>
+
+<input name="Date" id="Date" type="text" class="noborder" style="position:absolute; left:36px; top:218px; width:335px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:16px; text-align:center; background-color:transparent;" oscarDB=today>
+
+<input name="ReferMD" id="ReferMD" type="text" class="noborder" style="position:absolute; left:392px; top:218px; width:336px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:center; background-color:transparent;"  oscarDB=current_user>
+
+<input name="Diagnosis1" id="Diagnosis1" type="checkbox" class="largerCheckbox" style="position:absolute; left:80px; top:332px; ">
+
+<input name="Diagnosis2" id="Diagnosis2" type="checkbox" class="largerCheckbox" style="position:absolute; left:80px; top:353px; ">
+
+<input name="Diagnosis3" id="Diagnosis3" type="checkbox" class="largerCheckbox" style="position:absolute; left:80px; top:374px; ">
+
+<input name="Diagnosis4" id="Diagnosis4" type="checkbox" class="largerCheckbox" style="position:absolute; left:80px; top:395px; ">
+
+<input name="Diagnosis5" id="Diagnosis5" type="checkbox" class="largerCheckbox" style="position:absolute; left:80px; top:416px; ">
+
+<input name="Diagnosis6" id="Diagnosis6" type="checkbox" class="largerCheckbox" style="position:absolute; left:310px; top:332px; ">
+
+<input name="Diagnosis7" id="Diagnosis7" type="checkbox" class="largerCheckbox" style="position:absolute; left:310px; top:353px; ">
+
+<input name="Diagnosis8" id="Diagnosis8" type="checkbox" class="largerCheckbox" style="position:absolute; left:310px; top:374px; ">
+
+<input name="Diagnosis10" id="Diagnosis10" type="checkbox" class="largerCheckbox" style="position:absolute; left:310px; top:395px; ">
+
+
+<input name="Diagnosis9" id="Diagnosis9" type="checkbox" class="largerCheckbox" style="position:absolute; left:555px; top:332px; ">
+
+
+<input name="Diganosis34" id="Diganosis34" type="checkbox" class="largerCheckbox" style="position:absolute; left:555px; top:353px; ">
+
+<input name="Diganosis35" id="Diganosis35" type="checkbox" class="largerCheckbox" style="position:absolute; left:486px; top:394px; ">
+
+<input name="LLDL" id="LLDL" type="text" class="noborder" style="position:absolute; left:516px; top:388px; width:26px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:16px; text-align:center; background-color:transparent;" value="">
+
+
+<input name="Diganosis39" id="Diganosis39" type="checkbox" class="largerCheckbox" style="position:absolute; left:564px; top:394px; ">
+
+
+<input name="LLDRight" id="LLDRight" type="text" class="noborder" style="position:absolute; left:596px; top:388px; width:26px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:16px; text-align:center; background-color:transparent;"  value="">
+
+<textarea name="DiagnosisOther" id="DiagnosisOther" class="noborder" style="position:absolute; left:100px; top:440px; width:640px; height:44px; font-family:sans-serif; font-style:normal; font-weight:normal; text-decoration: underline; font-size:14px; text-align:left; background-color:white;" ></textarea>
+
+<input name="CustomRX13" id="CustomRX14" type="checkbox" class="largerCheckbox" style="position:absolute; left:30px; top:548px; ">
+
+<input name="CustomRX14" id="CustomRX14" type="checkbox" class="largerCheckbox" style="position:absolute; left:45px; top:586px; ">
+
+<input name="CustomRX15" id="CustomRX15" type="checkbox" class="largerCheckbox" style="position:absolute; left:45px; top:608px; ">
+
+<input name="CustomRX16" id="CustomRX16" type="checkbox" class="largerCheckbox" style="position:absolute; left:45px; top:629px; ">
+
+<input name="CustomOTC" id="CustomOTC" type="checkbox" class="largerCheckbox" style="position:absolute; left:30px; top:652px;  ">
+
+<input name="CustomRX17" id="CustomRX17" type="checkbox" class="largerCheckbox" style="position:absolute; left:223px; top:546px; ">
+
+<input name="CustomRX18" id="CustomRX18" type="checkbox" class="largerCheckbox" style="position:absolute; left:223px; top:568px; ">
+
+<input name="CustomRX19" id="CustomRX19" type="checkbox" class="largerCheckbox" style="position:absolute; left:223px; top:590px; ">
+
+<input name="CustomRX20" id="CustomRX20" type="checkbox" class="largerCheckbox" style="position:absolute; left:223px; top:634px; ">
+
+<input name="CustomRX21" id="CustomRX21" type="checkbox" class="largerCheckbox" style="position:absolute; left:428px; top:546px; ">
+
+<input name="CustomRX22" id="CustomRX22" type="checkbox" class="largerCheckbox" style="position:absolute; left:428px; top:568px; ">
+
+<input name="CustomRX23" id="CustomRX23" type="checkbox" class="largerCheckbox" style="position:absolute; left:428px; top:590px; ">
+
+<input name="CustomRX24" id="CustomRX24" type="checkbox" class="largerCheckbox" style="position:absolute; left:558px; top:546px; ">
+
+<input name="CustomRX25" id="CustomRX25" type="checkbox" class="largerCheckbox" style="position:absolute; left:558px; top:568px; ">
+
+<input name="CustomHL" id="CustomHL" type="checkbox" class="largerCheckbox" style="position:absolute; left:428px; top:612px; ">
+
+<input name="CustomRX26" id="CustomRX26" type="checkbox" class="largerCheckbox" style="position:absolute; left:428px; top:634px; ">
+
+<input name="CustomRX27" id="CustomRX27" type="checkbox" class="largerCheckbox" style="position:absolute; left:428px; top:656px; ">
+
+<input name="HeelliftL" id="HeelliftL" type="checkbox" class="largerCheckbox" style="position:absolute; left:554px; top:612px; ">
+
+<input name="HeelLiftR" id="HeelLiftR" type="checkbox" class="largerCheckbox" style="position:absolute; left:631px; top:612px; ">
+
+<input name="HeelLiftLM" id="HeelLiftLM" type="text" class="noborder" style="position:absolute; left:584px; top:607px; width:26px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:16px; text-align:center; background-color:transparent;" value="">
+
+<input name="HeelLiftRM" id="HeelLiftRM" type="text" class="noborder" style="position:absolute; left:661px; top:607px; width:26px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:center; background-color:transparent;" value="">
+
+
+<textarea name="SpecialInstructions" id="SpecialInstructions" class="noborder" style="position:absolute; left:228px; top:680px; width:520px; height:44px; font-family:sans-serif; font-style:normal; font-weight:normal; text-decoration:underline; font-size:16px; text-align:left; background-color:white;" ></textarea>
+
+<input name="NonCustomRX28" id="NonCustomRX28" type="checkbox" class="largerCheckbox" style="position:absolute; left:30px; top:760px; ">
+
+<input name="NonCustomRX29" id="NonCustomRX29" type="checkbox" class="largerCheckbox" style="position:absolute; left:184px; top:760px; ">
+
+<input name="NonCustomRX30" id="NonCustomRX30" type="checkbox" class="largerCheckbox" style="position:absolute; left:376px; top:760px; ">
+
+<input name="NonCustomRX31" id="NonCustomRX31" type="checkbox" class="largerCheckbox" style="position:absolute; left:530px; top:760px; ">
+
+
+<input name="NonCustomRXOther" id="NonCustomRXOther" type="text" class="noborder" style="position:absolute; left:588px; top:758px; width:150px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; text-decoration:underline; font-size:16px; text-align:left; background-color:white;" value="">
+
+<span  name="Van_Address" id="Van_Address"  style="position:absolute; left:31px; top:953px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:11px; text-align:left; color:black; background-color:white;">1861 West Broadway</span>
+
+<span  name="No_4th" id="No_4th"  style="position:absolute; left:106px; top:933px; width:38px; height:20px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:left; color:black; background-color:white;"></span>
+
+
+	<div id="CanvasSignature2" class="sig" style="position:absolute; left:386px; top:126px; width:336px; height:53">
+	</div>
+
+	<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+
+<div style="position:absolute; left:386px; top:184px;">
+<img id="Stamp" src="../eform/displayImage.do?imagefile=BNK.png" width="338" height="4" onclick="toggleMe();">
+</div>
+
+
+</div>
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+
+
+ <div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1042px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+ </form>
+
+</body>
+</html>

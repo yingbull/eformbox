@@ -1,0 +1,281 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+
+<!-- Freeform Signatures -->
+
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").value="X";
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").value="X";
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="checkGender();reImg();loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}PMXX104704A_LipidClinicReferral_back_2019-May-30.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="patient_nameL" id="patient_nameL" type="text" class=" noborder" style="position:absolute; left:211px; top:237px; width:211px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class=" noborder" style="position:absolute; left:430px; top:237px; width:146px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="pt_middle_name" id="pt_middle_name" type="text" class=" noborder" style="position:absolute; left:581px; top:237px; width:148px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="other_names" id="other_names" type="text" class=" noborder" style="position:absolute; left:229px; top:260px; width:502px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:211px; top:285px; width:187px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hinc>
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:489px; top:285px; width:89px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc>
+<input name="Male" id="Male" type="text" class="Xbox" style="position:absolute; left:648px; top:285px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="Female" id="Female" type="text" class="Xbox" style="position:absolute; left:684px; top:285px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="address_street_number_and_name" id="address_street_number_and_name" type="text" class=" noborder" style="position:absolute; left:125px; top:307px; width:205px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address_street_number_and_name>
+<input name="city" id="city" type="text" class=" noborder" style="position:absolute; left:342px; top:307px; width:107px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=city>
+<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:458px; top:307px; width:100px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=province>
+<input name="postal" id="postal" type="text" class=" noborder" style="position:absolute; left:567px; top:307px; width:127px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=postal>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:165px; top:333px; width:132px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="ok_to_call" id="ok_to_call" type="text" class="Xbox" style="position:absolute; left:321px; top:336px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="message_no" id="message_no" type="text" class=" noborder" style="position:absolute; left:543px; top:333px; width:167px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="msp" id="msp" type="text" class="Xbox" style="position:absolute; left:140px; top:358px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="wcb" id="wcb" type="text" class="Xbox" style="position:absolute; left:176px; top:358px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="out_of_prov" id="out_of_prov" type="text" class="Xbox" style="position:absolute; left:221px; top:358px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="self_pay" id="self_pay" type="text" class="Xbox" style="position:absolute; left:311px; top:358px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="other" id="other" type="text" class=" noborder" style="position:absolute; left:413px; top:358px; width:96px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="rcmp_no" id="rcmp_no" type="text" class=" noborder" style="position:absolute; left:636px; top:358px; width:82px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="interpreter_n" id="interpreter_n" type="text" class="Xbox" style="position:absolute; left:190px; top:378px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="interpreter_y" id="interpreter_y" type="text" class="Xbox" style="position:absolute; left:234px; top:378px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="language" id="language" type="text" class=" noborder" style="position:absolute; left:353px; top:378px; width:145px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<textarea name="referral_reason" id="referral_reason" type="text" class=" noborder" style="position:absolute; left:77px; top:436px; width:637px; height:47px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<input name="coronary" id="coronary" type="text" class="Xbox" style="position:absolute; left:161px; top:724px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="cerebrovascular" id="cerebrovascular" type="text" class="Xbox" style="position:absolute; left:241px; top:724px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="peripheral_vascular" id="peripheral_vascular" type="text" class="Xbox" style="position:absolute; left:363px; top:724px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="hypertension" id="hypertension" type="text" class="Xbox" style="position:absolute; left:77px; top:743px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="smoker" id="smoker" type="text" class="Xbox" style="position:absolute; left:172px; top:743px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="diabetes" id="diabetes" type="text" class="Xbox" style="position:absolute; left:244px; top:743px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="ifg" id="ifg" type="text" class="Xbox" style="position:absolute; left:316px; top:743px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="igt" id="igt" type="text" class="Xbox" style="position:absolute; left:512px; top:743px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="obesity" id="obesity" type="text" class="Xbox" style="position:absolute; left:77px; top:759px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="psychosocial" id="psychosocial" type="text" class="Xbox" style="position:absolute; left:201px; top:759px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="inactivity" id="inactivity" type="text" class="Xbox" style="position:absolute; left:301px; top:759px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="vascular_disease" id="vascular_disease" type="text" class="Xbox" style="position:absolute; left:429px; top:759px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="hdl" id="hdl" type="text" class="Xbox" style="position:absolute; left:247px; top:774px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="other" id="other" type="text" class="Xbox" style="position:absolute; left:346px; top:774px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="doctor" id="doctor" type="text" class=" noborder" style="position:absolute; left:108px; top:834px; width:270px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=doctor>
+<input name="doctor_ohip_no" id="doctor_ohip_no" type="text" class=" noborder" style="position:absolute; left:110px; top:857px; width:265px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=doctor_ohip_no>
+<input name="doctor_work_phone" id="doctor_work_phone" type="text" class=" noborder" style="position:absolute; left:112px; top:874px; width:123px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=doctor_work_phone>
+<input name="dr_fax" id="dr_fax" type="text" class=" noborder" style="position:absolute; left:271px; top:874px; width:107px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="no_gp" id="no_gp" type="text" class="Xbox" style="position:absolute; left:75px; top:898px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:aquamarine;" >
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:440px; top:834px; width:268px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class=" noborder" style="position:absolute; left:445px; top:857px; width:268px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_ohip_no>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:445px; top:874px; width:122px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:602px; top:874px; width:110px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<input name="gp" id="gp" type="text" class="Xbox" style="position:absolute; left:403px; top:899px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="specialist" id="specialist" type="text" class="Xbox" style="position:absolute; left:440px; top:899px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="np" id="np" type="text" class="Xbox" style="position:absolute; left:511px; top:899px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="hospitalist" id="hospitalist" type="text" class="Xbox" style="position:absolute; left:549px; top:899px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="er" id="er" type="text" class="Xbox" style="position:absolute; left:620px; top:899px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+<input name="other" id="other" type="text" class="Xbox" style="position:absolute; left:660px; top:899px; width:12px; height:12px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:10px; text-align:center; background-color:aquamarine;" >
+    
+<div id="CanvasSignature1" class="sig" style="position:absolute; left:271px; top:930px; width:300px; height:50; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+
+<div id="page2" style="page-break-after:always;position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}PMXX104704A_LipidClinicReferral_back_2019-May-30p2.png" style="position: relative; left: 0px; top: 0px; width:750px">
+    
+        
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+</form>
+</body>
+</html>

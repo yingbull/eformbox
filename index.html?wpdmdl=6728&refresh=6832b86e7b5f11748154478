@@ -1,0 +1,181 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- <meta http-equiv="refresh" content="3" > -->
+
+<title>Generic Label</title>
+<!-- E.Wertheimer Jul 15,2020 multiple (3) formats; added hinqc for RAMQ spacing -->
+<!-- the following was added to apconfig.xml
+    <databaseap>
+        <ap-name>hinqc</ap-name>
+        <ap-sql>SELECT UPPER( CONCAT(LEFT(hin,4),' ', MID(hin,5,4),' ',MID(hin,9,4)) ) AS hinqc FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${hinqc}</ap-output>
+    </databaseap>
+-->
+<!-- E.Wertheimer Jun 23,2020 for Dr. Yaremko -->
+<!-- E.Wertheimer Jun 18,2020 for Dr. Yaremko -->
+<!-- E.Wertheimer Nov 17,2019 for Mediplex -->
+<!-- E.Wertheimer Jul  5,2016 for Sante Kildare -->
+<!-- keywords: label, lab req -->
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.1.js"></script>
+
+<style type="text/css">
+div.form-div1, div.form-div2, div.form-div3, div.form-div4, div.form-div42 div.form-div1 > label, div.form-div2 > label, div.form-div3 > label, div.form-div4 > label, div.form-div42 > label, div.form-div5 > label {
+    margin-bottom: 15px;
+    color: #000;
+}
+</style>
+
+<style type="text/css" media="screen" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+.noborder {
+	border : 0px;
+	background: transparent;
+    background-color:transparent;
+    height:14px; 
+    font-family:sans-serif; 
+    font-style:normal; 
+    font-weight:normal; 
+    font-size:12px; 
+    text-align:left; 
+}
+</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {
+	display: none;
+}
+.noborder {
+	border : 0px;
+	background: transparent;
+    background-color:transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+    height:16px; 
+    font-family:sans-serif; 
+    font-style:normal; 
+    font-weight:normal; 
+    font-size:14px; 
+    text-align:left; 
+}
+</style>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+
+</head>
+
+<body onload="">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<!-- 	    $('.form-div32').hide(); -->
+
+<script language="javascript">
+	$(document).ready(function () {
+
+	    $('.form-div1').show();
+	    $('.form-div2, .form-div3').hide();
+
+	    $('#label-type').change(function () {
+            $('.form-div1').toggle($(this).val() == "option1");
+	    });
+
+	    $('#label-type').change(function () {
+            $('.form-div2').toggle($(this).val() == "option2");
+	    });
+
+	    $('#label-type').change(function () {
+            $('.form-div3').toggle($(this).val() == "option3");
+	    });
+
+	});
+</script>
+
+<div class="form-div0 DoNotPrint" style="position: absolute; left:01px; top:150px;">
+    <label>Select the label format</label> &nbsp; 
+    <select id="label-type">
+        <option value="option1">Patient</option>
+        <option value="option2">RAMQ</option>
+        <option value="option3">Mailing</option>        
+    </select>
+</div>
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; left:300px; top:150px;">
+    <table>
+        <tr><td>
+            <input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+        </td></tr>
+    </table>
+</div>
+
+<!-- Patient Label -->
+<div class="form-div1">
+    <input name="patname" id="patname" type="text" class="noborder" style="position:absolute;  left:01px; top:0px; width:300px;" oscarDB=patient_name>
+    <input name="sex"     id="sex"     type="text" class="noborder" style="position:absolute; left:280px; top:0px; width:15px;" oscarDB=sex>
+
+    <input name="address" id="address" type="text" class="noborder" style="position:absolute; left:01px; top:16px; width:340px;" oscarDB=address_street_number_and_name>
+    
+    <input name="city"    id="city"    type="text" class="noborder" style="position:absolute; left:01px;  top:32px; width:190px;" oscarDB=city>
+    <input name="prov"    id="prov"    type="text" class="noborder" style="position:absolute; left:200px; top:32px; width:20px;"  oscarDB=province>
+    <input name="postal"  id="postal"  type="text" class="noborder" style="position:absolute; left:240px; top:32px; width:60px;"  oscarDB=postal>
+    
+    <div style="position:absolute; left:01px; top:48px;" class="noborder">DOB:</div>
+    <input name="dobc"    id="dobc"    type="text" class="noborder" style="position:absolute;  left:35px; top:48px; width:110px;" oscarDB=dobc2>
+    <div style="position:absolute; left:130px; top:48px;" class="noborder">RAMQ:</div>
+    <input name="hinc"    id="hinc"    type="text" class="noborder" style="position:absolute; left:175px; top:48px; width:140px;" oscarDB=hinqc>
+
+    <div style="position:absolute; left:01px; top:64px;" class="noborder">Cell:</div>
+    <input name="cell"    id="cell"    type="text" class="noborder" style="position:absolute; left:30px;  top:64px; width:110px;" oscarDB=cell>
+    <div style="position:absolute; left:130px; top:64px;" class="noborder">Home:</div>
+    <input name="phone"   id="phone"   type="text" class="noborder" style="position:absolute; left:170px; top:64px; width:110px;" oscarDB=phone>
+<!-- <div style="position:absolute; left:01px; top:120px;" class="noborder DoNotPrint">1 Patient Label</div> -->
+</div>
+
+<!-- RAMQ Label -->
+<div class="form-div2">
+    <input name="patname" id="patname" type="text" class="noborder" style="position:absolute; left:01px; top:0px; width:300px;" oscarDB=patient_name>
+
+    <input name="hinc"    id="hinc"    type="text" class="noborder" style="position:absolute; left:01px; top:20px; width:140px;" oscarDB=hinqc>
+
+    <input name="dobc"    id="dobc"    type="text" class="noborder" style="position:absolute; left:01px;  top:40px; width:110px;" oscarDB=dobc2>
+    <input name="sex"     id="sex"     type="text" class="noborder" style="position:absolute; left:130px; top:40px; width:15px;" oscarDB=sex>
+<!-- <div style="position:absolute; left:01px; top:120px;" class="noborder DoNotPrint">2 RAMQ Label</div> -->
+</div>
+
+<!-- Mailing Label -->
+<div class="form-div3">
+    <input name="patname" id="patname" type="text" class="noborder" style="position:absolute; left:01px; top:0px; width:300px;" oscarDB=first_last_name>
+
+    <input name="address" id="address" type="text" class="noborder" style="position:absolute; left:01px; top:20px; width:340px;" oscarDB=address_street_number_and_name>
+    
+    <input name="city"    id="city"    type="text" class="noborder" style="position:absolute; left:01px;  top:40px; width:190px;" oscarDB=city>
+    <input name="prov"    id="prov"    type="text" class="noborder" style="position:absolute; left:200px; top:40px; width:20px;" oscarDB=province>
+    
+    <input name="postal"  id="postal"  type="text" class="noborder" style="position:absolute; left:01px; top:60px; width:110px;" oscarDB=postal>
+<!-- <div style="position:absolute; left:01px; top:120px;" class="noborder DoNotPrint">3 Mailing Label</div> -->
+</div>
+
+
+</form>
+
+</body>
+</html>

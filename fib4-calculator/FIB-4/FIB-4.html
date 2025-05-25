@@ -1,0 +1,317 @@
+<html>
+<head>
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<title>FIB-4A</title>
+<script src='${oscar_javascript_path}jquery/jquery-2.2.4.min.js'>
+</script>
+<script>window.jQuery || document.write("\x3cscript src='https://code.jquery.com/jquery-2.2.4.min.js'\x3e\x3c\/script\x3e");</script>
+<style>
+		/* base style for pages */
+		.page_container {
+			position: relative;
+			background: #ffffff;
+			float: left;
+			border: solid 0;
+			margin: 0;
+		}
+
+		/* div containing form input elements */
+		.input_elements {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* base styling for input wrapper divs */
+		.gen-widget {
+			display: inline-block;
+			text-align: left;
+			vertical-align: top;
+			background: transparent;
+			border: 0;
+		}
+
+		/* style wrapped input elements */
+		.gen-widget input, textarea {
+			position: absolute;
+			display: inline-block;
+			text-align: left;
+			font-weight: normal;
+			font-size: 12px;
+			font-family: 'Helvetica', 'Arial', sans-serif;
+			background: transparent;
+			color: #000000;
+			border: 1px solid #d2d2d2;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+			margin: 0;
+		}
+
+		/* define xbox styling */
+		.gen-xBox input {
+			background: #f3f3f3;
+			text-align: center;
+			font-weight: bold;
+			font-size: 9px;
+			border: 1px solid black;
+			cursor: pointer;
+		}
+		.gen-xBox input:focus {
+			outline: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+		}
+		/* define custom checkbox styling */
+		.gen-checkbox input {
+			background: #f3f3f3;
+			text-align: center;
+			font-weight: bold;
+			font-size: 9px;
+			border: 1px solid black;
+			cursor: pointer;
+		}
+		.gen-checkbox input:focus {
+			outline: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+		}
+
+		/* define other */
+		.noborder {
+			border-color: transparent !important;
+		}
+
+		/* print only styling */
+		@media print {
+			.DoNotPrint {
+				display: none;
+			}
+
+			.noborderPrint {
+				border-color: transparent !important;
+			}
+
+			.page_container {
+				page-break-after: always;
+			}
+		}
+
+		/* define label styling (only used by generated labels) */
+		.label-style_1 {
+			color: #000000;
+			font-size: 12px;
+			font-weight: normal;
+			font-family: Verdana, Arial, sans-serif;
+		}
+	</style>
+<script>
+		var needToConfirm = false;
+		/** call this to prevent closing the window without a confirmation */
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+		/** call this to prevent the exit confirmation popup when closing the window */
+		function releaseDirtyFlag() {
+			needToConfirm = false;
+		}
+		/** call this function on page load to prevent the window from closing
+		 * without confirmation when unsaved changes have been made */
+		function initConfirmClose() {
+			window.addEventListener("beforeunload", function (event) {
+				if (needToConfirm) {
+					var confirmationMessage = "You have attempted to leave this page. " +
+						"If you have made any changes to the fields without clicking the Submit button, " +
+						"your changes will be lost. Are you sure you want to exit this page?";
+					event.returnValue = confirmationMessage;
+					return confirmationMessage;
+				}
+			});
+			$("input").change(function (event) {
+				setDirtyFlag();
+			});
+		}
+		/** this function fixes images paths in the eform to allow image use outside of oscar.
+		 *  This is useful when developing the eform, but can be removed for final versions */
+		function replaceOscarImagePathsWhenLocal($selector) {
+			var strLoc = window.location.href.toLowerCase();
+			if (strLoc.indexOf("https") == -1) {
+				$selector.find("img").not(".signature_data").each(function () {
+					this.src = this.src.replace(/$\%7Boscar_image_path\%7D/, '');
+				});
+			}
+		}
+		/** initializes custom x-box input functionality.
+		 *  should be called once on eform load */
+		function initXBoxes($selector) {
+			$selector.find(".xBox").click(function () {
+				$(this).val($(this).val() === 'X' ? '' : 'X');
+			}).keypress(function (event) {
+				// any key press except tab will constitute a value change to the checkbox
+				if (event.which != 0) {
+					$(this).click();
+					return false;
+				}
+			});
+		}
+		/** initializes custom checkboxes input functionality using utf-8 character.
+		 *  should be called once on eform load */
+		function initUTF8Checkboxes($selector) {
+			$selector.find(".utf8Check").click(function () {
+				$(this).val($(this).val() === '\u2713' ? '' : '\u2713');
+			}).keypress(function (event) {
+				// any key press except tab will constitute a value change to the checkbox
+				if (event.which != 0) {
+					$(this).click();
+					return false;
+				}
+			});
+		}
+		/** pre-check checkboxes and xboxes based on patient gender */
+		function initPrecheckedCheckboxes($selector) {
+			var $patientGender = $("#PatientGender");
+			if ($patientGender) {
+				var filter = ".gender_precheck_" + $patientGender.val();
+				$selector.find("input[type=checkbox]").filter(filter).prop('checked', true);
+				$selector.find(".xBox").filter(filter).val('X');
+				$selector.find(".utf8Check").filter(filter).val('\u2713');
+			}
+		}
+		/** This function is called when the eform has been loaded */
+		function onEformLoad() {
+			var $input_elements = $(".input_elements");
+			replaceOscarImagePathsWhenLocal($("#eform_container"));
+			initXBoxes($input_elements);
+			initUTF8Checkboxes($input_elements);
+			initPrecheckedCheckboxes($input_elements);
+			initConfirmClose();
+		}
+		/** This function is called when the print button is clicked */
+		function onEformPrint() {
+			window.print();
+		}
+		/** This function is called when the eform submit button is clicked */
+		function onEformSubmit() {
+			releaseDirtyFlag();
+			document.forms[0].submit();
+		}
+		/** This function is called when the eform print & submit button is clicked */
+		function onEformPrintSubmit() {
+			onEformPrint();
+			releaseDirtyFlag();
+			setTimeout('document.forms[0].submit()', 2000);
+		}
+	</script>
+</head>
+<body onload='onEformLoad();'>
+<div id='eform_container'style='max-width: 850px'>
+<form id="inputForm" action="">
+<div id="page_1" class="page_container ui-droppable" style="width: 850px; height: 600px;">
+<div class="input_elements">
+<div>
+  <header>
+    <h1>FIB-4 Calculator</h1>
+    <p>Liver fibrosis often progresses non-linearly, so it is important to be able to re-assess fibrosis trends in individual patients over time, and invasive re-assessments carry significant risk to patients. FIB-4 allows for non-invasive liver fibrosis assessment. 
+<br>
+<a href="https://www.mdcalc.com/calc/2200/fibrosis-4-fib-4-index-liver-fibrosis" target="_blank">Visit mdcalc.ca</a></p>
+  </header>
+</div>
+<div id="gen_widgetId1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 40px; height: 16px; position: absolute; z-index: 11; top: 159.167px; left: 193.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+AST:<input type="text" class="gen_input TextBox noborderPrint" title="m$AST#value" oscardb="m$AST#value" id="AST" name="gen_inputId1">
+</div>
+<div id="gen_widgetId2" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 40px; height: 16px; position: absolute; z-index: 12; top: 207.167px; left: 190.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+ALT:<input type="text" class="gen_input TextBox noborderPrint" title="m$ALT#value" oscardb="m$ALT#value" id="ALT" name="gen_inputId2">
+</div>
+<div id="gen_widgetId3" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 40px; height: 16px; position: absolute; z-index: 13; top: 254.167px; left: 190.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+PLT:<input type="text" class="gen_input TextBox noborderPrint" title="m$PLT#value" oscardb="m$PLT#value" id="PLT" name="gen_inputId3">
+</div>
+<div id="gen_widgetId4" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 14; top: 256.167px; left: 372.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="m$PLT#dateObserved" oscardb="m$PLT#dateObserved" id="gen_inputId4" name="gen_inputId4">
+</div>
+<div id="gen_widgetId5" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 40px; height: 16px; position: absolute; z-index: 15; top: 312.233px; left: 193.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+Age:<input type="text" class="gen_input TextBox noborderPrint" title="age" oscardb="age" id="AGE" name="gen_inputId5">
+</div>
+<div id="gen_widgetIdA1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 16; top: 160.167px; left: 373.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="m$AST#dateObserved" oscardb="m$AST#dateObserved" id="gen_inputIdA1" name="gen_inputIdA1">
+</div>
+<div id="gen_widgetIdA2" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 130px; height: 16px; position: absolute; z-index: 17; top: 208.167px; left: 374.867px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="m$ALT#dateObserved" oscardb="m$ALT#dateObserved" id="gen_inputIdA2" name="gen_inputIdA2">
+</div>
+<div id="gen_widgetIdA3" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 40px; height: 16px; position: absolute; z-index: 23; top: 375.05px; left: 189px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+Score:<input type="text" readonly class="gen_input TextBox noborderPrint" id="score" name="gen_inputIdA3">
+</div>
+<div id="gen_widgetIdB1" onclick="mycalc()" class="gen-widget square-rounded gen-layer2 gen-resize-destroyed gen-draggable-destroyed gen-droppable-destroyed" style="width: 64px; height: 64px; position: absolute; z-index: 10; top: 370px; left: 290px;">
+<button type="button">CALCULATE</button>
+</div>
+<div id="gen_widgetIdE1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 231px; height: 16px; position: absolute; z-index: 20; top: 420.05px; left: 189px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="<1 (mild fibrosis)" id="none" name="gen_inputIdC1" value="<1 (no fibrosis)">
+</div>
+<div id="gen_widgetIdC1" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 231px; height: 16px; position: absolute; z-index: 20; top: 450.05px; left: 189px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="1-2 (mild fibrosis)" id="mild" name="gen_inputIdC1" value="1-2 (mild fibrosis)">
+</div>
+<div id="gen_widgetIdC2" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 229px; height: 16px; position: absolute; z-index: 21; top: 484.05px; left: 189px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="3-4 (moderate fibrosis)" id="moderate" name="gen_inputIdC2" value="3-4 (moderate fibrosis)">
+</div>
+<div id="gen_widgetIdC3" class="gen-widget  gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 229px; height: 16px; position: absolute; z-index: 22; top: 520.05px; left: 189px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="5-6 (severe fibrosis/cirrhosis) " id="severe" name="gen_inputIdC3" value="5-6 (severe fibrosis/cirrhosis) ">
+</div>
+</div>
+</div>
+
+<div id="BottomButtons" class="DoNotPrint">
+<!-- Form Control Buttons -->
+<label for="subject">Subject:</label>
+<input name="subject" id="subject" size="40" type="text">
+<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="onEformSubmit();">
+<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="onEformPrint();">
+<input value="Print &amp; Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="onEformPrintSubmit();">
+</div>
+<script>
+function mycalc() {
+var vAST = $('#AST').val()
+var vALT = $('#ALT').val()
+var vPLT = $('#PLT').val()
+var vAGE = $('#AGE').val()
+var res = ((vAGE * vAST)  / (vPLT *  Math.sqrt(vALT))).toFixed(2)
+$('#score').val(res)
+$('#subject').val(" Score is " + res)
+switch(true) {
+    case res < 1:
+       $('#none').css('background-color', 'yellow')
+       $('#mild').css('background-color', 'white')
+       $('#moderate').css('background-color', 'white')
+       $('#severe').css('background-color', 'white')
+        break;
+    case res >= 1  && res < 3:
+       $('#none').css('background-color', 'white')
+       $('#mild').css('background-color', 'lime')
+       $('#moderate').css('background-color', 'white')
+       $('#severe').css('background-color', 'white')
+        break;
+    case res >= 3 && res < 5:
+       $('#none').css('background-color', 'white')
+       $('#mild').css('background-color', 'white')
+       $('#moderate').css('background-color', 'orange')
+       $('#severe').css('background-color', 'white')
+        break;
+    case res >= 5:
+       $('#none').css('background-color', 'white')
+       $('#mild').css('background-color', 'white')
+       $('#moderate').css('background-color', 'white')
+       $('#severe').css('background-color', 'pink')
+        break;
+}
+}
+</script>
+</div>
+</div>
+</div>
+<div class="DoNotPrint" id="BottomButtons">
+
+</form>
+</div>
+</body>
+</html>

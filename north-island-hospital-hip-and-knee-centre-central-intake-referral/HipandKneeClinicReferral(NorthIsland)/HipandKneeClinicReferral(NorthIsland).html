@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Hip and Knee Clinic referral North Island Hospitals</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+	 .noborder {
+		border : 0px solid black;
+		background-color: transparent;
+		padding: 3px;
+		overflow: hidden;
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+		resize:none;
+	 }
+	 .border {
+		border : 1px solid lightgray;
+		background-color: #e6f2ff;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+		resize:none;
+	 }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		cursor: pointer;
+		font-weight: bolder;
+		text-align: center;
+		background-color: lightyellow;
+	}
+	input[class*='box']:hover {background-color: #e6f2ff;}
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+	 .noborder {
+		border : 0px;
+		background: transparent;
+		padding: 2px;
+		overflow: hidden;		
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 0px;
+		background-color: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+	 }
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		font-weight: bolder;
+		text-align: center;
+		background-color: white;
+	}
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+
+<script type="text/javascript">
+	function reImg(){
+	// for stand alone development without uploading to OSCAR
+		var strLoc = window.location.href.toLowerCase();
+		if(strLoc.indexOf("https") == -1) {
+			var src1 = document.getElementById("BGImage1").src;
+			document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		}
+	}
+	</script>
+
+
+</head>
+
+<body onload="reImg();loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}hip-knee-clinic-central-intake-referral-nih-806-May-2022.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:443px; top:351px; width:148px; height:37px; z-index:10;">
+	</div>
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+	<input value="Clear Sig" name="ClearButton2" id="ClearButton2" type="button"  class="DoNotPrint" style="position:absolute; left:600px; top:370px; color:green;" onclick="clearSig();"> 
+
+
+<input name="page1_2" id="page1_2" type="text" class="Xbox" style="position:absolute; left:53px; top:106px;" >
+<input name="page1_3" id="page1_3" type="text" class="Xbox" style="position:absolute; left:460px; top:106px;" >
+<input name="patient_nameL" id="patient_nameL" type="text" class=" noborder" style="position:absolute; left:128px; top:213px; width:186px; height:15px; font-weight:bold;"  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class=" noborder" style="position:absolute; left:128px; top:233px; width:187px; height:15px; font-weight:bold;"  oscarDB=patient_nameF>
+<input name="dob" id="dob" type="text" class=" noborder" style="position:absolute; left:128px; top:252px; width:160px; height:12px; background:white;"  oscarDB=dob>
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:128px; top:270px; width:181px; height:15px; "  oscarDB=hin>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:216px; top:291px; width:154px; height:15px; font-weight:bold;"  oscarDB=cell>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:216px; top:311px; width:153px; height:15px; "  oscarDB=phone>
+<input name="phone2_extension" id="phone2_extension" type="text" class=" noborder" style="position:absolute; left:216px; top:330px; width:153px; height:15px; "  oscarDB=phone2>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:152px; top:350px; width:100px; height:12px; background:white "  oscarDB=today>
+
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:509px; top:215px; width:179px; height:15px; font-weight:bold;"  oscarDB=current_user>
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class=" noborder" style="position:absolute; left:440px; top:237px; width:87px; height:15px; "  oscarDB=current_user_ohip_no>
+<textarea name="clinic_label" id="clinic_label" type="text" class=" noborder" style="position:absolute; left:486px; top:258px; width:202px; height:84px; font-size:12px;"  oscarDB=clinic_label></textarea>
+
+<input name="page1_4" id="page1_4" type="text" class="Xbox" style="position:absolute; left:108px; top:370px;" >
+<input name="page1_5" id="page1_5" type="text" class="Xbox" style="position:absolute; left:169px; top:370px;" >
+<input name="page1_6" id="page1_6" type="text" class="Xbox" style="position:absolute; left:125px; top:405px; " >
+<input name="page1_7" id="page1_7" type="text" class="Xbox" style="position:absolute; left:125px; top:420px; " >
+<input name="page1_8" id="page1_8" type="text" class="Xbox" style="position:absolute; left:121px; top:562px; " >
+<input name="page1_9" id="page1_9" type="text" class="Xbox" style="position:absolute; left:121px; top:579px; " >
+<input name="page1_10" id="page1_10" type="text" class="Xbox" style="position:absolute; left:189px; top:562px; " >
+<input name="page1_11" id="page1_11" type="text" class="Xbox" style="position:absolute; left:183px; top:579px; " >
+<input name="page1_12" id="page1_12" type="text" class="Xbox" style="position:absolute; left:123px; top:617px; " >
+<input name="page1_13" id="page1_13" type="text" class="Xbox" style="position:absolute; left:123px; top:633px; " >
+<input name="page1_14" id="page1_14" type="text" class="Xbox" style="position:absolute; left:122px; top:667px; " >
+<input name="page1_15" id="page1_15" type="text" class="Xbox" style="position:absolute; left:122px; top:682px; " >
+<input name="page1_16" id="page1_16" type="text" class="Xbox" style="position:absolute; left:122px; top:697px; " >
+<input name="page1_17" id="page1_17" type="text" class="Xbox" style="position:absolute; left:114px; top:736px; " >
+<input name="page1_18" id="page1_18" type="text" class="Xbox" style="position:absolute; left:114px; top:755px; " >
+<input name="page1_19" id="page1_19" type="text" class="Xbox" style="position:absolute; left:114px; top:775px; " >
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%d-%b-%Y",  button : "today" } );
+</script>
+
+</body>
+</html>

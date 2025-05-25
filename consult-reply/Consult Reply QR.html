@@ -1,0 +1,235 @@
+<html>
+<head>
+<title>Consult Reply QR</title>
+
+<meta charset="UTF-8">
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+
+<!-- autorefresh every 5 seconds -->
+<!-- <meta http-equiv="refresh" content="5"> -->
+<!-- Rev Apr  9,2025 - EW added QR for HIN, LName, FName
+<!-- Rev Feb 22,2018 - EW adjusted address & phone -->
+<!-- Rev Feb  8,2018 - EW moved most definitions to style -->
+<!-- Rev Feb  7,2018 - EW adjusted css media definition -->
+<!-- Rev Feb  3,2018 - EW adjusted box heights for printing -->
+<!-- Rev Apr 21,2017 - EW 1 page version -->
+<!-- Rev Aug 10,2016 - EW mods for faxing -->
+<!-- Rev Apr 18,2016 - EW added Fax number default -->
+<!-- Rev Dec  1,2015 - EW added @page style -->
+<!-- Rev Oct 28,2015 - EW Print font expanded from 14 to 16 -->
+<!-- Rev Sep 17,2015 - EW all sans-serif, allow multi-page printing -->
+
+<style type="text/css">
+table.info td.telno {
+  text-align: right;
+  background: transparent;
+}</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {display:none;}
+.noborder {
+	 border : 0px;
+ 	 background: transparent;
+ 	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+     font-family: sans-serif;
+	 font-style:normal;
+	 font-weight:normal; 	 
+	 text-align:left; 
+	 background-color:transparent;
+ }
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+  	 background-color: transparent;
+ }
+</style>
+
+<style type="text/css" media="screen, projection">
+.noborder {
+     font-family: sans-serif;
+	 font-style:normal;
+	 font-weight:normal; 	 
+	 text-align:left; 
+	 background-color:transparent;
+ }
+.sig {
+	 border: 2px dotted blue;
+	 background-color : lightgrey;
+ }
+</style>
+
+<!-- 2 column w/fixed right side -->
+<style type="text/css">
+#wrapper {
+  margin-right: 270px;
+  margin-left: 10px;
+}
+#colone {
+  float: left;
+  width: 100%;
+}
+#coltwo {
+  float: right;
+  width: 270px;
+  margin-right: -270px;
+}
+#cleared {
+  clear: both;
+}</style>
+
+<!-- barcode libraries -->
+<!-- from http://www.jqueryscript.net/other/Simple-jQuery-Based-Barcode-Generator-Barcode.html -->
+<!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+<!-- <script type="text/javascript" src="${oscar_image_path}jquery-barcode.min.js"></script> -->
+
+<!-- get it from github.com -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script> -->
+<!-- works with v19. Library installed for 2FA -->
+<script type="text/javascript" src="${oscar_javascript_path}../../library/qrcode.min.js"></script>
+
+
+<style type="text/css">
+#qrcode img, #qrcode canvas {
+    width:120px;
+    height:120px;
+}
+</style>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- load Fax Number with Referring MD fax number -->
+<script language="javascript">
+$(document).ready(function() {
+setTimeout('document.getElementById("otherFaxInput").value=document.getElementById("reffax").value',1000);
+});
+</script>
+
+<!-- Stamped Signatures -->
+<script type="text/javascript">
+function SignForm(){
+// 
+  document.getElementById("Stamp").src = "${oscar_image_path}sig-" + document.getElementById("CurrentUserCPSID").value + ".png";
+}
+</script>
+
+</head>
+
+<body onload="SignForm();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div style="width:750px"> <!-- entire page -->
+
+<div align="center" style="margin-top: 1em"> 
+    <input name="clinname" id="clinname" type="text" class="noborder" style="width:300px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:24px; text-align:center; background-color:transparent;" oscarDB=clinic_name><br>
+    <font size="3" face="sans-serif"><em>COMPUTEROLOGIST</em></font>
+</div>
+
+<div style="clear: both;"></div>
+
+<div>
+<font size="1" face="sans-serif">
+<table class="info" border="0" width="100%" style="margin: 0px;">
+  <tr>
+    <td>123 Main Street, Suite 007<br>Montreal, QC H4V 1T5</td>
+    <td class="telno">Tel: (514) 555-1212<br>Fax: (514) 487-1263</td>
+  <tr>
+</table>
+</font>
+</div>
+
+<div><!-- main -->
+<br>
+
+<div id="wrapper" style="font-family:sans-serif;">
+    <div id="colone">
+    Dr. <input name="refname" id="refname" type="text"  class="noborder" style="width:250px; height:20px; font-size:16px;" oscarDB=referral_name><br>
+    <textarea name="refaddr"  id="refaddr"              class="noborder" style="width:250px; height:80px; font-size:16px;" oscarDB=referral_address></textarea><br>
+    Tel: <input name="reftel"  id="reftel"  type="text" class="noborder" style="width:120px; height:20px; font-size:16px;" oscarDB=referral_phone> &nbsp;&nbsp;
+    Fax: <input name="reffax"  id="reffax"  type="text" class="noborder" style="width:120px; height:20px; font-size:16px;" oscarDB=referral_fax>
+  </div>
+
+  <div id="coltwo">
+    <input name="hin"    id="hin"    type="text" class="noborder" style="width:200px; height:22px; font-size:18px;" oscarDB=hinc><br>
+    <input name="pname"  id="pname"  type="text" class="noborder" style="width:250px; height:24px; font-size:18px;" oscarDB=patient_name><br>
+    <input name="hinver" id="hinver" type="text" class="noborder" style="width:40px;  height:20px; font-size:16px;" oscarDB=hinversion>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <input name="hinren" id="hinren" type="text" class="noborder" style="width:100px; height:20px; font-size:16px;" oscarDB=hc_renew_date><br>
+    <input name="dobymd" id="dobymd" type="text" class="noborder" style="width:150px; height:22px; font-size:18px;" oscarDB=dobc2>
+    &nbsp; &nbsp; &nbsp;
+    <input name="sex"    id="sex"    type="text" class="noborder" style="width:20px;  height:22px; font-size:18px;" oscarDB=sex>
+	<br><br>
+	Date: <input name="today" id="today" type="text" class="noborder" style="width:150px; height:20px; font-size:16px;" oscarDB=today></font>
+  </div>
+
+  <div id="cleared"></div>
+
+  <br />
+
+  <textarea name="replytext" id="replytext" class="noborder" wrap="hard" rows="30" cols="84" style="resize:none; font-size:16px;"></textarea>
+
+  <div class="sig"><img id="Stamp" src="${oscar_image_path}BNK.png" width="190" height="50"></div>
+
+  <input type="hidden" name="fname"  id="fname" oscarDB=patient_nameF>
+  <input type="hidden" name="lname"  id="lname" oscarDB=patient_nameL>
+  <div id="qrcode" style="position: absolute; top:120px; left:360px;"></div>
+  <script type="text/javascript">new QRCode(document.getElementById("qrcode"), "HIN:"+document.getElementById("hin").value+" LName:"+document.getElementById("lname").value+" FName:"+document.getElementById("fname").value );</script>
+
+</div>
+
+</div><!-- main -->
+
+<!-- hidden fields -->
+<input type="hidden" name="CurrentUserCPSID" id="CurrentUserCPSID" oscarDB=current_user_cpsid>
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:880px; left:1px;">
+  <table><tr><td>Subject: 
+    <input name="subject" size="40" type="text"> 
+    <input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();">
+<!-- <input value="Reset"  name="ResetButton"  id="ResetButton"  type="reset"> -->
+    <input value="Print"  name="PrintButton"  id="PrintButton"  type="button" onclick="formPrint();"> 
+    <input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',2500);">
+ </td></tr></table>
+</div>
+
+</div> <!-- end of page -->
+</form>
+
+</body>
+</html>

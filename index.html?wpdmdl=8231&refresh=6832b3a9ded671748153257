@@ -1,0 +1,32 @@
+<report title="Appointment Missing eForms" 
+description="List of Appointment that do not have a corresponding eForm<br>
+If the eForm date and Days are blank, the eForm was not done within 7 days of the appointment<br>
+You can click on the Lastname to vew the Demographic record" active="1">
+  <query>
+
+SELECT app.appointment_date AS 'Appt.date', app.start_time AS 'Appt.time', 
+       CONCAT( "(<a  target=new href=../../demographic/demographiccontrol.jsp?demographic_no=", dem.demographic_no,   "&displaymode=edit&dboperation=search_detail/>", dem.last_name, ")<a/>" ) as Lastname,
+       dem.first_name AS Firstname, 
+       app.reason AS 'Appt reason', lli.value AS Reason,
+       efd.form_name AS 'eFormname', efd.form_date AS 'eForm date', DATEDIFF( efd.form_date, app.appointment_date ) AS Days
+FROM appointment app
+LEFT JOIN demographic dem ON app.demographic_no = dem.demographic_no
+LEFT JOIN LookupListItem lli ON lli.lookupListID = 1 AND lli.id = app.reasonCode
+LEFT JOIN eform_data efd ON ( dem.demographic_no = efd.demographic_no 
+                            AND DATEDIFF( efd.form_date, app.appointment_date ) BETWEEN 0 AND 7
+                            AND efd.fid = '{eform_id}' )
+WHERE app.appointment_date >= '{start}' and app.appointment_date <= '{finish}'
+
+  </query>
+
+<param id="start" type="date" description="Start date"> </param>
+<param id="finish" type="date" description="Finish date"> </param>
+
+<param id="eform_id" type="list" description="eform">
+  <param-query>select fid, form_name
+                 from eform
+                order by form_name ; 
+  </param-query>
+</param> 
+
+</report>

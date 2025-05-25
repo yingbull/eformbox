@@ -1,0 +1,360 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Island Health Outpatient IV Iron Booking</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	$("#CanvasSignature2").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+	var $sig=$("#CanvasSignature2");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature2").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+	$("#CanvasSignature2").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+	var $sig=$("#CanvasSignature2");
+	var data
+	data=document.getElementById("StoreSignature2").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script language="javascript" type="text/javascript">
+
+        function TruncLabDate(id) {
+                // Take Observed Date from Lab Data and remove everything after yyyy-mm-dd
+                // Function expects an array of date components in yyyy-mm-dd hh:mm:ss format  2014-12-01 13:08:00
+//The element that you want to change is passed via the id
+                // Get the date
+var FullDate = document.getElementById(id).value; 
+if ( FullDate ){
+                
+                var delimiter = '-';
+                // Split the value
+                var Year = FullDate.split(delimiter)[0];
+                var MonthNum = FullDate.split(delimiter)[1];
+MonthNumArray = MonthNum -1;
+                var Day = FullDate.split(delimiter)[2];
+                var Month  = "";
+var Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var length = 2;
+var TruncDay = Day.substring(0,length);
+
+                // Convert Numeric Month to 3 letter month
+                Month = Months[MonthNumArray]
+
+                var MixedDate = Year + "/" + Month + "/" + TruncDay;
+                var NumericDate = Year + "/" + MonthNum + "/" + TruncDay;
+
+                // Show the fields on the page
+document.getElementById(id).value = MixedDate ;
+}
+else{
+(document.getElementById(id).value = "click for date" );}
+}
+</script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="loadSig(); TruncLabDate('HbDate');TruncLabDate('FerDate'); ">
+<form method="post" action="" name="FormName" id="FormName" >
+</div>
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}ivnewpg1.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:480px; top:41px; width:237px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=first_last_name>
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:473px; top:63px; width:138px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc>
+<input name="sex" id="sex" type="text" class=" noborder" style="position:absolute; left:639px; top:63px; width:51px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=sex>
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:474px; top:85px; width:155px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:537px; top:109px; width:146px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:475px; top:127px; width:166px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<textarea name="page1_1" id="page1_1" type="text" class=" noborder" style="position:absolute; left:116px; top:163px; width:255px; height:42px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<textarea name="allergies_des_no_archived" id="allergies_des_no_archived" type="text" class=" noborder" style="position:absolute; left:442px; top:160px; width:281px; height:46px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=allergies_des_no_archived></textarea>
+<input name="page1_2" id="page1_2" type="text" class="Xbox" style="position:absolute; left:61px; top:277px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_3" id="page1_3" type="text" class="Xbox" style="position:absolute; left:61px; top:301px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_4" id="page1_4" type="text" class="Xbox" style="position:absolute; left:399px; top:281px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_5" id="page1_5" type="text" class="Xbox" style="position:absolute; left:399px; top:313px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_6" id="page1_6" type="text" class="Xbox" style="position:absolute; left:399px; top:334px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_7" id="page1_7" type="text" class="Xbox" style="position:absolute; left:62px; top:403px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_8" id="page1_8" type="text" class="Xbox" style="position:absolute; left:62px; top:423px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_9" id="page1_9" type="text" class="Xbox" style="position:absolute; left:62px; top:444px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_10" id="page1_10" type="text" class="Xbox" style="position:absolute; left:62px; top:482px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_11" id="page1_11" type="text" class="Xbox" style="position:absolute; left:62px; top:502px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_12" id="page1_12" type="text" class="Xbox" style="position:absolute; left:399px; top:404px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_13" id="page1_13" type="text" class="Xbox" style="position:absolute; left:399px; top:424px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_14" id="page1_14" type="text" class="Xbox" style="position:absolute; left:399px; top:462px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_15" id="page1_15" type="text" class="Xbox" style="position:absolute; left:399px; top:481px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_16" id="page1_16" type="text" class=" noborder" style="position:absolute; left:423px; top:477px; width:295px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Hb" id="Hb" type="text" class=" noborder" style="position:absolute; left:118px; top:558px; width:60px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$Hb#value>
+<input name="HbDate" id="HbDate" type="text" class=" noborder" style="position:absolute; left:76px; top:582px; width:109px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$Hb#dateObserved>
+<input name="Fer" id="Fer" type="text" class=" noborder" style="position:absolute; left:378px; top:576px; width:40px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=m$Fer#value>
+<input name="FerDate" id="FerDate" type="text" class=" noborder" style="position:absolute; left:521px; top:576px; width:110px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=m$Fer#dateObserved>
+<input name="page1_17" id="page1_17" type="text" class=" noborder" style="position:absolute; left:419px; top:596px; width:43px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="today1" id="today1" type="text" class=" noborder" style="position:absolute; left:523px; top:597px; width:108px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscarDB=today3>
+<input name="page1_18" id="page1_18" type="text" class="Xbox" style="position:absolute; left:64px; top:733px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_19" id="page1_19" type="text" class=" noborder" style="position:absolute; left:267px; top:729px; width:161px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_20" id="page1_20" type="text" class=" noborder" style="position:absolute; left:444px; top:729px; width:67px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_21" id="page1_21" type="text" class="Xbox" style="position:absolute; left:64px; top:837px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page1_22" id="page1_22" type="text" class=" noborder" style="position:absolute; left:470px; top:829px; width:110px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page1_23" id="page1_23" type="text" class=" noborder" style="position:absolute; left:595px; top:828px; width:58px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:39px; top:888px; width:242px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+<input name="current_user_cpsid" id="current_user_cpsid" type="text" class=" noborder" style="position:absolute; left:286px; top:888px; width:86px; height:25px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_cpsid>
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:393px; top:887px; width:212px; height:53; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+<input name="today2" id="today2" type="text" class=" noborder" style="position:absolute; left:613px; top:885px; width:108px; height:27px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+</div>
+
+<div id="page2" style="page-break-after:always;position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}ivnewpg2.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="first_last_name1" id="first_last_name1" type="text" class=" noborder" style="position:absolute; left:436px; top:62px; width:269px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=first_last_name>
+<input name="dobc2" id="dobc2" type="text" class=" noborder" style="position:absolute; left:437px; top:85px; width:168px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc2>
+<input name="hin1" id="hin1" type="text" class=" noborder" style="position:absolute; left:438px; top:108px; width:167px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="phone1" id="phone1" type="text" class=" noborder" style="position:absolute; left:475px; top:133px; width:131px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell1" id="cell1" type="text" class=" noborder" style="position:absolute; left:477px; top:157px; width:129px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<textarea name="page2_25" id="page2_25" type="text" class=" noborder" style="position:absolute; left:41px; top:117px; width:348px; height:96px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<textarea name="page2_26" id="page2_26" type="text" class=" noborder" style="position:absolute; left:41px; top:232px; width:681px; height:43px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<textarea name="page2_27" id="page2_27" type="text" class=" noborder" style="position:absolute; left:41px; top:403px; width:679px; height:67px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+<textarea name="current_user2" id="current_user2" type="text" class=" noborder" style="position:absolute; left:40px; top:509px; width:241px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user></textarea>
+<textarea name="current_user_cpsid1" id="current_user_cpsid1" type="text" class=" noborder" style="position:absolute; left:286px; top:510px; width:86px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_cpsid></textarea>
+	<div id="CanvasSignature2" class="sig" style="position:absolute; left:377px; top:486px; width:196px; height:49; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+<input name="today3" id="today3" type="text" class=" noborder" style="position:absolute; left:611px; top:508px; width:110px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="page2_29" id="page2_29" type="text" class=" noborder" style="position:absolute; left:132px; top:564px; width:345px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="page2_30" id="page2_30" type="text" class="Xbox" style="position:absolute; left:160px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_31" id="page2_31" type="text" class="Xbox" style="position:absolute; left:204px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_32" id="page2_32" type="text" class="Xbox" style="position:absolute; left:244px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_33" id="page2_33" type="text" class="Xbox" style="position:absolute; left:288px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_34" id="page2_34" type="text" class="Xbox" style="position:absolute; left:327px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_35" id="page2_35" type="text" class="Xbox" style="position:absolute; left:361px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_36" id="page2_36" type="text" class="Xbox" style="position:absolute; left:396px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Location" id="Location" type="text" class="noborder" style="position:absolute; left:201px; top:610px; width:250px; font-size:14px; background:transparent;" list="Local" placeholder="Double click or start typing" title="Double click or start typing" />
+		<datalist id="Local">
+			<option value="Campbell River ">Campbell River</option>
+			<option value="Comox Valley ">Comox Valley</option>
+			<option value="Cowichan District ">Cowichan District</option>
+			<option value="Nanaimo ">Nanaimo</option>
+			<option value="Port McNeill ">Port McNeill</option>
+			<option value="Royal Jubilee ">Royal Jubilee</option>
+			<option value="Victoria General ">Victoria General</option>
+		</datalist>
+<input name="page2_38" id="page2_38" type="text" class="Xbox" style="position:absolute; left:488px; top:568px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_39" id="page2_39" type="text" class="Xbox" style="position:absolute; left:488px; top:591px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="page2_40" id="page2_40" type="text" class="Xbox" style="position:absolute; left:488px; top:613px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "HbDate", ifFormat : "%Y-%m-%d",  button : "HbDate" } );
+	Calendar.setup( { inputField : "FerDate", ifFormat : "%Y-%m-%d",  button : "FerDate" } );
+	Calendar.setup( { inputField : "today1", ifFormat : "%Y-%m-%d",  button : "today1" } );
+	Calendar.setup( { inputField : "today2", ifFormat : "%Y-%m-%d",  button : "today2" } );
+	Calendar.setup( { inputField : "today3", ifFormat : "%Y-%m-%d",  button : "today3" } );
+</script>
+
+</body>
+</html>

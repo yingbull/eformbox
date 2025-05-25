@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one
+	or more contributor license agreements.  See the NOTICE file
+	distributed with this work for additional information
+	regarding copyright ownership.  The ASF licenses this file
+	to you under the Apache License, Version 2.0 (the
+	"License"); you may not use this file except in compliance
+	with the License.  You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing,
+	software distributed under the License is distributed on an
+	"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	KIND, either express or implied.  See the License for the
+	specific language governing permissions and limitations
+	under the License.
+-->
+
+<!-- V4_Jun28_2018: add fix risk assessment paste format and reload; John Yap -->
+<!-- V5_Jun29_2018: add subject line paste; John Yap -->
+
+<html manifest="static/cache.manifest">
+<head>
+	<title>Risk Calculator V3</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+	<link rel="shortcut icon" href="imgs/icon-32.png">
+	
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="apple-touch-icon" href="imgs/icon-60.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="imgs/icon-76.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="imgs/icon-60@2x.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="imgs/icon-76@2x.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="imgs/icon-60@3x.png">
+	
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="imgs/icon-144.png">
+	
+	<link rel="stylesheet" href="CVD3Style.css">
+	<link rel="stylesheet" href="${oscar_image_path}CVD3Style.css">
+	<script language="javascript" type="text/javascript" src="${oscar_image_path}jquery-1.12.0.min.js"></script>
+	<script language="javascript" type="text/javascript" src="${oscar_image_path}CVD4Engine_Jun2018.js"></script>
+
+<!-- for off-line functionality -->
+	<script language="javascript" type="text/javascript" src="jquery-1.12.0.min.js"></script>
+	<script language="javascript" type="text/javascript" src="CVD4Engine_Jun2018.js"></script>
+	<script src="Slider3.js"></script>
+	<script src="calculatorNew5.js"></script>
+<!-- What is this for?  Where is it? -->
+	<script src="NoteCreation.js"></script>
+
+	<style type="text/css" media="print">
+		div.DoNotPrint {display:none;}
+		.DoNotPrint {display:none;}
+		textarea { 
+			font-size: 20px; 
+			font-family:"Times New Roman";
+			border: none;	  
+		}
+	</style>
+
+<body onload="onLoad();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<input name="PatBP" id="PatBP" type="hidden" oscarDB=m$BP#value>
+<input type="hidden" name="history1" id="history1"  oscarDB=OngoingConcerns>
+<input type="hidden" name="history2" id="history2"  oscarDB=Medical_History>
+<input type="hidden" name="history3" id="history3"  oscarDB=Other_Medications_History>
+<input type="hidden" name="history4" id="history4"  oscarDB=Social_Family_History>
+<input type="hidden" name="Meds" id="Meds"  oscarDB=druglist_generic>
+<input type="hidden" name="DMT" id="DMT"  oscarDB=m$DMME#value>
+<input type="hidden" name="A1C" id="A1C"  oscarDB=m$A1C#value>
+<input type="hidden" name="counter" id="counter" value="">
+<input type="hidden" name="counter2" id = "counter2"  value=1>
+<input type="hidden" name="date" id="date"  oscardb=today >
+<input type="hidden" name="SexGender" id="SexGender" oscarDB=sex>
+<input type="hidden" name="PtName" id="PtName" oscarDB=patient_name>
+<input type="hidden" name="PatAge" id="PatAge" oscarDB=age>
+<input type="hidden" name="DisReg" id="DisReg" oscarDB=dxregistry>
+<input type="hidden" name="TotChol" id="TotChol" oscarDB=m$TCHL#value>
+<input type="hidden" name="TotHDL" id="TotHDL" oscarDB=m$HDL#value>
+<input type="hidden" name="HT" id="HT" oscarDB=m$HT#value>
+<input type="hidden" name="WT" id="WT" oscarDB=m$WT#value>
+<input type="hidden" name="RiskH" id="RiskH" value="">
+<input type="hidden" name="BenefitH" id="BenefitH">
+<input type="hidden" name="CalculatorH" id="CalculatorH" value="">
+<input type="hidden" name="currentRisk" id="currentRisk" value=10>
+
+<div id="container" class= "DoNotPrint">
+	<div id="header">
+		<h1>The Absolute CVD Risk/Benefit Calculator</h1>
+	</div>
+
+	<div id="formula_selector">
+		<ul class="tab">
+
+			<li id="AHACalc" name="ACC/AHA calculator for heart attack or stroke" onclick="setFormula(this); identify(this); document.FormName.CalculatorH.value='ACC/AHA calculator for heart attack or stroke';" data-calc="ascvd">
+			<div>ACC/AHA ASCVD</div>
+			<span>CHD death + nonfatal heart attacks <br />+ fatal/nonfatal strokes</span>
+			</li>
+
+			<li id="liFramingham" name="Framingham calculator for heart attack, angina, heart failure, stroke or blocked arteries" onclick="setFormula(this); identify(this);" data-calc="cvd">
+			<div>Framingham</div>
+			<span>Heart attacks + angina/coronary insufficiency + heart failure + strokes + intermittent claudication</span>
+			</li>
+					
+					<!--
+					<ul id="ulFraminghamSubtypes">
+						<li onclick="setFormula(this)" data-calc="cvd" title="CHD + HF + strokes + intermit. claudication">
+							CVD
+							<span>CHD + HF + strokes + intermit. claudication</span>
+						</li>
+						<li onclick="setFormula(this)" data-calc="chd" title="fatal/nonfatal heart attacks + angina/coronary insufficiency">
+							CHD
+							<span>fatal/nonfatal heart attacks + angina/coronary insufficiency</span>
+						</li>
+						<li onclick="setFormula(this)" data-calc="mi" style="line-height: 0.9em;" title="fatal/nonfatal heart attacks">
+							Heart<br/> Attacks
+							<span>fatal/nonfatal heart attacks</span>
+						</li>
+						<li onclick="setFormula(this)" data-calc="stroke" title="stroke + TIA">
+							Strokes
+							<span>stroke + TIA</span>
+						</li>
+					</ul>
+					-->
+			<li id="liQrisk" name="Qrisk calculator for heart attack or stroke" onclick="setFormula(this); identify(this);" data-calc="qrisk">
+			<div>Qrisk<sup>&reg;</sup>2-2014</div>
+			<span>Heart attacks + strokes<br />&nbsp;</span>
+			</li>
+		</ul>
+			
+			<hr /> <!-- adds separator line -->
+		</div>
+
+		<!-- Input -->
+		<div id="input">
+			<div><h3 id="age2">Age</h3>
+				<div class="slider_parent">
+					<input id="slider_age" type="range" min="40" max="80" value="50" step="1" oninput="adjustSlider('age','slider_age', _alerts['age'], this)" onchange="refreshAdditional(),adjustSlider('age','slider_age', _alerts['age'], this),reFresh()" />
+					<input id="age" type="number" class="two" min="40" max="80" maxlength="2" step="1" value="50" oninput="adjustSlider('age','slider_age', _alerts['age'], this)" onchange="refreshAdditional(),adjustSlider('age','slider_age', _alerts['age'], this),reFresh()" />&nbsp;years
+				</div>
+			</div>
+
+			<div class="errorAlert" id="alert_age"></div>
+			
+			<div><strong id="female2">Gender</strong>
+				<span class="toggle">
+				<span id="male" onclick="refreshAdditional(),gender(this), CALC(),reFresh();">Male</span>
+				<span id="female" onclick="refreshAdditional(),gender(this), CALC(),reFresh()" class="active">Female</span>
+				</span>
+			</div>
+			
+			<div id="divRace"><strong style="color:red">Race</strong>
+				<span class="toggle">
+				<span id="black" onclick="refreshAdditional(),race(this), CALC(),reFresh();">Black</span>
+				<span id="nonblack" onclick="refreshAdditional(),race(this), CALC(),reFresh()" class="active">Non-Black</span>
+				</span>
+			</div>
+			
+			<div id="divEthnicity"><strong style="color:red">Ethnicity</strong>
+				<select id="ethnicity" onchange="refreshAdditional(); CALC(); reFresh();" class="toggle">
+					<option value="1" selected>White or not stated</option>
+					<option value="2">Indian</option>
+					<option value="3">Pakistani</option>
+					<option value="4">Bangladeshi</option>
+					<option value="5">Other Asian</option>
+					<option value="6">Black Caribbean</option>
+					<option value="7">Black African</option>
+					<option value="8">Chinese</option>
+					<option value="9">Other ethnic group</option>
+				</select>
+			</div>
+			
+			<div id="smoker_dicotomous"><strong style="color:red">Smoker</strong>
+				<span class="toggle">
+				<span id="smoker_yes" onclick="refreshAdditional(); smoker(this); CALC(); reFresh();">Yes</span>
+				<span id="smoker_no" onclick="refreshAdditional(); smoker(this); CALC(); reFresh();" class="active">No</span>
+				</span>
+				<p class="item_info">CVD risk is reversed after 5-10 years of no smoking </p>
+			</div>
+			
+			<div id="smoker_detailed"><strong style="color:red">Smoker</strong>
+				<select id="smoke_cat" onchange="refreshAdditional(); CALC(); reFresh();" class="toggle">
+					<option value="0" selected>Non-smoker</option>
+					<option value="1">Ex-smoker</option>
+					<option value="2">Less than 10 cig&frasl;day</option>
+					<option value="3">10 to 19 cig&frasl;day</option>
+					<option value="4">20 or more cig&frasl;day</option>
+				</select>
+			</div>
+			
+			<div id="dm_dichotomous"><strong>Diabetes</strong>
+				<span class="toggle">
+				<span id="diabetes_yes" onclick="refreshAdditional(); diabetes(this); CALC(); reFresh();">Yes</span>
+				<span id="diabetes_no" onclick="refreshAdditional(); diabetes(this); CALC(); reFresh();" class="active">No</span>
+				</span>
+			</div>
+			
+			<div id="dm_detailed"><strong style="color:red">Diabetes</strong>
+				<select id="dm_cat" onchange="refreshAdditional(); CALC(); reFresh();" class="toggle">
+					<option value="0" selected>No</option>
+					<option value="1">Type 1</option>
+					<option value="2">Type 2</option>
+				</select>
+			</div>
+			
+			<div><h3 id="sbp2">Systolic Blood Pressure</h3>
+				<div class="slider_parent">
+					<input id="slider_sbp" class="slider_40" type="range" min="110" max="190" value="120" step="1" oninput="adjustSlider('sbp','slider_sbp', _alerts['sbp'], this)" onchange="refreshAdditional(),adjustSlider('sbp','slider_sbp', _alerts['sbp'], this),reFresh()" />
+					<input id="sbp" type="number" class="three" min="110" max="190" maxlength="3" step="1" value="120" oninput="adjustSlider('sbp','slider_sbp', _alerts['sbp'], this)" onchange="refreshAdditional(),adjustSlider('sbp','slider_sbp', _alerts['sbp'], this),reFresh()" />&nbsp;mmHg
+				</div>
+				<p id="BpPriorToDrugs" class="item_info">Blood pressure should be prior to drug treatment</p>
+				<p class="item_info">120 mmHg is used for baseline risk</p>
+			</div>
+
+			<div class="errorAlert" id="alert_sbp"></div>
+			
+			<div id="divBPTreatment"><strong>On treatment for BP</strong>
+				<span id="bptreatment_toggle" class="toggle disabled">
+				<span id="bptreatment_yes" onclick="refreshAdditional(); bptreatment(this); CALC(); reFresh();">Yes</span>
+				<span id="bptreatment_no" onclick="refreshAdditional(); bptreatment(this); CALC(); reFresh();" class="active">No</span>
+				</span>
+				<p id="bptreatment_hint" class="item_info">Only applies if SBP is greater than 120 mmHg</p>
+			</div>
+			
+			<div><h3 id="chol2">Total Cholesterol</h3>
+				<div class="slider_parent chol_mmol">
+					<input id="totalchol_mmol" type="range" min="3" max="8" value="3" step="0.1" oninput="adjustSlider('chol_mmol', 'totalchol_mmol', _alerts['tchol'], this)" onchange="refreshAdditional(),adjustSlider('chol_mmol', 'totalchol_mmol', _alerts['tchol'], this),reFresh()" />
+					<input id="chol_mmol" type="number" class="two" min="3" max="8" maxlength="3" step="0.1" value="3" oninput="adjustSlider('chol_mmol', 'totalchol_mmol', _alerts['tchol'], this)" onchange="refreshAdditional(),adjustSlider('chol_mmol', 'totalchol_mmol', _alerts['tchol'], this),reFresh()" />&nbsp;<a href="javascript:void(0);" onclick="toggleCholesterolUnit();">mmol/L</a>
+				</div>
+
+				<div class="slider_parent chol_mgdl">
+					<input id="totalchol_mgdl" class="slider_40" type="range" min="116" max="310" value="116" step="2" oninput="adjustSlider('chol_mgdl', 'totalchol_mgdl', _alerts['tchol'], this)" onchange="refreshAdditional(),adjustSlider('chol_mgdl', 'totalchol_mgdl', _alerts['tchol'], this),reFresh()" />
+					<input id="chol_mgdl" type="number" class="three" min="116" max="310" maxlength="3" step="2" value="116" oninput="adjustSlider('chol_mgdl', 'totalchol_mgdl', _alerts['tchol'], this)" onchange="refreshAdditional(),adjustSlider('chol_mgdl', 'totalchol_mgdl', _alerts['tchol'], this),reFresh()" />&nbsp;<a href="javascript:void(0);" onclick="toggleCholesterolUnit();">mg/dL</a>
+				</div>
+				<p class="item_info">Cholesterol should be prior to drug treatment</p>
+				<p class="item_info chol_mmol">3 mmol/L is used for baseline risk.<br /><a href="javascript:void(0);" onclick="toggleCholesterolUnit();">Click to change to mg/dL.</a></p>
+				<p class="item_info chol_mgdl">116 mg/dL is used for baseline risk.<br /><a href="javascript:void(0);" onclick="toggleCholesterolUnit();">Click to change to mmol/L.</a></p>
+			</div>
+			
+			<div><h3 id="hdl2">HDL Cholesterol</h3>
+				<div class="slider_parent chol_mmol">
+					<input id="hdlchol_mmol" type="range" min="0.5" max="2" value="1.3" step="0.1" oninput="adjustSlider('hdl_mmol', 'hdlchol_mmol', _alerts['hdl'], this)" onchange="refreshAdditional(),adjustSlider('hdl_mmol', 'hdlchol_mmol', _alerts['hdl'], this),reFresh()" />
+					<input id="hdl_mmol" type="number" class="two" min="0.5" max="2" maxlength="3" step="0.1" value="1.3" oninput="adjustSlider('hdl_mmol', 'hdlchol_mmol', _alerts['hdl'], this)" onchange="refreshAdditional(),adjustSlider('hdl_mmol', 'hdlchol_mmol', _alerts['hdl'], this),reFresh()" />&nbsp;<a href="javascript:void(0);" onclick="toggleCholesterolUnit();">mmol/L</a>
+				</div>
+
+				<div class="slider_parent chol_mgdl">
+					<input id="hdlchol_mgdl" type="range" min="20" max="77" value="50" step="1" oninput="adjustSlider('hdl_mgdl', 'hdlchol_mgdl', _alerts['hdl'], this)" onchange="refreshAdditional(),adjustSlider('hdl_mgdl', 'hdlchol_mgdl', _alerts['hdl'], this),reFresh()" />
+					<input id="hdl_mgdl" type="number" class="two" min="20" max="77" maxlength="3" step="1" value="50" oninput="adjustSlider('hdl_mgdl', 'hdlchol_mgdl', _alerts['hdl'], this)" onchange="refreshAdditional(),adjustSlider('hdl_mgdl', 'hdlchol_mgdl', _alerts['hdl'], this),reFresh()" />&nbsp;<a href="javascript:void(0);" onclick="toggleCholesterolUnit();">mg/dL</a>
+				</div>
+				<p class="item_info">HDL should be prior to drug treatment</p>
+				<p class="item_info chol_mmol">1.3 mmol/L is used for baseline risk.</p>
+				<p class="item_info chol_mgdl">50 mg/dL is used for baseline risk.</p>
+			</div>
+
+			<div class="errorAlert" id="alert_chol"></div>
+			<div class="errorAlert" id="alert_tchol"></div>
+			<div class="errorAlert" id="alert_hdl"></div>
+			
+			<div class="qrisk_questions"><strong style="color:red">Family History of CVD</strong>
+				<span class="toggle">
+				<span id="famhistory_yes" onclick="refreshAdditional(),famhistory(this), CALC(),reFresh();">Yes</span>
+				<span id="famhistory_no" onclick="refreshAdditional(),famhistory(this), CALC(),reFresh()" class="active">No</span>
+				</span>
+				<p class="item_info">Angina or heart attack in a 1<sup>st</sup> degree relative < 60 yrs</p>
+			</div>
+			
+			<div class="qrisk_questions"><strong style="color:red">Chronic Kidney Disease</strong>
+				<span class="toggle">
+				<span id="ckd_yes" onclick="refreshAdditional(),ckd(this), CALC(),reFresh();">Yes</span>
+				<span id="ckd_no" onclick="refreshAdditional(),ckd(this), CALC(),reFresh()" class="active">No</span>
+				</span>
+			</div>
+			
+			<div class="qrisk_questions"><strong style="color:red">Atrial Fibrillation</strong>
+				<span class="toggle">
+				<span id="afib_yes" onclick="refreshAdditional(),afib(this), CALC(),reFresh();">Yes</span>
+				<span id="afib_no" onclick="refreshAdditional(),afib(this), CALC(),reFresh()" class="active">No</span>
+				</span>
+			</div>
+			
+			<div class="qrisk_questions"><strong style="color:red">Rheumatoid Arthritis</strong>
+				<span class="toggle">
+				<span id="ra_yes" onclick="refreshAdditional(),ra(this), CALC(),reFresh();">Yes</span>
+				<span id="ra_no" onclick="refreshAdditional(),ra(this), CALC(),reFresh()" class="active">No</span>
+				</span>
+			</div>
+			
+			<div class="qrisk_questions"><h3>Height</h3>
+				<div class="slider_parent" id="divHeightCm">
+					<input id="height_cm" class="slider_40" type="range" min="120" max="198" value="152" step="2" oninput="adjustSliderAllowZeroOrEmpty('height_cm_label', 'height_cm', _alerts['height'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('height_cm_label', 'height_cm', _alerts['height'], this),reFresh()" />
+					<input id="height_cm_label" type="number" class="three" min="120" max="198" maxlength="3" step="2" value="152" oninput="adjustSliderAllowZeroOrEmpty('height_cm_label', 'height_cm', _alerts['height'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('height_cm_label', 'height_cm', _alerts['height'], this),reFresh()" />&nbsp;
+					<a href="javascript:void(0);" onclick="toggleHeightUnit();">cm</a>
+				</div>
+
+				<div class="slider_parent" id="divHeightIn">
+					<input id="height_in" type="range" min="47" max="78" value="60" step="1" oninput="adjustSliderAllowZeroOrEmpty('height_in_label', 'height_in', _alerts['height'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('height_in_label', 'height_in', _alerts['height'], this),reFresh()" />
+					<input id="height_in_label" type="number" class="two" min="47" max="78" maxlength="2" step="1" value="60" oninput="adjustSliderAllowZeroOrEmpty('height_in_label', 'height_in', _alerts['height'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('height_in_label', 'height_in', _alerts['height'], this),reFresh()" />&nbsp;
+					<a href="javascript:void(0);" onclick="toggleHeightUnit();">in</a>
+				</div>
+
+				<div class="errorAlert" id="alert_height"></div>
+			</div>
+
+			<div class="qrisk_questions"><h3>Weight</h3>
+				<div class="slider_parent" id="divWeightKg">
+					<input id="weight_kg" class="slider_40" type="range" min="30" max="250" value="80" step="0.5" oninput="adjustSliderAllowZeroOrEmpty('weight_kg_label', 'weight_kg', _alerts['weight'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('weight_kg_label', 'weight_kg', _alerts['weight'], this),reFresh()" />
+					<input id="weight_kg_label" type="number" class="three" min="30" max="250" maxlength="3" step="0.5" value="80" oninput="adjustSliderAllowZeroOrEmpty('weight_kg_label', 'weight_kg', _alerts['weight'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('weight_kg_label', 'weight_kg', _alerts['weight'], this),reFresh()" />&nbsp;
+					<a href="javascript:void(0);" onclick="toggleWeightUnit();">kg</a>
+				</div>
+
+				<div class="slider_parent" id="divWeightLbs">
+					<input id="weight_lbs" class="slider_40" type="range" min="66" max="551" value="176" step="1" oninput="adjustSliderAllowZeroOrEmpty('weight_lbs_label', 'weight_lbs', _alerts['weight'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('weight_lbs_label', 'weight_lbs', _alerts['weight'], this),reFresh()" />
+					<input id="weight_lbs_label" type="number" class="three" min="66" max="551" maxlength="3" step="1" value="176" oninput="adjustSliderAllowZeroOrEmpty('weight_lbs_label', 'weight_lbs', _alerts['weight'], this)" onchange="refreshAdditional(),adjustSliderAllowZeroOrEmpty('weight_lbs_label', 'weight_lbs', _alerts['weight'], this),reFresh()" />&nbsp;
+					<a href="javascript:void(0);" onclick="toggleWeightUnit();">lbs</a>
+				</div>
+
+				<div class="errorAlert" id="alert_weight"></div>
+			</div>
+
+			<div class="qrisk_questions"><strong>BMI</strong>
+				<span style="float: right; font-size: 1.1em; font-weight: bold;" id="bmi"></span>
+				<p class="item_info">BMI of 25 kg/m<sup>2</sup> for baseline risk</p>
+				
+				<div class="errorAlert" id="alert_BMI"></div>
+			</div>
+			
+			<div id="divFamilyHistoryOfEarlyCHD"><h3 style="color:red">Family History of Early CHD</h3>
+				<div class="slider_parent">
+					<input id="slider_overestimate" class="slider_40" type="range" min="0" max="75" value="0" step="1" oninput="adjustSlider('overestimate','slider_overestimate', _alerts['overestimate'], this)" onchange="refreshAdditional(),adjustSlider('overestimate','slider_overestimate', _alerts['overestimate'], this),reFresh()" />
+					<input id="overestimate" type="number" class="three" min="0" max="75" maxlength="3" step="1" value="0" oninput="adjustSlider('overestimate','slider_overestimate', _alerts['overestimate'], this)" onchange="refreshAdditional(),adjustSlider('overestimate','overestimate', _alerts['overestimate'], this),reFresh()" />%
+				</div>
+
+				<div class="errorAlert" id="alert_overestimate"></div>
+
+				<p class="item_info" id="AmountOfRisk">
+					The amount of <u>additional</u> risk conferred from a family member to a patient depends on: (1) how close a relative, (2) age of a relative, (3) number of affected family members.
+				</p>
+
+				<p class="item_info">
+					If mother (&lt; 65 yrs) increase risk 60%
+				</p>
+				<p class="item_info">
+					If father (&lt; 55 yrs) increase risk 75%
+				</p>
+			</div>
+		</div>
+		
+		<div id="input-2">
+			<div><h3 class="relativeBenefit">Relative Benefit:&nbsp;&nbsp;<span><span id="benefit">0</span></span></h3>
+				<p class="item_info">Benefit often has <i>nothing</i> to do with the effect on the surrogate marker. At present, you can only select one intervention at a time.</p>
+				<!--div class="slider_parent">
+					<input type="range" min="0" max="50" value="0" oninput="adjust('benefit', this)" onchange="adjust('benefit', this)" />
+					<b id="benefit">0</b>&nbsp;%
+				</div-->
+				<!-- The benefit table. It goes here so Canadians can edit it. -->
+
+				<script>
+				var _alerts = {
+					'age': {
+						'alert_id': 'alert_age',
+						'label': 'Age',
+						'suffix': 'years'
+					},
+					'sbp': {
+						'alert_id': 'alert_sbp',
+						'label': 'Systolic BP',
+						'suffix': 'mmHg'
+					},
+					'time': {
+						'alert_id': 'alert_time',
+						'label': 'Risk time period',
+						'suffix': 'years'
+					},
+					'tchol': {
+						'alert_id': 'alert_tchol',
+						'label': 'Total cholesterol',
+						'suffix': ''
+					},
+					'hdl': {
+						'alert_id': 'alert_hdl',
+						'label': 'HDL cholesterol',
+						'suffix': ''
+					},
+					'height': {
+						'alert_id': 'alert_height',
+						'label': 'Height',
+						'suffix': ''
+					},
+					'weight': {
+						'alert_id': 'alert_weight',
+						'label': 'Weight',
+						'suffix': ''
+					},
+					'overestimate': {
+						'alert_id': 'alert_overestimate',
+						'label': 'Risk adjustment',
+						'suffix': '%'
+					}
+				}
+				
+				var _bp_threshold = 140;			// BP meds benefits are NOT being applied if BP is LOWER THAN this number
+				var _benefit = {
+					'cvd': {
+						'activity': 25,
+						'meddiet': 30,
+						'vitaomeg': 0,
+						'bp': { 'default': 30, 'diabetes': 50 },
+						'statins_lowmod': 25,
+						'statins_high': 35,
+						'fibrates': 0,
+						'ezetimibe': 0,
+						'niacin': 0,
+						'metformin': { 'default': 0, 'diabetes': 35 },
+						'sulfonylureas': { 'default': 0, 'diabetes': 0 },
+						'insulins': { 'default': 0, 'diabetes': 0 },
+						'glitazones': { 'default': 0, 'diabetes': 0 },
+						'glp': { 'default': 0, 'diabetes': 0 },
+						'dpp-4': { 'default': 0, 'diabetes': 0 },
+						'meglit': { 'default': 0, 'diabetes': 0 },
+						'sglt': { 'default': 0, 'diabetes': 0 },						
+						'smoking': 'Variable',
+						'asa': { 'male': 15, 'female': 10 }
+					},
+					'ascvd': {
+						'activity': 25,
+						'meddiet': 30,
+						'vitaomeg': 0,
+						'bp': { 'default': 30, 'diabetes': 50 },
+						'statins_lowmod': 25,
+						'statins_high': 35,
+						'fibrates': 0,
+						'ezetimibe': 0,
+						'niacin': 0,
+						'metformin': { 'default': 0, 'diabetes': 35 },
+						'sulfonylureas': { 'default': 0, 'diabetes': 0 },
+						'insulins': { 'default': 0, 'diabetes': 0 },
+						'glitazones': { 'default': 0, 'diabetes': 0 },
+						'glp': { 'default': 0, 'diabetes': 0 },
+						'dpp-4': { 'default': 0, 'diabetes': 0 },
+						'meglit': { 'default': 0, 'diabetes': 0 },
+						'sglt': { 'default': 0, 'diabetes': 0 },
+						'smoking': 'Variable',
+						'asa': { 'male': 15, 'female': 10 }
+					},
+					'qrisk': {
+						'activity': 25,
+						'meddiet': 30,
+						'vitaomeg': 0,
+						'bp': { 'default': 30, 'diabetes': 50 },
+						'statins_lowmod': 25,
+						'statins_high': 35,
+						'fibrates': 0,
+						'ezetimibe': 0,
+						'niacin': 0,
+						'metformin': { 'default': 0, 'diabetes': 35 },
+						'sulfonylureas': { 'default': 0, 'diabetes': 0 },
+						'insulins': { 'default': 0, 'diabetes': 0 },
+						'glitazones': { 'default': 0, 'diabetes': 0 },
+						'glp': { 'default': 0, 'diabetes': 0 },
+						'dpp-4': { 'default': 0, 'diabetes': 0 },
+						'meglit': { 'default': 0, 'diabetes': 0 },
+						'sglt': { 'default': 0, 'diabetes': 0 },						
+						'smoking': 'Variable',
+						'asa': { 'male': 15, 'female': 10 }
+					},
+					'chd': {
+						'activity': 25,
+						'meddiet': 20,
+						'vitaomeg': 0,
+						'bp': { 'default': 20, 'diabetes': 20 },
+						'statins_lowmod': 25,
+						'statins_high': 35,
+						'fibrates': 20,
+						'ezetimibe': 0,
+						'niacin': 0,
+						'metformin': { 'default': 0, 'diabetes': 35 },
+						'sulfonylureas': { 'default': 0, 'diabetes': 0 },
+						'insulins': { 'default': 0, 'diabetes': 0 },
+						'glitazones': { 'default': 0, 'diabetes': 0 },
+						'glp': { 'default': 0, 'diabetes': 0 },
+						'dpp-4': { 'default': 0, 'diabetes': 0 },
+						'meglit': { 'default': 0, 'diabetes': 0 },
+						'sglt': { 'default': 0, 'diabetes': 0 },						
+						'smoking': 'Variable',
+						'asa': { 'male': 30, 'female': 0 }
+					},
+					'mi': {
+						'activity': 20,
+						'meddiet': 20,
+						'vitaomeg': 0,
+						'bp': { 'default': 20, 'diabetes': 20 },
+						'statins_lowmod': 25,
+						'statins_high': 35,
+						'fibrates': 20,
+						'ezetimibe': 0,
+						'niacin': 0,
+						'metformin': { 'default': 0, 'diabetes': 35 },
+						'sulfonylureas': { 'default': 0, 'diabetes': 0 },
+						'insulins': { 'default': 0, 'diabetes': 0 },
+						'glitazones': { 'default': 0, 'diabetes': 0 },
+						'glp': { 'default': 0, 'diabetes': 0 },
+						'dpp-4': { 'default': 0, 'diabetes': 0 },
+						'meglit': { 'default': 0, 'diabetes': 0 },
+						'sglt': { 'default': 0, 'diabetes': 0 },						
+						'smoking': 'Variable',
+						'asa': { 'male': 30, 'female': 0 }
+					},
+					'stroke': {
+						'activity': 25,
+						'meddiet': 40,
+						'vitaomeg': 0,
+						'bp': { 'default': 40, 'diabetes': 40 },
+						'statins_lowmod': 25,
+						'statins_high': 35,
+						'fibrates': 0,
+						'ezetimibe': 0,
+						'niacin': 0,
+						'metformin': { 'default': 0, 'diabetes': 35 },
+						'sulfonylureas': { 'default': 0, 'diabetes': 0 },
+						'insulins': { 'default': 0, 'diabetes': 0 },
+						'glitazones': { 'default': 0, 'diabetes': 0 },
+						'glp': { 'default': 0, 'diabetes': 0 },
+						'dpp-4': { 'default': 0, 'diabetes': 0 },
+						'meglit': { 'default': 0, 'diabetes': 0 },
+						'sglt': { 'default': 0, 'diabetes': 0 },
+						'smoking': 'Variable',
+						'asa': { 'male': 0, 'female': 15 }
+					}
+				};
+				var _benefit_risks = {
+					'activity': "Potential for activity-related injury<br><h3>Additional Benefits</h3><ul><li>Less depression</li><li>Improves sleep quality</li><li>Improves OA pain and function</li></ul>",
+					'meddiet': "No real harms",
+					'vitaomeg': [
+						"Vitamin A and E have evidence for increased mortality",
+						"Drug Cost"
+					],
+					'bp': [
+						"Types of side effects vary between drugs",
+						"Having to stop drug due to intolerability NNH 10",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'statins_lowmod': [
+						"Muscle aches and stiffness NNH 10-20 (similar to placebo in most studies)",
+						"Increased liver function tests (3x normal) NNH 250",
+						"Severe muscle/kidney damage NNH 10,000",
+						"Nausea, constipation, diarrhea",
+						"Drug Cost"
+					],
+					'statins_high': [
+						"Muscle aches and stiffness NNH 10-20 (similar to placebo in most studies)",
+						"Increased liver function tests (3x normal) NNH 150",
+						"Severe muscle/kidney damage NNH 10,000",
+						"Nausea, constipation, diarrhea",
+						"Drug Cost"
+					],
+					'fibrates': [
+						"Nausea, abdominal pain, flatulence",
+						"Increased risk of muscle damage when combined with statins",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'niacin': [
+						"Flushing/itching NNH 20",
+						"Increased glucose NNH 100",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'ezetimibe': [
+						"Headache, diarrhea",
+						"Muscle aches",
+						"Increased liver function tests",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'sulfonylureas': [
+						"Severe low blood sugar (yearly) NNH 175",
+						"Weight gain - average 2 kg",
+						"Rash, diarrhea",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'insulins': [
+						"Severe low blood sugar (yearly) NNH 85",
+						"Weight gain - average 2 kg",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost",
+					],
+					'metformin': [
+						"Indigestion, nausea, diarrhea",
+						"Lactic acidosis - inconclusive evidence",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'glitazones': [
+						"Fluid retention/heart failure NNH 25",
+						"Fractures (three years) NNH 85",
+						"Weight gain - average 2kg",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'glp': [
+						"Nausea, vomiting, diarrhea NNH 10-20",
+						"Weight loss - average 2 kg",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'dpp-4': [
+						"Hives, rash",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'meglit': [
+						"Hypoglycemia",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'sglt': [
+						"Genital infections NNH 15",
+						"Inconvenience of surrogate remeasurements",
+						"Drug Cost"
+					],
+					'smoking': [
+						"No Harms",
+					],
+					'asa': [
+						"Major bleed (yearly) NNH 200",
+						"Drug Cost"
+					]
+				};
+				</script>
+
+			<script type="text/javascript"> //extra code
+				function refreshAdditional() {
+					$('#additional1').val("");
+				}
+				
+				function reFresh() {
+					select();
+				}
+
+				function identify(obj) {
+					b = $(obj).attr('name');
+					$('#CalculatorH').val(b);
+					$('#additional').val("");
+					$('#additional1').val("");
+					baselineRisk();
+					select();
+				}
+ 
+				function baselineRisk() {
+					c = $('#time').val();
+					u = "Your estimated baseline risk using the" + " " + $('#CalculatorH').val() + " " + "over the next " + c + " " + "years is " + (Math.round(100-$('#RiskH').val())) + " percent. "  + "\n\n" + "Estimated benefit from the following interventions: ";
+					$('#additional').val(u);
+				
+					a = $('#additional').val() + " " + " " + $('#additional1').val();
+					$('#summaryDisplay').val(a);
+				
+				}
+
+				function addSummary(obj) {
+					d = $(obj).attr('class');
+					if (d == "active") {
+					z =  $('#additional1').val() + "\n" + "-" + " " + $(obj).attr('name') + " " + "reduces your "+ (Math.round(100-$('#RiskH').val())) + " percent risk by " + $(obj).attr('value') + " so results in a " + (Math.round($('#BenefitH').val())) + " percent risk reduction." + " " + " ";
+					$('#additional1').val(z);
+
+					b = "Suggested web resources: https://therapeuticseducation.org/tools. Online risk assessment calculators. "
+					a = $('#additional').val() + " " + " " + $('#additional1').val() + "\n\n" + b;
+					$('#summaryDisplay').val(a);
+					}
+				}
+				
+			// printSummary(); what does this actually do? -->
+				function printSummary() {
+				$('#additionalNotes').printThis();
+				}
+
+				function onLoad() {
+			// on Reload 
+					if (document.getElementById("counter").value =='1') {
+					$('.DoNotPrint').css("display","none");
+					}
+
+			// On first load
+					if (document.getElementById("counter").value =='') {
+						document.getElementById("counter").value = "1";
+ 
+ 				// Check age validity first
+						var Age=document.getElementById("PatAge").value;
+						if (Age>80) {
+						alert('This patient appears to be older than 80 yrs! Do not use the calculator to make estimates for patients above age 80 as the relation between increases in the risk factors used in Framingham calculators and increased risk of CVD do not seem to hold. Evidence suggests for younger people, there does appear to be an association between changes in risk factors and the risk of cardiovascular events and thus is the rationale for the use of risk calculators. However, this does not appear to be the case in patients over the age of 80 so refrain from using this calculator to estimate risk in this patient population. BMJ 2009;338:a3083 doi:10.1136/bmj.a3083');
+						}
+
+			// start with ACC/AHA calculator
+					$("#AHACalc").trigger('click');
+					//$("#liFramingham").trigger('click');
+					//$("#liQrisk").trigger('click');
+
+						passGender();
+						UpdateBP();
+						passAge();
+						Diabetes();
+						CurrentSmoker();
+						chol();
+						htwt();
+						baselineRisk(); 
+						select();
+					}
+				}
+
+			// Submit Scripts - pastes risk into subject line
+				function submission() {
+					document.FormName.subject.value = 'CVD risk ' + (Math.round(100-$('#RiskH').val())) + '%';
+					setTimeout('document.FormName.submit()',2000);
+				}
+			</script>
+			   
+<script type="text/javascript"> //extra code 
+	function select() {  
+		var score = 1;
+		var ar = document.getElementById('currentRisk').value;
+		var nntH = 41;
+		var nntL = 21;
+		var tenH = 10000/(nntH*10);
+		var tenL = 10000/(nntL*10);
+		var fifteenH = 10000/(nntH*15);
+		var fifteenL = 10000/(nntL*15);
+		var twentyH = 10000/(nntH*20);
+		var twentyL = 10000/(nntL*20);
+		var twentyfiveH = 10000/(nntH*25);
+		var twentyfiveL = 10000/(nntL*25);
+		var thirtyH = 10000/(nntH*30);
+		var thirtyL = 10000/(nntL*30);
+		var thirtyfiveH = 10000/(nntH*35);
+		var thirtyfiveL = 10000/(nntL*35);
+		var fortyH = 10000/(nntH*40);
+		var fortyL = 10000/(nntL*40);
+		var fiftyH = 10000/(nntH*50);
+		var fiftyL = 10000/(nntL*50);
+
+		//smoking alert
+		smo = $('#smoker_yes').attr('class');
+		nosmo = $('#smoker_no').attr('class');
+			if (smo == "active") {
+		document.getElementById("SmokingCessation").style.background="#35994F";
+		}
+			if (nosmo == "active") {
+		document.getElementById("SmokingCessation").style.background="white";
+		}
+
+		document.getElementById("DrugExercise").style.background="#A4DCD1";
+			if (ar >= twentyfiveH) {
+				document.getElementById("DrugExercise").style.background="#48E271";
+				if(ar >= twentyfiveL) {
+					document.getElementById("DrugExercise").style.background="#35994F";
+				}
+			} 
+
+		document.getElementById("Diet").style.background="#A4DCD1";
+			if (ar >= thirtyH) {
+				document.getElementById("Diet").style.background="#48E271";
+				if(ar >= thirtyL) {
+					document.getElementById("Diet").style.background="#35994F";
+				}
+			}
+
+		bp = $('#sbp').val();
+			if (bp >= 140) {		  
+				if (ar >= thirtyH) {
+					document.getElementById("BPMed").style.background="#48E271";
+					if(ar >= thirtyL) {
+						document.getElementById("BPMed").style.background="#35994F";
+					}
+				}
+			}
+
+			else {
+				document.getElementById("BPMed").style.background="white";
+			}
+
+			if (ar >= twentyfiveH) {
+				document.getElementById("LowStat").style.background="#48E271";
+				if (ar >= twentyfiveL) {
+					document.getElementById("LowStat").style.background="#35994F";
+				}
+			}
+
+			if (ar >= thirtyfiveH) {
+				document.getElementById("HighStat").style.background="#48E271";
+				if (ar >= thirtyfiveL) {
+					document.getElementById("HighStat").style.background="#35994F";
+				}
+			}
+
+		dm = $('#diabetes_yes').attr("class");
+			if (dm == 'active') {
+				if (ar >= thirtyfiveH) {
+					document.getElementById("Met").style.background="#48E271";
+						if(ar >= thirtyfiveL) {
+							document.getElementById("Met").style.background="#35994F";
+						}
+				}
+			}
+
+			else {
+				document.getElementById("Met").style.background="white";
+			}
+
+		genf = $('#female').attr("class");
+		genm = $('#male').attr("class");
+			if (genf == 'active') {
+				if (ar >= tenH) {
+					document.getElementById("ASA").style.background="#48E271";
+					if(ar >= tenL) {
+						document.getElementById("ASA").style.background="#35994F";
+					}
+				}
+			}
+
+			if (genm == 'active') {
+				if (ar >= fifteenH) {
+					document.getElementById("ASA").style.background="#48E271";
+					if(ar >= fifteenL) {
+						document.getElementById("ASA").style.background="#35994F";
+					}
+				}
+			}
+	}
+
+	function changeFormula(){
+		$("#AHACalc").trigger('click');
+		//$("#liFramingham").attr('class', '');
+	}
+</script>
+		
+				<ul id="benefit_estimates">
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Physical Activity" id="DrugExercise" value="1/4" data-benefit="activity">Physical Activity</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Mediterranean or Low fat diet" id="Diet" value="~1/3" data-benefit="meddiet">Mediterranean or Low fat diet</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Vitamin/Omega-3 supplements" id="Vit" value="nothing" data-benefit="vitaomeg">Vitamin/Omega-3 supplements</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="BP med (not atenolol/doxazosin)" id="BPMed" value="1/3 to 1/2" data-benefit="bp">BP meds (not atenolol/doxazosin)</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Low-mod intensity statin" id="LowStat" value="1/4" data-benefit="statins_lowmod">Low-mod intensity statins</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="High intensity statin" id="HighStat" value="1/3" data-benefit="statins_high">High intensity statins</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Fibrate" value="nothing" data-benefit="fibrates">Fibrates</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Niacin" value="nothing" data-benefit="niacin">Niacin</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Ezetimibe" value="nothing" data-benefit="ezetimibe">Ezetimibe</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Metformin" id="Met" value="1/3" data-benefit="metformin">Metformin</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Sulfonylurea" value="nothing" data-benefit="sulfonylureas">Sulfonylureas</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Insulin" value="nothing" data-benefit="insulins">Insulins</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Glitazone" value="nothing" data-benefit="glitazones">Glitazones</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="GLP" value="nothing" data-benefit="glp">GLPs</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="DPP-4" value="nothing" data-benefit="dpp-4">DPP-4s</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Meglitinide" value="nothing" data-benefit="meglit">Meglitinides</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="SGLT2" value="nothing" data-benefit="sglt">SGLT2</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="Smoking Cessation" id="SmokingCessation" value="a variable amount"data-benefit="smoking">Smoking Cessation</li>
+					<li onclick="toggleBenefit(this); addSummary(this);" name="ASA" id="ASA" value="1/8 to 1/10" data-benefit="asa" style="display:table;">ASA</li> 
+					<!-- display:table to put onto a single line -->
+				</ul>
+				<div style="clear: both;"></div>
+				<a class="item_info" href="http://chd.bestsciencemedicine.com/FAQ.html#calculator" target="_blank">Benefit Estimate Details</a>
+			</div>		
+		</div>
+
+		<!-- Outcome -->
+		<div id="outcome">
+			<div id="divRiskTimePeriod"><h3>Risk Time Period</h3>
+				<div class="slider_parent">
+					<div id="divTime">
+						<input id="rangeTime" type="range" min="1" max="10" value="10" step="1" oninput="adjustSlider('time', 'rangeTime', _alerts['time'], this)" onchange="adjustSlider('time', 'rangeTime', _alerts['time'], this)" />
+						<input id="time" type="number" class="two" min="1" max="10" maxlength="2" step="1" value="10" oninput="adjustSlider('time', 'rangeTime', _alerts['time'], this)" onchange="adjustSlider('time', 'rangeTime', _alerts['time'], this)" />&nbsp;years
+					</div>
+					<b id="time_fixed" style="display:none;">10 years</b>
+				</div>
+			</div>
+
+			<div class="errorAlert" id="alert_time"></div>
+		
+			<div id="faces"></div>
+			<div id="disease"></div>
+			
+			<div id="scores">
+				<table>
+					<colgroup>
+						<col width="32" />
+						<col width="92" />
+						<col />
+					</colgroup>
+					<tr id="trScoreGood">
+						<td><img src="${oscar_image_path}blue@2x.png" alt="" /></td>
+						<th id="score_good"></th>
+						<td><strong>No event</strong></td>
+					</tr>
+					<tr id="trScoreBadSum">
+						<td><img src="${oscar_image_path}badS@2x.png" alt="" /></td>
+						<th id="score_bad_sum"></th>
+						<td><strong>Total with an event</strong></td>
+					</tr>
+					<tr id="trScoreBenefits">
+						<td><img src="${oscar_image_path}green@2x.png" alt="" /></td>
+						<th id="score_benefits"></th>
+						<td><strong>Number who benefit from treatment</strong></td>
+					</tr>
+					<tr id="trScoreNNT">
+						<td style="font-size:1.4em; font-family:'Arial Narrow',Arial,sans-serif;">NNT</td>
+						<th><span id="score_nnt"></span><span style="color:transparent; visibility: hidden;">%</span></th>
+						<td><strong>Number needed to treat</strong></td>
+					</tr>
+					<tr id="trScoreBad">
+						<td><img src="${oscar_image_path}bad@2x.png" alt="" /></td>
+						<th id="score_bad"></th>
+						<td><strong>Baseline events using baseline factors alone</strong></td>
+					</tr>
+					<tr id="trScoreBadAdd">
+						<td><img src="${oscar_image_path}badA@2x.png" alt="" /></td>
+						<th id="score_bad_add"></th>
+						<td><strong>Additional events "caused" by risk factors</strong></td>
+					</tr>
+				</table>
+					<p class="item_info">As with all risk calculators, calculated risk numbers are +/- 5% at best.
+						<a class="infoT various" href="http://chd.bestsciencemedicine.com/FAQ.html#calculator" target="_blank">More information</a>.
+					</p>
+					<p class="item_info" id="qrisk_disclaimer">See the <a href="http://chd.bestsciencemedicine.com/FAQ.html#QRISK" target="_blank">QRISK<sup>&reg;</sup>2 disclaimer</a> for more information.
+					</p>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div id="footer">
+			<div id="toggleBasicView" class="button" onclick="window.location.hash = '#basic'; window.location.reload();">
+				Switch to "Basic" View
+			</div>
+
+			<p>Please provide feedback to <a href="mailto:james.mccormack@ubc.ca">james.mccormack@ubc.ca</a>.
+				<br />For more detailed information and acronym definitions etc, see the <a href="http://chd.bestsciencemedicine.com/FAQ.html#calculator" target="_blank">FAQ</a>.
+				<br />For important calculator caveats click <a href="http://chd.bestsciencemedicine.com/Caveats.html#calculator" target="_blank">here</a>.
+				<br />For a link to the original online version click <a href="http://bestsciencemedicine.com/chd/calc2.html" target="_blank">here</a>.
+				<br />Disclaimer: the use of this tool is at your own risk. Please use clinical judgement when making decisions with the patient. This tool is a guide only and the authors cannot guarantee its accuracy.
+				<br /><input type = "button" name="CVDRisk" style="color:green;" Value = "Link V2" oscarOPEN="CVD Risk Calculator v2">
+			</p>
+
+			James McCormack/Pascal Pfiffner, 2015
+			<span class="separator">?</span>
+			<a id="cache_status" href="javascript:void(0);" onclick="offlineHint();">Available offline</a>
+		</div>
+
+		<div style="background:#e5f2ff;">
+			<input value="Print Risk Assessment" name="PrintButton" type="button" onclick="javascript:window.print();">&nbsp; &nbsp;
+			<input value="Print Rx For Health" type="button" onclick="OpenPrint();">&nbsp; &nbsp;
+			<input value="Print Mediterranean Diet" type="button" onclick="OpenPrint2();">&nbsp; &nbsp;
+			<input value="Copy to Encounter" type="button" onclick="UpdateEncounter();">&nbsp; &nbsp;
+			<input value="Submit" type="button" onclick="submission();">&nbsp; &nbsp;
+			<input  value="Copy to Encounter and Submit" name="CopyButton" id="CopyButton" type="button" onclick="UpdateEncounter(); submission();"><br>
+			Subject: <input name="subject" id="subject" size="80" type="text"> 
+
+		</div>
+	</div>
+
+	<div id="additionalNotes" style="font-size:20px;">
+		<p> Personalized cardiac risk assessment:</p>
+		<textarea style="display:none" name="additional" id="additional"></textarea>
+		<textarea style="display:none" name="additional1" id="additional1"></textarea>
+		<textarea name="summaryDisplay" id="summaryDisplay" style="width:750px; height:700px;"></textarea>
+	</div>
+
+	<!-- JS -->
+	<script src="${oscar_image_path}Slider3.js"></script>
+	<script src="${oscar_image_path}calculatorNew5.js"></script>
+	<!-- The NoteCreation.js file is no where to be found! -->
+	<script src="${oscar_image_path}NoteCreation.js"></script>
+
+	<script type="text/javascript" language="javascript">
+		function OpenPrint() {
+			var TempWin=window.open('','name');
+			TempWin.document.write('<html><head><title>Rx For Health</title></head><body>');
+			TempWin.document.write('<img src="${oscar_image_path}RxForHealth.png" width="850" onLoad="javascript:window.print(); self.close(); ">');
+			TempWin.document.write('</body></html>');
+			TempWin.document.close();
+		}
+
+		function OpenPrint2() {
+			var TempWin=window.open('','name');
+			TempWin.document.write('<html><head><title>Mediterranean Diet</title></head><body>');
+			TempWin.document.write('<img src="${oscar_image_path}MDiet.png" width="850" onLoad="javascript:window.print(); self.close();">');
+			TempWin.document.write('</body></html>');
+			TempWin.document.close();
+		}
+	</script>
+
+	<script type="text/javascript">
+		function Form(ElementId) {
+			return document.getElementById(ElementId);
+		}
+
+     /* function to update encounter note */
+		function UpdateEncounter() {
+			try {
+				if (window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+					window.parent.opener.document.getElementById("newNoteImg").onclick();
+					TextAreaId = window.parent.opener.document.getElementsByClassName('txtArea')[0];
+					window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.document.getElementById(TextAreaId.id).value + Form("summaryDisplay").value;
+					window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+				} 
+
+				else if (window.parent.opener.window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+					window.parent.opener.window.parent.opener.document.getElementById("newNoteImg").onclick();
+					TextAreaId = window.parent.opener.window.parent.opener.document.getElementsByClassName('txtArea')[0];
+					window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value + Form("summaryDisplay").value;
+					window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+				}
+			}
+
+			catch(e) {
+				alert("The note could not be copied to the encounter note.");
+			}
+		}
+	</script>
+
+	<script>var CONVERT_SLIDERS = false;</script>
+
+	<!--[if lte IE 9 ]>
+	<script>CONVERT_SLIDERS = true;</script>
+	<style>
+		input[type="range"] { display:none; }	/* Prevent duplicate textboxes from being displayed in browsers that don't support input[type=range] */
+	</style>
+	<![endif]
+	-->
+
+</form>
+</body>
+</html>

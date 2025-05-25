@@ -1,0 +1,404 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>EdwardImagingReq</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<!-- Freeform Signatures -->
+
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script type="text/javascript" src="SignHere.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}SignHere.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'#0000FF'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<script language="javascript">
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="416-597-3342"',1000);
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script language="JavaScript">
+	 top.window.moveTo(0,0);
+	 if (document.all) {
+	 top.window.resizeTo(screen.availWidth,screen.availHeight);
+	 }
+	 else if (document.layers||document.getElementById) {
+	 if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+		 top.window.outerHeight = screen.availHeight;
+		 top.window.outerWidth = screen.availWidth;
+	}
+}
+ </script>
+
+<!-- scripts for scaling up checkboxes -->
+<style type="Text/css">
+input.largerCheckbox {
+	-moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+}
+</style>
+<style type="text/css" media="print">
+input.largerCheckbox { 
+	-moz-transform:scale(1.8);         /*scale up image 1.8x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+} 
+</style>
+<!--[if IE]>
+<style type="text/css">
+input.largerCheckbox { 
+	height: 30px;                     /*30px checkboxes for IE 5 to IE 7 */ 
+	width: 30px; 
+} 
+</style> 
+<![endif]--> 
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();loadSig();setFaxNo();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}EdwardREQ1.jpg" style="position: relative; left: 0px; top: 0px; width:750px">
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:582px; top:783px; width:120px; height:30; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+<input name="patient_name" id="patient_name" type="text" class=" noborder" style="position:absolute; left:132px; top:114px; width:160px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+<input name="addressline" id="addressline" type="text" class=" noborder" style="position:absolute; left:144px; top:132px; width:379px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=addressline>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:144px; top:148px; width:148px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="dob" id="dob" type="text" class=" noborder" style="position:absolute; left:328px; top:149px; width:196px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob>
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:132px; top:205px; width:229px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="doctor_ohip_no" id="doctor_ohip_no" type="text" class=" noborder" style="position:absolute; left:453px; top:838px; width:85px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=doctor_ohip_no>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:582px; top:837px; width:106px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:426px; top:863px; width:116px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:578px; top:865px; width:112px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<input name="clinic_addressLineFull" id="clinic_addressLineFull" type="text" class=" noborder" style="position:absolute; left:457px; top:886px; width:239px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_addressLineFull>
+<input name="Reason1" id="Reason1" type="text" class=" noborder" style="position:absolute; left:586px; top:192px; width:118px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Reason2" id="Reason2" type="text" class=" noborder" style="position:absolute; left:545px; top:207px; width:158px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Weight" id="Weight" type="text" class=" noborder" style="position:absolute; left:342px; top:115px; width:69px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Height" id="Height" type="text" class=" noborder" style="position:absolute; left:458px; top:115px; width:62px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="ApptDate" id="ApptDate" type="text" class=" noborder" style="position:absolute; left:159px; top:162px; width:134px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Time" id="Time" type="text" class=" noborder" style="position:absolute; left:332px; top:163px; width:190px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="ThirdParty" id="ThirdParty" type="text" class=" noborder" style="position:absolute; left:151px; top:181px; width:142px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Claim" id="Claim" type="text" class=" noborder" style="position:absolute; left:343px; top:180px; width:178px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Urgent" id="Urgent" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:538px; top:165px; ">
+<input name="Small1" id="Small1" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:259px; ">
+<input name="small2" id="small2" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:269px; ">
+<input name="abd1" id="abd1" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:289px; ">
+<input name="abd2" id="abd2" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:298px; ">
+<input name="abd3" id="abd3" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:309px; ">
+<input name="abd4" id="abd4" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:320px; ">
+<input name="abd5" id="abd5" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:330px; ">
+<input name="abd6" id="abd6" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:339px; ">
+<input name="abd7" id="abd7" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:349px; ">
+<input name="sono" id="sono" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:358px; ">
+<input name="should" id="should" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:379px; ">
+<input name="hernia" id="hernia" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:433px; ">
+<input name="shoudr" id="shoudr" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:238px; top:381px; ">
+<input name="shouldl" id="shouldl" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:265px; top:381px; ">
+<input name="kneeR" id="kneeR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:238px; top:391px; ">
+<input name="kneeL" id="kneeL" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:265px; top:393px; ">
+<input name="hipR" id="hipR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:238px; top:401px; ">
+<input name="hipL" id="hipL" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:265px; top:405px; ">
+<input name="otherR" id="otherR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:238px; top:414px; ">
+<input name="otherL" id="otherL" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:265px; top:414px; ">
+<input name="ing" id="ing" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:94px; top:444px; ">
+<input name="ingR" id="ingR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:174px; top:444px; ">
+<input name="ingL" id="ingL" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:210px; top:444px; ">
+<input name="abdwall" id="abdwall" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:94px; top:453px; ">
+<input name="obE" id="obE" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:473px; ">
+<input name="nuchal" id="nuchal" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:482px; ">
+<input name="anatomic" id="anatomic" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:493px; ">
+<input name="growth" id="growth" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:503px; ">
+<input name="bio" id="bio" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:514px; ">
+<input name="limited" id="limited" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:522px; ">
+<input name="ABI" id="ABI" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:553px; ">
+<input name="carotid" id="carotid" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:564px; ">
+<input name="lower_ext" id="lower_ext" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:574px; ">
+<input name="upper" id="upper" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:606px; ">
+<input name="artR" id="artR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:179px; top:584px; ">
+<input name="venR" id="venR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:179px; top:595px; ">
+<input name="upper_art_R" id="upper_art_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:178px; top:617px; ">
+<input name="upper_ven_r" id="upper_ven_r" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:178px; top:628px; ">
+<input name="lower_art_left" id="lower_art_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:205px; top:584px; ">
+<input name="lower_ven_left" id="lower_ven_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:205px; top:596px; ">
+<input name="upper_art_left" id="upper_art_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:205px; top:618px; ">
+<input name="upper_ven_left" id="upper_ven_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:205px; top:629px; ">
+<input name="breastfna" id="breastfna" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:668px; ">
+<input name="thy" id="thy" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:678px; ">
+<input name="other" id="other" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:690px; ">
+<input name="breastult" id="breastult" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:733px; ">
+<input name="routinemammo" id="routinemammo" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:744px; ">
+<input name="mammoR" id="mammoR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:76px; top:753px; ">
+<input name="mammoL" id="mammoL" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:106px; top:753px; ">
+<input name="diagnosticmammo" id="diagnosticmammo" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:762px; ">
+<input name="diagR" id="diagR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:190px; top:762px; ">
+<input name="DiagL" id="DiagL" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:214px; top:762px; ">
+<input name="implantY" id="implantY" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:124px; top:772px; ">
+<input name="implantN" id="implantN" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:148px; top:772px; ">
+<input name="lump" id="lump" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:64px; top:802px; ">
+<input name="discharge" id="discharge" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:104px; top:802px; ">
+<input name="pain" id="pain" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:173px; top:802px; ">
+<input name="swelling" id="swelling" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:209px; top:802px; ">
+<input name="additional" id="additional" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:812px; ">
+<input name="MSKother" id="MSKother" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:412px; ">
+<input name="facialbones" id="facialbones" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:269px; ">
+<input name="mand" id="mand" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:279px; ">
+<input name="orbit" id="orbit" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:288px; ">
+<input name="sinus" id="sinus" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:299px; ">
+<input name="skull" id="skull" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:309px; ">
+<input name="chest" id="chest" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:340px; ">
+<input name="chest_visa" id="chest_visa" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:349px; ">
+<input name="ribs" id="ribs" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:361px; ">
+<input name="acro" id="acro" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:380px; ">
+<input name="shou" id="shou" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:391px; ">
+<input name="clav" id="clav" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:400px; ">
+<input name="elb" id="elb" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:411px; ">
+<input name="hum" id="hum" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:420px; ">
+<input name="wrist" id="wrist" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:431px; ">
+<input name="hand" id="hand" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:440px; ">
+<input name="digits" id="digits" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:451px; ">
+<input name="cervical" id="cervical" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:470px; ">
+<input name="thor" id="thor" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:481px; ">
+<input name="scoli" id="scoli" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:490px; ">
+<input name="lumbar" id="lumbar" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:501px; ">
+<input name="pelvis" id="pelvis" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:510px; ">
+<input name="sijoints" id="sijoints" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:519px; ">
+<input name="sacrum" id="sacrum" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:530px; ">
+<input name="femur" id="femur" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:562px; ">
+<input name="heel" id="heel" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:617px; ">
+<input name="toes" id="toes" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:629px; ">
+<input name="abd" id="abd" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:649px; ">
+<input name="abdkub" id="abdkub" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:661px; ">
+<input name="lowrisk" id="lowrisk" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:694px; ">
+<input name="highrisk" id="highrisk" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:706px; ">
+<input name="ribsR" id="ribsR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:605px; top:361px; ">
+<input name="ac_R" id="ac_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:381px; ">
+<input name="should_R" id="should_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:391px; ">
+<input name="clav_R" id="clav_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:400px; ">
+<input name="elb_R" id="elb_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:410px; ">
+<input name="hum_R" id="hum_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:422px; ">
+<input name="wristR" id="wristR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:431px; ">
+<input name="hand_R" id="hand_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:439px; ">
+<input name="digitsR" id="digitsR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:450px; ">
+<input name="hipR" id="hipR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:550px; ">
+<input name="femurR" id="femurR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:562px; ">
+<input name="kneeR" id="kneeR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:574px; ">
+<input name="heel_R" id="heel_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:618px; ">
+<input name="toes_R" id="toes_R" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:630px; ">
+<input name="tibia" id="tibia" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:585px; ">
+<input name="ankle" id="ankle" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:597px; ">
+<input name="foot" id="foot" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:609px; ">
+<input name="tibiaR" id="tibiaR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:586px; ">
+<input name="footR" id="footR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:606px; ">
+<input name="ankleR" id="ankleR" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:602px; top:595px; ">
+<input name="MSK_knee" id="MSK_knee" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:390px; ">
+<input name="MSK_hip" id="MSK_hip" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:402px; ">
+<input name="msk_soft_tissue" id="msk_soft_tissue" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:56px; top:424px; ">
+<input name="xray_soft_tissue" id="xray_soft_tissue" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:392px; top:319px; ">
+<input name="xray_hip" id="xray_hip" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:552px; ">
+<input name="xray_knee" id="xray_knee" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:391px; top:574px; ">
+<input name="ob_highrisk" id="ob_highrisk" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:55px; top:534px; ">
+<input name="xray_ribsleft" id="xray_ribsleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:361px; ">
+<input name="xray_acleft" id="xray_acleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:381px; ">
+<input name="xray_shoulderleft" id="xray_shoulderleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:389px; ">
+<input name="xray_clavicleleft" id="xray_clavicleleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:400px; ">
+<input name="elbows_left" id="elbows_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:408px; ">
+<input name="xray_humerus_left" id="xray_humerus_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:420px; ">
+<input name="xray_wristleft" id="xray_wristleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:432px; ">
+<input name="xray_handleft" id="xray_handleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:440px; ">
+<input name="xray_digits_left" id="xray_digits_left" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:649px; top:452px; ">
+<input name="xray_hipleft" id="xray_hipleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:551px; ">
+<input name="xray_femurleft" id="xray_femurleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:563px; ">
+<input name="xray_kneeleft" id="xray_kneeleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:575px; ">
+<input name="xray_tibialeft" id="xray_tibialeft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:585px; ">
+<input name="xray_ankleleft" id="xray_ankleleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:597px; ">
+<input name="xray_footleft" id="xray_footleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:606px; ">
+<input name="xray_heelsleft" id="xray_heelsleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:618px; ">
+<input name="xray_toesleft" id="xray_toesleft" class="" type="checkbox" class="largerCheckbox" style="position:absolute; left:652px; top:630px; ">
+<input name="ptsign" id="ptsign" type="text" class=" noborder" style="position:absolute; left:460px; top:923px; width:109px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="ptdate" id="ptdate" type="text" class=" noborder" style="position:absolute; left:604px; top:923px; width:85px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="txt_abdlimit" id="txt_abdlimit" type="text" class=" noborder" style="position:absolute; left:168px; top:303px; width:96px; height:8px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<input name="txt_other" id="txt_other" type="text" class=" noborder" style="position:absolute; left:166px; top:417px; width:70px; height:9px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<input name="txt_soft_tissue" id="txt_soft_tissue" type="text" class=" noborder" style="position:absolute; left:221px; top:429px; width:77px; height:7px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<input name="txt_biopsy" id="txt_biopsy" type="text" class=" noborder" style="position:absolute; left:106px; top:694px; width:206px; height:8px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<input name="txt_knee" id="txt_knee" type="text" class=" noborder" style="position:absolute; left:436px; top:578px; width:101px; height:7px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<input name="txt_bmd" id="txt_bmd" type="text" class=" noborder" style="position:absolute; left:492px; top:721px; width:135px; height:7px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;" >
+<textarea name="txt_history" id="txt_history" type="text" class=" noborder" style="position:absolute; left:62px; top:863px; width:298px; height:53px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:white;" ></textarea>
+<input name="provider_name" id="provider_name" type="text" class=" noborder" style="position:absolute; left:518px; top:767px; width:177px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:10px; text-align:left; background-color:transparent;"  oscarDB=provider_name>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+	Calendar.setup( { inputField : "ptdate", ifFormat : "%Y-%m-%d",  button : "ptdate" } );
+</script>
+
+</body>
+</html>

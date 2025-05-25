@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Physiotherapy Referral</title>
+
+	<!-- update v22.11.2 - date 13-Nov-2022, by Gunther Klein, River City Medical Clinic -->
+
+	<!-- E-FORM DISCLAIMER: 
+	Licensing: This eForm was developed by Gunther Klein, and is distributed under the Creative Commons, Attribution-ShareAlike 3.0 Unported Licensse (CC BY-SA 3.0)
+	As is: eForms are shared as-is, free of charge on a share-alike basis 
+	with absolutely no guarantee or warranty. 
+	No Quality Control: The author does not vet any eForms 
+	and does not purport to apply any manner of quality control. 
+	Responsibility: The responsibility for the clinical and medical-legal consequences 
+	of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. 
+	This applies to both eForms shared by others, and those created by users themselves. 
+	Attribution: eForms are shared freely among the user community, 
+	with attribution to the original author of the eForm. 
+	Free: eForms so shared may not be sold or purchased. 
+	Provincial validation:  eForms are optional and non-essential add-ons, 
+	separate from OSCAR, and with their own license terms.
+	eForms are not part of the OSCAR core program functionality and code base. 
+	For this reason eForms are not subject to provincial validation testing and conformance criteria.
+	eForms are also not subject to the ISO production process for OSCAR. -->
+
+
+<style type="text/css" media="screen">
+p {
+	margin: 2px;
+	padding: 5px;
+}
+.pttable {	
+	vertical-align: top;
+	padding-left: 50px;
+}
+.pttitle {
+	font: normal 24px Arial sans-serif;
+	color: #000000;
+	text-align:center;
+	margin-top:10px;
+	width:100%;
+}
+.tableheader {	
+	font: italic 14px Arial sans-serif;
+	text-align: center;
+	width:100%;
+	background: #F5f5f5;
+	border: 2px solid #444;
+}
+.biggertext {	
+	font: normal 16px Arial sans-serif;
+	text-align: left;
+}
+.normaltext {
+	font: normal 14px Arial sans-serif;
+	text-align: left;
+}
+.smallertext {
+	font: normal 12px Arial sans-serif;
+	text-align: left;
+}
+.smalltext {
+	font: normal 10px Arial sans-serif;
+	text-align: left;
+}
+.subheading {
+	font: italic bold 13px Arial sans-serif;
+	text-align: left;
+}
+.noborder {
+	border : 0px solid black;
+	background-color: transparent;
+	padding: 3px;
+	overflow: hidden;
+	font: bold 13px Arial sans-serif;
+	text-align:left;
+}
+.border {
+	border : 1px solid lightgray;
+	background-color: #e6f2ff;
+	padding: 5px;
+	overflow: hidden;
+	font: normal 15px Arial sans-serif;
+	text-align:left;
+}
+.sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+	cursor: crosshair;
+ }
+</style>
+
+	<style type="text/css" media="print">
+
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+	 .NotPrint {
+		display: none;
+	 }
+	p {
+		margin: 2px;
+		padding: 5px;
+	}
+	.pttable {	
+		vertical-align: top;
+		padding-left: 50px;
+	}
+	.pttitle {
+		font: normal 30px Arial sans-serif;
+		color: #000000;
+		text-align:center;
+		width:100%;
+	}
+	.tableheader {	
+		font: italic 14px Arial sans-serif;
+		text-align: center;
+		width:100%;
+		background: #F5f5f5;
+		border: 2px solid #444;
+	}
+	.biggertext {	
+		font: normal 16px Arial sans-serif;
+		text-align: left;
+	}
+	.normaltext {
+		font: normal 14px Arial sans-serif;
+		text-align: left;
+	}
+	.smallertext {
+		font: normal 12px Arial sans-serif;
+		text-align: left;
+	}
+	.smalltext {
+		font: normal 10px Arial sans-serif;
+		text-align: left;
+	}
+	.subheading {
+		font: italic bold 13px Arial sans-serif;
+		text-align: left;
+	}
+	 .noborder {
+		border : 0px;
+		background: transparent;
+		padding: 5px;
+		overflow: hidden;		
+		font: bold 13px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 0px;
+		background-color: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 14px Arial sans-serif;
+		text-align:left;
+	 }
+
+
+	 .sig {
+		border-style: solid;
+		border-color: transparent;
+		color: Black;
+		background-color: transparent;
+	}
+ 	textarea {
+ 		   resize: none;
+	}
+	 </style>
+
+<!-- ------------------------------------------------------------------ -->
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+
+<!-- Freeform Signatures -->
+
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+			window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+	<!-- main calendar program -->
+	<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+	<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+
+
+</head>
+
+<body onload="document.FormName.Diagnosis1.focus();loadSig();">
+<form method="POST" action=""  name="FormName" id="FormName">
+<div style="position: absolute; left: 12px; top: 0px; width:770px; z-index:'-1'" >
+
+<p class="pttitle">PHYSIOTHERAPY</p>
+
+<p style="margin-bottom: 0cm; text-align: left;">
+
+<span  class="normaltext"> Date:&nbsp;</span>
+<input name="today" ID="date" class="noborder normaltext" style="width: 150px" oscardb=today type="text"> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input name="WCB"type="checkbox"><span  class="normaltext"> WCB &nbsp;&nbsp; 
+<input name="ICBC"type="checkbox"><span  class="normaltext"> ICBC &nbsp;&nbsp;
+<input name="Other"type="checkbox"><span  class="normaltext"> Other&nbsp; &nbsp;<br>
+</p>
+
+<p type="text"  align="justify">
+
+<span  class="normaltext"> Patient Name: &nbsp;</span>
+<input name="PatientName" class="noborder normaltext" style="width: 280px" oscardb=first_last_name type="text">
+&nbsp;&nbsp;
+
+<span  class="normaltext"> DOB: &nbsp;</span>
+<input name="DOB" class="noborder normaltext" style="width: 80px" oscardb=dobc type="text">
+&nbsp;&nbsp;
+
+<span  class="normaltext"> PHN: &nbsp;</span>
+<input name="PHN" class="noborder normaltext" style="width: 120px" oscardb=HIN type="text"> 
+
+</p>
+ 
+
+<p><span  class="subheading"> Diagnosis - Reason for Referral: </span><br>
+<textarea type="text" class="border"style="height:50px; width:750px;" id="Diagnosis1" name="Diagnosis"></textarea></p>
+
+
+<p><span  class="subheading">Contraindications - Restrictions:</span><br>
+<textarea type="text" class="border" style="height:30px; width:750px;" name="Contraindications">None identified</textarea></p>
+
+
+<p><span  class="subheading">Diagnostic Imaging:</span><br>
+<textarea type="text"  class="border" style="height:30px; width:750px;" name="DiagnosticImaging">None ordered as yet</textarea></p>
+
+<p  class="normaltext" style="margin-bottom:0px;">
+
+<span  class="normaltext">Referring Physician:&nbsp;</span>
+<input name="CurrentUser" type="text" class="border" style="width: 180px" oscardb=current_user>
+&nbsp;
+
+<span  class="normaltext">MSP: &nbsp;</span>
+<input name="CurrentUserMSPnumber"  type="text" class="border" style="width: 50px" oscardb=current_user_ohip_no>
+&nbsp;
+
+<span  class="normaltext">Clinic: &nbsp;</span>
+<input name="ClinicName"  type="text" class="border" style="width: 200px" oscardb=clinic_name>
+&nbsp;
+<br><br>
+</p>
+
+
+<table width="100%" cellpadding="5px" cellspacing=3px" border="0px">
+
+<tr>
+<th class="tableheader" colspan="2">Community Physiotherapy Clinics in Campbell River</th>
+</tr>
+
+<tr>
+
+	<td width="50%"  class="pttable">
+	<!-- below are the table data items in the left sided column -->
+
+<p class="smallertext"><input name="AtiveLivingCheckbox"type="checkbox">
+<span  class="subheading">Active Living Physiotherapy</span><br>
+2-2380 South Island Hwy, Campbell River<br>
+Tel: 778-420-0111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 888-508-6080
+<a target="_blank" href="http://www.activelivingphysio.com/">www.activelivingphysio.com</a><br>
+ </p>
+
+<p class="smallertext"><input name="RehabMotionWillow" type="checkbox"> 
+<span  class="subheading">CBI - Willow Point</span><br>
+2315 S. Island Highway Campbell River<br>
+Tel: 250-923-3773&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 250-923-3644<br>
+<a target="_blank" href="http://www.cbi.ca">www.cbi.ca</a><br>
+ </p>
+
+<p class="smallertext"><input name="RehabMotionQuinsam" type="checkbox">
+<span  class="subheading">CBI - Quinsam Clinic</span><br>
+1371 Greenwood St.Campbell River<br>
+Tel: 250-286-9670&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 250-286-9674<br>
+<a target="_blank" href="http://www.cbi.ca">www.cbi.ca</a>
+</p>
+
+<p class="smallertext"><input name="EpicCheckbox" type="checkbox">
+<span  class="subheading">Epic Physiotherapy</span><br>
+4387 Barclay Rd, Campbell River<br>
+Tel: 250-202-1749<br>
+<a target="_blank" href="http://www.epicphysiotherapy.ca">www.epicphysiotherapy.ca</a> </p>
+
+<p class="smallertext"><input name="FoundationCheckbox" type="checkbox">
+<span  class="subheading">Foundation Rehab</span><br>
+91 Erickson Rd. Campbell River<br>
+Tel: 778-418-1008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 778-418-0028<br>
+<a target="_blank" href="http://www.foundationrehabpt.com">www.foundationrehabpt.com</a> </p>
+
+	</td>
+	<!-- end of left column  -->
+
+	<td width="50%" class="pttable">
+	<!-- below are the table data items in the right sided column -->
+
+<p class="smallertext"><input name="MountainviewCheckbox" type="checkbox">
+<span  class="subheading">Mountain View Therapeutics</span><br>
+<span  class="subheading">Uptown:</span>&nbsp;111 Dogwood St - Unit C, Campbell River<br> 
+<span  class="subheading">Downtown:</span>&nbsp;991 Alder St - Unit 5, Campbell River<br> 
+Tel: 250-203-5897&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 1-888-567-0833<br>
+<a target="_blank" href="http://www.mountainviewphysio.com/">www.mountainviewphysio.com</a>
+</p>
+
+<p class="smallertext"><input name="PhysioOnTheRunCheckbox" type="checkbox">
+<span  class="subheading">Physio On the Run</span><br>
+<i>Physio and exercise home visits</i><br> 
+Tel: 250-203-4047<br>
+<a target="_blank" href="http://www.physioontherun.ca">www.physioontherun.ca</a>
+</p>
+
+<p class="smallertext"><input name="RiverCity" type="checkbox">
+ <span  class="subheading">RiverCity Therapeutic Centre</span><br>
+212-1720 14th Ave, Campbell River<br>
+Tel: 250-203-4047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 1-844-273-0167<br>
+<a target="_blank" href="https://rivercitytherapeuticcentre.janeapp.com/">https://rivercitytherapeuticcentre.janeapp.com</a><br>
+</p>
+
+<p class="smallertext"><input name="Seafarer" type="checkbox"> 
+<span  class="subheading">Seafarer Physiotherapy Clinic</span><br> 
+1003 Island Hwy Coast Marina<br>
+Tel: 250-203-5897&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: 888-567-0833
+<a target="_blank" href="http://www.seafarerphysio.com">www.seafarerphysio.com</a><br>
+</p>
+
+<p class="smallertext"><input name="TheJoint" type="checkbox"> 
+<span  class="subheading">The Joint Physiotherapy and Pain Treatment Center </span><br>
+Suite 107- 250 Dogwood St. Campbell River<br> 
+Tel: (250) 287-3530<br>
+<a target="_blank" href="https://thejointphysio.janeapp.com">https://thejointphysio.janeapp.com</a><br>
+<br>
+</p>
+
+	</td>
+	<!-- end of right column -->
+	</tr>
+	</table>
+</div>
+<!-- --------------------------------------------------------------------- -->
+
+<!-- Signature field -->
+
+<div id="CanvasSignature1" class="sig" style="position:absolute; left:20px; top:850px; width:248px; height:62px; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<span style="position:absolute; left:20px; top:920px;" class="normaltext">Signed by:&nbsp;</span>
+<input name="CurrentUser2" type="text" class="noborder" style="position:absolute; left:90px; top:920px; width: 200px;" oscardb=current_user>
+
+<!-- E-signed text stamp buttons -->
+	<textarea name="eSigned" id="eSigned" type="text" class="NotPrint" style="position:absolute; left:20px; top:850px; width:248px; height:18; font-family:sans-serif; font-style:italic; font-weight:bold; font-size:12px; text-align:center; background-color:lightyellow; border-width:0; resize:none;" >&quot;electronically signed&quot;</textarea>
+
+
+	<input value="Clear Sig" name="ClearButton2" id="ClearButton" type="button" class="NotPrint" style="color:green; position:absolute; font-size:12px; left:280px; top:860px;" 
+	onclick="
+			document.getElementById('CanvasSignature1').className = 'sig';
+			document.getElementById('eSigned').className = 'NotPrint';
+			clearSig();
+			">
+
+	<input value="eSign" name="eSigButton" id="eSigButton" type="button" class="NotPrint" style="color:green; position:absolute; font-size:12px; left:280px; top:880px;" 
+	onclick="
+			document.getElementById('CanvasSignature1').className = 'Hide';
+			document.getElementById('eSigned').className = 'noborder';
+			">  
+
+
+<!-- The print and submit buttons -->
+
+<div class="NotPrint" id="BottomButtons" style="position: absolute; top:950px; left:10px;">
+	 <table><tr><td style="padding-left:0px;">
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+<!-- Copy Left -->
+	<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+ </div>
+
+<!-- End of the print and submit buttons -->
+
+</form>
+
+	<!-- Define Date Calendars -->
+	<script type="text/javascript">
+		Calendar.setup( { inputField : "date", ifFormat : "%d-%b-%Y",  button : "date" } );
+	</script>
+
+</body>
+</html>

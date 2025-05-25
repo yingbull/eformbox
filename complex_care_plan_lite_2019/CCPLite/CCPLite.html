@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- Complex Care Lite - no background -->
+<!-- V1_Apr12_2019, based on VIHA Patient Summary, John Yap -->
+<!-- Json fix file updated for CCP lite, CPP_Lite_fixJson_Jun_7_2019.js , John Yap -->
+<!-- V2_Apr15_2019: add pasting to eChart as per CL489 eForms, John Yap -->
+<!-- V3_Apr16_2019: expand goals/plans, and hide blanks, John Yap -->
+<!-- V4_May20_2019: remove references to immunization dates, disable time stamp removal from immunization dates;
+ 	not all servers (i.e. build 854) have the latest immunization date DB tags; John Yap -->
+<!-- V5_Jun7_2019: add start/end times, with pasting; John Yap -->
+<!-- V6_Dec6_2019: save last conditions checked; John Yap -->
+<!-- V7_Jul28_2021: add COVID vaccine; John Yap -->
+<!-- V8_Sep5_2021: fix MOST observed date - remove time stamp; clean up detritus; streamline BottomButtons; John Yap -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+<!-- Do not use \n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+<script>
+	// For OSCAR to detect what files to include in the generated ZIP, the
+	// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+	// this serves as a workaround to force the files to be included for ZIP exports.
+	// Allows for appropriate import of all png files that are not referenced by BGImage tags
+	// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+	// "${oscar_image_path}SICG_2017_04_18CC1pg.png"
+</script>
+
+<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors 
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+<script language="javascript1.2" type="text/javascript" src="onBodyLoad_Oct2018.js"></script>
+<script language="javascript1.2" type="text/javascript" src="CPP_Lite_fixJson_Jun_7_2019.js"></script>
+<script type="text/javascript" src="CCP_Lite_Paste_Universal.js"></script>
+End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+
+<!-- script to link to other pages -->
+<script language="javascript" type="text/javascript" src="${oscar_image_path}onBodyLoad_Oct2018.js"></script>
+
+<!-- script to allow Json fixes, etc -->
+<script language="javascript" type="text/javascript" src="${oscar_image_path}CPP_Lite_fixJson_Jun_7_2019.js"></script>
+
+<!-- JS file to allow Copy to Encounter with correct formatting, and proper import -->
+<script type="text/javascript" src="${oscar_image_path}CCP_Lite_Paste_Universal.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+/* hides signature borders on print */
+*{font-family: Helvetica, Arial, sans-serif;}
+.input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+
+a {
+	text-decoration: none;
+	font-size: 14px;
+} 
+a:hover { border: 1px solid #000000; border-style: outset; background: pink; opacity: 0.6;}
+a:active { border: 3px solid #000000; border-style: inset;}
+
+::placeholder {
+	color: rebeccapurple;
+	font-style: italic;
+	opacity: 1;
+}
+
+.title {
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bolder;
+	text-align: left;
+	color: black;
+}
+.heading1 {
+	width: 100%;
+	font-size: 14px;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.heading2 {
+	font-size: 14px;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.heading3 {
+	font-size: 14px;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.normaltext {
+	font-size: 16px;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 0;
+}
+.formtext {
+	width: 100%;
+	font-size: 14px;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 1;
+	border-style: solid; 
+	border-radius: 3px;
+	resize:none;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+/* hide placehoders */
+::placeholder {
+	color: transparent;
+}
+
+.title {
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bolder;
+	text-align: left;
+	color: black;
+}
+.heading1 {
+	width: 100%;
+	font-size: 14px;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.heading2 {
+	font-size: 14px;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.heading3 {
+	font-size: 14px;
+	font-weight: bold;
+	vertical-align: top;
+	color: black;
+	background-color: #5bc0de;
+	border-width: 1;
+}
+.normaltext {
+	font-size: 16px;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 0;
+}
+.formtext {
+	width: 100%;
+	font-size: 14px;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+	border-width: 1;
+	border-style: solid; 
+	border-radius: 3px;
+	resize:none;
+}
+
+.DoNotPrint {display: none;}
+td.subjectline {
+	display: none;
+}
+input.noborder {
+	border : 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	border-radius: 3px;
+	border: 0px;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+	.box1 {
+		position: absolute;
+		width: 16px;
+		height: 16px;
+		font-size: 16px;
+		font-family: Arial;
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+
+	.box2 {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+</style>
+
+<!-- Script to optimize window on loading -->
+<script language="javascript" type="text/javascript">
+		/****************************
+			startup functions 
+		****************************/
+		function startUp() {
+		// new off-line architecture as per K Yap; this eFORM does not require a background; but still use js in image library
+
+		// Need to to execute fixJson() immediately on load; adjust format before loading up autoscroll, etc.
+			setDefaults();
+			changeImage("SICG_2017_04_18CC1pg.png", "SIGC"); 
+
+		//optimize window size/width
+			top.window.resizeTo(950, screen.availHeight);
+			setDocumentTitle('ComplexCarePlan_',document.getElementById('PatientNameL').value);
+		}
+
+		function changeImage(img,imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+			// On initial Load do this; do not run fixJson on reload as it disables autoscroll
+			// Split Json items if used in textarea fields
+			// Split meds, other meds, and allergies into separate lines
+			// Add two databases, Ongoing Concerns and Medical History, into one textfield
+			fixJson(); 
+
+			parseName("CurrentProviderDoctor");
+			parseName("CurrentProviderDoctor2");
+			parseName("patient_name");
+
+			parseMeasurementDate("MOST_date");
+			} else {
+			// on Reload do this
+				document.getElementById("NewDateSet").checked = false;
+				document.getElementById("NewDate").value = '';
+			}
+		}
+
+		/****************************
+			Create name in conventional order 
+		****************************/
+		function parseName(id) {
+			// Get the name
+			var fullName = document.getElementById(id).value;
+
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+
+			// Show the fields on the page
+			document.getElementById(id).value = First_Last_Name;
+		}
+
+		/****************************
+			Remove time stamp from measurement
+			Oscar default is yyyy-mm-dd hh:mm:ss
+		****************************/
+		function parseMeasurementDate(id) {
+			// Change date field to dd/mmm/yyyy format
+			// Function expects an array of date components in yyyy/mm/dd format
+			// Get the date
+			var FullMeasurementDate = document.getElementById(id).value;
+			var delimiter = ' ';
+
+			// Split the value
+			var MeasurementDate = FullMeasurementDate.split(delimiter)[0];
+
+			var DateOnly = MeasurementDate;
+
+			// Show the fields on the page
+			document.getElementById(id).value = DateOnly;
+		}
+
+		function NewDateSet_add() {
+			if(document.getElementById('NewDateSet').checked != false) {
+			document.FormName.subject.value += ' ' + document.FormName.CurrentProviderDoctor.value + ' ' + document.FormName.NewDate.value;
+			}
+			else {
+			document.FormName.subject.value = document.FormName.DxCode.value;
+			}
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// click to hide all blank Plans/Goals
+			findBlanks();
+
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			document.FormName.subject.value += " - Complete";
+			setTimeout('document.FormName.submit()',3000);
+		}
+
+		function partialSubmission() {
+			setFlag();
+			releaseDirtyFlag();
+			document.FormName.subject.value += " - Partial";
+			setTimeout('document.FormName.submit()',3000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+		/****************************
+			checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+				$( this ).click();
+				return false;
+				}
+			});
+		});
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		//Script to show and hide sections, with colour switching enabled.
+		function ChangeClass(i,c) { // i  = id name, c = class name
+			document.getElementById(i).className = c;
+		}
+		function SwitchView(i,checked) {
+			var j = i + '_Detail';
+			if(document.getElementById(j).className == 'Hide') {
+				document.getElementById(i).style.background = 'lightgreen';
+				document.getElementById(i).title = 'Click to HIDE';
+				ChangeClass(j,'Show');
+				document.getElementById(i + '_Hidden').value = 'false';
+			}
+			else if (document.getElementById(j).className == 'Show') {
+				document.getElementById(i).style.background = 'pink';
+				document.getElementById(i).title = 'Click to SHOW';
+				ChangeClass(j,'Hide');
+				document.getElementById(i + '_Hidden').value = 'true';
+			}	
+		}
+
+		/****************************
+			Show all Fields
+		****************************/
+		function ShowAll() {
+			if (document.getElementById('PastMedicalHxSwitch_Detail').className == 'Hide') {
+			document.getElementById('PastMedicalHxSwitch').click();
+			}
+			if (document.getElementById('OtherProvidersSwitch_Detail').className == 'Hide') {
+			document.getElementById('OtherProvidersSwitch').click();
+			}
+			if (document.getElementById('MedicationsSwitch_Detail').className == 'Hide') {
+			document.getElementById('MedicationsSwitch').click();
+			}
+			if (document.getElementById('CarePlan1Switch_Detail').className == 'Hide') {
+			document.getElementById('CarePlan1Switch').click();
+			}
+			if (document.getElementById('CarePlan2Switch_Detail').className == 'Hide') {
+			document.getElementById('CarePlan2Switch').click();
+			}
+			if (document.getElementById('CarePlan3Switch_Detail').className == 'Hide') {
+			document.getElementById('CarePlan3Switch').click();
+			}
+			if (document.getElementById('CarePlan4Switch_Detail').className == 'Hide') {
+			document.getElementById('CarePlan4Switch').click();
+			}
+			if (document.getElementById('CarePlanOtherSwitch_Detail').className == 'Hide') {
+			document.getElementById('CarePlanOtherSwitch').click();
+			}
+			if (document.getElementById('Goals1Switch_Detail').className == 'Hide') {
+			document.getElementById('Goals1Switch').click();
+			}
+			if (document.getElementById('Goals2Switch_Detail').className == 'Hide') {
+			document.getElementById('Goals2Switch').click();
+			}
+			if (document.getElementById('Goals3Switch_Detail').className == 'Hide') {
+			document.getElementById('Goals3Switch').click();
+			}
+			if (document.getElementById('Goals4Switch_Detail').className == 'Hide') {
+			document.getElementById('Goals4Switch').click();
+			}
+			if (document.getElementById('Goals5Switch_Detail').className == 'Hide') {
+			document.getElementById('Goals5Switch').click();
+			}
+			if (document.getElementById('GoalsOtherSwitch_Detail').className == 'Hide') {
+			document.getElementById('GoalsOtherSwitch').click();
+			}
+			if (document.getElementById('CommentsSwitch_Detail').className == 'Hide') {
+			document.getElementById('CommentsSwitch').click();
+			}
+		}
+
+		/****************************
+			Hide all Fields
+		****************************/
+		function HideAll() {
+			if (document.getElementById('PastMedicalHxSwitch_Detail').className == 'Show') {
+			document.getElementById('PastMedicalHxSwitch').click();
+			}
+			if (document.getElementById('OtherProvidersSwitch_Detail').className == 'Show') {
+			document.getElementById('OtherProvidersSwitch').click();
+			}
+			if (document.getElementById('MedicationsSwitch_Detail').className == 'Show') {
+			document.getElementById('MedicationsSwitch').click();
+			}
+			if (document.getElementById('CarePlan1Switch_Detail').className == 'Show') {
+			document.getElementById('CarePlan1Switch').click();
+			}
+			if (document.getElementById('CarePlan2Switch_Detail').className == 'Show') {
+			document.getElementById('CarePlan2Switch').click();
+			}
+			if (document.getElementById('CarePlan3Switch_Detail').className == 'Show') {
+			document.getElementById('CarePlan3Switch').click();
+			}
+			if (document.getElementById('CarePlan4Switch_Detail').className == 'Show') {
+			document.getElementById('CarePlan4Switch').click();
+			}
+			if (document.getElementById('CarePlanOtherSwitch_Detail').className == 'Show') {
+			document.getElementById('CarePlanOtherSwitch').click();
+			}
+			if (document.getElementById('Goals1Switch_Detail').className == 'Show') {
+			document.getElementById('Goals1Switch').click();
+			}
+			if (document.getElementById('Goals2Switch_Detail').className == 'Show') {
+			document.getElementById('Goals2Switch').click();
+			}
+			if (document.getElementById('Goals3Switch_Detail').className == 'Show') {
+			document.getElementById('Goals3Switch').click();
+			}
+			if (document.getElementById('Goals4Switch_Detail').className == 'Show') {
+			document.getElementById('Goals4Switch').click();
+			}
+			if (document.getElementById('Goals5Switch_Detail').className == 'Show') {
+			document.getElementById('Goals5Switch').click();
+			}
+			if (document.getElementById('GoalsOtherSwitch_Detail').className == 'Show') {
+			document.getElementById('GoalsOtherSwitch').click();
+			}
+			if (document.getElementById('CommentsSwitch_Detail').className == 'Show') {
+			document.getElementById('CommentsSwitch').click();
+			}
+		}
+		
+		/****************************
+			Script to allow for auto-expanding textarea; needs to be active onload
+		****************************/
+		function addAutoResize() {
+			document.addEventListener('input', function (event) {
+				if (event.target.nodeName.toLowerCase() !== 'textarea') {
+					return;
+				}
+
+				event.target.style.height = 'auto';
+				event.target.style.height = event.target.scrollHeight + 15 + 'px';
+			});
+		}
+
+		function resizeAllTextAreas() {
+			document.querySelectorAll('textarea').forEach(function (el) {
+				el.style.height = el.scrollHeight + 15 + 'px';
+			})
+		}
+
+		/****************************
+			Script to allow for saving hide/show states, and reloading in the SAME state, as per K Yap
+		****************************/
+		function loadHidden() {
+			divs = document.getElementsByClassName('HiddenDivs')
+			for (i = 0; i < divs.length; i++) {
+				var div = divs[i];
+				if (div.value === 'true') {
+					var name = divs[i].name.split('_')[0];
+					ChangeClass(name + '_Detail', 'Hide');
+				}
+			}
+		}
+
+		/****************************
+			Script to find blank care plans/goals and hide from print
+		****************************/
+		function findBlanks() {
+			divs = document.getElementsByClassName('BlankPlanGoal') // e.g. CarePlan1_Hidden
+			for (i = 0; i < divs.length; i++) {
+				var div = divs[i];
+				var name = div.name.split('_')[0];
+				var switchdetail = name + 'Switch_Detail';
+				if (document.getElementById(name).value =='' && document.getElementById(switchdetail).className == 'Show') {
+					document.getElementById(name + 'Switch').click();
+				}
+			}
+		}
+
+		/****************************
+			script for current time
+		****************************/
+		function StartClock12() {
+			Time12 = new Date();
+			Cur12Hour = Time12.getHours();
+			Cur12Mins = Time12.getMinutes();
+			The12Time = 0;
+			The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+			The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+			The12Time += (Cur12Hour > 11) ? ' PM' : ' AM';
+			window.status = The12Time;
+			setTimeout('StartClock12()', 2000);
+		}
+
+		/****************************
+			Script to allow eFORM inputs to paste to encounter note, 
+			adapted from EOL/LEAD lab work, with assistance by K Yap.
+			PasteToEncounter function now located in image library: CCP_Lite_Paste_Universal.js
+			Cannot have \n\n in eFORM html as it will not import/export properly
+			Set UpdateAllEncounters below specifically for this eFORM
+		****************************/
+		function UpdateAllEncounters() {
+			// Complex Care title - (items inline, header)
+			UpdateEncounterFirst('HiddenHeader1', 'Complex Care review done on: '); 
+
+			// Start time Header - (items inline, header)
+			UpdateEncounterFirst('start_time', 'Start time: '); 
+			// End time Header - (items inline, header)
+			UpdateEncounterFirst('end_time', 'End time: '); 
+
+			// Family/Medical Representative
+			UpdateEncounterFirst('SDMContacts', 'Family/Medical Representative: '); 
+			UpdateEncounterFirst('MOST', 'Last MOST: '); 
+
+			// Diagnoses (boxIds, boxDetails items to paste below, header)
+			UpdateEncounterBoxes(
+				["DM", "CKD", "CHF", "Resp", "CVD", "IHD", "CLD", "CND"],
+				["diabetes,", "chronic kidney disease (CKD),", "congestive heart failure (CHF),", "chronic respiratory disorder (e.g. asthma, COPD, other),", "stroke (CVA),", "ischemic heart disease (IHD, angina, heart attack),", "chronic liver disease (e.g. chronic hepatitis, cirrhosis),", "chronic neurological disease (e.g. MS, ALS, Parkinsonisim, dementia, etc),"],
+				"COMPLEX DIAGNOSES"
+			);
+
+			// Other Current Problems - (items below, header) 
+			UpdateEncounter('MedicalHx', 'OTHER HEALTH PROBLEMS'); 
+
+			// Other Healthcare Providers
+			UpdateEncounter('OtherProviders', 'OTHER HEALTHCARE PROFESSIONALS'); 
+
+			// Medication Review
+			UpdateEncounter('Meds', 'MEDICATION REVIEW'); 
+
+			// Other Medication Review
+			UpdateEncounter('OtherMeds', 'OTHER MEDICATION REVIEW'); 
+
+			// Allergies
+			UpdateEncounter('Allergies', 'ALLERGY REVIEW'); 
+
+			// Care Plan Header - (items inline, header)
+			UpdateHeader('HiddenHeader2', ''); 
+
+			// Care Plan 1
+			UpdateEncounterFirst('CarePlan1', 'Plan 1: '); 
+
+			// Care Plan 2
+			UpdateEncounterFirst('CarePlan2', 'Plan 2: '); 
+
+			// Care Plan 3
+			UpdateEncounterFirst('CarePlan3', 'Plan 3: '); 
+
+			// Care Plan 4
+			UpdateEncounterFirst('CarePlan4', 'Plan 4: '); 
+
+			// Care Plan Other
+			UpdateEncounterFirst('CarePlanOther', 'Other Plan: '); 
+
+			// Goals/etc Header
+			UpdateHeader('HiddenHeader3', ''); 
+
+			// Goal 1
+			UpdateEncounterFirst('Goals1', 'Goal 1: '); 
+
+			// Goal 2
+			UpdateEncounterFirst('Goals2', 'Goal 2: '); 
+
+			// Goal 3
+			UpdateEncounterFirst('Goals3', 'Goal 3: '); 
+
+			// Goal 4
+			UpdateEncounterFirst('Goals4', 'Goal 4: '); 
+
+			// Comments
+			UpdateEncounter('Comments', 'Comments: '); 
+}
+</script>
+
+</head>
+
+<body onload="StartClock12(); loadHidden(); startUp(); addAutoResize(); resizeAllTextAreas();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for subject update -->
+<input type="hidden" name="CurrentProviderDoctor" id="CurrentProviderDoctor">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+ <!-- Hidden input for adding MedicalHx items  -->
+<textarea name="PMHx_Hx" id="PMHx_Hx" class="Hide" oscarDB=medical_history></textarea>
+<textarea name="ongoingconcerns" id="ongoingconcerns" class="Hide" oscarDB=ongoingconcerns></textarea>
+
+<!-- Hidden inputs for saving whether textareas are shown or hidden; retained on reload -->
+<input type="hidden" name="PastMedicalHxSwitch_Hidden" id="PastMedicalHxSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="OtherProvidersSwitch_Hidden" id="OtherProvidersSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="MedicationsSwitch_Hidden" id="MedicationsSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="CarePlan1Switch_Hidden" id="CarePlan1Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="CarePlan2Switch_Hidden" id="CarePlan2Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="CarePlanOtherSwitch_Hidden" id="CarePlanOtherSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="Goals1Switch_Hidden" id="Goals1Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="Goals2Switch_Hidden" id="Goals2Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="Goals3Switch_Hidden" id="Goals3Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="Goals4Switch_Hidden" id="Goals4Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="Goals5Switch_Hidden" id="Goals5Switch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="GoalsOtherSwitch_Hidden" id="GoalsOtherSwitch_Hidden" class="HiddenDivs" value="false">
+<input type="hidden" name="CommentsSwitch_Hidden" id="CommentsSwitch_Hidden" class="HiddenDivs" value="false">
+
+<!-- Hidden inputs for finding blank care plans/goals -->
+<textarea type="hidden" name="CarePlan1_Hidden" id="CarePlan1_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="CarePlan2_Hidden" id="CarePlan2_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="CarePlan3_Hidden" id="CarePlan3_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="CarePlan4_Hidden" id="CarePlan4_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="CarePlanOther_Hidden" id="CarePlanOther_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="Goals1_Hidden" id="Goals1_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="Goals2_Hidden" id="Goals2_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="Goals3_Hidden" id="Goals3_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="Goals4_Hidden" id="Goals4_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="Goals5_Hidden" id="Goals5_Hidden" class="BlankPlanGoal Hide"></textarea>
+<textarea type="hidden" name="GoalsOther_Hidden" id="GoalsOther_Hidden" class="BlankPlanGoal Hide"></textarea>
+<input type="hidden" name="Comments_Hidden" id="Comments_Hidden" class="BlankPlanGoal Hide">
+
+<!-- Hidden Header for eChart note; inputs today's date -->
+<input type="hidden" name="HiddenHeader1" id="HiddenHeader1" oscarDB=today>
+<input type="hidden" name="HiddenHeader2" id="HiddenHeader2" value="CARE PLANS">
+<input type="hidden" name="HiddenHeader3" id="HiddenHeader3" value="GOALS, FEARS, STRENGTHS, ABILITIES, TRADE-OFFS, VALUES, EXPECTED OUTCOMES">
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+
+<p class="title" style="font-size:20px; text-align:center;">Complex Care Plan Lite</p>
+<p class="DoNotPrint" style="position:relative; top:-20px; text-align:center;"><input type="button" name="ComplexCarePlan" style="font-size:10px; cursor:pointer; color:green;" oscarOpen="CCP full" value="Complex Care Full" title="to Full Complex Care Plan eForm"></p>
+
+<table width=50%>
+	<tr>
+		<td style="width:75px;" class="heading2"><span>Start time: </span></td>
+		<td style="width:100px;"><input name="start_time" id="start_time" type="text" class="formtext noborder" onclick="document.FormName.start_time.value = The12Time;" title="click field ONCE to set start time"></td>
+		<td style="width:75px; padding-left:10px;" class="heading2"><span>End time: </span></td>
+		<td style="width:100px;"><input name="end_time" id="end_time" type="text" class="formtext noborder" onclick="document.FormName.end_time.value = The12Time;" title="click field ONCE to set end time"></td>
+	</tr>
+</table><br>
+
+<div name="header">
+<table width=100%>
+	<tr>
+		<td style="width:30px;" class="heading2">Date: </td>
+		<td class="normaltext"><input class="formtext noborder" name="Date" id="Date" type="text" oscarDB=today></td>
+	</tr>
+</table>
+<br>
+
+<!-- Identification -->
+<table width=100%>
+	<tr>
+		<td class="heading2" style="width:55px;">Patient: </td>
+		<td class="normaltext"><input name="patient_name" id="patient_name" class="formtext noborder" type="text" oscarDB=patient_name></td>
+		<td class="heading2" style="width:75px; padding-left:10px;">Provider: </td>
+		<td class="normaltext"><input name="CurrentProviderDoctor2" id="CurrentProviderDoctor2" type="text" class="formtext noborder" oscarDB=current_user></td>
+	</tr>
+</table>
+</div>
+<br>
+
+<div name="SDM">
+<table width=100% name="SDM Contacts">
+	<tr>
+		<td style="width:215px;" class="heading2">Family/Medical Representative: </td>
+	</tr>
+	<tr>
+		<td style="text-align:right">
+			<input name="SDM_Link" type="button" class="DoNotPrint" style="color:green;" value="SDM" title="to Advance Care Planning eForm" oscarOpen="Substitute Decision Maker">
+			<input name="Rep9_box" id="Rep9_box" type="text" class="Xbox box1 DoNotPrint" style="position:relative; left:0px;" oscarDB=e$last#Rep9_box>
+			<a id="Rep9" class="DoNotPrint" style="position:relative; left:0px; color:green;" href="http://www2.gov.bc.ca/assets/gov/health/managing-your-health/incapacity-planning/representation_agreement_s9.pdf" target="_blank" title="Grants authority to decide on life-preserving intervention">Representation Agreement (Section 9) completed</a>
+		</td></tr>
+	<tr>
+		<td class="normaltext"><textarea name="SDMContacts" id="SDMContacts" class="formtext" rows="1" placeholder="Add SDM contact info, family, etc" oscarDB=e$last#SDMContacts></textarea></td>
+	</tr>
+</table>
+</div>
+
+<div name="MOST">
+<!-- MOST -->
+<table width=100%>
+		<tr><td class="normaltext"><span style=" font-size:16px; text-decoration:underline;"><b>Previous MOST: </b></span><input name="MOST" id="MOST" class="normaltext" type="text" style="width:70px; font-size:16px; font-weight:bold; text-align:center;" oscarDB=m$MOST#value>
+			(<input name="MOST_date" id="MOST_date" class="normaltext" type="text" style="width:85px; text-align:center; font-weight:bold;" oscarDB=m$MOST#dateObserved>)
+		</td>
+		<td style="text-align:right" class="DoNotPrint">
+			<input name="MOST_Link" type="button" style="color:green;" value="MOST" oscarOPEN="MOST" title="to Medical Orders for Scope of Treatment eForm">
+			<input name="DNR_Link" type="button" style="color:green;" value="DNR" oscarOPEN="DNR" title="to Do Not Resuscitate eForm">
+			<input name="LabSummary" type="button" style="color:green;" name="LabSummary" onclick="onBodyLoad(); labRow();" value="Lab Row Display">
+			<input name="LabSummary" type="button" style="color:green;" onclick="onBodyLoad(); labGrid();" value="Lab Grid Display" type="button">
+		</td></tr>
+	</table>
+</div>
+
+<div style="position:relative; top:10px;">
+<!-- Diagnosis -->
+	<span style="position:absolute; top:0px; font-size:16px; text-decoration:underline;"><b>Diagnosis:</b></span>
+	<input name="diseaseRegistry_link" id="diseaseRegistry_link" class="DoNotPrint" style="position:absolute; left:0px; top:20px; color:green;" type="Button" value="to Disease Registry" onclick="onBodyLoad(); diseaseRegistry();">
+
+	<div name="DxCodes" class="DoNotPrint" style="position:absolute; left:0px; top:40px;">
+		<input name="DxCode" id="DxCode" type="text" class="noborder" style="position:absolute; left:0px; top:0px; width:60px; font-size:16px; text-align:center;">
+		<select name="GPSCDxCode" class="DoNotPrint" style="position:absolute; left:0px; top:35px; width:120px;">
+			<option onclick="document.FormName.DxCode.value = ''; NewDateSet_add();">GPSC Dx Code:</option>
+			<option onclick="document.FormName.DxCode.value = 'N591'; NewDateSet_add();">N591: CND/Resp</option>
+			<option onclick="document.FormName.DxCode.value = 'N414'; NewDateSet_add();">N414: CND/IHD</option>
+			<option onclick="document.FormName.DxCode.value = 'N428'; NewDateSet_add();">N428: CND/CHF</option>
+			<option onclick="document.FormName.DxCode.value = 'N250'; NewDateSet_add();">N250: CND/DM</option>
+			<option onclick="document.FormName.DxCode.value = 'N430'; NewDateSet_add();">N430: CND/CVD</option>
+			<option onclick="document.FormName.DxCode.value = 'N428'; NewDateSet_add();">N428: CND/CHF</option>
+			<option onclick="document.FormName.DxCode.value = 'N585'; NewDateSet_add();">N585: CND/CKD</option>
+			<option onclick="document.FormName.DxCode.value = 'N573'; NewDateSet_add();">N573: CND/CLD</option>
+			<option onclick="document.FormName.DxCode.value = 'R414'; NewDateSet_add();">R414: Resp/IHD</option>
+			<option onclick="document.FormName.DxCode.value = 'R428'; NewDateSet_add();">R428: Resp/CHF</option>
+			<option onclick="document.FormName.DxCode.value = 'R250'; NewDateSet_add();">R250: Resp/DM</option>
+			<option onclick="document.FormName.DxCode.value = 'R430'; NewDateSet_add();">R430: Resp/CVD</option>
+			<option onclick="document.FormName.DxCode.value = 'R585'; NewDateSet_add();">R585: Resp/CKD</option>
+			<option onclick="document.FormName.DxCode.value = 'R573'; NewDateSet_add();">R573: Resp/CLD</option>
+			<option onclick="document.FormName.DxCode.value = 'I428'; NewDateSet_add();">I428: IHD/CHF</option>
+			<option onclick="document.FormName.DxCode.value = 'I250'; NewDateSet_add();">I250: IHD/DM</option>
+			<option onclick="document.FormName.DxCode.value = 'I430'; NewDateSet_add();">I430: IHD/CVD</option>
+			<option onclick="document.FormName.DxCode.value = 'I585'; NewDateSet_add();">I585: IHD/CKD</option>
+			<option onclick="document.FormName.DxCode.value = 'I573'; NewDateSet_add();">I573: IHD/CLD</option>
+			<option onclick="document.FormName.DxCode.value = 'H250'; NewDateSet_add();">H250: CHF/DM</option>
+			<option onclick="document.FormName.DxCode.value = 'H430'; NewDateSet_add();">H430: CHF/CVD</option>
+			<option onclick="document.FormName.DxCode.value = 'H585'; NewDateSet_add();">H585: CHF/CKD</option>
+			<option onclick="document.FormName.DxCode.value = 'H573'; NewDateSet_add();">H573: CHF/CLD</option>
+			<option onclick="document.FormName.DxCode.value = 'D430'; NewDateSet_add();">D430: DM/CVD</option>
+			<option onclick="document.FormName.DxCode.value = 'D585'; NewDateSet_add();">D585: DM/CKD</option>
+			<option onclick="document.FormName.DxCode.value = 'D573'; NewDateSet_add();">D573: DM/CLD</option>
+			<option onclick="document.FormName.DxCode.value = 'C585'; NewDateSet_add();">C585: CVD/CKD</option>
+			<option onclick="document.FormName.DxCode.value = 'C573'; NewDateSet_add();">C573: CVD/CLD</option>
+			<option onclick="document.FormName.DxCode.value = 'K573'; NewDateSet_add();">K573: CKD/CLD</option>
+		</select>
+	</div>
+
+
+	<div name="Diagnosis" style="position:absolute; left:140px; top:5px;">
+		<input name="DM" id="DM" type="text" class="Xbox box1" style="left:0px; top:0px;">
+		<span style="position:absolute; left:30px; top:0px; width:325px; font-size:16px;" title="Dx 250">Diabetes</span>
+		
+		<input name="CKD" id="CKD" type="text" class="Xbox box1" style="left:0px; top:20px;" oscarDB=e$last#CKD>
+		<span style="position:absolute; left:30px; top:20px; width:325px; font-size:16px;">Chronic renal failure (eGFR &lt; 60)</span>
+		
+		<input name="CHF" id="CHF" type="text" class="Xbox box1" style="left:0px; top:40px;" oscarDB=e$last#CHF>
+		<span style="position:absolute; left:30px; top:40px; font-size:16px;" title="Dx 428">CHF</span>
+		
+		<input name="Resp" id="Resp" type="text" class="Xbox box1" style="left:0px; top:60px;" oscarDB=e$last#Resp>
+		<span style="position:absolute; left:30px; top:60px; width:325px; font-size:16px;" title="Dx 493 (asthma), 496 (COPD)">Asthma, COPD, Chronic Respiratory Disease</span>
+		
+		<input name="CVD" id="CVD" type="text" class="Xbox box1" style="left:0px; top:80px;" oscarDB=e$last#CVD>
+		<span style="position:absolute; left:30px; top:80px; width:325px; font-size:16px;" title="Dx 435 (TIA), 436 (CVA)">Cerebrovascular Disease (stroke)</span>
+		
+		<input name="IHD" id="IHD" type="text" class="Xbox box1" style="left:0px; top:100px;" oscarDB=e$last#IHD>
+		<span style="position:absolute; left:30px; top:100px; width:325px; font-size:16px;" title="Dx 410 (acute MI), 414 (angina)">Ischemic Heart Disease (heart attack)</span>
+		
+		<input name="CLD" id="CLD" type="text" class="Xbox box1" style="left:0px; top:120px;" oscarDB=e$last#CLD>
+		<span style="position:absolute; left:30px; top:120px; width:325px; font-size:16px;" title="Dx code 571 (cirrhosis), 0703 (chronic HBV), 0705 (chronic HCV)">Chronic Liver Disease (hepatitis, cirrhosis)</span>
+
+		<input name="CND" id="CND" type="text" class="Xbox box1" style="left:0px; top:140px;" oscarDB=e$last#CND>
+		<span style="position:absolute; left:30px; top:140px; width:510px; font-size:16px;" title="Dx code 340 (MS), 3352 (ALS), 332 (Parkinsonism), 290x (Dementia), 3310 (Alzheimer), etc.">Chronic Neurological Disease (MS, ALS, Parkinsonism, Dementia, etc)</span>
+	</div>
+
+	<!-- Preventions -->
+	<span style="position:absolute; left:0px; top:170px; font-size:16px; text-decoration:underline;"><b>Preventions:</b></span>
+	<input name="prevention_link" id="prevention_link" type="Button" class="DoNotPrint" style="position:absolute; left:0px; top:190px; color:green;" value="to Prevention" onclick="onBodyLoad(); prevention();">
+	<div name="Preventions" style="position:absolute; left:140px; top:175px;">
+		<input name="FV" id="FV" type="text" class="Xbox box1" style="left:0px; top:0px;" oscarDB=e$last#FV>
+		<span style="position:absolute; left:30px; top:0px; width:165px; font-size:16px;">Flu vaccine done</span>
+		<input name="FV_date" id="FV_date" type="text" class="noborder" style="position:absolute; left:200px; top:0px; width:95px; font-size:16px; text-align:center;" oscarDB=e$last#FV_date>
+
+		<input name="PPV" id="PPV" type="text" class="Xbox box1" style="left:0px; top:20px;" oscarDB=e$last#PPV>
+		<span style="position:absolute; left:30px; top:20px; width:165px; font-size:16px;" title="Pneumo-23, polysaccharide vaccine">Pneumovax done</span>
+		<input name="PPV_date" id="PPV_date" type="text" class="noborder" style="position:absolute; left:200px; top:20px; width:95px; font-size:16px; text-align:center;" oscarDB=e$last#PPV_date>
+
+		<input name="PneumoC" id="PneumoC" type="text" class="Xbox box1" style="left:0px; top:40px;" oscarDB=e$last#PneumoC>
+		<span style="position:absolute; left:30px; top:40px; width:165px; font-size:16px;" title="Pneumo-C, conjugate vaccine">Prevnar done</span>
+		<input name="PneumoC_date" id="PneumoC_date" type="text" class="noborder" style="position:absolute; left:200px; top:40px; width:95px; font-size:16px; text-align:center;" oscarDB=e$last#PneumoC_date>
+
+		<input name="Shingles" id="Shingles" type="text" class="Xbox box1" style="left:0px; top:60px;" oscarDB=e$last#Shingles>
+		<span style="position:absolute; left:30px; top:60px; width:165px; font-size:16px;">Shingles vaccine done</span>
+		<input name="Shingles_date" id="Shingles_date" type="text" class="noborder" style="position:absolute; left:200px; top:60px; width:95px; font-size:16px; text-align:center;" maxLength="10" oscarDB=e$last#Shingles_date>
+
+		<input name="COVID1" id="COVID1" type="text" class="Xbox box1" style="left:0px; top:80px;" oscarDB=e$last#COVID1>
+		<span style="position:absolute; left:30px; top:80px; width:165px; font-size:16px;">COVID vaccine done</span>
+		<input name="COVID1_date" id="COVID1_date" type="text" class="noborder" style="position:absolute; left:200px; top:80px; width:95px; font-size:16px; text-align:center;" maxLength="10" placeholder="first shot" oscarDB=e$last#COVID1_date>
+		<input name="COVID2_date" id="COVID2_date" type="text" class="noborder" style="position:absolute; left:320px; top:80px; width:95px; font-size:16px; text-align:center;" maxLength="10" placeholder="second shot" oscarDB=e$last#COVID2_date>
+	</div>
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<!-- Relevant Medical Hx -->
+<div style="position:relative;">
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Current Problems" name="PastMedicalHxSwitch" id="PastMedicalHxSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="PastMedicalHxSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Other Current Problems:</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="MedicalHx" id="MedicalHx" class="formtext" rows="3"></textarea>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- Other Health Providers -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Other Providers" name="OtherProvidersSwitch" id="OtherProvidersSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="OtherProvidersSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Other Healthcare Professionals:</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="OtherProviders" id="OtherProviders" class="formtext" rows="2"></textarea>
+		</td>
+	</tr>
+</table>
+</div>
+
+<!-- Current Medications -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Medications + Allergies" name="MedicationsSwitch" id="MedicationsSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+
+<div id="MedicationsSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Medication Review:</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="Meds" id="Meds" class="formtext" rows="2" oscarDB=druglist_line></textarea>
+		</td>
+	</tr>
+</table>
+
+<!-- Other Medications -->
+<table width=100%>
+	<tr>
+		<td class="heading1">Other Medications:</td>
+	<tr>
+	<tr>
+		<td class="normaltext"><textarea name="OtherMeds" id="OtherMeds" class="formtext" rows="2" oscarDB=other_medications_history placeholder="OTC, vitamins, supplements, etc"></textarea></td> 
+	</tr>
+</table>
+
+<table width=100%>
+	<tr>
+		<td class="heading2" style="width:100px;" title="add reaction details">Allergies:</td>
+		<td><textarea name="Allergies" id="Allergies" class="formtext" rows="2" oscarDB=allergies_des_no_archived></textarea></td>
+	</tr>
+</table>
+</div>
+<br>
+
+<!-- Care Plans -->
+<div>
+	<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Care Plans:</td>
+	</tr>
+	</table>
+
+	<!-- Care Plan1 -->
+	<div name="CarePlan1">
+		<table>
+		<td width=100%></td>
+		<td><input value="Care Plan 1" name="CarePlan1Switch" id="CarePlan1Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	<div id="CarePlan1Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">1. </td>
+			<td><textarea name="CarePlan1" id="CarePlan1" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Care Plan2 -->
+	<div name="CarePlan2">
+		<table>
+		<td width=100%></td>
+		<td><input value="Care Plan 2" name="CarePlan2Switch" id="CarePlan2Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="CarePlan2Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">2. </td>
+			<td><textarea name="CarePlan2" id="CarePlan2" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Care Plan3 -->
+	<div name="CarePlan3">
+		<table>
+		<td width=100%></td>
+		<td><input value="Care Plan 3" name="CarePlan3Switch" id="CarePlan3Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="CarePlan3Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">3. </td>
+			<td><textarea name="CarePlan3" id="CarePlan3" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Care Plan4 -->
+	<div name="CarePlan4">
+		<table>
+		<td width=100%></td>
+		<td><input value="Care Plan 4" name="CarePlan4Switch" id="CarePlan4Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="CarePlan4Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">4. </td>
+			<td><textarea name="CarePlan4" id="CarePlan4" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Care Plan Other -->
+	<div name="CarePlanOther">
+		<table>
+		<td width=100%></td>
+		<td><input value="Care Plan Other" name="CarePlanOtherSwitch" id="CarePlanOtherSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="CarePlanOtherSwitch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:45px;">Other. </td>
+			<td><textarea name="CarePlanOther" id="CarePlanOther" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+</div>
+<br>
+
+<!-- Goals/Values/Expectations -->
+<div>
+	<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Goals / Fears/ Strengths / Abilities / Trade-Offs / Values / Expected Outcomes:</td>
+	</tr>
+	</table>
+
+	<!-- Goals 1 -->
+	<div name="Goals1">
+		<table>
+			<td width=100%>
+				<a id="SIGC" class="DoNotPrint" style="width:200px; font-size:14px; color:green;" href="" target="_blank" title="Courtesy of Ariadne Labs">Serious Illness Conversation Guide</a>
+			</td>
+			<td>
+				<input value="Goals 1" name="Goals1Switch" id="Goals1Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);">
+			</td>
+		</table>
+	<div id="Goals1Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">1. </td>
+			<td><textarea name="Goals1" id="Goals1" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Goals 2 -->
+	<div name="Goals2">
+		<table>
+		<td width=100%></td>
+		<td><input value="Goals 2" name="Goals2Switch" id="Goals2Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="Goals2Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">2. </td>
+			<td><textarea name="Goals2" id="Goals2" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Goals 3 -->
+	<div name="Goals1">
+		<table>
+		<td width=100%></td>
+		<td><input value="Goals 3" name="Goals3Switch" id="Goals3Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	<div id="Goals3Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">3. </td>
+			<td><textarea name="Goals3" id="Goals3" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+	<!-- Goals 4 -->
+	<div name="Goals4">
+		<table>
+		<td width=100%></td>
+		<td><input value="Goals 4" name="Goals4Switch" id="Goals4Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="Goals4Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">4. </td>
+			<td><textarea name="Goals4" id="Goals4" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+<!-- Goals 5  -->
+	<div name="Goals5">
+		<table>
+		<td width=100%></td>
+		<td><input value="Goals 5" name="Goals5Switch" id="Goals5Switch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="Goals5Switch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:20px;">5. </td>
+			<td><textarea name="Goals5" id="Goals5" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+
+<!-- Goals Other -->
+	<div name="GoalsOther">
+		<table>
+		<td width=100%></td>
+		<td><input value="Goals Other" name="GoalsOtherSwitch" id="GoalsOtherSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+		</table>
+	</div>
+	<div id="GoalsOtherSwitch_Detail" class="Show">
+		<table width=100%>
+		<tr>
+			<td class="heading2" style="width:45px;">Other. </td>
+			<td><textarea name="GoalsOther" id="GoalsOther" class="formtext" rows="1"></textarea></td>
+		</tr>
+		</table>
+	</div>
+</div>
+
+<!-- Other Comments -->
+<div>
+<table width=100%>
+	<td width=100%></td>
+	<td><input value="Comments" name="CommentsSwitch" id="CommentsSwitch" type="button" class="DoNotPrint" style="font-size:10px; cursor:pointer; color:blue; background:lightgreen;" title="Click to HIDE" onclick="SwitchView(this.id);"></td>
+</table>
+</div>
+<div id="CommentsSwitch_Detail" class="Show">
+<table width=100%>
+	<tr>
+		<td class="heading1" colspan="2">Comments:</td>
+	<tr>
+	<tr>
+		<td class="normaltext">
+		<textarea name="Comments" id="Comments" class="formtext" rows="1" placeholder="Additional relevant details"></textarea>
+		</td>
+	</tr>
+</table>
+</div>
+
+<br>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="width:850px; font-size:13px;">
+	<table style="font-size:14px; background:#e5f2ff;">
+		<tr><td class="subjectline" style="padding:5px;">
+			<input type="hidden" id="newForm" name="newForm" value="True" />
+			Subject: <input name="subject" id="subject" size="80" type="text"><br><br>
+
+			If you wish to complete this form later, click on 
+			<input value="Partial Submit" name="PartialSubmitButton" id="PartialSubmitButton" style="color:green; font-size:14px;" type="button" onclick="partialSubmission();" title="May take up to 5 seconds to save">
+			and <b>DO NOT COPY</b> to encounter. &nbsp; You may proceed to finish your encounter note as usual.<br><br>
+
+			The <b>COMPLETED FORM</b> can be copied to the eCHART as a standard progress note, with 
+			<input value="Copy to Encounter" name="CopyToEncounter" id="CopyToEncounter" style="color:green; font-size:14px;" type="button" onclick="UpdateAllEncounters();"/>.<br>
+			<li style="position:relative; left:10px;">This feature only works when the CCP Lite eFORM is opened from the eCHART and the chart <b>REMAINS OPEN.</b></li>
+			<li style="position:relative; left:10px;">If the eCHART is closed, do a <b><span style="color:green; font-size:14px;">Partial Submit</span></b>, reopen the chart, and reopen the CCP Lite eFORM then do the Copy to Encounter.</li>
+			<li style="position:relative; left:10px;">This feature <b>does not work in CHROME.</b></li>
+			<li style="position:relative; left:10px;">You will encounter a warning box <b><u>STATING</u></b>: <b>Click OK to save it or Cancel to continue editing the current note.</b></li>
+			<li style="position:relative; left:10px;"><span style="color:red;"><b><u>DO NOT CLICK OK</u></b></span></li>
+			<li style="position:relative; left:10px;">Please <b><span style="color:green;">click CANCEL repeatedly</span></b> to complete the copy process.</li>
+			<li style="position:relative; left:10px;"><b>Copy to Encounter</b> does not Submit (save) the eForm.
+			<li style="position:relative; left:10px;"><b>Copy to Encounter</b> should be done <b>before Complete Submit.</b></li><br>
+
+			<input value="Print" name="PrintButton" id="PrintButton" style="color:green; font-size:14px;" type="button" onclick="printLetter();"> the completed eForm to share with patient and family.<br>
+
+			Use 
+			<input value="Complete Submit" name="SubmitButton" id="SubmitButton" style="color:green; font-size:14px;" type="button" onclick="submission();" title="May take up to 5 seconds to save"> for the final save. &nbsp;
+			<input name="NewDate" id="NewDate" type="text" style="width:145px; font-size:12px" placeholder="Choose date" title="Click to add reference date to subject. Click checkbox to the right to paste into subject.">
+			<input name="NewDateSet" id="NewDateSet" type="checkbox" onclick="NewDateSet_add();" title="Click to add info to subject line"><br><br>
+
+			<input value="Show All" name="ShowAll_Button" type="button" style="color:green; font-size:14px;" onclick="ShowAll();">
+			<input value="Hide All" name="HideAll_Button" type="button" style="color:green; font-size:14px;" onclick="HideAll();">
+
+			<input value="Reset" name="ResetButton" id="ResetButton" style="color:red; font-size:16px; float:right;" type="reset" title="WARNING: this will erase all the inputs to this form." onClick="history.go(0);">		</td>
+	</tr></table>
+</div>
+
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField:"Date", ifFormat: "%Y-%m-%d", showsTime:false, button:"Date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"NewDate", ifFormat: "%Y-%m-%d", showsTime:false, button:"NewDate", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"FV_date", ifFormat: "%Y-%m-%d", showsTime:false, button:"FV_date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"PPV_date", ifFormat: "%Y-%m-%d", showsTime:false, button:"PPV_date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"PneumoC_date", ifFormat: "%Y-%m-%d", showsTime:false, button:"PneumoC_date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"Shingles_date", ifFormat: "%Y-%m-%d", showsTime:false, button:"Shingles_date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"COVID1_date", ifFormat: "%Y-%m-%d", showsTime:false, button:"COVID1_date", singleClick:true, step:1 } );
+	Calendar.setup( { inputField:"COVID2_date", ifFormat: "%Y-%m-%d", showsTime:false, button:"COVID2_date", singleClick:true, step:1 } );
+</script> 
+
+</body></html>

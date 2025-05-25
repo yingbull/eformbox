@@ -1,0 +1,16 @@
+<report title="Covid-19 Monitoring Report" description="This report will show all patient with open Covid Monitoring eforms that do not have a discharge date set" active="1">
+<query>
+select 
+	v2.demographic_no ,
+	CONCAT( "<a  target=new href=../../eform/efmshowform_data.jsp?fdid=",v2.fdid,"&demographic_no=",v2.demographic_no,"/>eform link<a/>" ) AS "eformLink", 
+	(select concat(d.last_name,',',d.first_name) from demographic d where d.demographic_no = v2.demographic_no) as "Name",
+	(select var_value from eform_values v4 where v4.var_name = 'nextVisitDate' and v4.fdid = v2.fdid ) as "Next Visit"
+		from eform_values v2 
+		where  v2.fdid = (select max(v1.fdid) from eform_values v1 where v1.fid = (select e.fid from eform e where e.form_name = "Covid Monitoring Record - ADD TO THIS FORM") 
+	and v1.demographic_no = v2.demographic_no)  
+	and not exists (select 1 from eform_values v3 where v3.fdid = v2.fdid and v3.var_name = 'dischargeDate') 
+group by v2.demographic_no
+order by "Next Visit";
+
+</query>
+</report>

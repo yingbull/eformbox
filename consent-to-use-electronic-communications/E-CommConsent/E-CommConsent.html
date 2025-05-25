@@ -1,0 +1,574 @@
+<html>
+<head>
+
+<!-- Electronic Communication Consent form, as per CMPA, V1_Oct8_2018, created by John Yap -->
+<!-- V2_Oct9_2018, updated with features as per Hebert Chang; designed for Pathways use -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- Freeform Signatures -->
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}com_16_consent_to_use_electronic_communication_form_Pg1.png"
+// "${oscar_image_path}com_16_consent_to_use_electronic_communication_form_Pg2.png"
+// "${oscar_image_path}com_16_consent_to_use_electronic_communication_form_Pg3.png"
+</script>
+
+<style>
+input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+.sig {
+	 border: 2px dotted blue;
+	 background: lightgrey;
+}
+</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {display:none;}
+.noborder {
+	 border:0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 overflow:hidden;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background: transparent;
+}
+</style>
+ 
+<style type="text/css">
+.noborder {
+	 background:transparent;
+ }
+.Show{
+	visibility:visible;
+	display:inline;
+ }
+.Hide{
+	visibility:hidden;
+	display:none;
+ }
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+	.box1 {
+		position: absolute;
+		width: 16px;
+		height: 16px;
+		font-size: 16px;
+		font-family: sans-serif;
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+
+	.box2 {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: sans-serif;
+		border: 1px solid #000000;
+		cursor: pointer;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+	}
+
+	.box3 {
+		position: absolute;
+		width: 16px;
+		height: 15px;
+		font-size: 15px;
+		border: 0px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: transparent;
+	}
+</style>
+
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {			
+			setDocumentTitle('Electronic Communication Consent',document.getElementById('PatientNameL').value);
+			changeImage("com_16_consent_to_use_electronic_communication_form_Pg1.png", "BGImage1");
+			changeImage("com_16_consent_to_use_electronic_communication_form_Pg2.png", "BGImage2");
+			changeImage("com_16_consent_to_use_electronic_communication_form_Pg3.png", "BGImage3");
+			setDefaults();
+
+			// Optimize window size/width
+			top.window.resizeTo(1100, screen.availHeight);
+		}
+		
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title, PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;					
+							
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				document.getElementById("EMail").click();
+				document.getElementById("TextMsg").click();
+
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById('current_user_name').value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+				}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+				}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.CurrentProviderDoctor1.value = First_Last_Name ;
+			}
+		} 
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			saveSig(); 
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		/****************************
+		Signature functions - 3 signatures, 2 initials
+		****************************/
+		jQuery(document).ready(function() {
+			$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+			$("#CanvasSignature2").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+			$("#CanvasSignature3").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+			$("#CanvasSignature4").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+			$("#CanvasSignature5").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+		})
+
+		function saveSig() {
+			var $sig=$("#CanvasSignature1");
+			var datapair=new Array();
+			datapair=$sig.jSignature("getData","base30");
+			document.getElementById("StoreSignature1").value=datapair.join(",");
+		
+			var $sig=$("#CanvasSignature2");
+			var datapair=new Array();
+			datapair=$sig.jSignature("getData","base30");
+			document.getElementById("StoreSignature2").value=datapair.join(",");
+
+			var $sig=$("#CanvasSignature3");
+			var datapair=new Array();
+			datapair=$sig.jSignature("getData","base30");
+			document.getElementById("StoreSignature3").value=datapair.join(",");
+
+			var $sig=$("#CanvasSignature4");
+			var datapair=new Array();
+			datapair=$sig.jSignature("getData","base30");
+			document.getElementById("StoreSignature4").value=datapair.join(",");
+
+			var $sig=$("#CanvasSignature5");
+			var datapair=new Array();
+			datapair=$sig.jSignature("getData","base30");
+			document.getElementById("StoreSignature5").value=datapair.join(",");
+		}
+
+		function clearSig1() {
+			$("#CanvasSignature1").jSignature("reset");
+		}
+
+		function clearSig2() {
+			$("#CanvasSignature2").jSignature("reset");
+		}
+
+		function clearSig3() {
+			$("#CanvasSignature3").jSignature("reset");
+		}
+
+		function clearSig4() {
+			$("#CanvasSignature4").jSignature("reset");
+		}
+
+		function clearSig5() {
+			$("#CanvasSignature5").jSignature("reset");
+		}
+
+		function loadSig() {
+			var $sig=$("#CanvasSignature1");
+			var data
+			data=document.getElementById("StoreSignature1").value;
+			$sig.jSignature("setData","data:"+ data) ;
+
+			var $sig=$("#CanvasSignature2");
+			var data
+			data=document.getElementById("StoreSignature2").value;
+			$sig.jSignature("setData","data:"+ data) ;
+
+			var $sig=$("#CanvasSignature3");
+			var data
+			data=document.getElementById("StoreSignature3").value;
+			$sig.jSignature("setData","data:"+ data) ;
+
+			var $sig=$("#CanvasSignature4");
+			var data
+			data=document.getElementById("StoreSignature4").value;
+			$sig.jSignature("setData","data:"+ data) ;
+
+			var $sig=$("#CanvasSignature5");
+			var data
+			data=document.getElementById("StoreSignature5").value;
+			$sig.jSignature("setData","data:"+ data) ;
+		}
+
+		/****************************
+			checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+				$( this ).click();
+				return false;
+				}
+			});
+		});
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		function checkAll() {
+			if (document.FormName.STD.value == '') {
+			document.FormName.STD.value = 'X';
+			document.FormName.HIV.value = 'X';
+			document.FormName.MentalHealth.value = 'X';
+			document.FormName.DevelopmentalDisability.value = 'X';
+			document.FormName.SubstanceAbuse.value = 'X';
+			}
+			else {
+			document.FormName.STD.value = '';
+			document.FormName.HIV.value = '';
+			document.FormName.MentalHealth.value = '';
+			document.FormName.DevelopmentalDisability.value = '';
+			document.FormName.SubstanceAbuse.value = '';
+			}
+		}
+</script>
+
+</head>
+<body onload="startUp(); loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<img id="BGImage1" src="">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctorX" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<!-- Hidden input for storing Signature data -->
+<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+<input type="hidden" name="StoreSignature2" id="StoreSignature2" value="">
+<input type="hidden" name="StoreSignature3" id="StoreSignature3" value="">
+<input type="hidden" name="StoreSignature4" id="StoreSignature4" value="">
+<input type="hidden" name="StoreSignature5" id="StoreSignature5" value="">
+
+<!-- All textfields/checkboxes/textareas go here... -->
+<!-- Physician Information -->
+<input name="CurrentProviderDoctor1" id="CurrentProviderDoctor1" type="text" class="noborder" style="position:absolute; left:110px; top:228px; width:690px; font-family:sans-serif; font-size:16px; background:transparent;">
+<input name="clinic_addressLineFull" id="clinic_addressLineFull" type="text" class="noborder" style="position:absolute; left:110px; top:250px; width:690px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=clinic_addressLineFull>
+<input name="Clinic_Email" id="Clinic_Email" type="text" class="noborder" style="position:absolute; left:170px; top:272px; width:630px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="clinic_phone" id="clinic_phone" type="text" class="noborder" style="position:absolute; left:250px; top:296px; width:550px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=clinic_phone>
+<input name="Clinic_website" id="Clinic_website" type="text" class="noborder" style="position:absolute; left:190px; top:318px; width:610px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- Communication Format -->
+<input name="EMail" id="EMail" type="text" class="Xbox box1" style="left:40px; top:375px;"
+	onclick="
+			if(document.getElementById('EMail').value != 'X') {
+				document.FormName.subject.value += 'Email, ';
+			}
+			else {
+				document.FormName.subject.value = document.FormName.subject.value.replace('Email, ','');
+			}">
+
+<input name="TextMsg" id="TextMsg" type="text" class="Xbox box1" style="left:40px; top:408px;"
+	onclick="
+			if(document.getElementById('TextMsg').value != 'X') {
+				document.FormName.subject.value += 'TextMsg, ';
+			}
+			else {
+				document.FormName.subject.value = document.FormName.subject.value.replace('TextMsg, ','');
+			}">
+
+<input name="SocialMedia" id="SocialMedia" type="text" class="Xbox box1" style="left:40px; top:440px;"
+	onclick="
+			if(document.getElementById('SocialMedia').value != 'X') {
+				document.FormName.subject.value += 'SocialMedia, ';
+			}
+			else {
+				document.FormName.subject.value = document.FormName.subject.value.replace('TextMsg, ','');
+			}">
+<input name="SocialMedia_text" id="SocialMedia_text" type="text" class="noborder" style="position:absolute; left:200px; top:440px; width:600px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<input name="Other_Media" id="Other_Media" type="text" class="Xbox box1" style="left:40px; top:472px;"
+	onclick="
+			if(document.getElementById('Other_Media').value != 'X') {
+				document.FormName.subject.value += 'Other, ';
+			}
+			else {
+				document.FormName.subject.value = document.FormName.subject.value.replace('Other, ','');
+			}">
+<input name="Other_Media_text" id="Other_Media_text" type="text" class="noborder" style="position:absolute; left:160px; top:472px; width:640px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<input name="VideoConf" id="VideoConf" type="text" class="Xbox box1" style="left:425px; top:375px;"
+	onclick="
+			if(document.getElementById('VideoConf').value != 'X') {
+				document.FormName.subject.value += 'VideoConf, ';
+			}
+			else {
+				document.FormName.subject.value = document.FormName.subject.value.replace('VideoConf, ','');
+			}">
+
+<input name="WebsitePortal" id="WebsitePortal" type="text" class="Xbox box1" style="left:425px; top:408px;"
+	onclick="
+			if(document.getElementById('WebsitePortal').value != 'X') {
+				document.FormName.subject.value += 'WebsitePortal, ';
+			}
+			else {
+				document.FormName.subject.value = document.FormName.subject.value.replace('WebsitePortal, ','');
+			}">
+<input name="WebsitePortal_text" id="WebsitePortal_text" type="text" class="noborder" style="position:absolute; left:540px; top:408px; width:260px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- Patient label -->
+<input name="PatientName" id="PatientName" type="text" class="noborder" style="position:absolute; left:150px; top:710px; width:650px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=patient_name>
+
+<input name="Patient_1_Line_Address" type="text" class="noborder" style="position:absolute; left:150px; top:742px; width:650px; font-family:sans-serif; font-size:16px; background:transparent;" oscardb=addressLine>
+
+<input name="phone" type="text" class="noborder" style="position:absolute; left:175px; top:774px; width:625px; font-family:sans-serif; font-size:16px; background:transparent;" oscardb=phone>
+
+<input name="cell" type="text" class="noborder" style="position:absolute; left:175px; top:806px; width:625px; font-family:sans-serif; font-size:16px; background:transparent;" oscardb=cell>
+
+<input name="email" type="text" class="noborder" style="position:absolute; left:215px; top:838px; width:585px; font-family:sans-serif; font-size:16px; background:transparent;" oscardb=email>
+
+<input name="Other_Acct_Info" type="text" class="noborder" style="position:absolute; left:515px; top:870px; width:285px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- Signature script 1 -->
+<div name="PatientSignature1" id="CanvasSignature1" class="sig" style="position:absolute; left:150px; top:885px; width:270px; height:45px; background:transparent;">
+<input value="Clear Sig" name="ClearButton1" id="ClearButton1" type="button" class="DoNotPrint" style="position:absolute; left:660px; top:15px; color:green;" onclick="clearSig1();"> 
+</div>
+<input name="today1" id="today1" type="text" class="noborder" style="position:absolute; left:480px; top:903px; width:320px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=today>
+
+<!-- Witness script -->
+<div name="WitnessSignature" id="CanvasSignature2" class="sig" style="position:absolute; left:150px; top:930px; width:270px; height:45px; background:transparent;">
+<input value="Clear Sig" name="ClearButton2" id="ClearButton2" type="button" class="DoNotPrint" style="position:absolute; left:660px; top:5px; color:green;" onclick="clearSig2();"> 
+</div>
+<input name="today2" id="today2" type="text" class="noborder" style="position:absolute; left:480px; top:935px; width:320px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=today>
+<textarea name="Witness" id="Witness" type="text" class="noborder" style="position:absolute; left:40px; top:980px; width:380px; height:22px; resize:none; font-family:sans-serif; font-size:16px; background:transparent;" value="">Witness: </textarea>
+</div>
+<!-- End of Page 1 -->
+
+<div id="page2" style="page-break-after:always; position:relative;">
+<img id="BGImage2" src="" width="850px;">
+
+<input name="CheckAll" id="CheckAll" type="button" class="DoNotPrint" style="position:absolute; left:660px; top:579px; color:green;" onclick="checkAll();" value="Check All">
+		
+<!-- Sensitive Info Exclusions -->
+<input name="STD" id="STD" type="text" class="Xbox box2" style="left:445px; top:579px;">
+<input name="HIV" id="HIV" type="text" class="Xbox box2" style="left:445px; top:595px;">
+<input name="MentalHealth" id="MentalHealth" type="text" class="Xbox box2" style="left:445px; top:612px;">
+<input name="DevelopmentalDisability" id="DevelopmentalDisability" type="text" class="Xbox box2" style="left:445px; top:628px;">
+<input name="SubstanceAbuse" id="SubstanceAbuse" type="text" class="Xbox box2" style="left:445px; top:644px;">
+<input name="Other_Restriction" id="Other_Restriction" type="text" class="Xbox box2" style="left:445px; top:661px;">
+<input name="Other_Restriction_text" id="Other_Restriction_text" type="text" class="noborder" style="position:absolute; left:560px; top:658px; width:240px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- Patient Initial 1 -->
+<div name="PatientInitial1" id="CanvasSignature3" class="sig" style="position:absolute; left:655px; top:1030px; width:165px; height:45px; background:transparent;">
+<input value="Clear Sig" name="ClearButton3" id="ClearButton3" type="button" class="DoNotPrint" style="position:absolute; left:175px; top:0px; color:green;" onclick="clearSig3();"> 
+</div>
+</div>
+<!-- End of Page 2 -->
+
+<div id="page3" style="page-break-after:always; position:relative;">
+<img id="BGImage3" src="" width="850px;">
+
+<!-- Signature script 2 -->
+<div name="PatientSignature2" id="CanvasSignature4" class="sig" style="position:absolute; left:140px; top:545px; width:350px; height:60px; background:transparent;">
+<input value="Clear Sig" name="ClearButton4" id="ClearButton4" type="button" class="DoNotPrint" style="position:absolute; left:360px; top:15px; color:green;" onclick="clearSig4();"> 
+</div>
+<input name="today3" id="today3" type="text" class="noborder" style="position:absolute; left:90px; top:620px; width:320px; font-family:sans-serif; font-size:16px; background:transparent;" oscarDB=today>
+
+<!-- Patient Initial 2 -->
+<div name="PatientInitial2" id="CanvasSignature5" class="sig" style="position:absolute; left:655px; top:1005px; width:165px; height:45px; background:transparent;">
+<input value="Clear Sig" name="ClearButton5" id="ClearButton5" type="button" class="DoNotPrint" style="position:absolute; left:175px; top:0px; color:green;" onclick="clearSig5();"> 
+</div>
+</div>
+<!-- End of Page 3 -->
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:relative; left:40px; top:0px;">
+	<table><tr><td style="background: #e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();"> 			
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="printSubmit();">
+	</td></tr></table><br>
+</div>
+
+</form>
+
+<script type="text/javascript">
+	Calendar.setup( { inputField :"today1", ifFormat : "%Y-%m-%d", showsTime:false, button : "today1" } );
+	Calendar.setup( { inputField :"today2", ifFormat : "%Y-%m-%d", showsTime:false, button : "today2" } );
+	Calendar.setup( { inputField :"today3", ifFormat : "%Y-%m-%d", showsTime:false, button : "today3" } );
+</script>
+
+</body></html>

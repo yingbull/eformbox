@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Ontario Outpatient Lab Requisition eForm" >
+<meta name="keywords" content="Standard, Lab, Outpatient, Requisition">
+<meta name="robots" content="nofollow">
+<!-- author Peter Hutten-Czapski, many others in the community -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty. -->
+
+<!-- V10 -changed form background to 2019/05 -->
+<!-- V11 -added tickler setting -->
+<!-- V12 -added costing per Lifelabs and OHIP schedule  -->
+<!-- V13 -jQuery to 2.2.1 -->
+<!-- V14 -moved code to lab.js -->
+<!-- V15 -reverted some 14 code -->
+<!-- added Rheumatology sets -->
+<!-- paste to encounter -->
+<!-- check if out of province code -->
+<!-- HTML5 validation -->
+<!-- added back in consult_sig_xxx.png signatures -->
+<!-- MFOUT support -->
+
+<title>Lab Requisition Ministry Health Long Term Care</title>
+
+   <style>
+        input[type="text"], textarea {
+			border : 0px;
+			background: transparent;
+			overflow: hidden;
+			font-family:sans-serif;
+        }
+        .doublesp {
+			letter-spacing: 7.6px;
+        }
+        .x, .y {
+			position: absolute;
+			width:14px;
+			height:14px; 
+			font-weight:bold; 
+			text-align:center;
+        }
+        .prior {
+			position: absolute;
+			height: 10px;
+			font-size: 9px;
+			text-align:left;
+        }
+		.h15 {
+			position: absolute;
+			height:15px;
+			font-size:12px;
+		}
+		.h19 {
+			position: absolute;
+			height:19px;
+			font-size:16px;
+		}
+    </style>
+    <style media="print">
+        .DoNotPrint {
+                display: none;
+        }
+        @media print {
+        ::-webkit-input-placeholder { /* WebKit browsers */
+                color: transparent;
+        }
+        ::-moz-placeholder { /* Mozilla Firefox 19+ */
+                color: transparent;
+        }
+        }
+    </style>
+<!-- Optional Decision Support Script --> 
+<script src="${oscar_image_path}labDecisionSupport.js"></script>
+
+ <!-- main calendar program -->
+<script src="../share/calendar/calendar.js"></script>
+<script src="../share/calendar/lang/calendar-en.js"></script>
+<script src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" >
+
+
+<!-- jQuery for greater functionality -->
+<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous" ></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.12.3.js">< \/script>') </script>
+<!-- fax control scripts -->  
+<script src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+
+<!-- xBox scripts -->
+<script>
+function flip(x){
+    if (document.getElementById(x).value == '') {
+        document.getElementById(x).value = 'X';
+    } else {
+        document.getElementById(x).value = '';
+    }
+    updateTests();
+}
+
+function key(evt,x) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    // any key press except tab will constitute a value change to the checkbox
+    if (charCode != 9){
+        flip(x);
+        return false;
+    }
+}
+
+function checkGender(){
+	// full M F and O U T support
+     document.getElementById('Male').value = '';
+     document.getElementById('Female').value = '';
+     if (document.getElementById('PatientGender').value == 'M'){
+		document.getElementById('Male').value = 'X';
+     }else if (document.getElementById('PatientGender').value == 'F'){
+		document.getElementById('Female').value = 'X';
+     }else {
+		document.getElementById('otherGender').value = document.getElementById('PatientGender').value;
+	 }
+ }
+</script>
+
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script>
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+
+function setDirtyFlag(){
+    needToConfirm = true;
+}
+
+function releaseDirtyFlag(){
+    needToConfirm = false;
+	if (document.getElementById("subject").value.length==0){document.getElementById("subject").value=document.getElementById("tests").value;}
+}
+
+window.onbeforeunload = confirmExit;
+
+function confirmExit(){
+     if (needToConfirm){
+         return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+     }
+}
+
+</script>
+<script>
+function SignForm2() {
+	//stamp by delegation model 
+	var provNum = '';
+	var userBillingNo = document.getElementById('user_ohip_no').value;
+	if (parseInt(userBillingNo) > 100) {
+		// then a valid billing number so use the current user id 
+		provNum = document.getElementById('user_id').value; 
+		if (provNum != document.getElementById('doctor_no').value && !!document.getElementById('doctor')) {
+			document.getElementById('doctor').value=document.getElementById('CurrentUserName').value + ' CC: ' + document.getElementById('doctor').value;
+		}
+	} else { 
+		provNum = document.getElementById('doctor_no').value; 
+	}
+	document.getElementById('Stamp').src = '../eform/displayImage.do?imagefile=consult_sig_'+provNum+'.png';
+}
+function toggleMe(){
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		SignForm2()
+	} else {
+		document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile=BNK.png";
+	}
+}
+</script>
+<script>
+
+function formPrint(){
+    window.print();
+}
+
+function add(x,test){
+    if (document.getElementById(x).value.indexOf(test)==-1){
+            document.getElementById(x).value += test
+    }
+}
+
+function checkProvider(){
+    // Check who has opened the eForm
+    if ((document.getElementById('user_ohip').value.length<1) || (document.getElementById('user_ohip').value<1000)){
+        // the form is being filled by someone on the doctors authority
+            document.lab.txtPhysicianNumber.value = document.lab.PatientMDsOHIP.value;
+            document.lab.physician.value = document.lab.PatientMD.value;
+            document.lab.txtPhysicianNumber.value = document.lab.PatientMDsOHIP.value;
+        
+    }
+    if (document.lab.physician.value != document.lab.PatientMD.value) {
+        // add and highlight the option to cc to the doctor on record
+        document.getElementById('CCMD1').innerHTML += "<input type='checkbox' name='md1' id='md1' title=document.lab.PatientMD.value \
+        onClick=\"\
+        document.lab.CopyTo.value +=  document.lab.PatientMD.value + ' Dr\\\n';\
+        document.lab.chkCopyToPhysician.value='X';\
+        \">Copy to Patients Doctor<br>";
+        hilite('CCMD1');
+        document.getElementById('md1').checked=true;
+        document.lab.CopyTo.value +=  document.lab.PatientMD.value + ' Dr';
+        document.lab.chkCopyToPhysician.value='X';
+    }
+
+}
+
+function clearMe() {
+
+    for(i=0; i<document.lab.elements.length; i++){
+        if (document.lab.elements[i].value == 'X') { document.lab.elements[i].value =''; }
+        if (document.lab.elements[i].type == 'checkbox') { document.lab.elements[i].checked=false; }
+    }
+    document.getElementById('subject').value='';
+    document.getElementById('OtherTests').value='';
+    document.getElementById('Instructions').value='';
+    document.getElementById('CopyTo').value='';
+    document.getElementById('chkOHIP').value='X';
+    checkGender();
+    localise();
+}
+
+    var pi="INSTRUCTIONS: ";
+    var fa="Nothing to eat or drink, except for water, for 10 hours prior to the test. ";
+    var dr="Take your medication AFTER getting your blood drawn. ";
+
+function localise(){
+
+    if ((document.lab.txtPhysicianPostCode.value=='P0J 1K0')||(document.lab.txtPhysicianPostCode.value=='P0J 1P0') ){
+        checkProvider();
+        document.getElementById('LOCAL1').innerHTML ="<input type='checkbox' name='DMclinicCopy' id=name='DMclinicCopy'\
+        onClick=\"\
+        add('CopyTo','Temiskaming Diabetes Clinic\\\nFax 705-647-8766\\\n');\
+        document.lab.chkCopyToPhysician.value='X';\
+            \">Copy to Diabetes Clinic<br>\
+            <input type='checkbox' name='legerCopy'\
+        onClick=\"\
+        add('CopyTo','Leger-Nolet, Celine Dr\\\n Temiskaming Hospital New Liskeard Ontario P0J 1P0\\\n');\
+        document.lab.chkCopyToPhysician.value='X';\
+               \">Copy to Dr Leger<br>\
+            <input type='checkbox' name='bariatricCopy'\
+        onClick=\"\
+        add('CopyTo','Bariatric Clinic Health Sciences North,\\\n41 Ramsey Lake Rd, Sudbury, ON P3E 5J1\\\nFax 705-671-5635\\\n');\
+        document.lab.chkCopyToPhysician.value='X';\
+               \">Copy to Bariatric Clinic<br>\
+        <input type='checkbox' name='localfax'\
+        onClick=\"\  document.getElementById('otherFaxInput').value='905-795-9891';\
+               \">Toronto fax \
+            <input type='checkbox' name='stat'\
+        onClick=\"\  add('Instructions','***STAT*** ');document.getElementById('otherFaxInput').value='705-647-1020';\
+               \">STAT<br>";
+        setTimeout('document.getElementById("otherFaxInput").value="705-647-1020"',1000);
+    }
+
+}
+
+function Start() {
+	SignForm2();
+    checkGender();
+    localise();
+	decisionSupport();
+    if ('ON' != document.getElementById('txtPatientProv').value){
+		document.getElementById("PR").value = document.getElementById('txtPatientProv').value;
+		document.getElementById("OtherProvHIN").value = document.getElementById("txtPatientHCN").value;
+		document.getElementById("txtPatientHCN").style.visibility = "hidden"; 
+    } else if(document.getElementById("txtPatientHCN").value.length > 0) {
+		document.getElementById("chkOHIP").value = "X";	 
+	}
+	textAreaAdjust(document.getElementById("searchbox"));
+	textAreaAdjust(document.getElementById("searchboxRx"));
+}
+
+function textAreaAdjust(element) {
+    element.style.height = "1px";
+    element.style.height = (10 + element.scrollHeight) + "px";
+}
+
+
+	/*** set Tickler reminder for future date (aka loop closer) ***/
+	Date.prototype.addDays = function(days) {
+		var dat = new Date(this.valueOf());
+		dat.setDate(dat.getDate() + days);
+		return dat;
+	}
+
+	Date.prototype.addMonths = function(months) {
+		var dat = new Date(this.valueOf());
+		dat.setMonth(dat.getMonth() + months);
+		return dat;
+	}
+
+	function addMonths(months) {
+		var d = new Date();
+		d = d.addMonths(months);
+		var mth = ((d.getMonth()+1)<10)? ("0"+(d.getMonth()+1)) : (d.getMonth()+1);
+		var day =  d.getDate() > 10 ? d.getDate() : ("0" + d.getDate());
+		var newD = d.getFullYear() + "-" + mth + "-" + day;
+		document.lab.Tickler_date.value = newD;
+	}
+
+	function addDays(numDays) {
+		var d = new Date();
+		d = d.addDays(numDays);
+		var mth = ((d.getMonth()+1)<10)? ("0"+(d.getMonth()+1)) : (d.getMonth()+1);
+		var day =  d.getDate() > 10 ? d.getDate() : ("0" + d.getDate());
+		var newD = d.getFullYear() + "-" + mth + "-" + day;
+		document.lab.Tickler_date.value = newD;
+	}
+
+	ticklerReminder = function() {
+		var patient_id = document.getElementById('patient_id').value;
+		var user_id = document.getElementById('current_user_id').value;
+		var ticklerDate = $( '#Tickler_date' ).val();
+		var ticklerMsg = "Review labs. " + $( '#Tickler_msg' ).val();
+
+		sendTickler(patient_id, ticklerMsg, user_id, ticklerDate);
+
+		if (ticklerDate == '') {
+			return("ERROR: Tickler reminder date is blank.  Please correct before proceeding.");
+		}
+	} 
+
+	sendTickler = function(demographicNo, message, taskAssignedTo, ticklerDate) {
+		var ticklerToSend = {};
+
+		ticklerToSend.demographicNo = demographicNo;
+		ticklerToSend.message = message;
+		ticklerToSend.taskAssignedTo = taskAssignedTo;
+		ticklerToSend.serviceDate = ticklerDate ;
+
+	jQuery.ajax( {
+		type: "POST",
+		url:  '../ws/rs/tickler/add',
+		dataType:'json',
+		contentType:'application/json',
+		data: JSON.stringify(ticklerToSend),
+		success: processTicklerCallBack
+		});
+	}
+
+	processTicklerCallBack = function(data) {
+		if(data.success) {
+			alert("Lab reminder Tickler created and assigned to you.");
+		} else {
+			alert("ERROR: Tickler failed. Please create tickler manually.");
+		}
+	}
+
+	calculateTicklerDays = function() {
+		if(jQuery.trim($('#Tickler_date').val()).length > 0) {
+		// calculate future date for Tickler
+			var t = new Date(); // today
+			var d = new Date(Date.parse(jQuery.trim($('#Tickler_date').val()))); // chosen date or (today + add) - days
+			var i = ((Math.floor((d - t)/(1000 * 60 * 60 * 24))) +2); // days forward from today
+			d.setDate(d.getDate());
+			$( "#Tickler_date" ).val(d.toISOString().substring(0,10));
+			var NewTickler = document.getElementById('Tickler_date').value;
+			alert("Once you click Set Tickler button, a reminder will be set for " + i + " day(s) from today.  Expect Lab result(s) by " +  $( '#Tickler_date' ).val() + ". Click the Set Tickler button to create reminder now.");
+		}
+	}
+		function xTests() {
+			var inputNames = "";
+			var inputs = document.querySelectorAll("input.x");	// an STATIC array of elements
+			for (i = 0, len = inputs.length; i < len; i++) {
+				if (inputs[i].value == 'X'){
+					inputNames += inputs[i].name + ", ";
+					}
+			}
+            return inputNames;			
+
+		}
+        function updateTests(){
+            var daTests = xTests() + document.getElementById("OtherTests").value;
+			if(daTests.length > 2 && daTests.substring(daTests.length -2) == ", ") {  
+				daTests = daTests.substring(0, daTests.length -2); 
+			}
+			document.getElementById("tests").value = daTests;
+            return daTests;
+        }
+        function copyTestsToEncounter(){
+            copyToEncounter(updateTests());    
+
+        }
+		function copyToEncounter(text) {
+			  try {
+				if( window.parent.opener.document.forms["caseManagementEntryForm"] != undefined ) {
+					window.parent.opener.pasteToEncounterNote(text);
+				  }else if( window.parent.opener.document.encForm != undefined ){
+					window.parent.opener.document.encForm.enTextarea.value = window.parent.opener.document.encForm.enTextarea.value + text;
+				  }else if( window.parent.opener.document.getElementById(noteEditor) != undefined ){
+					window.parent.opener.document.getElementById(noteEditor).value = window.parent.opener.document.getElementById(noteEditor).value + text;
+				  }else if(window.parent.opener.parent.opener.document.forms["caseManagementEntryForm"] != undefined){
+					  window.parent.opener.parent.opener.pasteToEncounterNote(text);
+				  }else if( window.parent.opener.parent.opener.document.encForm != undefined ){
+					window.parent.opener.parent.opener.document.encForm.enTextarea.value = window.parent.opener.parent.opener.document.encForm.enTextarea.value + text;
+				  }else if( window.parent.opener.parent.opener.document.getElementById(noteEditor) != undefined ){
+					window.parent.opener.parent.opener.document.getElementById(noteEditor).value = window.parent.opener.parent.opener.document.getElementById(noteEditor).value + text;
+					}
+			} catch(e) {
+				alert(text + " could not be copied to the encounter note.");
+			}
+		}
+
+</script>
+
+
+<link rel="stylesheet" href="${oscar_image_path}autoComplete.css">
+</head>
+
+<body onload="Start();">
+<img id='BGImage' alt="lab" src="${oscar_image_path}4422-84v11.png" style="position: absolute; left: 0px; top: 0px; width:750px">
+<form method="post" action="" name="lab" id="lab" >
+
+
+<!-- ********************* All textfields/checkboxes/textareas go here...****** -->
+<input type="hidden" name="today" id="today" oscarDB=today>
+<input type="hidden" name="PatientMD" id="PatientMD" oscarDB=doctor>
+<input type="hidden" name="PatientMDsOHIP" id="PatientMDsOHIP" oscarDB=doctor_ohip_no>
+<input type="hidden" name="PatientAge" id="PatientAge" oscarDB=age>
+<input type="hidden" name="curr_user" id="curr_user" oscarDB=current_user>
+<input type="hidden" name="user_ohip" id="user_ohip" oscarDB=current_user_ohip_no>
+<input type="hidden" name="user_cpsid" id="user_cpsid" oscarDB=current_user_cpsid>
+
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+<input type="hidden" name="user_id" id="user_id" oscarDB=current_user_id>
+<input type="hidden" name="user_ohip_no" id="user_ohip_no" oscarDB=current_user_ohip_no>
+<input type="hidden" name="doctor_no" id="doctor_no" oscarDB=doctor_provider_no>
+
+<input name="m$TDP#value" id="m$TDP#value" type="hidden" oscarDB=m$TDP#value>
+<!-- *********************** Extra  Lab Grid Code   ****** -->
+<input name="TSHvalue" id="TSHvalue" type="hidden"  oscarDB=m$TSH#value>
+<input name="TSHdate" id="TSHdate" type="hidden"  oscarDB=m$TSH#dateObserved>
+<input name="ACRvalue" id="ACRvalue" type="hidden"  oscarDB=m$ACR#value>
+<input name="TCHLvalue" id="TCHLvalue" type="hidden"  oscarDB=m$TCHL#value>
+<input name="HDLvalue" id="HDLvalue" type="hidden"  oscarDB=m$HDL#value>
+
+<input name="BP" id="BP" type="hidden" oscarDB=m$BP#value>a
+<input name="dailySmokes" id="dailySmokes" type="hidden" oscarDB=m$NOSK#value>
+<input name="smoker" id="smoker" type="hidden" oscarDB=m$SMK#value>
+
+<input name="m$FRAM#value" id="m$FRAM#value" type="hidden"  oscarDB=m$FRAM#value>
+<input name="m$FRAM#dateObserved" id="m$FRAM#dateObserved" type="hidden"  oscarDB=m$FRAM#dateObserved>
+
+<input type="hidden" name="history" id="history"  oscarDB=Reminders>
+
+<input type="hidden" name="Meds" id="Meds"  oscarDB=druglist_generic>
+<input type="hidden" name="counter" id = "counter" >
+<input type="hidden" name="history1" id="history1"  oscarDB=OngoingConcerns>
+<input type="hidden" name="history2" id="history2"  oscarDB=Medical_History>
+<input type="hidden" name="history3" id="history3"  oscarDB=Other_Medications_History>
+<input type="hidden" name="history4" id="history4"  oscarDB=Social_Family_History>
+
+<input type="hidden" name="dxlist" id="dxlist"  oscarDB=dxregistry>
+<input type="hidden" name="OHIPlist" id="OHIPlist"  oscarDB=OHIPdxCode>
+
+<!-- ****** Hidden inputs needed for Tickler generator (loop closer) ******** -->
+<input type="hidden" name="patient_id" id="patient_id" oscarDB=patient_id >
+<input type="hidden" name="current_user_id" id="current_user_id" oscarDB=current_user_id >
+
+<!-- **********  Main Lab Page ******************-->
+
+
+
+<div id="LabPage" style="font-family:sans-serif; font-style:normal; font-weight:normal; text-align:left; font-size:9px;">
+
+            <input name="physician" id="physician" type="text" class="noborder h19" style="left:26px; top:86px; width:265px;" oscarDB=current_user >
+            <input name="txtPhysicianAddress" id="txtPhysicianAddress" type="text" class="noborder h15" style="left:26px; top:119px; width:265px;" oscarDB=clinic_addressLine >
+            <input name="txtPhysicianCity" id="txtPhysicianCity" type="text" class="noborder h15" style="left:26px; top:137px; width:161px;" oscarDB=clinic_city >
+            <input name="txtPhysicianProvince" id="txtPhysicianProvince" type="text" class="noborder h15" style="left:180px; top:137px; width:101px;" oscarDB=clinic_province >
+            <input name="txtPhysicianPostCode" id="txtPhysicianPostCode" type="text" class="noborder h15" style="left:26px; top:155px; width:106px;" oscarDB=clinic_postal >
+            <span id="faxLabel" class="noborder h15" style="left:180px; top:155px; width:106px;">Fax:</span>
+            <input name="txtPhysicianFax" id="txtPhysicianFax" type="text" class="noborder h15" style="left:210px; top:155px; width:106px;" oscarDB=clinic_fax >
+            <input name="txtPhysicianNumber" id="txtPhysicianNumber" type="text" class="noborder h15" style="left:36px; top:186px; width:150px;" oscarDB=current_user_ohip_no >
+            <input name="txtCPSONumber" id="txtCPSONumber" type="text" class="noborder h15" style="left:183px; top:186px; width:104px;" oscarDB=current_user_cpsid >
+            <input name="chkOHIP" id="chkOHIP" type="text" class="noborder y" style="left:21px; top:220px;" onmousedown="flip(this.id)">
+            <input name="chkThirdParty" id="chkThirdParty" type="text" class="noborder y" style="left:109px; top:220px;" onmousedown="flip(this.id)">
+            <input name="chkWSIB" id="chkWSIB" type="text" class="noborder y" style="left:243px; top:220px;" onmousedown="flip(this.id)">
+            <textarea name="clinical" id="clinical"  wrap="soft" class="noborder" style="position:absolute; left:25px; top:248px; width:264px; height:52px;" ></textarea>
+            <input name="chkCopyToPhysician" id="chkCopyToPhysician" type="text" class="noborder y" style="left:22px; top:301px;" onmousedown="flip(this.id)" >
+            <input type="text" name="referral_name" id="referral_name" class="h15" onKeyup="consultantSearch(this.value)" placeholder="lastname, firstname" autocomplete="off" onFocus="toggleTempBin(1, 'referral_name')" onBlur="toggleTempBin(0, 'referral_name')" style="width:270px; left:23px; top:323px;">
+            <input type="hidden" name="consultantFilter" id="consultantFilter">
+            <div id="tempBin" onmouseover="tempBinHover(true)" onmouseout="tempBinHover(false)" style="display:none;position:absolute;padding:4px; background-color:white;border:thin solid #cccccc;z-index:999;font-size:12px;">You must enter at least 2 characters of a doctors name!</div>
+            <textarea name="CopyTo" id="CopyTo" class="noborder" style="position:absolute; left:23px; top:348px; width:270px; height:40px; font-size: 10px;" ></textarea>
+            <input name="txtPhysicianPhone" id="txtPhysicianPhone" type="text" class="noborder h15" style="left:298px; top:154px; width:256px;" oscarDB=doctor_work_phone>
+            <input name="txtPatientHCN" id="txtPatientHCN" type="text" class="noborder doublesp h19" style="left:299px; top:185px; width:198px; text-align:left;" oscarDB=hinc >
+            <input name="txtPatientHCNVersion" id="txtPatientHCNVersion" type="text" class="noborder h19" style="left:476px; top:185px; width:30px; text-align:center;" oscarDB=hinversion >
+
+            <input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+			<input name="otherGender" id="otherGender" type="text" class="noborder" style="position: absolute; left:530px; top:172px; width:50px;">
+            <input name="Male" id="Male" type="text" class="noborder y" style="left:512px; top:190px;" onclick="flip(this.id)">
+            <input name="Female" id="Female" type="text" class="noborder y" style="left:548px; top:190px;" onclick="flip(this.id)">
+            <input name="txtPatientDOB" id="txtPatientDOB" type="text" class="noborder doublesp h15" style="left:583px; top:191px; width:140px; text-align:center;" oscarDB=dobc2 >
+            <input name="PR" id="PR" type="text" class="noborder h19" style="left:297px; top:215px; width:33px">
+            <input name="OtherProvHIN" id="OtherProvHIN" type="text" class="noborder doublesp h19" style="left:333px; top:215px; width:213px;">
+            <input name="txtPatientPhone" id="txtPatientPhone" type="text" class="noborder h19" style="left:549px; top:215px; width:173px;" oscarDB=phone >
+            <input name="txtPatientLastName" id="txtPatientLastName" type="text" class="noborder doublesp h19" style="left:297px; top:249px; width:425px;" oscarDB=patient_nameL >
+            <input name="txtPatientFirstName" id="txtPatientFirstName" type="text" class="noborder doublesp h19" style="left:297px; top:280px; width:207px;" oscarDB=patient_nameF >
+            <input name="txtPatientMiddleName" id="txtPatientMiddleName" type="text" class="noborder doublesp h15" style="left:514px; top:280px; width:208px;"  oscarDB=patient_nameM>
+            <input name="txtPatientAddress" id="txtPatientAddress" type="text" class="noborder h15" style="left:298px; top:313px; width:284px;" oscarDB=address_street_number_and_name>
+            <input name="txtPatientCity" id="txtPatientCity" type="text" class="noborder h15" style="left:298px; top:332px; width:211px;" oscarDB=city>
+            <input name="txtPatientProv" id="txtPatientProv" type="text" class="noborder h15" style="left:298px; top:350px; width:98px;" oscarDB=province>
+            <input name="txtPatientPostCode" id="txtPatientPostCode" type="text" class="noborder h15" style="left:401px; top:350px; width:108px;" oscarDB=postal>
+            <textarea name="Instructions" id="Instructions" wrap="soft" class="noborder" style="position: absolute; left: 490px; top: 300px; width: 242px; height: 96px; font-size: 16px; " ></textarea>
+            <!-- lab tests start -->
+            <input name="Glucose" id="Glucose" type="text" class="noborder x" style="left:22px; top:417px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="GlucoseRandom" id="GlucoseRandom" type="text" class="noborder x" style="left:137px; top:417px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="GlucoseFasting" id="GlucoseFasting" type="text" class="noborder x" style="left:214px; top:417px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="HbA1C" id="HbA1C" type="text" class="noborder x" style="left:22px; top:433px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="A1Cvalue" id="A1Cvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:436px; width:30px;" oscarDB=m$A1C#value>
+            <input name="A1Cdate" id="A1Cdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:436px; width:48px;" oscarDB=m$A1C#dateObserved>
+            <input name="Creatinine" id="Creatinine" type="text" class="noborder x" style="left:22px; top:448px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="eGFRvalue" id="eGFRvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:451px; width:30px;" oscarDB=m$EGFR#value>
+            <input name="eGFRdate" id="eGFRdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:451px; width:48px;" oscarDB=m$EGFR#dateObserved>
+            <input name="UricAcid" id="UricAcid" type="text" class="noborder x" style="left:22px; top:463px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="URICvalue" id="URICvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:466px; width:30px;" oscarDB=m$URIC#value>
+            <input name="URICdate" id="URICdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:466px; width:48px;" oscarDB=m$URIC#dateObserved>
+            <input name="Sodium" id="Sodium" type="text" class="noborder x" style="left:22px; top:478px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Naplvalue" id="Naplvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:481px; width:30px;" oscarDB=m$Napl#value>
+            <input name="Napldate" id="Napldate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:481px; width:48px;" oscarDB=m$Napl#dateObserved>
+            <input name="Potassium" id="Potassium" type="text" class="noborder x" style="left:22px; top:493px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Kplvalue" id="Kplvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:496px; width:30px;" oscarDB=m$Kpl#value>
+            <input name="Kpldate" id="Kpldate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:496px; width:48px;" oscarDB=m$Kpl#dateObserved>
+            <input name="ALT" id="ALT" type="text" class="noborder x" style="left:22px; top:508px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="ALTvalue" id="ALTvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:511px; width:30px;" oscarDB=m$ALT#value>
+            <input name="ALTdate" id="ALTdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:511px; width:48px;" oscarDB=m$ALT#dateObserved>
+            <input name="ALP" id="ALP" type="text" class="noborder x" style="left:22px; top:523px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="ALPvalue" id="ALPvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:526px; width:30px;" oscarDB=m$ALP#value>
+            <input name="ALPdate" id="ALPdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:526px; width:48px;" oscarDB=m$ALP#dateObserved>
+            <input name="Bilirubin" id="Bilirubin" type="text" class="noborder x" style="left:22px; top:538px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="BILIvalue" id="BILIvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:541px; width:30px;" oscarDB=m$BILI#value>
+            <input name="BILIdate" id="BILIdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:541px; width:48px;" oscarDB=m$BILI#dateObserved>
+            <input name="Albumin" id="Albumin" type="text" class="noborder x" style="left:22px; top:553px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="ALBvalue" id="ALBvalue" type="text" class="noborder DoNotPrint prior" style="left:150px; top:556px; width:30px;" oscarDB=m$ALB#value>
+            <input name="ALBdate" id="ALBdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:556px; width:48px;" oscarDB=m$ALB#dateObserved>
+            <input name="Lipids" id="Lipids" type="text" class="noborder x" style="left:22px; top:583px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="TCHLdate" id="TCHLdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:601px; width:48px;" oscarDB=m$TCHL#dateObserved>
+            <input name="ACR" id="ACR" type="text" class="noborder x" style="left:22px; top:613px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="ACRdate" id="ACRdate" type="text" class="noborder DoNotPrint prior" style="left:180px; top:616px; width:48px;" oscarDB=m$ACR#dateObserved>
+            <input name="Urinalysis" id="Urinalysis" type="text" class="noborder x" style="left:22px; top:628px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="NeonatalBilirubin" id="NeonatalBilirubin" type="text" class="noborder x" style="left:22px; top:643px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="txtAge" id="txtAge" type="text" class="noborder" style="position:absolute; left:96px; top:658px; width:59px; height:14px; font-size:14px; text-align:left;" >
+            <input name="txtAgeHours" id="txtAgeHours" type="text" class="noborder" style="position:absolute; left:182px; top:658px; width:64px; height:14px;">
+            <input name="txtPractitionersPhone" id="txtPractitionersPhone" type="text" class="noborder h15" style="left:164px; top:673px; width:126px;">
+            <input name="txtPatients24HrNumber" id="txtPatients24HrNumber" type="text" class="noborder h15" style="left:164px; top:688px; width:126px;">
+            <input name="DrugMonitoring" id="DrugMonitoring" type="text" class="noborder x" style="left:22px; top:703px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="DrugName1" id="DrugName1" type="text" class="noborder h15" style="left:120px; top:721px; width:169px;">
+            <input name="DrugName2" id="DrugName2" type="text" class="noborder h15" style="left:120px; top:736px; width:169px;">
+            <input name="TimeCollected_Hr" id="TimeCollected_Hr" type="text" class="noborder h15" style="left:143px; top:751px; width:39px;">
+            <input name="TimeCollected_Hr2" id="TimeCollected_Hr2" type="text" class="noborder h15" style="left:219px; top:751px; width:54px;">
+            <input name="TimeLastDose1_Hr1" id="TimeLastDose1_Hr1" type="text" class="noborder h15" style="left:143px; top:766px; width:39px">
+            <input name="TimeLastDose1_Hr2" id="TimeLastDose1_Hr2" type="text" class="noborder h15" style="left:219px; top:766px; width:54px;">
+            <input name="TimeNextDose1_Hr1" id="TimeNextDose1_Hr1" type="text" class="noborder h15" style="left:143px; top:781px; width:39px;">
+            <input name="TimeNextDose1_Hr2" id="TimeNextDose1_Hr2" type="text" class="noborder h15" style="left:219px; top:781px; width:54px;">
+            <input name="CBC" id="CBC" type="text" class="noborder x" style="left:294px; top:417px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="PTINR" id="PTINR" type="text" class="noborder x" style="left:294px; top:432px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="INRdate" id="INRdate" type="text" class="noborder DoNotPrint prior" style="left:420px; top:435px; width:48px;" oscarDB=m$INR#dateObserved>
+            <input name="PregnancyTestUrine" id="PregnancyTestUrine" type="text" class="noborder x" style="left:294px; top:462px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Mono" id="Mono" type="text" class="noborder x" style="left:294px; top:477px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Rubella" id="Rubella" type="text" class="noborder x" style="left:294px; top:492px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="PrenatalAntibody" id="PrenatalAntibody" type="text" class="noborder x" style="left:294px; top:507px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="RepeatPrenatal" id="RepeatPrenatal" type="text" class="noborder x" style="left:294px; top:537px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkMicro_Cervical" id="chkMicro_Cervical" type="text" class="noborder x" style="left:294px; top:582px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkMicro_Vaginal" id="chkMicro_Vaginal" type="text" class="noborder x" style="left:294px; top:597px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkMicro_VaginalRectalGroupBStrep" id="chkMicro_VaginalRectalGroupBStrep" type="text" class="noborder x" style="left:294px; top:612px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkMicro_Chlamydia" id="chkMicro_Chlamydia" type="text" class="noborder x" style="left:294px; top:627px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="txtMicro_Chlamydia" id="txtMicro_Chlamydia" type="text" class="noborder h15" style="left:429px; top:627px; width:79px; height:16px;">
+            <input name="chkMicro_GC" id="chkMicro_GC" type="text" class="noborder x" style="left:294px; top:642px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="txtMicro_GC" id="txtMicro_GC" type="text" class="noborder h15" style="left:402px; top:642px; width:106px">
+            <input name="chkMicro_Sputum" id="chkMicro_Sputum" type="text" class="noborder x" style="left:294px; top:657px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkMicro_Throat" id="chkMicro_Throat" type="text" class="noborder x" style="left:294px; top:673px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Strep_Link" id="Strep_Link" type="button" class="DoNotPrint" style="position:absolute; left:370px; top:673px; font-size:10px; " oscarOPEN="Strep Throat Risk" title="Modified Centor Pharyngitis Risk Score eForm" value="Strep Throat Risk">
+            <input name="chkMicro_Wound" id="chkMicro_Wound" type="text" class="noborder x" style="left:294px; top:688px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="txtMicro_Wound" id="txtMicro_Wound" type="text" class="noborder x" style="left:416px; top:688px; width:92px; height:14px;">
+            <input name="UrineCulture" id="UrineCulture" type="text" class="noborder x" style="left:294px; top:704px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="StoolCS" id="StoolCS" type="text" class="noborder x" style="left:294px; top:720px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="StoolOP" id="StoolOP" type="text" class="noborder x" style="left:294px; top:736px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkMicro_Other" id="chkMicro_Other" type="text" class="noborder x" style="left:294px; top:752px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="txtMicro_Other" id="txtMicro_Other" type="text" class="noborder" style="position:absolute; left:323px; top:767px; width:174px; height:12px;">
+            <input name="txtSpecimenCollectedTime" id="txtSpecimenCollectedTime" type="text" class="noborder h15" style="left:318px; top:838px; width:74px;">
+            <input name="txtSpecimenCollectedDate" id="txtSpecimenCollectedDate" type="text" class="noborder h15" style="position:absolute; left:422px; top:838px; width:84px;">
+            <input name="Hepatitis_Acute" id="Hepatitis_Acute" type="text" class="noborder x" style="left:510px; top:417px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Hepatitis_Chronic" id="Hepatitis_Chronic" type="text" class="noborder x" style="left:510px; top:432px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="Hepatitis_ImuneStatus" id="Hepatitis_ImuneStatus" type="text" class="noborder x" style="left:510px; top:447px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="HepA" id="HepA" type="text" class="noborder x" style="left:571px; top:458px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="HepB" id="HepB" type="text" class="noborder x" style="left:571px; top:471px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="HepC" id="HepC" type="text" class="noborder x" style="left:571px; top:485px;;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkPSA_TotalPSA" id="chkPSA_TotalPSA" type="text" class="noborder x" style="left:510px; top:538px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkPSA_FreePSA" id="chkPSA_FreePSA" type="text" class="noborder x" style="left:603px; top:538px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="PSAvalue" id="PSAvalue" type="text" class="noborder DoNotPrint prior" style="left:595px; top:555px; width:30px;" oscarDB=m$PSA#value>
+            <input name="PSAdate" id="PSAdate" type="text" class="noborder DoNotPrint prior" style="left:630px; top:555px; width:48px;" oscarDB=m$PSA#dateObserved>
+            <input name="chkPSA_Insured" id="chkPSA_Insured" type="text" class="noborder x" style="left:510px; top:567px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkPSA_Uninsured" id="chkPSA_Uninsured" type="text" class="noborder x" style="left:510px; top:580px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkVitaminD_Insured" id="chkVitaminD_Insured" type="text" class="noborder x" style="left:510px; top:616px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <input name="chkVitaminD_Uninsured" id="chkVitaminD_Uninsured" type="text" class="noborder x" style="left:510px; top:653px;" onmousedown="flip(this.id)" onkeypress="return key(event,this.id); ">
+            <textarea name="OtherTests" id="OtherTests" class="noborder" style="position:absolute; left:513px; top:686px; width:210px; height:168px; font-size:12px;" onchange="updateTests();"></textarea>
+
+			<input name="txtSignatureDate" id="txtSignatureDate" type="text" class="noborder" style="position:absolute; left:196px; top:903px; width:96px; height:21px;" oscarDB=today>
+			
+			<input type="hidden" name="signatureValue" id="signatureValue">
+	<div id="signatureDisplay" style="position:absolute; left:30px; top:870px;">
+		<img id="Stamp" alt="signature" src="../eform/displayImage.do?imagefile=BNK.png" width="150" height="40" onclick="toggleMe();">
+	</div>
+
+</div>
+
+
+<!-- ********** Side Menu Items ************************ -->
+
+<div id="LabQuickSelect" class="DoNotPrint" style="position:absolute; left:750px; top:22px; width:400px; background-color:LightYellow; border-style:solid; border-color:black; border-width:1px; font-family: sans-serif; font-size:10px;">
+
+
+<!-- **********Base Info******************* *-->
+<table style="width:100%; font-size:10px;">
+<!-- Start Column 1 -->
+<tr><td style="vertical-align:top; width:50%;">
+    <u>CONDITIONS:</u><br>
+    <textarea  name="searchbox" id="searchbox" class="noborder" style="font-size:8px; width:190px;" onblur="decisionSupport()" ></textarea><br>
+</td><td style="vertical-align:top; width:50%;">
+    <u>CURRENT MEDS:</u><br>
+    <textarea  name="searchboxRx" id="searchboxRx" class="noborder" style="font-size:8px; width:190px;" onblur="decisionSupport()"></textarea><br>
+</td></tr>
+</table>
+<!--**********Instructions & Copies ********************-->
+    <u>INSTRUCTIONS:</u><br>
+        <input type="checkbox" name="PatientCopy"
+    onClick="
+        add('CopyTo','Patient\\n');
+        document.lab.chkCopyToPhysician.value='X';
+        ">Copy to Patient
+    <input type="checkbox" name="FastingInfo"
+    onClick="
+        add('Instructions',pi);
+        add('Instructions',fa);
+    ">Fasting Instructions
+    <div id="LOCAL1" class="temiskaming">
+    </div>
+    <div id="CCMD1"></div>
+
+<table style="width:100%; font-size:10px;">
+<!-- Start Column 1 -->
+<tr><td style="vertical-align:top; width:50%;">
+
+<!--**********Therapeutic monitoring**************-->
+    <div id="DRUG1">
+    <u>THERAPEUTIC MONITORING</u><br>
+    <div id="DRUG2"> </div>
+    </div>
+
+<!--******ANEMIA******************-->
+    <div id="ANEMIA1">
+ANEMIA:<br>
+    <input type="checkbox" name="Anemia_basic"
+     onClick="
+        add('subject','Anemia ');
+        document.lab.CBC.value='X';
+        add('OtherTests','Ferritin, ');
+        updateTests();
+    ">Anemia Initial<br>
+
+    <input type="checkbox" name="Anemia_advanced"
+     onClick="
+        add('subject','Anemia ');
+        document.lab.CBC.value='X';
+        document.lab.ALT.value='X';
+        document.lab.Albumin.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.Bilirubin.value='X';
+        document.lab.Urinalysis.value='X';
+        add('OtherTests','Ferritin, ');
+        add('OtherTests','HIV, ');
+        add('OtherTests','LDH, ');
+        add('OtherTests','SPEP, ');
+        add('OtherTests','reticulocyte, ');
+        add('OtherTests','Vit C, ');
+        updateTests();
+    ">Anemia Refractory<br>
+    </div>
+
+
+<!--**********CHF**************-->
+    <div id="CHF1">
+CHF:<br>
+    <input type="checkbox" name="CHFBaseline"
+     onClick="
+        add('subject','CHF ');
+        document.lab.CBC.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        add('OtherTests','TSH, ');
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.ALT.value='X';
+        document.lab.Albumin.value='X';
+        add('OtherTests','EKG, ');
+        add('Instructions',pi);
+        add('Instructions',fa);
+        updateTests();
+    ">Baseline
+
+    <input type="checkbox" name="CHFFollowUp"
+     onClick="
+        add('subject','CHF ');
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        updateTests();
+    ">Follow-up<br>
+
+    <input type="checkbox" name="CHFFollowUpStandingQ3months"
+     onClick="
+        add('subject','CHF ');
+        add('OtherTests','Standing order: Na/K/eGFR Q3monthly for 2 years, ');
+        updateTests();
+    ">Standing Order Q3M<br>
+    </div>
+
+<!--********CKD******************-->
+    <div id="CKD3">
+CKD Stage 3:<br>
+    <input type="checkbox" name="CKDAnnual"
+     onClick="
+        add('subject','CKD ');
+        document.lab.CBC.value='X';
+        document.lab.HbA1C.value='X';
+        document.lab.ACR.value='X';
+        document.lab.Lipids.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        add('OtherTests','Ca, ');
+        document.lab.Albumin.value='X';
+        add('OtherTests','Iron, Transferrin, ');
+        add('OtherTests','Phosphorus, iPTH, ');
+        updateTests();
+    ">Annual
+
+    <input type="checkbox" name="CKDQ6months"
+     onClick="
+        add('subject','Chronic Kidney Disease ');
+        document.lab.ACR.value='X';
+        document.lab.Creatinine.value='X';
+        add('OtherTests','Standing order: eGFR/ACR Q6monthly for 2 years, ');
+        updateTests();
+    ">eGFR/ACR Q6M<br>
+    </div>
+<!--****DM******************-->
+    <div id="DM1">
+DM:<br>
+    <input type="checkbox" name="DMAnnual"
+     onClick="
+        add('subject','Diabetes ');
+        document.lab.HbA1C.value='X';
+        document.lab.ACR.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.Lipids.value='X';
+        add('Instructions',pi);
+        add('Instructions',fa);
+        if (document.getElementById('m$TDP#value').value.indexOf('es')>0){ add('CopyTo','Temiskaming Diabetes Clinic\\nFax 705-647-8766\\n');   };
+        updateTests();
+    ">Annual
+
+    <input type="checkbox" name="DMStandingQ3months"
+    onClick="
+        add('subject','Diabetes ');
+        add('OtherTests','Standing order: A1C Q3months for 2 years, ');
+        if (document.getElementById('m$TDP#value').value.indexOf('es')>0){ add('CopyTo','Temiskaming Diabetes Clinic\\nFax 705-647-8766\\n');   };
+        updateTests();
+    ">A1C Q3M<br>
+    </div>
+<!--******Dyslipidemia************-->
+    <div id="LIPID1">
+<a href="https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/cvd_appendix_c.pdf" id="lipidHeader" target="_blank" title="Guideline for Lipid Testing in Primary Prevention">DYSLIPIDEMIA:</a><br>
+    <input type="checkbox" name="CholesterolFBS"
+     onClick="
+        add('subject','Dyslipidemia ');
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.Lipids.value='X';
+        add('Instructions',pi);
+        updateTests();
+        <!-- add('Instructions',fa); -->
+    ">Screening
+
+<!--    <input type="checkbox" name="DyslipidemiaOnStatin"
+     onClick="
+        add('subject','Dyslipidemia ');
+        add('subject','Statin ');
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.Lipids.value='X';
+        document.lab.ALT.value='X';
+        add('Instructions',pi);
+        add('Instructions',fa);
+        updateTests();
+    ">On Statin<br> -->
+    </div>
+
+
+<!--******HEPATITIS******************-->
+    <div id="LFT1">
+HEPATITIS:<br>
+  
+        <input type="checkbox" name="LFT"
+        onClick="
+            document.lab.ALT.value='X';
+            add('OtherTests','GGT, ');
+            document.lab.ALP.value='X';
+            document.lab.Bilirubin.value='X';
+            document.lab.Albumin.value='X';
+            add('OtherTests','Protein, ');
+            updateTests();
+        ">LFTs<br>
+
+    <input type="checkbox" name="AcuteElevatedLFT"
+    onClick="
+        add('subject','Acute Elevated LFT ');
+        document.lab.CBC.value='X';
+        document.lab.PTINR.value='X';
+        document.lab.ALT.value='X';
+        add('OtherTests','GGT, ');
+        document.lab.ALP.value='X';
+        document.lab.Bilirubin.value='X';
+        document.lab.Albumin.value='X';
+        add('OtherTests','Protein, ');
+        document.lab.Hepatitis_Acute.value='X';
+        updateTests();
+    ">LFT Elevation Acute<br>
+
+    <input type="checkbox" name="ChronicElevatedLFT"
+    onClick="
+        add('subject','Chronic Elevated LFT ');
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.Lipids.value='X';
+        add('OtherTests','Ferritin, ');
+        document.lab.Hepatitis_Chronic.value='X'
+        add('OtherTests','ANA, Anti-mitochondrial AB, Ceruloplasmin, Alpha-1 antitrypsin, ');
+        add('Instructions',pi);
+        add('Instructions',fa);
+        updateTests();
+    ">Chronic Elevated LFTs <br>
+
+    <input type="checkbox" name="ChronicHepatitisBFollow-up"
+    onClick="
+        add('subject','Chronic Hep B ');
+        add('OtherTests','Standing order: AFP, ALT Q 3 months for 6 months, ');
+        updateTests();
+    "><a href="http://www.hepatology.ca/wp-content/uploads/2012/06/2012HepBGuidelines_CJG.pdf"
+        target="_blank" title="Web reference">Chronic HBV FU</a><br>
+</div>
+<!--******HTN******************-->
+    <div id="HBP1">
+<a href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/hypertension">HYPERTENSION:</a><br>
+    <input type="checkbox" name="HypertensionAnnual"
+     onClick="
+        add('subject','Hypertension ');
+        document.lab.Glucose.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        add('Instructions',pi);
+        add('Instructions',fa);
+        updateTests();
+    ">Annual<br>
+    </div>
+
+<!--******Infertility******************-->
+    <div id="INF1">
+INFERTILITY:<br>
+    <input type="checkbox" name="InfertilityFemale"
+    onClick="
+        add('subject','Infertility ');
+        document.lab.CBC.value='X';
+        document.lab.Rubella.value='X';
+        document.lab.PrenatalAntibody.value='X';
+        add('OtherTests','TSH, ');
+        add('OtherTests','HBsAg, ');
+        add('OtherTests','HIV, ');
+        add('OtherTests','Cycle day 3 FSH, Estradiol, Prolactin, Hep C, VDRL, ');
+        add('Instructions',pi);
+        add('Instructions','Do blood work in the 3rd day of your cycle/period. ');
+        updateTests();
+        ">Infertility Female
+
+    <input type="checkbox" name="InfertilityMale"
+    onClick="
+        add('subject','Infertility ');
+        document.lab.CBC.value='X';
+        add('OtherTests','HIV, ');
+        add('OtherTests','TSH, ');
+        add('OtherTests','Semenalysis, ');
+        updateTests();
+           ">Male<br>
+    <input type="checkbox" name="AbnSA"
+    onClick="
+        add('subject','Infertility ');
+        document.lab.CBC.value='X';
+        add('OtherTests','HIV, ');
+        add('OtherTests','TSH, ');
+        add('OtherTests','FSH, LH, Prolactin, Testosterone, Karyotype, ');
+        updateTests();
+           ">Abn Semen Analysis<br>
+
+    </div>
+
+
+<!--******Prenatal******************-->
+    <div id="PN1">
+PRENATAL:<br>
+        <input type="checkbox" name="Prenatal"
+    onClick="
+        add('subject','Pregnant ?asymptomatic bacteriuria ');
+        document.lab.CBC.value='X';
+        document.lab.UrineCulture.value='X';
+        document.lab.PrenatalAntibody.value='X';
+        document.lab.chkMicro_Chlamydia.value='X';
+        document.lab.txtMicro_Chlamydia.value='urine';
+        document.lab.chkMicro_GC.value='X';
+        document.lab.txtMicro_GC.value='urine';
+        document.lab.Rubella.value='X';
+        add('OtherTests','HBsAg, ');
+        add('OtherTests','anti-HCV, ');
+        add('OtherTests','HIV, ');
+        add('OtherTests','Syphilis screen, ');
+        updateTests();
+    ">Prenatal:First visit labs<br>
+
+    <input type="checkbox" name="Prenatal2"
+    onClick="
+        add('OtherTests','TSH, ');
+        add('OtherTests','anti-HCV, ');
+        add('OtherTests','Varicella Titre, ');
+        add('OtherTests','CMV, ');
+        add('OtherTests','Parovirus, ');
+        add('OtherTests','Toxoplasmosis, ');
+        add('OtherTests','Ferritin, ');
+        add('OtherTests','B12, ');
+        updateTests();
+    ">Prenatal:Discretionary labs<br>
+
+    <input type="checkbox" name="PET"
+    onClick="
+        add('subject','Gestational-HTN ');
+        document.lab.CBC.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        add('OtherTests','Ca, ');
+        document.lab.ALT.value='X';
+        add('OtherTests','GGT, ');
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseRandom.value='X';
+        document.lab.Bilirubin.value='X';
+        document.lab.Albumin.value='X';
+        document.lab.PTINR.value='X';
+        add('OtherTests','BUN, HCO3-,Mg2+, Uric Acid, LDH, Fibrinogen,\\nRandom Urine for Protein:Creatinine Ratio,(NOT ACR)\\n');
+        updateTests();
+    ">Prenatal:Gestational HTN<br>
+<!-- Prenatal Public Health - use other eForm -->
+    <input name="Pub_H_link" id="Pub_H_link" value="Pub Health" type="button" style="font-size:10px;" oscarOpen="Prenatal HIV VDRL Rubella" title="Ontario Public Health Screening for HIV VDRL Rubella"><br>
+<!-- PGS - use other eForm -->
+    <input id="PGS_link" name="PGS_link" value="NYG Prenatal" type="button" style="font-size:10px;" oscarOpen="PN Downs Screening NY" title="Prenatal Genetic Screening, aka eFTS">
+<!-- NIPT - use other eForm -->
+    <input name="NIPT_link" id="NIPT_link" value="Panorama" type="button" style="font-size:10px;" oscarOpen="Panorama" title="Private Panorama NIPT or Trisomy 21 18 or 13 with criterea"><br>
+
+    </div>
+<!-- Start Column 2 -->
+</td><td style="vertical-align:top; width:50%;">
+<!--****RHEUMATOLOGY********-->
+                        <u>RHEUMATOLOGY:</u><br>
+                        <input type="checkbox" name="RA" title="RF ANA are done once, serial values generally not useful.  - RF, CCP, CBC, ALT, hepatitis, creatinine, ESR, and CRP"
+                            onClick="
+                            add('subject','?RA ');
+                            add('OtherTests','RF, ');
+                            add('OtherTests','CCP, ');
+                            add('OtherTests','ESR, ');
+                            add('OtherTests','HBsAg, HBcAb, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Rheumatoid arthritis.<br>
+                        <input type="checkbox" name="PA" title="RF ANA are done once, serial values generally not useful  - RF, CCP, CBC, ALT, HLAB27, hepatitis, creatinine, ESR, and CRP."
+                            onClick="
+                            add('subject','?Psoritic Arthritis ');
+                            add('OtherTests','RF, ');
+                            add('OtherTests','CCP, ');
+                            add('OtherTests','ESR, ');
+                            add('OtherTests','CRP, ');
+                            add('OtherTests','HBsAg, HBcAb, ');
+                            add('OtherTests','HLA-B27, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Psoriatic arthritis<br>
+                         <input type="checkbox" name="CT" title="RF ANA are done once, serial values generally not useful  - RF, CCP, CBC, ALT, HLAB27, hepatitis, creatinine, ESR, and CRP."
+                            onClick="
+                            add('subject','?Connective Tissue Disease ');
+                            add('OtherTests','RF, ');
+                            add('OtherTests','CCP, ');
+                            add('OtherTests','ESR, ');
+                            add('OtherTests','CRP, ');
+                            add('OtherTests','HBsAg, HBcAb, ');
+                            add('OtherTests','HLA-B27, ');
+                            add('OtherTests','bicarbonate, ');
+                            document.lab.Sodium.value='X';
+                            document.lab.Potassium.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Connective Tissue Disease<br> 
+                         <input type="checkbox" name="AS" title="HLAB27, CBC, ALT, Cr, hepatitis serology (including HBV core ab), and CRP.."
+                            onClick="
+                            add('subject','?Ankylosing spondylitis ');
+                            add('OtherTests','CRP, ');
+                            add('OtherTests','HBsAg, HBcAb, ');
+                            add('OtherTests','HLA-B27, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Ankylosing spondylitis<br>
+                         <input type="checkbox" name="gout" title="HLAB27, CBC, ALT, Cr, hepatitis serology (including HBV core ab), and CRP"
+                            onClick="
+                            add('subject','?Gout ');
+                            document.lab.UricAcid.value='X';
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Gout&nbsp;
+                         <input type="checkbox" name="CPPD" title="Ca, Mg, PO, Cr, PTH, ALP, and TSH"
+                            onClick="
+                            add('subject','?CPPD ');
+                            add('OtherTests','Ca, ');
+                            add('OtherTests','Mg, ');
+                            add('OtherTests','PO, ');
+                            add('OtherTests','PTH, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            updateTests();
+                            ">CPPD<br>
+                         <input type="checkbox" name="vasc" title="CBC, Cr, ALT, hepatitis serology (including HBV core ab), urinalysis, urine ACr, MPO, PR3, cANCA, pANCA"
+                            onClick="
+                            add('subject','?Vasculitis ');
+                            add('OtherTests','pANCA, ');
+                            add('OtherTests','cANCA, ');
+                            add('OtherTests','PR3, ');
+                            add('OtherTests','MPO, ');
+                            add('OtherTests','HBsAg, HBcAb, ');
+                            document.lab.Urinalysis.value='X';
+                            document.lab.ACR.value='X';
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Vasculitis<br>                        
+                         <input type="checkbox" name="IgG4" title="CBC, Cr, ALT, CRP, hepatitis serology (including HBV core ab), Serum immunoglobulins, serum IgG levels"
+                            onClick="
+                            add('subject','?IgG4 ');
+                            add('OtherTests','IgG, ');
+                            add('OtherTests','Serum immunoglobulins, ');
+                            add('OtherTests','CRP, ');
+                            add('OtherTests','HBsAg, HBcAb, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">IgG4 group<br>
+                         <input type="checkbox" name="dmard" title=" CBC, Cr, ALT, and CRP"
+                            onClick="
+                            add('subject','DMARD ');
+                            add('OtherTests','CRP, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">DMARD monitoring<br>
+                         <input type="checkbox" name="Rituximab" title=" CBC, Cr, ALT, and CRP"
+                            onClick="
+                            add('subject','Rituximab ');
+                            add('OtherTests','CRP, ');
+                            add('OtherTests','Serum immunoglobulins, ');
+                            document.lab.ALT.value='X';
+                            document.lab.Creatinine.value='X';
+                            document.lab.CBC.value='X';
+                            updateTests();
+                            ">Rituximab monitoring<br>
+<!--****Other******************-->
+    <u>OTHERS:</u><br>
+    <input type="checkbox" name="Autoimmune" title="RF ANA are done once, serial values generally not useful"
+    onClick="
+        add('subject','?autoimmune ');
+        add('OtherTests','ANA, ');
+        add('OtherTests','RF, ');
+        add('OtherTests','CRP, ');
+        document.lab.CBC.value='X';
+		updateTests();
+    ">Autoimmune
+ANA, 
+RF<br>
+    <input type="checkbox" name="Celiac" title="Done once, generally serial values to TTG are not useful"
+    onClick="
+        add('subject','?Celiac disease ');
+        add('OtherTests','Anti-TTG IgA for celiac disease and Total IgA, ');
+    ">Celiac disease<br>
+    <input type="checkbox" name="BAR"
+    onClick="
+        add('subject','Bariatric ');
+        document.lab.CBC.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.ALT.value='X';
+        document.lab.ACR.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.HbA1C.value='X';
+        document.lab.Lipids.value='X';
+        document.lab.Bilirubin.value='X';
+        document.lab.Albumin.value='X';
+        document.lab.chkVitaminD_Insured.value='X';
+        add('OtherTests','Urea, Ca, Phosphate,\\nAlk Phos, PTH, Zinc, Copper,\\nIron, B12, Ferritin,\\nVit A, B1(Thiamine), TSH,\\n H Pylori (PHL req)');
+		updateTests();
+    ">Bariatric
+    <input type="checkbox" name="BARA"
+    onClick="
+        add('subject','Bariatric annual ');
+        document.lab.CBC.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.ALT.value='X';
+        document.lab.ACR.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.HbA1C.value='X';
+        document.lab.Lipids.value='X';
+        document.lab.Bilirubin.value='X';
+        document.lab.Albumin.value='X';
+        document.lab.chkVitaminD_Insured.value='X';
+        add('OtherTests','Urea, Ca, Phosphate,\\nAlk Phos, Bilirubin,PTH, Zinc\\nB12, RBC Folate, Ferritin, Vit A');
+		updateTests();
+    ">annual
+<br>
+    <input type="checkbox" name="Dementia"
+     onClick="
+        add('subject','Memory issues ');
+        document.lab.CBC.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        add('OtherTests','TSH, ');
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        add('OtherTests','Ca, ');
+        document.lab.Creatinine.value='X';
+        document.lab.ALT.value='X';
+        add('OtherTests','GGT, ');
+         document.lab.UrineCulture.value='X';
+        add('OtherTests','B12, ');
+        add('Instructions',pi);
+        add('Instructions',fa);
+		updateTests();
+    ">Dementia<br>
+
+    <input type="checkbox" name="Eatingdisorderworkup"
+     onClick="
+        add('subject','Eating disorder ');
+        document.lab.CBC.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        document.lab.Lipids.value='X';
+        add('OtherTests','TSH, ');
+        add('OtherTests','Ferritin, ');
+        document.lab.UrineCulture.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        add('OtherTests','Ca, ');
+        document.lab.ALT.value='X';
+        add('OtherTests','GGT, ');
+        document.lab.ALP.value='X';
+        document.lab.Bilirubin.value='X';
+        document.lab.Albumin.value='X';
+        add('OtherTests','Protein, ');
+        add('OtherTests','EKG, ');
+        add('OtherTests','Mg, PO4, ');
+        add('Instructions',pi);
+        add('Instructions',fa);
+		updateTests();
+    ">Eating disorder workup<br>
+
+    <input type="checkbox" name="Fatigue"
+     onClick="
+        add('subject','Fatigue ');
+        document.lab.CBC.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        add('OtherTests','TSH, ');
+        add('OtherTests','Ferritin, ');
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.ALT.value='X';
+        add('OtherTests','GGT, ');
+        add('Instructions',pi);
+        add('Instructions',fa);
+		updateTests();
+    ">Fatigue<br>
+
+    <input type="checkbox" name="GynCa"
+    onClick="
+        add('subject','Gynae Ca f/u, ');
+        add('OtherTests','CA125, CEA, CA19-9, CA15-3, ');
+		updateTests();
+    ">Gyne Cancer<br>
+
+    <div id="INR1">
+        <input type="checkbox" name="INRStanding"
+        onClick="
+            add('subject','Warfarin ');
+            add('OtherTests','Standing Order: INR PRN for 6 months. ');
+			updateTests();
+        ">INR - Standing Order<br>
+    </div>
+
+
+    <input type="checkbox" name="FemaleOsteoporosis"
+    onClick="
+        add('subject','Osteoporosis ');
+        document.lab.CBC.value='X';
+            add('OtherTests','TSH, ');
+        add('OtherTests','Ca, ');
+        document.lab.ALP.value='X';
+        add('Instructions',pi);
+        add('OtherTests','Phosphate, serum protein electrophoresis, ');
+		updateTests();
+        ">Osteoporosis Female
+
+    <input type="checkbox" name="MaleOsteoporosis"
+    onClick="
+        add('subject','Osteoporosis ');
+            add('OtherTests','TSH, ');
+        document.lab.CBC.value='X';
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        add('OtherTests','Ca, ');
+        document.lab.ALP.value='X';
+        document.lab.chkVitaminD_Insured.value='X';
+        add('OtherTests','Phosphate, total and bio-available testosterone, iPTH, urinary calcium excretion, ');
+        add('Instructions',pi);
+        add('Instructions','Do blood work in the morning, before 10:00 a.m. ');
+		updateTests();
+        ">Male<br>
+
+    <input type="checkbox" name="PCOSworkup"
+     onClick="
+        add('subject','?PCOS ');
+        document.lab.CBC.value='X';
+        document.lab.Glucose.value='X';
+        document.lab.GlucoseFasting.value='X';
+        add('OtherTests','TSH, ');
+        add('OtherTests','FSH, ');
+        add('OtherTests','LH, ');
+        add('OtherTests','Prolactin, ');
+        add('OtherTests','Total testosterone, ');
+        add('OtherTests','DHEAS, ');
+		updateTests();
+    ">PCOS workup<br>
+
+<!-- Recurrent Pregnancy Loss/RPL -->
+    <input type="checkbox" name="Recurrent_Pregnancy_Loss"
+    onClick="
+        document.lab.Sodium.value='X';
+        document.lab.Potassium.value='X';
+        document.lab.Creatinine.value='X';
+        document.lab.PrenatalAntibody='X';
+        add('OtherTests','Cycle day 3 FSH, ');
+        add('OtherTests','LH, ');
+        add('OtherTests','Prolactin, ');
+        add('OtherTests','Testosterone, ');
+        add('OtherTests','DHEAS, ');
+        add('OtherTests','Estradiol, ');
+        add('OtherTests','Rubella, ');
+        add('OtherTests','anti-HCV, ');
+        add('OtherTests','Syphillis screen, ');
+        add('OtherTests','Lupus Anticoagulant/DRVVT, ');
+        add('OtherTests','Cardiolipin Ab, ');
+        add('OtherTests','Beta 2 Glycoprotein 1, ');
+		updateTests();
+        ">Recurrent Pregnancy Loss<br>
+
+    <div id="LYTES1">
+        <input type="checkbox" name="RenalFunction"
+        onClick="
+            document.lab.Sodium.value='X';
+            document.lab.Potassium.value='X';
+            document.lab.Creatinine.value='X';
+			updateTests();
+        ">Renal Function<br>
+    </div>
+    <input type="checkbox" name="Stool"
+    onClick="
+        add('subject','Diarrhea,');
+        document.lab.StoolCS.value='X';
+        document.lab.StoolOP.value='X';
+		updateTests();
+    ">
+    <a href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/infectious-diarrhea" title="Guideline for ordering Stool Specimens">Stool O+P,C+S</a><br>
+    <input type="checkbox" name="RLS"
+    onClick="
+       document.lab.CBC.value='X';
+       document.lab.Creatinine.value='X';
+       add('OtherTests','B12, Folate, TSH, Ferritin\\n');
+	   updateTests();
+        ">Restless Leg<br>
+    <input type="checkbox" name="Thrombosisscreen"
+    onClick="
+        add('subject','Thrombosis-Screen ');
+        document.lab.CBC.value='X';
+        document.lab.PTINR.value='X';
+        add('OtherTests','TSH, ');
+        add('OtherTests','Factor 5 Leiden, Protein C, Protein S, Antithrombin 3, DRVVT, ');
+		updateTests();
+    ">Thrombosis screen<br>
+
+    <div id="THYROID1">
+        <input type="checkbox" name="TSHStandingorder"
+        onClick="
+            add('subject','Thyroid screen ');            
+                add('OtherTests','TSH, ');
+				updateTests();
+        "><a href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines/thyroid-testing" title="Guideline for ordering Thyroid Tests">Thyroid screen</a><br>
+
+        <input type="checkbox" name="TSHStandingorder"
+        onClick="
+            add('subject','Hypothyroidism ');            
+                add('OtherTests','Standing Order: TSH annually for 2 years, ');
+				updateTests();
+        ">TSH
+ Standing Order<br>
+    </div>
+
+</td>
+</tr>
+</table>
+<input name="subject2" class="labBox" size="70" type="text">
+		Approximate cost of todays lab work: &nbsp;&nbsp; <b>$</b>
+		<input name="Costs" id= "Costs" type="text" style="width:40px; text-align:center; font-weight:bold; font-size:14px; background:transparent;" class="noborder labBox"><br>
+&nbsp;<input value="Clear" name="ClearButton" id="ClearButton" type="button" onclick="clearMe();">
+<hr>
+    
+<!-- Tickler Reminders (aka loop closer) -->
+<div id="SetTickler" style="font-size:14px;" class="DoNotPrint">
+	<u><span style="font-size:12px;">Choose Tickler reminder date</span></u>
+&nbsp;<input name="ResetTickler" id="ResetTickler" type="button" style="font-size:10px; color:red;" onclick="document.getElementById('Tickler_date').value = ''; document.getElementById('Four_weeks').checked = false; document.getElementById('Six_weeks').checked = false; addDays(0);" value="Reset"><br>
+	
+	<input name="Tickler_date" id="Tickler_date" type="text" class="noborder" style="width:95px; font-size:14px; text-align:center; background:transparent;" onblur="calculateTicklerDays();">
+
+	<input name="Four_weeks" id="Four_weeks" type="checkbox" 
+		onclick="
+			document.getElementById('Six_weeks').checked = false;
+			addDays(28); // need to add extra day for proper calculation
+			calculateTicklerDays();">4 weeks
+	<input name="Six_weeks" id="Six_weeks" type="checkbox" 
+		onclick="
+			document.getElementById('Four_weeks').checked = false;
+			addDays(42); // need to add extra day for proper calculation
+			calculateTicklerDays();">6 weeks<br>
+	<input name="Tickler_msg" id="Tickler_msg" type="text" class="noborder" style="font-size:14px; background:transparent; width: 250px;" placeholder="Optional Tickler msg here"><br>
+	&nbsp;<input value="Set Tickler" name="Tickler" id="Tickler" type="button" class="link"  title="Set tickler reminder for chosen future date" onclick="ticklerReminder();"> &nbsp; &nbsp; 
+</div>
+
+</div>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:10px;">
+
+<input name="subject" id="subject" type="text">
+	<input type="text" name="tests" id="tests" style="width:500px;" >
+    <table><tr id=sig>
+    <td> <div id="signatureInput">&nbsp;</div></td>
+    <td> <div id="faxControl">&nbsp;</div></td>
+    </tr></table>
+    <table><tr><td>
+            <input type="button" onclick="copyTestsToEncounter();" value="Write tests to echart">
+            <input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="releaseDirtyFlag();">
+            <input value="Reset" name="ResetButton" id="ResetButton" type="reset">
+            <input value="Just Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();">
+            <input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();alert('Click OK to Finish Submitting');SubmitButton.click();"> <br>
+
+
+     </td></tr></table>
+        <div id="LOCAL"></div>
+
+ </div>
+ </form>
+
+<script src="${oscar_image_path}searchProfessionalSpecialist.js"></script>
+
+<script>
+
+Calendar.setup({inputField:"Tickler_date", ifFormat:"%Y-%m-%d", showsTime:false, button:"Tickler_date"});
+Calendar.setup({inputField:"txtSignatureDate", ifFormat:"%Y-%m-%d", showsTime:false, button:"txtSignatureDate"});
+
+function StartAddIfMissingTitle(x,content) {
+			document.getElementById(x).title = content
+		}
+	$("#GlucoseFasting").attr('title', 'Cost: $1.28');
+	$("#GlucoseRandom").attr('title', 'Cost: $1.28');
+	$("#HbA1C").attr('title', 'Cost: $7.25');
+	$("#Creatinine").attr('title', 'Cost: $1.28');
+	$("#UricAcid").attr('title', 'Cost: $1.16');
+	$("#Sodium").attr('title', 'Cost: $1.16');
+	$("#Potassium").attr('title', 'Cost: $1.16');
+	$("#ALT").attr('title', 'Cost: $1.28');
+	$("#ALP").attr('title', 'Cost: $1,57');
+	$("#Bilirubin").attr('title', 'Cost: $1.55');
+	$("#Albumin").attr('title', 'Cost: $1.55');
+	$("#Lipids").attr('title', 'Cost: $21,31');
+	$("#ACR").attr('title', 'Cost: $11,41');
+	$("#Urinalysis").attr('title', 'Cost: $2.15');
+	$("#NeonatalBilirubin").attr('title', 'Cost: $1.55');
+ 
+    $("#CBC").attr('title', 'Cost: $3.98');
+	$("#PregnancyTestUrine").attr('title', 'Cost: $2.78');
+    $("#Mono").attr('title', 'Cost: $17,10');
+	$("#PTINR").attr('title', 'Cost: $12,07');
+	$("#Rubella").attr('title', 'Cost: $10,00');
+	$("#PrenatalAntibody").attr('title', 'Cost: $10,00');
+	$("#RepeatPrenatal").attr('title', 'Cost: $10,00');
+
+
+	$("#chkMicro_Cervical").attr('title', 'Cost: $11.09');
+	$("#chkMicro_Vaginal").attr('title', 'Cost: $11.09');
+	$("#chkMicro_Chlamydia").attr('title', 'Cost: $16.46');
+	$("#chkMicro_VaginalRectalGroupBStrep").attr('title', 'Cost: $15.40');
+    $("#chkMicro_GC").attr('title', 'Cost: $28.85 - 11.09');
+
+	$("#chkMicro_Sputum").attr('title', 'Cost: $11.09');
+	$("#chkMicro_Throat").attr('title', 'Cost: $3.10');
+	$("#chkMicro_Wound").attr('title', 'Cost: $12.93');
+	$("#chkMicro_Other").attr('title', 'Cost: $12.93');
+
+	$("#UrineCulture").attr('title', 'Cost: $10.34 + $9.55/org + $11.55/Ab Sus');
+	$("#StoolCS").attr('title', 'Cost: $17.37 + $14.42/org');
+	$("#StoolOP").attr('title', 'Cost: $9.12');
+
+	$("#Hepatitis_Acute").attr('title', 'Cost: $36.12');
+	$("#Hepatitis_Chronic").attr('title', 'Cost: $47.26');
+	$("#HepA").attr('title', 'Cost: $10.25');
+	$("#HepB").attr('title', 'Cost: $10.25');
+	$("#HepC").attr('title', 'Cost: $10.25');
+	$("#Hepatitis_ImmuneStatus").attr('title', 'Cost: $47.26');
+
+	$("#chkPSA_TotalPSA").attr('title', 'Cost: $14,35');
+	$("#chkPSA_Insured").attr('title', 'Cost: $14,35 insured if known or suspected prostate cancer');
+	$("#chkPSA_Uninsured").attr('title', 'Cost: $35.00');
+
+	$("#chkVitaminD_Uninsured").attr('title', 'Cost: $39.00');
+	$("#chkVitaminD_Insured").attr('title', 'Cost: $11.66 insured for: osteoporosis, rickets, osteopenia, malabsorption syndromes and  renal disease, or for persons who are on medications that affect vitamin D metabolism. ');
+
+
+	
+	setInterval(function calculateCost() {
+		  $('#Costs').val(0);
+		  StartAddIfMissingTitle('Costs',"" );
+		  
+		  var othertests = $('#OtherTests').val();
+		  var OtherTests = othertests.toUpperCase(); 
+		  var match = OtherTests.search("AST|PHOSPHATE|PO4|URIC|LDH|LACTATE DEHYDROGENASE");
+
+			if ( (match != -1)||(($('#Sodium').val()=='X')||($('#Potassium').val()=='X')||($('#Creatinine').val()=='X')||($('#Albumin').val()=='X')||($('#ALP').val()=='X')||($('#ALT').val()=='X')||($('#Bilirubin').val()=='X')||($('#GGT').val()=='X')||($('#TProtein').val()=='X')||($('#Calcium').val()=='X')||($('#CreatineKinase').val()=='X')||($('#GlucoseRandom').val()=='X')||($('#GlucoseFasting').val()=='X') ) ) {
+			newcost = Math.round(($('#Costs').val()*1)+15.62);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Base Chemistry Fee: $14.28\\n" );
+			}
+		  
+			if ($('#Sodium').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.16);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Na: $1.16\\n" );
+			}
+			if ($('#Potassium').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.16);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"K: $1.16\\n" );
+			}
+			if ($('#Creatinine').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.28);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"eGFR: $1.28\\n" );
+			} 
+			if ($('#Albumin').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.55);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Alb: $1.55\\n" );
+			}
+			if ($('#ALP').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.57);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"ALP: $1.57\\n" );
+			}
+			if ($('#ALT').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.28);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"ALT: $1.28\\n" );
+			}
+			if ($('#Bilirubin').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.55);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"BILI: $1.55\\n" );
+			}
+			if ($('#GGT').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.66);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"GGT: $1.66\\n" );
+			}
+
+			if ($('#PrenatalAntibody').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.00);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Prenatal Antibodies: $10.00\\n" );
+			}
+			if ($('#RepeatPrenatal').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.00);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Repeat Prenatal Antibodies: $10.00\\n" );
+			}
+			if ($('#NeonatalBilirubin').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.55);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Neonatal Bili: $1.55\\n" );
+			}
+			if ($('#UricAcid').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.16);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Uric Acid: $1.16\\n" );
+			}
+
+			if ($('#chkVitaminD_Insured').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+11.65);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Vit D: $11.66\\n" );
+			}
+			if ($('#chkVitaminD_Uninsured').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+39.00);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Vit D: $39.00\\n" );
+			}
+			if ($('#HepC').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.00);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Hep C: $10.00\\n" );
+			}
+			if ($('#Hepatitis_ImmuneStatus').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+47.26);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Hepatitis Immune Status: $47.26\\n" );
+			}
+			if ($('chkMicro_Other').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+22.50);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Microbiology: $11.09 - 27.73\\n" );
+			}
+
+			if ($('#TProtein').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.60);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"TProtein: $1.60\\n" );
+			}
+			if ($('#Calcium').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.55);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Ca: $1.55\\n" );
+			}
+			if ($('#CreatineKinase').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.88);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"CK: $1.88\\n" );
+			}
+		   if ($('#CBC').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+3.98);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"CBC: $3.98\\n" );
+			}
+		   if ($('#PTINR').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+12.07);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"INR: $12.07\\n" );
+			}
+		   if ($('#Ferritin').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.12);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Ferritin: $10.12\\n" );
+			}
+		   if ($('#GlucoseFasting').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.28);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"FBS: $1.28\\n" );
+			}
+		   if ($('#GlucoseRandom').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+1.28);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"RBS: $1.28\\n" );
+			}
+		   if ($('#GTTGDMScreen').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.03);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"50G GTT: $10.03\\n" );
+			}
+		   if ($('#GTTGDMConfirmation').val()=='X') {
+			 newcost = Math.round(($('#Costs').val()*1)+15.84);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"75G GTT: $15.84\\n" );
+			}
+		   if ($('#HbA1C').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+7.25);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"A1C: $7.25\\n" );
+			}
+		   if ($('#ACR').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+11.41);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"ACR: $11.41\\n" );
+			}
+		   if ($('#Lipids').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+21.31);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"LipidProfile: $21.31\\n" );
+			}
+		   if ($('#Lipid_FU').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+14.44);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"LipidFU: $14.44\\n" );
+			}
+		   if ($('#Lipid_ApoB').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+16.60);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"ApoB: $16.60\\n" );
+			}
+		   if ($('#MonitorThyroidRx').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+9.90);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"TSH: $9.90\\n" );
+			}
+		   if ($('#TSH').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+22.02);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"TSH/T4: $22.02\\n" );
+			}
+		   if ($('#SuspectHyperthyroidism').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+34.14);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"TSH/T4/T3: $34.14\\n" );
+			}
+			if ($('#chkPSA_Insured').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+14.35);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"PSA: $14.35\\n" );
+			}
+			if ($('#chkPSA_Uninsured').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+35.00);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"PSA: $35.00\\n" );
+			}
+			if ($('#bHCG').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+16.30);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"SerumPregTest: $16.30\\n" );
+			}
+			if ($('#PregnancyTestUrine').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+15.30);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"UrinePregTest: $15.30\\n" );
+			}
+			if (($('#FIT_CSP').val()=='X')||($('#FIT_Other').val()=='X')) {
+			newcost = Math.round(($('#Costs').val()*1)+19.60);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"FIT: $19.60\\n" );
+			}
+			if ($('#ECG').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+32.47);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"ECG: $32.47\\n" );
+			}
+			if ($('#Holter').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+89.19);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"ECG: $89.19\\n" );
+			}
+			if ($('#UrineCulture').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+40.73);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"UrineCulture: $40.73 ($10.34 + $9.55/org + $11.55/Ab Sus)\\n" );
+			}
+			if ($('#Urinalysis').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+2.15);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"UrineMacroMicro: $2.15\\n" );
+			}
+			if ($('#UrineMacroscopicCultureIfPyuriaOrNitrate').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+48.15);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"UrineMacroCulture: $48.15 ($26.99 + $9.55/org + $11.55/Ab Sus)\\n" );
+			}
+			if ($('#UrineMacroscopicOnly').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+7.42);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"UrineMacro: $7.42\\n" );
+			}
+			if ($('#UrineMicroscopicOnly').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+7.17);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"UrineMicro: $7.17\\n" );
+			}
+			if ($('#chkMicro_VaginalRectalGroupBStrep').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+15.40);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"GBS: $15.40\\n" );
+			}
+			if ($('#chkMicro_Chlamydia').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+16.46);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Chlamydia: $16.46\\n" );
+			}
+			if ($('#StoolCS').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+17.37);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Stool Culture: $17.37 + $14.42/org\\n" );
+			}
+			if ($('#CDToxin').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+16.64);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"CDiff: $16.64\\n" );
+			}
+			if ($('#StoolOP').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+9.12);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"StoolOP: $9.12\\n" );
+			}
+			if ($('#StoolOPHighRisk').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+93.86);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"StoolOPX2: $93.86\\n" );
+			}
+			if ($('#DermatophyteCulture').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+21.41);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Dermatophyte Culture: $21.41\\n" );
+			}
+			if ($('#FungusKOHPrep').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+13.76);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Fungal KOH: $13.76\\n" );
+			}
+			if ($('#HBsAg').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.40);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"HBsAg: $10.40\\n" );
+			}
+			if ($('#Hepatitis_Acute').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+36.12);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Acute hepatitis: $36.12\\n" );
+			}
+			if ($('#Hepatitis_Chronic').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+47.20);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Chronic hepatitis: $47.20\\n" );
+			}
+			if ($('#HepA').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.25);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"HepA status: $10.25\\n" );
+			}
+			if ($('#HepB').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+10.25);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"HepB Status: $10.25\\n" );
+			}
+			if (($('#HIVNominal').val()=='X')||($('#HIVNonNominal').val()=='X')) {
+			newcost = Math.round(($('#Costs').val()*1)+10.00);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"HIV: ?$10.00\\n" );
+			}
+			if ($('#chkMicro_Throat').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+3.10);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Throat Swab: $3.10\\n" );
+			}
+			if ($('#chkMicro_Wound').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+57.57);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Sup Wound Cult: $57.57 ($12.93-62.34)\\n" );
+			}
+			if ($('#DeepWound').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+57.57);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Deep Wound Cult: $57.57 ($12.93-62.34)\\n" );
+			}
+			if ($('#chkMicro_Sputum').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+43.86);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"BV+Candida: $43.86 ($11.09-48.80)\\n" );
+			}
+			if ($('#chkMicro_Vaginal').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+43.86);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"BV+Candida: $43.86 ($11.09-48.80)\\n" );
+			}
+			if ($('#VaginitisChronic').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+24.35);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Vaginitis Chronic: $24.35 ($11.09-11.09)\\n" );
+			}
+			if ($('#Trichomonas').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+15.19);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"Trichomonas: $15.19 ($11.63-11.09)\\n" );
+			}
+			if ($('#chkMicro_GC').val()=='X') {
+			newcost = Math.round(($('#Costs').val()*1)+28.85);
+			$('#Costs').val(newcost);
+			AddIfMissingTitle('Costs',"GC: $28.85\\n" );
+			}
+		
+			var match = OtherTests.search("ESR");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.61);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"ESR: $10.61\\n" );
+			}
+			var match = OtherTests.search("CRP");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.31);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"CRP: $10.31\\n" );
+			}
+			var match = OtherTests.search("TTG");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+125.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"TTG: $125.00\\n" );
+			}
+			var match = OtherTests.search("HP BREATH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+36.50);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"HPBreathTest: $36.50\\n" );
+			}
+			var match = OtherTests.search("URIC");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.16);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Uric: $1.16\\n" );
+			}
+			var match = OtherTests.search("DIG");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.34);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Digoxin: $10.34\\n" );
+			}
+			var match = OtherTests.search("DILANT");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+17.13);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Dilantin: $17.13\\n" );
+			}
+			var match = OtherTests.search("LITHIUM");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+14.94);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Lithium: $14.94\\n" );
+			}
+			var match = OtherTests.search("MG|MAGNESIUM");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+6.79);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Mg: $6.79\\n" );
+			}
+			var match = OtherTests.search("CA125");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+22.72);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"CA125: $22.72\\n" );
+			}
+			var match = OtherTests.search("CA19-9");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+20.88);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"CA19-9: $20.88\\n" );
+			}
+			var match = OtherTests.search("CA15-3");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+21.25);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"CA15-3: $21.25\\n" );
+			}
+			var match = OtherTests.search("FSH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+13.13);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"FSH: $13.13\\n" );
+			}
+			var match = OtherTests.search("LH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+12.41);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"LH: $12.41\\n" );
+			}
+			var match = OtherTests.search("PROLACTIN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+4.11);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Prolactin: $4.11\\n" );
+			}
+			var match = OtherTests.search("BLOOD GROUP");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+16.09);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Blood Group: $16.09\\n" );
+			}
+			var match = OtherTests.search("RH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.38);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Rh: $10.38\\n" );
+			}
+			var match = OtherTests.search("IPTH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+17.52);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"iPTH: $17.52\\n" );
+			}
+			var match = OtherTests.search("ENA");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+30.60);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"ENA: $30.60\\n" );
+			}
+			var match = OtherTests.search("FACTOR 5");
+			var match2 = OtherTests.search("FACTOR V");
+			if ((match != -1)||(match2 != -1)) {
+			   newcost = Math.round(($('#Costs').val()*1)+52.04);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Factor 5 Leiden: $52.04\\n" );
+			}
+			var match = OtherTests.search("PROTEIN C");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+51.33);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Protein C: $51.33\\n" );
+			}
+			var match = OtherTests.search("PROTEIN S");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+38.31);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"PROTEIN S: $38.31\\n" );
+			}
+			var match = OtherTests.search("ANTITHROMBIN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+33.49);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Antithrombin 3: $33.49\\n" );
+			}
+			var match = OtherTests.search("MONOSPOT");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+17.10);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Mono: $17.10\\n" );
+			}
+			var match = OtherTests.search("CERULOPLASM");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.15);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Ceruloplasmin: $10.15\\n" );
+			}
+			var match = OtherTests.search("COPPER");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+49.19);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Copper: $49.19\\n" );
+			}
+			var match = OtherTests.search("SERUM PROTEIN EL");
+			var match2 = OtherTests.search("SPEP");
+			if ((match != -1)||(match2 != -1)) {
+			   newcost = Math.round(($('#Costs').val()*1)+26.54);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"SPEP: $26.54\\n" );
+			}
+			var match = OtherTests.search("TROPONIN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.05);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Troponin: $15.05\\n" );
+			}
+			var match = OtherTests.search("SEMEN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Semenanalysis: $15.00\\n" );
+			}
+			var match = OtherTests.search("VITAMIN D");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+12.13);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Vit D: $12.13\\n" );
+			}
+			var match = OtherTests.search("HBEAG");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+14.87);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"HBeAg: $14.87\\n" );
+			}
+			var match = OtherTests.search("ANTI-HBEAG");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Anti-HBeAg: $15.00\\n" );
+			}
+			var match = OtherTests.search("HBV DNA");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+60.34);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"HBV DNA: $60.34\\n" );
+			}
+			var match = OtherTests.search("DRVVT");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+14.01);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"DRVVT: $14.01\\n" );
+			}
+			var match = OtherTests.search("BNP");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+28.14);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"BNP: $28.14\\n" );
+			}
+			var match = OtherTests.search("PHOSPHATE");
+			var match2 = OtherTests.search("PO4");
+			if ((match != -1)||(match2 != -1)) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.64);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"PO4: $1.64\\n" );
+			}
+			var match = OtherTests.search("TESTOSTERONE");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.81);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Testosterone: $15.81\\n" );
+			}
+			var match = OtherTests.search("URINARY CALCIUM");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+5.48);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Urine Calcium: $5.48\\n" );
+			}
+			var match = OtherTests.search("DHEA");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+5.87);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"DHEAS: $5.87\\n" );
+			}
+			var match = OtherTests.search("VDRL");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.96);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"VDRL: $15.96\\n" );
+			}
+			var match = OtherTests.search("ESTRADIOL");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+22.43);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Estradiol: $22.43\\n" );
+			}
+			var match = OtherTests.search("AFP");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+9.31);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"AFP: $9.31\\n" );
+			}
+			var match = OtherTests.search("CEA");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+20.40);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"CEA: $20.40\\n" );
+			}
+			var match = OtherTests.search("RF");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+8.41);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"RF: $8.41\\n" );
+			}
+			var match = OtherTests.search("ANA");
+			var match2 = OtherTests.search("ANALYSIS");
+			if ((match != -1) && (match2 == -1)) {
+			   newcost = Math.round(($('#Costs').val()*1)+23.27);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"ANA: $23.27(base+$75 per autoAb)\\n" );
+			}
+			var match = OtherTests.search("HEP C|HCV");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Hep C: ?$10.00\\n" );
+			}
+			var match = OtherTests.search("RUBELLA");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Rubella: ?$10.00\\n" );
+			}
+			var match = OtherTests.search("VZ");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"VZ IgG: ?$10.00\\n" );
+			}
+			var match = OtherTests.search("RPR|SYPHILIS");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+10.00);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"RPR: ?$10.00\\n" );
+			}
+			var match = OtherTests.search("ANTITRYPSIN|A1AT");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+20.06);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Alpha-1 antitrypsin: $20.06\\n" );
+			}
+			var match = OtherTests.search("MITOCHONDRIAL");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+23.82);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Anti-mitochondrial AB: $23.82 + $27.03/Extra Ab\\n" );
+			}
+			var match = OtherTests.search("LDH|LACTATE DEHYDROGENASE");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.62);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"LDH: $1.62\\n" );
+			}
+			var match = OtherTests.search("DDIMER|D DIMER|D-DIMER");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+23.27);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"D-dimer: $23.27\\n" );
+			}
+			var match = OtherTests.search("CCP");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+55);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"CCP: $55.00\\n" );
+			}
+			var match = OtherTests.search("THYROGLOBULIN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+27.90);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"THYROGLOBULIN: $27.90\\n" );
+			}
+			var match = OtherTests.search("VITAMIN C");
+            var match2 = OtherTests.search("VIT C");
+            var match3 = OtherTests.search("ASCORBIC");
+			if ((match != -1)||(match2 != -1)||(match3 != -1))
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.78);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Vit C: $15.78\\n" );
+			}
+			var match = OtherTests.search("TSH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+9.90);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"TSH: $9.90\\n" );
+			}
+
+			var match = OtherTests.search("FERRITIN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+2.97);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Ferritin: $2.97\\n" );
+			}
+			var match = OtherTests.search("LDH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.28);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"LDH: $1.28\\n" );
+			}
+			var match = OtherTests.search("CA,");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.16);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Calcium: $1.16\\n" );
+			}
+			var match = OtherTests.search("IRON");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.28);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Iron: $1.28\\n" );
+			}
+			var match = OtherTests.search("TRANSFERRIN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+5.22);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Transferrin: $5.22\\n" );
+			}
+			var match = OtherTests.search("PTH");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+9.39);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"PTH: $9.39\\n" );
+			}
+			var match = OtherTests.search("GGT");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.28);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"GGT: $1.28\\n" );
+			}
+			var match = OtherTests.search("VIT A");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+15.51);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Vit A: $15.51\\n" );
+			}
+			var match = OtherTests.search("BUN");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+1.28);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"BUN: $1.28\\n" );
+			}
+			var match = OtherTests.search("HLA");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+25.85);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"HLA: $25.85\\n" );
+			}
+			var match = OtherTests.search("KARYOTYPE");
+			if (match != -1) {
+			   newcost = Math.round(($('#Costs').val()*1)+155.10);
+			   $('#Costs').val(newcost);
+			   AddIfMissingTitle('Costs',"Karyotype: $155.10\\n" );
+			}
+
+
+		 }, 1000);
+	
+</script>
+</body>
+</html>

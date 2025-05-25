@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- eFORM Finchview Xray and Ultrasound
+Created by KC Lai, OSCAR Ontario for Finchview Imaging
+GWC v2022.12.15
+-->
+
+<titleFinchview Xray and Imaging</title>
+<style type="text/css" media="noborder" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+    /* Drawing the 'gripper' for touch-enabled devices */
+    html.touch #content {
+        float:left;
+        width:92%;
+    }
+    html.touch #scrollgrabber {
+        float:right;
+        width:4%;
+        margin-right:2%;
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+    }
+    html.borderradius #scrollgrabber {
+        border-radius: 1em;
+    }
+ </style>
+
+<!-- Remove browser header and footer details on print, set margin 0, set blank margin with padding-top 15 to 20 px -->
+<style type="text/css" media="print">
+@media print {
+    @page {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    body {
+        padding-top: 15px;
+        padding-bottom: 0px;
+    }
+}
+</style>
+
+<style type="text/css" media="print"> 
+.yesprint{ display: none !important }
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .Xbox {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+.sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< /script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< /script>') </script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+
+<!-- OnScreen Signature Pad Display Signature Position -->
+<script type="text/javascript">
+
+</script>
+
+<!-- Well Health fork autosignatures, adjust position "top:" and "left:" -->
+
+<script type="text/javascript">
+if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:35, width:125, top:760, left:275});});}
+<!-- Edit top: and left: to locate autosignature stamp -->
+
+function SignForm2() {
+	var provNum = '';
+	var userBillingNo = $('#user_ohip_no').val();
+	if (parseInt(userBillingNo) > 100) {
+		// then a valid billing number so use the current user id 
+		provNum = $('#user_id').val(); 
+	} else { 
+		provNum = $('#doctor_no').val(); 
+	}
+	 
+	document.getElementById('signature').src = '../eform/displayImage.do?imagefile=consult_sig_'+provNum+'.png';
+	<!-- place signature images in image folder naming convention: consult_sig_123.png for user 123 -->
+	$('#signature').error(function() {$(this).hide();});
+	$('#signature').click(function() {$(this).hide();});
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+<!-- scripts for scaling up checkboxes -->
+<style type="Text/css">
+input.largerCheckbox {
+	-moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+}
+</style>
+<style type="text/css" media="print">
+input.largerCheckbox { 
+	-moz-transform:scale(1.8);         /*scale up image 1.8x - Firefox specific */ 
+	-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ 
+	-o-transform:scale(1.3);           /*Opera browser */ 
+} 
+</style>
+<!-- [if IE]>
+<style type="text/css">
+input.largerCheckbox { 
+	height: 30px;                     /*30px checkboxes for IE 5 to IE 7 */ 
+	width: 30px; 
+} 
+</style> 
+<![endif] --> 
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- Stamped Signatures -->
+<script type="text/javascript">
+var ImgArray = [];
+</script>
+
+<!-- OSCAR Community Edition autosignatures using Stamp.js -->
+<script src='../eform/displayImage.do?imagefile=stamps.js'></script>
+<script type="text/javascript">
+//autoloading signature images
+ImgArray.push(
+	"anonymous|BNK.png",
+	"doctor|SignatureFile.png"
+	);
+
+function SignForm(){
+	//first look for the current users stamp
+	for (i=0; i<ImgArray.length;i++){
+		var ListItemArr =  ImgArray[i].split("|");
+		var UserName = ListItemArr[0];
+		var FileName = ListItemArr[1];
+		if (document.getElementById("CurrentUserName").value.indexOf(UserName)>=0){
+			document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile="+FileName;
+		}
+	}
+	//hmm not found so lets try the MRPs stamp
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		for (i=0; i<ImgArray.length;i++){
+			var ListItemArr =  ImgArray[i].split("|");
+			var UserName = ListItemArr[0];
+			var FileName = ListItemArr[1];
+			if (document.getElementById("DoctorName").value.indexOf(UserName)>=0){
+				document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile="+FileName;
+			}
+		}
+	}
+}
+function toggleMe(){
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		SignForm()
+	} else {
+		document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile=BNK.png";
+	}
+}
+</script>
+
+<!-- Set default FAX number -->
+<script language="javascript">
+<!-- Remove and replace GWC Test fax -->
+function setFaxNo(){
+	setTimeout('document.getElementById("otherFaxInput").value="4166334597"',1000);
+} 
+</script>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	let patientGenderVal = document.getElementById("PatientGender").value;
+	if (patientGenderVal == "M" || patientGenderVal == "F") {
+		let inputCheckEle = document.getElementById(patientGenderVal == "M" ? "Male" : "Female");
+		if (inputCheckEle.classList.contains("Xbox")) {
+		// xbox
+		inputCheckEle.value = "X";
+		} else {
+		// checkbox
+		inputCheckEle.checked = true;
+		}
+	}
+ }
+</script>
+
+</head>
+
+<!-- Switch the onload options if some of them are not loading, ie. SignForm or SignForm2 before checkGender -->
+<body onload="setFaxNo();SignForm();checkGender();">
+
+<form method="post" action="" name="FormName" id="FormName" >
+
+<!--<div id="page1" style="page-break-after:always;position:relative;" > -->
+<div id="page1" style="position:relative;" >
+
+<!-- REPLACE eFORM PNG IMAGE FILENAME HERE -->
+<img id="BGImage1" src="${oscar_image_path}Form-FinchviewXray-20221214.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+
+<!-- REPLACE eFORM FIELDS HERE -->
+
+<!-- Gender Checkbox, activate if need a gender textbox -->
+<input name="Male" id="Male" type="text" class="Xbox" style="position:absolute; left:254px; top:848px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="Female" id="Female" type="text" class="Xbox" style="position:absolute; left:288px; top:848px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+
+<input name="check_1" id="check_1" type="text" class="Xbox" style="position:absolute; left:30px; top:168px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_2" id="check_2" type="text" class="Xbox" style="position:absolute; left:30px; top:187px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_3" id="check_3" type="text" class="Xbox" style="position:absolute; left:30px; top:205px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_4" id="check_4" type="text" class="Xbox" style="position:absolute; left:64px; top:205px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_5" id="check_5" type="text" class="Xbox" style="position:absolute; left:31px; top:223px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_6" id="check_6" type="text" class="Xbox" style="position:absolute; left:31px; top:239px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_7" id="check_7" type="text" class="Xbox" style="position:absolute; left:31px; top:256px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_8" id="check_8" type="text" class="Xbox" style="position:absolute; left:31px; top:273px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_9" id="check_9" type="text" class="Xbox" style="position:absolute; left:62px; top:289px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_10" id="check_10" type="text" class="Xbox" style="position:absolute; left:62px; top:305px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_11" id="check_11" type="text" class="Xbox" style="position:absolute; left:62px; top:323px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_12" id="check_12" type="text" class="Xbox" style="position:absolute; left:33px; top:340px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_13" id="check_13" type="text" class="Xbox" style="position:absolute; left:33px; top:357px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_14" id="check_14" type="text" class="Xbox" style="position:absolute; left:33px; top:389px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_15" id="check_15" type="text" class="Xbox" style="position:absolute; left:33px; top:407px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_16" id="check_16" type="text" class="Xbox" style="position:absolute; left:33px; top:438px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_17" id="check_17" type="text" class="Xbox" style="position:absolute; left:62px; top:438px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_18" id="check_18" type="text" class="Xbox" style="position:absolute; left:32px; top:456px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_19" id="check_19" type="text" class="Xbox" style="position:absolute; left:63px; top:456px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_20" id="check_20" type="text" class="Xbox" style="position:absolute; left:32px; top:472px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_21" id="check_21" type="text" class="Xbox" style="position:absolute; left:62px; top:472px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_22" id="check_22" type="text" class="Xbox" style="position:absolute; left:32px; top:489px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_23" id="check_23" type="text" class="Xbox" style="position:absolute; left:62px; top:489px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_24" id="check_24" type="text" class="Xbox" style="position:absolute; left:33px; top:507px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_25" id="check_25" type="text" class="Xbox" style="position:absolute; left:62px; top:507px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_26" id="check_26" type="text" class="Xbox" style="position:absolute; left:34px; top:524px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_27" id="check_27" type="text" class="Xbox" style="position:absolute; left:63px; top:524px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_28" id="check_28" type="text" class="Xbox" style="position:absolute; left:33px; top:538px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_29" id="check_29" type="text" class="Xbox" style="position:absolute; left:62px; top:538px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_30" id="check_30" type="text" class="Xbox" style="position:absolute; left:32px; top:555px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_31" id="check_31" type="text" class="Xbox" style="position:absolute; left:61px; top:556px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_32" id="check_32" type="text" class="Xbox" style="position:absolute; left:32px; top:573px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_33" id="check_33" type="text" class="Xbox" style="position:absolute; left:256px; top:190px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_34" id="check_34" type="text" class="Xbox" style="position:absolute; left:256px; top:208px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_35" id="check_35" type="text" class="Xbox" style="position:absolute; left:256px; top:258px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_36" id="check_36" type="text" class="Xbox" style="position:absolute; left:256px; top:277px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_37" id="check_37" type="text" class="Xbox" style="position:absolute; left:256px; top:294px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_38" id="check_38" type="text" class="Xbox" style="position:absolute; left:256px; top:311px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_39" id="check_39" type="text" class="Xbox" style="position:absolute; left:256px; top:327px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_40" id="check_40" type="text" class="Xbox" style="position:absolute; left:256px; top:342px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_41" id="check_41" type="text" class="Xbox" style="position:absolute; left:256px; top:358px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_42" id="check_42" type="text" class="Xbox" style="position:absolute; left:256px; top:375px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_43" id="check_43" type="text" class="Xbox" style="position:absolute; left:256px; top:427px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_44" id="check_44" type="text" class="Xbox" style="position:absolute; left:256px; top:445px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_45" id="check_45" type="text" class="Xbox" style="position:absolute; left:256px; top:461px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_46" id="check_46" type="text" class="Xbox" style="position:absolute; left:402px; top:193px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_47" id="check_47" type="text" class="Xbox" style="position:absolute; left:402px; top:210px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_48" id="check_48" type="text" class="Xbox" style="position:absolute; left:431px; top:210px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_49" id="check_49" type="text" class="Xbox" style="position:absolute; left:402px; top:226px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_50" id="check_50" type="text" class="Xbox" style="position:absolute; left:402px; top:243px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_51" id="check_51" type="text" class="Xbox" style="position:absolute; left:402px; top:260px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_52" id="check_52" type="text" class="Xbox" style="position:absolute; left:402px; top:309px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_53" id="check_53" type="text" class="Xbox" style="position:absolute; left:402px; top:326px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_54" id="check_54" type="text" class="Xbox" style="position:absolute; left:402px; top:343px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_55" id="check_55" type="text" class="Xbox" style="position:absolute; left:402px; top:361px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_56" id="check_56" type="text" class="Xbox" style="position:absolute; left:402px; top:377px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_57" id="check_57" type="text" class="Xbox" style="position:absolute; left:402px; top:393px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_58" id="check_58" type="text" class="Xbox" style="position:absolute; left:402px; top:410px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_59" id="check_59" type="text" class="Xbox" style="position:absolute; left:402px; top:442px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_60" id="check_60" type="text" class="Xbox" style="position:absolute; left:569px; top:193px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_61" id="check_61" type="text" class="Xbox" style="position:absolute; left:597px; top:193px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_62" id="check_62" type="text" class="Xbox" style="position:absolute; left:570px; top:210px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_63" id="check_63" type="text" class="Xbox" style="position:absolute; left:599px; top:210px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_64" id="check_64" type="text" class="Xbox" style="position:absolute; left:569px; top:227px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_65" id="check_65" type="text" class="Xbox" style="position:absolute; left:597px; top:227px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_66" id="check_66" type="text" class="Xbox" style="position:absolute; left:568px; top:242px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_67" id="check_67" type="text" class="Xbox" style="position:absolute; left:598px; top:242px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_68" id="check_68" type="text" class="Xbox" style="position:absolute; left:569px; top:259px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_69" id="check_69" type="text" class="Xbox" style="position:absolute; left:598px; top:259px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_70" id="check_70" type="text" class="Xbox" style="position:absolute; left:569px; top:276px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_71" id="check_71" type="text" class="Xbox" style="position:absolute; left:597px; top:276px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_72" id="check_72" type="text" class="Xbox" style="position:absolute; left:569px; top:294px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_73" id="check_73" type="text" class="Xbox" style="position:absolute; left:596px; top:294px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_74" id="check_74" type="text" class="Xbox" style="position:absolute; left:568px; top:311px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_75" id="check_75" type="text" class="Xbox" style="position:absolute; left:595px; top:311px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_76" id="check_76" type="text" class="Xbox" style="position:absolute; left:569px; top:327px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_77" id="check_77" type="text" class="Xbox" style="position:absolute; left:597px; top:327px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_78" id="check_78" type="text" class="Xbox" style="position:absolute; left:567px; top:344px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_79" id="check_79" type="text" class="Xbox" style="position:absolute; left:597px; top:344px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_80" id="check_80" type="text" class="Xbox" style="position:absolute; left:568px; top:362px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_81" id="check_81" type="text" class="Xbox" style="position:absolute; left:597px; top:362px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_82" id="check_82" type="text" class="Xbox" style="position:absolute; left:567px; top:408px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_83" id="check_83" type="text" class="Xbox" style="position:absolute; left:598px; top:408px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_84" id="check_84" type="text" class="Xbox" style="position:absolute; left:567px; top:425px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_85" id="check_85" type="text" class="Xbox" style="position:absolute; left:596px; top:425px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_86" id="check_86" type="text" class="Xbox" style="position:absolute; left:568px; top:442px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_87" id="check_87" type="text" class="Xbox" style="position:absolute; left:599px; top:442px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_88" id="check_88" type="text" class="Xbox" style="position:absolute; left:568px; top:458px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_89" id="check_89" type="text" class="Xbox" style="position:absolute; left:598px; top:458px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_90" id="check_90" type="text" class="Xbox" style="position:absolute; left:568px; top:475px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_91" id="check_91" type="text" class="Xbox" style="position:absolute; left:598px; top:475px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_92" id="check_92" type="text" class="Xbox" style="position:absolute; left:569px; top:491px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_93" id="check_93" type="text" class="Xbox" style="position:absolute; left:596px; top:491px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_94" id="check_94" type="text" class="Xbox" style="position:absolute; left:568px; top:507px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_95" id="check_95" type="text" class="Xbox" style="position:absolute; left:596px; top:507px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_96" id="check_96" type="text" class="Xbox" style="position:absolute; left:570px; top:525px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_97" id="check_97" type="text" class="Xbox" style="position:absolute; left:598px; top:525px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="check_98" id="check_98" type="text" class="Xbox" style="position:absolute; left:431px; top:607px; width:17px; height:17px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:15px; text-align:center; background-color:transparent;" >
+<input name="check_99" id="check_99" type="text" class="Xbox" style="position:absolute; left:431px; top:667px; width:17px; height:17px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:15px; text-align:center; background-color:transparent;" >
+<input name="check_100" id="check_100" type="text" class="Xbox" style="position:absolute; left:431px; top:685px; width:17px; height:17px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:15px; text-align:center; background-color:transparent;" >
+<input name="check_101" id="check_101" type="text" class="Xbox" style="position:absolute; left:431px; top:912px; width:17px; height:17px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:15px; text-align:center; background-color:transparent;" >
+<input name="check_102" id="check_102" type="text" class="Xbox" style="position:absolute; left:608px; top:912px; width:17px; height:17px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:15px; text-align:center; background-color:transparent;" >
+
+<input name="ultrasoundother" id="ultrasoundother" type="text" class="noborder" style="position:absolute; left:92px; top:571px; width:144px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:white;" >
+<textarea name="xrayother" id="xrayother" type="text" class="noborder" style="position:absolute; left:425px; top:456px; width:127px; height:34px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:white;" ></textarea>
+<textarea name="technotes" id="technotes" type="text" class="noborder" style="position:absolute; left:257px; top:511px; width:279px; height:73px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:white;" ></textarea>
+<input name="digit" id="digit" type="text" class="noborder" style="position:absolute; left:632px; top:376px; width:25px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;" >
+<input name="toe" id="toe" type="text" class="noborder" style="position:absolute; left:632px; top:543px; width:27px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;" >
+<textarea name="clinicalinfo" id="clinicalinfo" type="text" class="noborder" style="position:absolute; left:29px; top:617px; width:373px; height:85px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;" ></textarea>
+<input name="currentuser" id="currentuser" type="text" class="noborder" style="position:absolute; left:25px; top:714px; width:160px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=current_user_fname_lname>
+<input name="copyto" id="copyto" type="text" class="noborder" style="position:absolute; left:25px; top:760px; width:160px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=doctor>
+<input name="ohip" id="ohip" type="text" class="noborder" style="position:absolute; left:6px; top:804px; width:121px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="version" id="version" type="text" class="noborder" style="position:absolute; left:134px; top:804px; width:35px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=hinversion>
+<input name="lastname" id="lastname" type="text" class="noborder" style="position:absolute; left:175px; top:804px; width:177px; height:28px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="firstname" id="firstname" type="text" class="noborder" style="position:absolute; left:6px; top:841px; width:127px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:138px; top:841px; width:110px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=dob>
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:323px; top:841px; width:110px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:323px; top:869px; width:110px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="address" id="address" type="text" class="noborder" style="position:absolute; left:6px; top:875px; width:311px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=addressline>
+<input name="date" id="date" type="text" class="noborder" style="position:absolute; left:6px; top:916px; width:119px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="appointment" id="appointment" type="text" class="noborder" style="position:absolute; left:139px; top:916px; width:263px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;" >
+<!--<textarea name="instructions" id="instructions" type="text" class=" noborder" style="position:absolute; left:447px; top:842px; width:290px; height:56px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;" ></textarea> -->
+
+<input name="currentuserohip" id="currentuserohip" type="text" class="noborder" style="position:absolute; left:200px; top:714px; width:60px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=current_user_ohip_no>
+<input name="mrpohip" id="mrpohip" type="text" class="noborder" style="position:absolute; left:200px; top:760px; width:60px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=doctor_ohip_no>
+<input name="clinicname" id="clinicaddress" type="text" class="noborder" style="position:absolute; left:550px; top:840px; width:170px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_name>
+<input name="clinicaddress" id="clinicaddress" type="text" class="noborder" style="position:absolute; left:440px; top:860px; width:290px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_addressLineFull>
+<input name="clinicfax" id="clinicfax" type="text" class="noborder" style="position:absolute; left:600px; top:880px; width:120px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:15px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<!-- REPLACE eFORM FIELDS ABOVE -->
+
+<!-- ADJUST eFORM SIGNATURE STAMP POSITION HERE "left:", "top:" etc -->
+<!-- Stamp.js signature position, relative to this page if placed in this div-->
+<img id="Stamp" src="../eform/displayImage.do?imagefile=BNK.png" style="position:absolute; left:275px; top:714px;" width="120" height="35" onclick="toggleMe();">
+
+</div>
+
+<!-- Important for stamp.js to find doctor user -->
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+<!-- Important for Gender checkboxes to work -->
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="" ></input>
+
+
+ <div class="DoNotPrint" id="BottomButtons" style="position: relative; top:0px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+<!--			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',3000);">  -->
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="releaseDirtyFlag();setTimeout(SubmitButton.click(),1000);formPrint();">
+
+	 </td></tr></table>
+ </div>
+ </form>
+
+</body>
+</html>

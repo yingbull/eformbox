@@ -1,0 +1,1031 @@
+<html>
+<head>
+
+<!-- V1_May27_2019: original request from Dr. J Morse, via OscarBC; based on Island Health Regional Surgical Booking Request - which is a fillable PDF; this is the generic version.  J Yap -->
+<!-- V2_Jul28_2019: add drop down lists for procedures; J Yap -->
+<!-- V3_Oct11_2019: fix Date of Decision bug - date change is preserved on submit, default is today; J Yap -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+<!-- Do not use \n to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}Island_Health_Regional_Booking_Form_v_1.06_FINAL_Oscar.png"
+</script>
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style>
+.input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+.sig {
+	 border: 2px dotted blue;
+	 background: transparent;
+}
+</style>
+
+<style type="text/css" media="print">
+.DoNotPrint {display: none;}
+.noborder {
+	 border:0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 overflow: hidden;
+}
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background: transparent;
+} 
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<!-- Xbox/Show/Hide/FontChange styling Arial creates better X's than sans-serif -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	font-family:Arial;
+	width: 14px;
+	height: 14px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 14px;
+	text-align: center;
+	background: aquamarine;
+}
+.box2 {
+	position: absolute;
+	font-family:Arial;
+	width:13px;
+	height:13px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 13px;
+	text-align: center;
+	background: aquamarine;
+}
+.circle {
+	position:absolute;
+	width:32px;
+	height:34px;
+	font-family:Arial;
+	text-align:center;
+	font-size:36px;
+	background:transparent;
+	border:0px;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+.FontSizeChange {
+	position:absolute;
+	width:16px;
+	height:15px;
+	font-size:13px;
+	cursor:pointer;
+	background:yellow;
+	text-align:center;
+	border: 1px solid #000000;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {
+			// new off-line architecture as per K Yap
+			setDocumentTitle('IslandHealthSurgicalBooking',document.getElementById('PatientNameL').value);
+			changeImage("Island_Health_Regional_Booking_Form_v_1.06_FINAL_Oscar.png", "BGImage1");
+			loadFontSize();
+			setDefaults();
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;					
+							
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				// document.getElementById("").value = 'X';
+
+			//optimize window size/width
+			top.window.resizeTo(950, screen.availHeight);
+
+			checkGender();
+
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById("current_user_name").value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.CurrentProviderDoctor.value = First_Last_Name ;
+
+			// Change date field to dd/mm/yyyy format for Date of Decision
+			// Function expects an array of date components in yyyy-mm-dd format
+			var delimiter = '-';
+			var today_format = document.getElementById('yymmdd').value;
+	
+			// Split the value
+			var yy = today_format.split(delimiter)[0];
+			var mm = today_format.split(delimiter)[1];
+			var dd = today_format.split(delimiter)[2];
+	
+			var ddmmyy_format = dd + "/" + mm + "/" + yy;
+	
+			// Show the ddmmyy
+			document.FormName.DateOfDecision.value = ddmmyy_format;
+			}
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		/****************************
+		Checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+				$( this ).click();
+				return false;
+				}
+			});
+		});
+
+		/****************************
+		Circle function
+		****************************/
+		function changeValueO(x) {
+			if (document.getElementById(x).value == '')
+				document.getElementById(x).value = 'O';
+			else
+				document.getElementById(x).value = '';
+		}
+
+		/****************************
+		Side function
+		****************************/
+		function changeSide(x) {
+			if (document.getElementById(x).value == '')
+				document.getElementById(x).value = 'Rt';
+			else if (document.getElementById(x).value == 'Rt')
+				document.getElementById(x).value = 'Lt';
+			else if (document.getElementById(x).value == 'Lt')
+				document.getElementById(x).value = 'Bilat';
+			else if (document.getElementById(x).value == 'Bilat')
+				document.getElementById(x).value = 'N/A';
+			else if (document.getElementById(x).value == 'N/A')
+				document.getElementById(x).value = '';
+		}
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+		/****************************
+			script to Increase or Decrease the Font Size
+			name = input name/id, delta = increase (+) or decrease (-) increment #
+			Requires loadFontSize(); in startUp, or in onload line
+		****************************/
+		function changeFontSize(name, delta) {
+			var element = $("#" + name)
+			var oldSize = parseInt(element.css("font-size"));
+			var newSize = oldSize + delta;
+	
+			// Save new font size into "value" field of hidden element
+			$("#" + name + "_fontsize").attr('value', newSize);
+	
+			// Set font size
+			element.css({'font-size': newSize + 'px'});
+		}
+
+		// Retains altered font size when eForm is reopened; 
+		// Requires hidden inputs with format for each field using this feature: 
+		// <input type="hidden" name="Input_fontsize" id="Input_fontsize" value="">
+		function loadFontSize() {
+			$.each($("input[name*='_fontsize'"), function(index, element) {
+				var fontSize = element.value;
+	
+				if (!!fontSize) {
+					var name = element.name.split('_')[0];
+					$("#" + name).css({'font-size': fontSize + 'px'});
+				}
+			});
+		}
+
+		/****************************
+			Check gender
+		****************************/
+		function checkGender() {
+				if (document.getElementById('PatientGender').value == 'M') {
+				document.getElementById('Male').value = 'X';
+				}
+				else if (document.getElementById('PatientGender').value == 'F') {
+				 document.getElementById('Female').value = 'X';
+				}
+		}
+</script>	
+
+<script>
+		/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x and is named in the convention name_X where X appears in the string defined in scales
+		****************************/
+		function Radio_Box1(x) {
+			var scales = ["Yes", "No"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+
+		function Radio_Box2(x) {
+			var scales = ["1", "2", "3", "4"];
+			var partA = x.substring(0, x.indexOf("_"));
+			var i = x.substring(x.indexOf("_"));
+			var j = i.substr(1);
+	
+			for (var n in scales) {
+				if ( j == scales[n]) {
+					for (var m in scales){
+						if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+					}
+				}
+			}
+		return false;
+		}
+</script>
+
+</head>
+
+<body onload="startUp();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<img id="BGImage1" src="" style="position:relative; left:0px; top:0px; width:850px;">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for checkGender -->
+<input type="hidden" name="PatientGender" id="PatientGender" oscarDB=sex>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctorX" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<!-- Hidden input for dd/mm/yyyy format -->
+<input type="hidden" name="yymmdd" id="yymmdd" oscarDB=today>
+
+<!-- Hidden input for font size changer inputs -->
+<input type="hidden" name="PatientLabel_fontsize" id="PatientLabel_fontsize" value="">
+<input type="hidden" name="Comments_fontsize" id="Comments_fontsize" value="">
+
+<!-- Site -->
+<select class="DoNotPrint" name="Choose_Site" style="position:absolute; left:190px; top:10px; color:green; background:transparent;">
+	<option onClick="document.FormName.Site.value='';
+			document.FormName.subject.value='';">Site</option>
+	<option onClick="document.FormName.Site.value='CDH'; document.FormName.subject.value='CDH';"
+			title="Cowichan District Hospital">CDH</option>
+	<option onClick="document.FormName.Site.value='CRH'; document.FormName.subject.value='CRH';"
+			title="Campbell River Hospital">CRH</option>
+	<option onClick="document.FormName.Site.value='CVH'; document.FormName.subject.value='CVH';"
+			title="Comox Valley Hospital">CVH</option>
+	<option onClick="document.FormName.Site.value='LMH'; document.FormName.subject.value='LMH';"
+			title="Lady Minto Hospital">LMH</option>
+	<option onClick="document.FormName.Site.value='NRGH'; document.FormName.subject.value='NRGH';"
+			title="Nanaimo Regional General Hospital">NRGH</option>
+	<option onClick="document.FormName.Site.value='PRV'; document.FormName.subject.value='PRV';"
+			title="??? Hospital">PRV</option>
+	<option onClick="document.FormName.Site.value='RJH'; document.FormName.subject.value='RJH';"
+			title="Royal Jubilee Hospital">RJH</option>
+	<option onClick="document.FormName.Site.value='SPH'; document.FormName.subject.value='SPH';"
+			title="Saanich Peninsula Hospital">SPH</option>
+	<option onClick="document.FormName.Site.value='VGH'; document.FormName.subject.value='VGH'';"
+			title="Victoria General Hospital">VGH</option>
+	<option onClick="document.FormName.Site.value='WCGH'; document.FormName.subject.value='WCGH';"
+			title="West Coast General Hospital">WCGH</option>
+</select>
+<input name="Site" id="Site" type="text" class="noborder" style="position:absolute; left:188px; top:45px; width:62px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+
+<!-- Service -->
+<select class="DoNotPrint" name="Choose_Service" style="position:absolute; left:260px; top:10px; color:green; background:transparent;">
+	<option onClick="document.FormName.Service.value='';
+			document.FormName.subject.value='';">Service</option>
+	<option onClick="document.FormName.Service.value='CARD'; document.FormName.subject.value+=' CARD';"
+			title="Cardiology">CARD</option>
+	<option onClick="document.FormName.Service.value='DENT'; document.FormName.subject.value+=' DENT';"
+			title="Dentistry">DENT</option>
+	<option onClick="document.FormName.Service.value='ENDO'; document.FormName.subject.value+=' ENDO';"
+			title="Endocrinology">ENDO</option>
+	<option onClick="document.FormName.Service.value='GENL'; document.FormName.subject.value+=' GENL';"
+			title="General Surgery">GENL</option>
+	<option onClick="document.FormName.Service.value='GYN/OB'; document.FormName.subject.value+=' GYN/OB';"
+			title="Gynecology/Obstetrics">GYN/OB</option>
+	<option onClick="document.FormName.Service.value='NEUR'; document.FormName.subject.value+=' NEUR';"
+			title="Neurology">NEUR</option>
+	<option onClick="document.FormName.Service.value='OPHT'; document.FormName.subject.value+=' OPHT';"
+			title="Ophthalmology">OPHT</option>
+	<option onClick="document.FormName.Service.value='ORAL'; document.FormName.subject.value+=' ORAL';"
+			title="Oral Surgery">ORAL</option>
+	<option onClick="document.FormName.Service.value='PLST'; document.FormName.subject.value+=' PLST'';"
+			title="Plastic Surgery">PLST</option>
+	<option onClick="document.FormName.Service.value='THOR'; document.FormName.subject.value+=' THOR';"
+			title="Thoracic Surgery">THOR</option>
+	<option onClick="document.FormName.Service.value='THOR'; document.FormName.subject.value+=' THOR';"
+			title="Thoracic Surgery">THOR</option>
+	<option onClick="document.FormName.Service.value='UROL'; document.FormName.subject.value+=' UROL';"
+			title="Urolgy">UROL</option>
+	<option onClick="document.FormName.Service.value='VASC'; document.FormName.subject.value+=' VASC';"
+			title="Vascular Surgery">VASC</option>
+</select>
+
+<input name="Service" id="Service" type="text" class="noborder" style="position:absolute; left:235px; top:78px; width:80px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+
+<!-- Patient Label -->
+<textarea name="PatientLabel" id="PatientLabel" type="text" class="noborder" style="position:absolute; left:515px; top:135px; width:305px; height:110px; resize:none; font-family:Arial; font-size:14px; background:transparent;" oscardb="label"></textarea>
+<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:825px; top:137px;" onclick="changeFontSize('PatientLabel', 1);" value="" >&#9650;</span>
+<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:825px; top:152px;" onclick="changeFontSize('PatientLabel', -1);" value="">&#9660;</span>
+
+<!-- Patient Info -->
+<input name="Patient_NameL" id="Patient_NameL" type="text" class="noborder" style="position:absolute; left:80px; top:150px; width:430px; font-family:sans-serif; font-size:16px; background:transparent;" oscardb=Patient_NameL>
+
+<input name="Patient_NameF" id="Patient_NameF" type="text" class="noborder" style="position:absolute; left:80px; top:189px; width:230px; font-family:sans-serif; font-size:16px; text-transform:capitalize; background:transparent;" oscardb=Patient_NameF>
+
+<input name="Patient_Name_Preferred" id="Patient_Name_Preferred" type="text" class="noborder" style="position:absolute; left:315px; top:189px; width:195px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<input name="Date_OR" id="Date_OR" type="text" class="noborder" style="position:absolute; left:80px; top:227px; width:250px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="Time_OR" id="Time_OR" type="text" class="noborder" style="position:absolute; left:340px; top:227px; width:170px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<input name="PHN" id="PHN" type="text" class="noborder" style="position:absolute; left:80px; top:271px; width:100px; font-family:sans-serif; font-size:14px; background:transparent;" oscardb=hinc>
+<input name="age" id="age" type="text" class="noborder" style="position:absolute; left:190px; top:271px; width:30px; font-family:sans-serif; font-size:14px; text-align:center; background:transparent;" oscardb=age>
+<input name="dobc" id="dobc" type="text" class="noborder" style="position:absolute; left:227px; top:271px; width:105px; font-family:sans-serif; font-size:14px; background:transparent;" oscardb=dobc>
+
+<!-- Non-MSP Billing -->
+<select class="DoNotPrint" name="Choose_Payer" style="position:absolute; left:840px; top:254px; color:green; background:transparent;">
+	<option onClick="document.FormName.Payer.value='';">Billing (Non-MSP)</option>
+	<option onClick="document.FormName.Payer.value='ICBC';">ICBC</option>
+	<option onClick="document.FormName.Payer.value='Self';">Self</option>
+	<option onClick="document.FormName.Payer.value='WSBC';">WSBC</option>
+	<option onClick="document.FormName.Payer.value='Other';">Other</option>
+</select>
+<input name="Payer" id="Payer" type="text" class="noborder" style="position:absolute; left:380px; top:254px; width:130px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<input name="Non_MSP_Billing_Number" id="Non_MSP_Billing_Number" type="text" class="noborder" style="position:absolute; left:595px; top:254px; width:230px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<input name="Patient_Pay" id="Patient_Pay" type="text" class="Xbox box2" style="left:696px; top:274px;">
+<input name="MH_Approved" id="MH_Approved" type="text" class="Xbox box2" style="left:790px; top:274px;">
+
+<textarea name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:80px; top:305px; width:255px; height:54px; resize:none; font-family:sans-serif; font-size:14px; background:transparent;" oscardb=addressline></textarea>
+<input name="city" id="city" type="text" class="noborder" style="position:absolute; left:345px; top:307px; width:160px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=city>
+<input name="Province" id="Province" type="text" class="noborder" style="position:absolute; left:515px; top:307px; width:50px; font-family:sans-serif; font-size:14px; text-align:center; background:transparent;" oscarDB=Province>
+<input name="postal" id="postal" type="text" class="noborder" style="position:absolute; left:580px; top:307px; width:70px; font-family:sans-serif; font-size:14px; text-align:center; background:transparent;" oscarDB=postal>
+
+<!-- Gender -->
+<input name="Male" id="Male" type="text" class="Xbox box2" style="left:676px; top:308px;">
+<input name="Female" id="Female" type="text" class="Xbox box2" style="left:711px; top:308px;">
+
+<input name="Short_notice" id="Short_notice" type="text" class="Xbox box2" style="left:785px; top:308px;">
+
+<!-- Patient Phone -->
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:345px; top:340px; width:160px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=phone>
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:515px; top:340px; width:135px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=cell>
+<input name="LocalContact" id="LocalContact" type="text" class="noborder" style="position:absolute; left:660px; top:340px; width:165px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<!-- Physicians: Surgeon, Family physician, Consult Physician, etc -->
+<textarea name="CurrentProviderDoctor" id="Surgeon" type="text" class="noborder" style="position:absolute; left:130px; top:367px; width:205px; height:38px; resize:none; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+<input name="MSP_Surgeon" id="MSP_Surgeon" type="text" class="noborder" style="position:absolute; left:370px; top:377px; width:50px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=current_user_ohip>
+
+<!-- Referral Dates, etc -->
+<input name="Date_GP_Referral" id="Date_GP_Referral" type="text" class="noborder" style="position:absolute; left:430px; top:380px; width:125px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+<input name="Date_Consult1" id="Date_Consult1" type="text" class="noborder" style="position:absolute; left:565px; top:380px; width:125px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+<input name="DateOfDecision" id="DateOfDecision" type="text" class="noborder" style="position:absolute; left:700px; top:380px; width:125px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+
+<input name="FamilyPhysician" id="FamilyPhysician" type="text" class="noborder" style="position:absolute; left:170px; top:413px; width:165px; font-family:sans-serif; font-size:13px; background:transparent;" value="">
+<input name="MSP_FamilyPhysician" id="MSP_FamilyPhysician" type="text" class="noborder" style="position:absolute; left:370px; top:411px; width:50px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<input name="Assistant1" id="Assistant1" type="text" class="noborder" style="position:absolute; left:490px; top:413px; width:255px; font-family:sans-serif; font-size:13px; background:transparent;" value="">
+<input name="MSP_Assistant1" id="MSP_Assistant1" type="text" class="noborder" style="position:absolute; left:775px; top:411px; width:50px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<input name="ConsultantPhysician" id="ConsultantPhysician" type="text" class="noborder" style="position:absolute; left:170px; top:438px; width:165px; font-family:sans-serif; font-size:13px; background:transparent;" value="">
+<input name="MSP_ConsultantPhysician" id="MSP_ConsultantPhysician" type="text" class="noborder" style="position:absolute; left:370px; top:436px; width:50px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<input name="Assistant2" id="Assistant2" type="text" class="noborder" style="position:absolute; left:490px; top:438px; width:255px; font-family:sans-serif; font-size:13px; background:transparent;" value="">
+<input name="MSP_Assistant2" id="MSP_Assistant2" type="text" class="noborder" style="position:absolute; left:775px; top:436px; width:50px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<!-- Special Bed Req -->
+<select class="DoNotPrint" name="Choose_Bed" style="position:absolute; left:80px; top:492px; color:green; background:transparent;">
+	<option onClick="document.FormName.Bed.value='';">Choose</option>
+	<option onClick="document.FormName.Bed.value='CVU';">CVU</option>
+	<option onClick="document.FormName.Bed.value='ICU';">ICU</option>
+	<option onClick="document.FormName.Bed.value='PICU Unit - RJH';">PICU RJH</option>
+	<option onClick="document.FormName.Bed.value='PICU Unit - VGH';">PICU VGH</option>
+	<option onClick="document.FormName.Bed.value='Step Down - NRGH';">Step Down NRGH</option>
+	<option onClick="document.FormName.Bed.value='Other';">Other</option>
+</select>
+<input name="Bed" id="Bed" type="text" class="noborder" style="position:absolute; left:135px; top:464px; width:180px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<input name="ASA" id="ASA_1" type="text" class="Xbox box2" style="left:143px; top:511px;" onClick="Radio_Box2(this.id);">
+<input name="ASA" id="ASA_2" type="text" class="Xbox box2" style="left:173px; top:511px;" onClick="Radio_Box2(this.id);">
+<input name="ASA" id="ASA_3" type="text" class="Xbox box2" style="left:204px; top:511px;" onClick="Radio_Box2(this.id);">
+<input name="ASA" id="ASA_4" type="text" class="Xbox box2" style="left:237px; top:511px;" onClick="Radio_Box2(this.id);">
+
+<!-- Priority -->
+<input name="Urgent" id="Priority_1" type="text" class="Xbox box2" style="left:437px; top:511px;" onClick="Radio_Box2(this.id);">
+<input name="SemiUrgent" id="Priority_2" type="text" class="Xbox box2" style="left:533px; top:511px;" onClick="Radio_Box2(this.id);">
+<input name="Elective" id="Priority_3" type="text" class="Xbox box2" style="left:609px; top:511px;" onClick="Radio_Box2(this.id);">
+
+<!-- Admission Type -->
+<select class="DoNotPrint" name="Choose_Admission" style="position:absolute; left:330px; top:492px; color:green; background:transparent;">
+	<option onClick="document.FormName.Admission.value='';">Choose</option>
+	<option onClick="document.FormName.Admission.value='24 hr Short Stay';">24 hr</option>
+	<option onClick="document.FormName.Admission.value='48 hr Short Stay';">48 hr</option>
+	<option onClick="document.FormName.Admission.value='72 hr Short Stay';">72 hr</option>
+	<option onClick="document.FormName.Admission.value='Day Care';">Day Care</option>
+	<option onClick="document.FormName.Admission.value='Same Day Surg Admit';">Same Day Surg Adm</option>
+	<option onClick="document.FormName.Admission.value='Surgical Ambulatory';">Surgical Amb</option>
+</select>
+<input name="Admission" id="Admission" type="text" class="noborder" style="position:absolute; left:385px; top:464px; width:160px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+<input name="LengthOfStay" id="LengthOfStay" type="text" class="noborder" style="position:absolute; left:575px; top:477px; width:25px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<textarea name="Diagnosis" id="Diagnosis" type="text" class="noborder" style="position:absolute; left:135px; top:535px; width:495px; height:45px; resize:none; font-family:Arial; font-size:16px; background:transparent;"></textarea>
+
+<input name="Diagnosis_code" id="Diagnosis_code" type="text" class="noborder" style="position:absolute; left:135px; top:587px; width:65px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="ORTH_Rev_code" id="ORTH_Rev_code" type="text" class="noborder" style="position:absolute; left:285px; top:587px; width:25px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="Other_code" id="Other_code" type="text" class="noborder" style="position:absolute; left:385px; top:587px; width:245px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<textarea name="Cancellation_comment" id="Cancellation_comment" type="text" class="noborder" style="position:absolute; left:640px; top:477px; width:185px; height:50px; resize:none; font-family:Arial; font-size:13px; background:transparent;"></textarea>
+
+<!-- Cancer -->
+<input name="Proven" id="Cancer_1" type="text" class="Xbox box2" style="left:775px; top:542px;" onClick="Radio_Box2(this.id);">
+<input name="Suspected" id="Cancer_2" type="text" class="Xbox box2" style="left:775px; top:570px;" onClick="Radio_Box2(this.id);">
+<input name="Not_Suspected_or_Proven" id="Cancer_3" type="text" class="Xbox box2" style="left:775px; top:594px;" onClick="Radio_Box2(this.id);">
+
+<!-- Procedures -->
+<input name="ProcedureCode_1" id="ProcedureCode_1" type="text" class="noborder" style="position:absolute; left:80px; top:632px; width:100px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="ProcedureCode_1_side" id="ProcedureCode_1_side" type="text" class="noborder" style="position:absolute; left:190px; top:632px; width:60px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="" onclick="changeSide(this.id);">
+<input name="Procedure_1" id="Procedure_1" type="text" class="noborder" style="position:absolute; left:260px; top:632px; width:565px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- ProcedureCode_1 -->
+<select class="DoNotPrint" name="Choose_Procedure" style="position:absolute; left:840px; top:632px; color:green; background:transparent;">
+	<option onClick="document.FormName.ProcedureCode_1.value='';
+				document.FormName.Procedure_1.value='';
+				document.FormName.ProcedureCode_1_side.value='';">Procedure Code 1</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00000';
+				document.FormName.Procedure_1.value='MEDICAL ENDO BRONCHOSCOPY';"
+				title="MEDICAL ENDO BRONCHOSCOPY">ENDO00000</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00001';
+				document.FormName.Procedure_1.value='MEDICAL ENDO BRONCHOSCOPY TRANS BRONCHIAL BX C-ARM';"
+				title="MEDICAL ENDO BRONCHOSCOPY TRANS BRONCHIAL BX C-ARM">ENDO00001</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00002';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY GASTROSCOPY';"
+				title="MEDICAL ENDO COLONOSCOPY GASTROSCOPY">ENDO00002</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00003';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY ARTIFICIAL STOMA';"
+				title="MEDICAL ENDO COLONOSCOPY ARTIFICIAL STOMA">ENDO00003</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00004';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (SYMPTOMS AND FINDINGS)';"
+				title="MEDICAL ENDO COLONOSCOPY (SYMPTOMS AND FINDINGS)">ENDO00004</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00005';
+				document.FormName.Procedure_1.value='MEDICAL ENDO ESOPHAGEAL DILATION';"
+				title="MEDICAL ENDO ESOPHAGEAL DILATION">ENDO00005</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00006';
+				document.FormName.Procedure_1.value='MEDICAL ENDO ESOPHAGOSCOPY W/DILATATION';"
+				title="MEDICAL ENDO ESOPHAGOSCOPY W/DILATATION">ENDO00006</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00007';
+				document.FormName.Procedure_1.value='MEDICAL ENDO ESOPHAGOSCOPY';"
+				title="MEDICAL ENDO ESOPHAGOSCOPY">ENDO00007</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00008';
+				document.FormName.Procedure_1.value='MEDICAL ENDO GASTROSCOPY';"
+				title="MEDICAL ENDO GASTROSCOPY">ENDO00008</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00009';
+				document.FormName.Procedure_1.value='MEDICAL ENDO ENDOSCOPY UPPER GI';"
+				title="MEDICAL ENDO ENDOSCOPY UPPER GI">ENDO00009</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00010';
+				document.FormName.Procedure_1.value='MEDICAL ENDO SIGMOIDOSCOPY FLEXIBLE';"
+				title="MEDICAL ENDO SIGMOIDOSCOPY FLEXIBLE">ENDO00010</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00011';
+				document.FormName.Procedure_1.value='MEDICAL ENDO SIGMOIDOSCOPY OTHER';"
+				title="MEDICAL ENDO SIGMOIDOSCOPY OTHER">ENDO00011</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00012';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (SCREENING)';"
+				title="MEDICAL ENDO COLONOSCOPY (SCREENING)">ENDO00012</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00013';
+				document.FormName.Procedure_1.value='MEDICAL ENDO LIVER BIOPSY PERCUTANEOUS ULTRASOUND';"
+				title="MEDICAL ENDO LIVER BIOPSY PERCUTANEOUS ULTRASOUND">ENDO00013</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00014';
+				document.FormName.Procedure_1.value='MEDICAL ENDO GASTROSCOPY VARICEAL GLUING';"
+				title="MEDICAL ENDO GASTROSCOPY VARICEAL GLUING">ENDO00014</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00015';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COAGULATION ARGON PLASMA (SUB PROCEDURE ONLY)';"
+				title="MEDICAL ENDO COAGULATION ARGON PLASMA (SUB PROCEDURE ONLY)">ENDO00015</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00016';
+				document.FormName.Procedure_1.value='MEDICAL ENDO HEMORRHOID BANDING';"
+				title="MEDICAL ENDO HEMORRHOID BANDING">ENDO00016</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00017';
+				document.FormName.Procedure_1.value='MEDICAL EXCISION/BIOPSY NANAIMO ONLY';"
+				title="MEDICAL EXCISION/BIOPSY NANAIMO ONLY">ENDO00017</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00018';
+				document.FormName.Procedure_1.value='MEDICAL ENDO ANOSCOPY PROCTOSCOPY';"
+				title="MEDICAL ENDO ANOSCOPY PROCTOSCOPY">ENDO00018</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00022';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (SURVEILLANCE NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (SURVEILLANCE NO CSP)">ENDO00022</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00023';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (SURVEILLANCE YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (SURVEILLANCE YES CSP)">ENDO00023</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00024';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (FIT POSITIVE NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FIT POSITIVE NO CSP)">ENDO00024</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00025';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (FIT POSITIVE YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FIT POSITIVE YES CSP)">ENDO00025</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00026';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY NO CSP)">ENDO00026</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00027';
+				document.FormName.Procedure_1.value='MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY YES CSP)">ENDO00027</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00028';
+				document.FormName.Procedure_1.value='MEDICAL ENDO ILEOSCOPY';"
+				title="MEDICAL ENDO ILEOSCOPY">ENDO00028</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00029';
+				document.FormName.Procedure_1.value='MEDICAL ENDO CAPSULE';"
+				title="MEDICAL ENDO CAPSULE">ENDO00029</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00030';
+				document.FormName.Procedure_1.value='MEDICAL ENDO THORACENTESIS';"
+				title="MEDICAL ENDO THORACENTESIS">ENDO00030</option>
+	<option onClick="document.FormName.ProcedureCode_1.value='ENDO00031';
+				document.FormName.Procedure_1.value='MEDICAL ENDO GASTROSCOPY WITH INSERTION OF FEEDING TUBE';"
+				title="MEDICAL ENDO GASTROSCOPY WITH INSERTION OF FEEDING TUBE">ENDO00031</option>
+</select>
+
+<input name="ProcedureCode_2" id="ProcedureCode_2" type="text" class="noborder" style="position:absolute; left:80px; top:662px; width:100px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="ProcedureCode_2_side" id="ProcedureCode_2_side" type="text" class="noborder" style="position:absolute; left:190px; top:662px; width:60px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="" onclick="changeSide(this.id);">
+<input name="Procedure_2" id="Procedure_2" type="text" class="noborder" style="position:absolute; left:260px; top:662px; width:565px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- ProcedureCode_2 -->
+<select class="DoNotPrint" name="Choose_Procedure" style="position:absolute; left:840px; top:662px; color:green; background:transparent;">
+	<option onClick="document.FormName.ProcedureCode_2.value='';
+				document.FormName.Procedure_2.value='';
+				document.FormName.ProcedureCode_2_side.value='';">Procedure Code 2</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00000';
+				document.FormName.Procedure_2.value='MEDICAL ENDO BRONCHOSCOPY';"
+				title="MEDICAL ENDO BRONCHOSCOPY">ENDO00000</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00001';
+				document.FormName.Procedure_2.value='MEDICAL ENDO BRONCHOSCOPY TRANS BRONCHIAL BX C-ARM';"
+				title="MEDICAL ENDO BRONCHOSCOPY TRANS BRONCHIAL BX C-ARM">ENDO00001</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00002';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY GASTROSCOPY';"
+				title="MEDICAL ENDO COLONOSCOPY GASTROSCOPY">ENDO00002</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00003';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY ARTIFICIAL STOMA';"
+				title="MEDICAL ENDO COLONOSCOPY ARTIFICIAL STOMA">ENDO00003</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00004';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (SYMPTOMS AND FINDINGS)';"
+				title="MEDICAL ENDO COLONOSCOPY (SYMPTOMS AND FINDINGS)">ENDO00004</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00005';
+				document.FormName.Procedure_2.value='MEDICAL ENDO ESOPHAGEAL DILATION';"
+				title="MEDICAL ENDO ESOPHAGEAL DILATION">ENDO00005</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00006';
+				document.FormName.Procedure_2.value='MEDICAL ENDO ESOPHAGOSCOPY W/DILATATION';"
+				title="MEDICAL ENDO ESOPHAGOSCOPY W/DILATATION">ENDO00006</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00007';
+				document.FormName.Procedure_2.value='MEDICAL ENDO ESOPHAGOSCOPY';"
+				title="MEDICAL ENDO ESOPHAGOSCOPY">ENDO00007</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00008';
+				document.FormName.Procedure_2.value='MEDICAL ENDO GASTROSCOPY';"
+				title="MEDICAL ENDO GASTROSCOPY">ENDO00008</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00009';
+				document.FormName.Procedure_2.value='MEDICAL ENDO ENDOSCOPY UPPER GI';"
+				title="MEDICAL ENDO ENDOSCOPY UPPER GI">ENDO00009</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00010';
+				document.FormName.Procedure_2.value='MEDICAL ENDO SIGMOIDOSCOPY FLEXIBLE';"
+				title="MEDICAL ENDO SIGMOIDOSCOPY FLEXIBLE">ENDO00010</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00011';
+				document.FormName.Procedure_2.value='MEDICAL ENDO SIGMOIDOSCOPY OTHER';"
+				title="MEDICAL ENDO SIGMOIDOSCOPY OTHER">ENDO00011</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00012';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (SCREENING)';"
+				title="MEDICAL ENDO COLONOSCOPY (SCREENING)">ENDO00012</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00013';
+				document.FormName.Procedure_2.value='MEDICAL ENDO LIVER BIOPSY PERCUTANEOUS ULTRASOUND';"
+				title="MEDICAL ENDO LIVER BIOPSY PERCUTANEOUS ULTRASOUND">ENDO00013</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00014';
+				document.FormName.Procedure_2.value='MEDICAL ENDO GASTROSCOPY VARICEAL GLUING';"
+				title="MEDICAL ENDO GASTROSCOPY VARICEAL GLUING">ENDO00014</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00015';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COAGULATION ARGON PLASMA (SUB PROCEDURE ONLY)';"
+				title="MEDICAL ENDO COAGULATION ARGON PLASMA (SUB PROCEDURE ONLY)">ENDO00015</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00016';
+				document.FormName.Procedure_2.value='MEDICAL ENDO HEMORRHOID BANDING';"
+				title="MEDICAL ENDO HEMORRHOID BANDING">ENDO00016</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00017';
+				document.FormName.Procedure_2.value='MEDICAL EXCISION/BIOPSY NANAIMO ONLY';"
+				title="MEDICAL EXCISION/BIOPSY NANAIMO ONLY">ENDO00017</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00018';
+				document.FormName.Procedure_2.value='MEDICAL ENDO ANOSCOPY PROCTOSCOPY';"
+				title="MEDICAL ENDO ANOSCOPY PROCTOSCOPY">ENDO00018</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00022';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (SURVEILLANCE NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (SURVEILLANCE NO CSP)">ENDO00022</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00023';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (SURVEILLANCE YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (SURVEILLANCE YES CSP)">ENDO00023</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00024';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (FIT POSITIVE NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FIT POSITIVE NO CSP)">ENDO00024</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00025';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (FIT POSITIVE YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FIT POSITIVE YES CSP)">ENDO00025</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00026';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY NO CSP)">ENDO00026</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00027';
+				document.FormName.Procedure_2.value='MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY YES CSP)">ENDO00027</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00028';
+				document.FormName.Procedure_2.value='MEDICAL ENDO ILEOSCOPY';"
+				title="MEDICAL ENDO ILEOSCOPY">ENDO00028</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00029';
+				document.FormName.Procedure_2.value='MEDICAL ENDO CAPSULE';"
+				title="MEDICAL ENDO CAPSULE">ENDO00029</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00030';
+				document.FormName.Procedure_2.value='MEDICAL ENDO THORACENTESIS';"
+				title="MEDICAL ENDO THORACENTESIS">ENDO00030</option>
+	<option onClick="document.FormName.ProcedureCode_2.value='ENDO00031';
+				document.FormName.Procedure_2.value='MEDICAL ENDO GASTROSCOPY WITH INSERTION OF FEEDING TUBE';"
+				title="MEDICAL ENDO GASTROSCOPY WITH INSERTION OF FEEDING TUBE">ENDO00031</option>
+</select>
+
+<input name="ProcedureCode_3" id="ProcedureCode_3" type="text" class="noborder" style="position:absolute; left:80px; top:692px; width:100px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="ProcedureCode_3_side" id="ProcedureCode_3_side" type="text" class="noborder" style="position:absolute; left:190px; top:692px; width:60px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="" onclick="changeSide(this.id);">
+<input name="Procedure_3" id="Procedure_3" type="text" class="noborder" style="position:absolute; left:260px; top:692px; width:565px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- ProcedureCode_3 -->
+<select class="DoNotPrint" name="Choose_Procedure" style="position:absolute; left:840px; top:692px; color:green; background:transparent;">
+	<option onClick="document.FormName.ProcedureCode_3.value='';
+				document.FormName.Procedure_3.value='';
+				document.FormName.ProcedureCode_3_side.value='';">Procedure Code 3</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00000';
+				document.FormName.Procedure_3.value='MEDICAL ENDO BRONCHOSCOPY';"
+				title="MEDICAL ENDO BRONCHOSCOPY">ENDO00000</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00001';
+				document.FormName.Procedure_3.value='MEDICAL ENDO BRONCHOSCOPY TRANS BRONCHIAL BX C-ARM';"
+				title="MEDICAL ENDO BRONCHOSCOPY TRANS BRONCHIAL BX C-ARM">ENDO00001</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00002';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY GASTROSCOPY';"
+				title="MEDICAL ENDO COLONOSCOPY GASTROSCOPY">ENDO00002</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00003';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY ARTIFICIAL STOMA';"
+				title="MEDICAL ENDO COLONOSCOPY ARTIFICIAL STOMA">ENDO00003</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00004';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (SYMPTOMS AND FINDINGS)';"
+				title="MEDICAL ENDO COLONOSCOPY (SYMPTOMS AND FINDINGS)">ENDO00004</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00005';
+				document.FormName.Procedure_3.value='MEDICAL ENDO ESOPHAGEAL DILATION';"
+				title="MEDICAL ENDO ESOPHAGEAL DILATION">ENDO00005</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00006';
+				document.FormName.Procedure_3.value='MEDICAL ENDO ESOPHAGOSCOPY W/DILATATION';"
+				title="MEDICAL ENDO ESOPHAGOSCOPY W/DILATATION">ENDO00006</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00007';
+				document.FormName.Procedure_3.value='MEDICAL ENDO ESOPHAGOSCOPY';"
+				title="MEDICAL ENDO ESOPHAGOSCOPY">ENDO00007</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00008';
+				document.FormName.Procedure_3.value='MEDICAL ENDO GASTROSCOPY';"
+				title="MEDICAL ENDO GASTROSCOPY">ENDO00008</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00009';
+				document.FormName.Procedure_3.value='MEDICAL ENDO ENDOSCOPY UPPER GI';"
+				title="MEDICAL ENDO ENDOSCOPY UPPER GI">ENDO00009</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00010';
+				document.FormName.Procedure_3.value='MEDICAL ENDO SIGMOIDOSCOPY FLEXIBLE';"
+				title="MEDICAL ENDO SIGMOIDOSCOPY FLEXIBLE">ENDO00010</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00011';
+				document.FormName.Procedure_3.value='MEDICAL ENDO SIGMOIDOSCOPY OTHER';"
+				title="MEDICAL ENDO SIGMOIDOSCOPY OTHER">ENDO00011</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00012';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (SCREENING)';"
+				title="MEDICAL ENDO COLONOSCOPY (SCREENING)">ENDO00012</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00013';
+				document.FormName.Procedure_3.value='MEDICAL ENDO LIVER BIOPSY PERCUTANEOUS ULTRASOUND';"
+				title="MEDICAL ENDO LIVER BIOPSY PERCUTANEOUS ULTRASOUND">ENDO00013</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00014';
+				document.FormName.Procedure_3.value='MEDICAL ENDO GASTROSCOPY VARICEAL GLUING';"
+				title="MEDICAL ENDO GASTROSCOPY VARICEAL GLUING">ENDO00014</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00015';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COAGULATION ARGON PLASMA (SUB PROCEDURE ONLY)';"
+				title="MEDICAL ENDO COAGULATION ARGON PLASMA (SUB PROCEDURE ONLY)">ENDO00015</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00016';
+				document.FormName.Procedure_3.value='MEDICAL ENDO HEMORRHOID BANDING';"
+				title="MEDICAL ENDO HEMORRHOID BANDING">ENDO00016</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00017';
+				document.FormName.Procedure_3.value='MEDICAL EXCISION/BIOPSY NANAIMO ONLY';"
+				title="MEDICAL EXCISION/BIOPSY NANAIMO ONLY">ENDO00017</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00018';
+				document.FormName.Procedure_3.value='MEDICAL ENDO ANOSCOPY PROCTOSCOPY';"
+				title="MEDICAL ENDO ANOSCOPY PROCTOSCOPY">ENDO00018</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00022';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (SURVEILLANCE NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (SURVEILLANCE NO CSP)">ENDO00022</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00023';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (SURVEILLANCE YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (SURVEILLANCE YES CSP)">ENDO00023</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00024';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (FIT POSITIVE NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FIT POSITIVE NO CSP)">ENDO00024</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00025';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (FIT POSITIVE YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FIT POSITIVE YES CSP)">ENDO00025</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00026';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY NO CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY NO CSP)">ENDO00026</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00027';
+				document.FormName.Procedure_3.value='MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY YES CSP)';"
+				title="MEDICAL ENDO COLONOSCOPY (FAMILY HISTORY YES CSP)">ENDO00027</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00028';
+				document.FormName.Procedure_3.value='MEDICAL ENDO ILEOSCOPY';"
+				title="MEDICAL ENDO ILEOSCOPY">ENDO00028</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00029';
+				document.FormName.Procedure_3.value='MEDICAL ENDO CAPSULE';"
+				title="MEDICAL ENDO CAPSULE">ENDO00029</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00030';
+				document.FormName.Procedure_3.value='MEDICAL ENDO THORACENTESIS';"
+				title="MEDICAL ENDO THORACENTESIS">ENDO00030</option>
+	<option onClick="document.FormName.ProcedureCode_3.value='ENDO00031';
+				document.FormName.Procedure_3.value='MEDICAL ENDO GASTROSCOPY WITH INSERTION OF FEEDING TUBE';"
+				title="MEDICAL ENDO GASTROSCOPY WITH INSERTION OF FEEDING TUBE">ENDO00031</option>
+</select>
+
+<input name="SkinToSking" id="SkinToSking" type="text" class="noborder" style="position:absolute; left:195px; top:738px; width:55px; font-family:sans-serif; font-size:16px; text-align:center; background:transparent;" value="">
+<input name="Pt_Position" id="Pt_Position" type="text" class="noborder" style="position:absolute; left:162px; top:767px; width:88px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<textarea name="Procedure_comment" id="Procedure_comment" type="text" class="noborder" style="position:absolute; left:260px; top:736px; width:565px; height:60px; resize:none; font-family:Arial; font-size:16px; background:transparent;"></textarea>
+
+<input name="Equipment" id="Equipment" type="text" class="noborder" style="position:absolute; left:150px; top:799px; width:675px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="Implants_Allografts" id="Implants_Allografts" type="text" class="noborder" style="position:absolute; left:150px; top:827px; width:675px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- Anaesthesia preference -->
+<input name="Anaesthesia_req" id="Anaesthesia_req" type="text" class="Xbox box2" style="left:202px; top:867px;">
+<input name="Anaesthesia_MAC" id="Anaesthesia_MAC" type="text" class="Xbox box2" style="left:293px; top:867px;">
+<input name="Anaesthesia_IVSedation" id="Anaesthesia_IVSedation" type="text" class="Xbox box2" style="left:400px; top:867px;">
+<input name="Anaesthesia_local" id="Anaesthesia_local" type="text" class="Xbox box2" style="left:476px; top:867px;">
+
+<input name="Anaesthesia_other" id="Anaesthesia_other" type="text" class="Xbox box2" style="left:202px; top:883px;">
+<input name="Anaesthesia_other_text" id="Anaesthesia_other_text" type="text" class="noborder" style="position:absolute; left:220px; top:883px; width:285px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<input name="AnaesthesiaReq_Yes" id="AnaesthesiaReq_1" type="text" class="Xbox box2" style="left:703px; top:862px;" onClick="Radio_Box2(this.id);">
+<input name="AnaesthesiaReq_No" id="AnaesthesiaReq_2" type="text" class="Xbox box2" style="left:758px; top:862px;" onClick="Radio_Box2(this.id);">
+
+<input name="Date_Anaesthetic" id="Date_Anaesthetic" type="text" class="noborder" style="position:absolute; left:545px; top:886px; width:105px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+<input name="Time_Anaesthetic" id="Time_Anaesthetic" type="text" class="noborder" style="position:absolute; left:680px; top:886px; width:145px; font-family:sans-serif; font-size:16px; background:transparent;" value="">
+
+<!-- Medical Issues -->
+<input name="IDDM" id="IDDM" type="text" class="Xbox box2" style="left:230px; top:913px;">
+<input name="Type2DM" id="Type2DM" type="text" class="Xbox box2" style="left:230px; top:927px;">
+<input name="DM_diet" id="DM_diet" type="text" class="Xbox box2" style="left:230px; top:941px;">
+
+<input name="DM_Ordering_MD" id="DM_Ordering_MD" type="text" class="noborder" style="position:absolute; left:230px; top:962px; width:275px; font-family:sans-serif; font-size:14px; background:transparent;" value="">
+
+<input name="InfectiousDz" id="InfectiousDz" type="text" class="Xbox box2" style="left:364px; top:913px;">
+<input name="ARO" id="ARO" type="text" class="Xbox box2" style="left:364px; top:927px;">
+<input name="MRSA" id="MRSA" type="text" class="Xbox box2" style="left:347px; top:941px;">
+
+<input name="LatexAllergy" id="LatexAllergy" type="text" class="Xbox box2" style="left:466px; top:913px;">
+<input name="OSA" id="OSA" type="text" class="Xbox box2" style="left:466px; top:927px;">
+
+<input name="MalignantHyperthermia" id="MalignantHyperthermia" type="text" class="Xbox box2" style="left:627px; top:913px;">
+<input name="Pacer" id="Pacer" type="text" class="Xbox box2" style="left:627px; top:927px;">
+<input name="ICD" id="ICD" type="text" class="Xbox box2" style="left:627px; top:941px;">
+
+<input name="ERAS_Yes" id="ERAS_1" type="text" class="Xbox box2" style="left:546px; top:963px;" onClick="Radio_Box2(this.id);">
+<input name="ERAS_No" id="ERAS_2" type="text" class="Xbox box2" style="left:597px; top:963px;" onClick="Radio_Box2(this.id);">
+
+<textarea name="PAC_Comment" id="PAC_Comment" type="text" class="noborder" style="position:absolute; left:700px; top:929px; width:125px; height:52px; resize:none; font-family:sans-serif; font-size:16px; background:transparent;" value=""></textarea>
+
+<!-- Patient Needs -->
+<input name="Path_Req" id="Path_Req" type="text" class="Xbox box2" style="left:235px; top:995px;">
+<input name="LymphomaProtocol" id="LymphomaProtocol" type="text" class="Xbox box2" style="left:235px; top:1009px;">
+
+<input name="II_Req" id="II_Req" type="text" class="Xbox box2" style="left:349px; top:995px;">
+<input name="PTH_Testing" id="PTH_Testing" type="text" class="Xbox box2" style="left:349px; top:1009px;">
+
+<input name="Flat_Plate" id="Flat_Plate" type="text" class="Xbox box2" style="left:499px; top:995px;">
+<input name="Interpreter_TCI" id="Interpreter_TCI" type="text" class="Xbox box2" style="left:499px; top:1009px;">
+
+<input name="CaregiverAttending" id="CaregiverAttending" type="text" class="Xbox box2" style="left:649px; top:995px;">
+<input name="Via_Ambulance" id="Via_Ambulance" type="text" class="Xbox box2" style="left:649px; top:1009px;">
+
+<input name="MobilityImpairment" id="MobilityImpairment" type="text" class="Xbox box2" style="left:790px; top:995px;">
+<input name="ElderAlert" id="ElderAlert" type="text" class="Xbox box2" style="left:790px; top:1009px;">
+
+<!-- Attachments -->
+<input name="Consults" id="Consults" type="text" class="Xbox box2" style="left:215px; top:1033px;">
+
+<input name="PreOpOrders_not_attached" id="PreOpOrders_1" type="text" class="Xbox box2" style="left:398px; top:1033px;" onClick="Radio_Box2(this.id);">
+<input name="PreOpOrders_attached" id="PreOpOrders_2" type="text" class="Xbox box2" style="left:398px; top:1047px;" onClick="Radio_Box2(this.id);">
+
+<input name="Consent" id="Consent" type="text" class="Xbox box2" style="left:474px; top:1033px;">
+
+<input name="SpecialNeedsForm_Yes" id="SpecialNeedsForm_1" type="text" class="Xbox box2" style="left:544px; top:1047px;" onClick="Radio_Box2(this.id);">
+<input name="SpecialNeedsForm_No" id="SpecialNeedsForm_2" type="text" class="Xbox box2" style="left:596px; top:1047px;" onClick="Radio_Box2(this.id);">
+
+<input name="Attachment_Other" id="Attachment_Other" type="text" class="Xbox box2" style="left:694px; top:1034px;">
+<input name="Attachment_Other_text" id="Attachment_Other_text" type="text" class="noborder" style="position:absolute; left:640px; top:1047px; width:78px; font-family:sans-serif; font-size:13px; background:transparent;" value="">
+
+<input name="GPHxReq_Yes" id="GPHxReq_1" type="text" class="Xbox box2" style="left:745px; top:1047px;" onClick="Radio_Box2(this.id);">
+<input name="GPHxReq_No" id="GPHxReq_2" type="text" class="Xbox box2" style="left:790px; top:1047px;" onClick="Radio_Box2(this.id);">
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:75px; top:1100px; width:750px;">
+	<table><tr style="background:#e5f2ff;"><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="window.print();">
+		<input value="Print & Submit" name="PrintSubmitButton" type="button" onClick="printSubmit();">
+	</td></tr></table>
+<br>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border:0px;" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+<br>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Island Health Regional Surgical Booking Request eForm, </span>
+<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">created by Dr. John Yap, May27_2019, licensed under a</span> 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"> GPL</a>. 
+<span>Update V3_Oct11_2019.  Please consider supporting </span>
+<a href="https://oscarbc.ca/" target="_blank" style="color:green;">OSCAR BC.</a>
+</div>
+
+</div>
+ 
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"Date_GP_Referral", ifFormat : "%d/%m/%Y", showsTime:false, button : "Date_GP_Referral" } );
+	Calendar.setup( { inputField :"Date_Consult1", ifFormat : "%d/%m/%Y", showsTime:false, button : "Date_Consult1" } );
+	Calendar.setup( { inputField :"DateOfDecision", ifFormat : "%d/%m/%Y", showsTime:false, button : "DateOfDecision" } );
+	Calendar.setup( { inputField :"dobc", ifFormat : "%d/%m/%Y", showsTime:false, button : "dobc" } );
+	Calendar.setup( { inputField :"Date_OR", ifFormat : "%d/%m/%Y", showsTime:false, button : "Date_OR" } );
+	Calendar.setup( { inputField :"Date_Anaesthetic", ifFormat : "%d/%m/%Y", showsTime:false, button : "Date_Anaesthetic" } );
+</script>
+</body></html>

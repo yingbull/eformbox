@@ -1,0 +1,298 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>FH_PPO_PICC</title>
+<style>
+ input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+ .sig {
+	 border: 2px dotted blue;
+	 background-color: transparent;
+ }
+ </style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background-color: transparent;
+ }
+ </style>
+
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+
+<!-- Freeform Signatures -->
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	 $("#CanvasSignature1").jSignature({'decor-color':'#FFFFFF'})
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	  $( ".Xbox" ).click(function() {
+		  var st = $( this ).val();
+		  if (st=="X") {
+			  $( this ).val("");
+		  } else {
+			  $( this ).val("X");
+		  }
+	});
+
+$( ".Xbox" ).keypress(function(event) {
+	  // any key press except tab will constitute a value change to the checkbox
+	  if (event.which != 0){
+		  $( this ).click();
+		  return false;
+		  }
+	});
+
+});
+</script>
+
+	<!-- Xbox styling -->
+
+	<style type="text/css">
+		.box1 {
+			position: absolute;
+			border: 1px solid #000000;
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+			background: white;
+			font-size: 10px;
+			width:10px;
+			height:10px;
+		}
+	</style>
+
+	<!-- XBox styling -->
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+<!-----------------script for current time--------->
+<script language="javascript">
+
+<!-- hide javascript
+
+function StartClock12() {
+Time12 = new Date();
+Cur12Hour = Time12.getHours();
+Cur12Mins = Time12.getMinutes();
+The12Time = 0;
+The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+The12Time += (Cur12Hour > 11) ? ' PM': ' AM';
+window.status = The12Time;
+setTimeout('StartClock12()',1000);
+}
+
+// done hiding -->
+</script> 
+
+<!-----------------script for current date--------->
+
+<script language="javascript">
+
+<!-- hide javascript
+
+function doDate() {
+       var digital = new Date();
+       var days = digital.getDate();
+       var months = digital.getMonth()*1 +1;
+       var years = digital.getFullYear();
+       var date =" " + days + "-" + months + "-" + years + " " ;
+       return date;
+}
+
+// done hiding -->
+
+</script>
+
+
+</head>
+
+<body onload="reImg(); StartClock12(); loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div>
+</div>
+
+
+<div id="page1" style="page-break-after:always;position:relative;" >
+
+<img id="BGImage1" src="${oscar_image_path}PICC.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<textarea name="PatientLabel" id="PatientLabel" class="noborder" style="position:absolute; left:450px; top:6px; width:295px; height:182px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  oscarDB=label></textarea>
+
+<textarea name="Allergies" id="Allergies" class="noborder" style="position:absolute; left:152px; top:198px; width:586px; height:40px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  oscarDB=allergies_des_no_archived></textarea>
+
+<input name="Over5" id="Over5" type="text"  class="XBox box1" style="position:absolute; left:18px; top:310px; " value="">
+
+<input name="TPN" id="TPN" type="text"  class="XBox box1" style="position:absolute; left:264px; top:310px; " value="">
+
+<input name="Chemo" id="Chemo" type="text"  class="XBox box1" style="position:absolute; left:429px; top:310px; " value="">
+
+<input name="Contrast" id="Contrast" type="text"  class="XBox box1" style="position:absolute; left:561px; top:310px; " value="">
+
+<input name="Limited" id="Limited" type="text"  class="XBox box1" style="position:absolute; left:18px; top:327px; " value="">
+
+<input name="Home" id="Home" type="text"  class="XBox box1" style="position:absolute; left:190px; top:327px; " value="">
+
+<input name="CVP" id="CVP" type="text"  class="XBox box1" style="position:absolute; left:274px; top:327px; " value="">
+
+<input name="Other" id="Other" type="text"  class="XBox box1" style="position:absolute; left:405px; top:327px; " value="">
+
+<input name="OtherText" id="OtherText" type="text" class="noborder" style="position:absolute; left:465px; top:328px; width:250px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline;" value="">
+
+<input name="Single" id="Single" type="text"  class="XBox box1" style="position:absolute; left:167px; top:385px; " value=""  onClick="document.FormName.Dual.value = ''; document.FormName.Triple.value = '' ">
+
+<input name="Dual" id="Dual" type="text"  class="XBox box1" style="position:absolute; left:282px; top:385px; " value=""  onClick="document.FormName.Single.value = ''; document.FormName.Triple.value = '' ">
+
+<input name="Triple" id="Triple" type="text"  class="XBox box1" style="position:absolute; left:381px; top:385px; " value=""  onClick="document.FormName.Single.value = ''; document.FormName.Dual.value = '' ">
+
+<input name="Distal" id="Distal" type="text"  class="XBox box1" style="position:absolute; left:481px; top:385px; " value="">
+
+<input name="Power" id="Power" type="text"  class="XBox box1" style="position:absolute; left:578px; top:385px; " value="">
+
+<input name="Ib" id="Ib" type="text"  class="XBox box1" style="position:absolute; left:67px; top:569px; " value="">
+
+<input name="Tylenol" id="Tylenol" type="text"  class="XBox box1" style="position:absolute; left:67px; top:587px; " value="">
+
+<input value="Today in d-m-y" name="DateButton" id="DateButton" class="DoNotPrint" type="button" style="position:absolute; left:19px; top:910px; " onclick="document.FormName.Today.value=doDate();">
+
+<input value="Insert Time" name="TimeButton" id="TimeButton" class="DoNotPrint" type="button" style="position:absolute; left:173px; top:910px; " onclick="document.FormName.Time.value = The12Time;">
+
+<input name="Today" id="Today" type="text" class="noborder" style="position:absolute; left:19px; top:952px; width:142px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;"  oscarDB=today>
+
+<input name="Time" id="Time" type="text" class="noborder" style="position:absolute; left:173px; top:952px; width:80px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:white;" value="">
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:269px; top:952px; width:200px; height:41; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<span style="position:absolute; left:507px; top:952px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"> CPSID: <input name="CPSID" id="CPSID" type="text" class="noborder" style="width:150px; height:21px;"  oscarDB=current_user_cpsid>
+
+</div>
+
+
+ <div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1010px; left:0px;">
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ <!-- Copy Left -->
+ 
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">created Dec 10 2015 by Dr. John Robertson, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. <span style="color:forestgreen;">Please consider supporting  </span> <a  href="https://oscar-emr.com/support-oscar/" target="_blank" >OSCAR EMR Canada</a> .<br><br>
+
+ </div>
+ </form>
+
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField :"Today", ifFormat : "%d-%m-%Y", button : "Today" } );
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<title>Drivers</title>
+<script src='../library/jquery/jquery-3.6.4.min.js'>
+</script>
+<script src='${oscar_javascript_path}jquery/jquery-2.2.4.min.js'>
+</script>
+<script>window.jQuery || document.write("\x3cscript src='../js/jquery-1.12.3.js'\x3e\x3c\/script\x3e");</script>
+<script>window.jQuery || document.write("\x3cscript src='https://code.jquery.com/jquery-3.6.4.min.js' integrity='sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=' crossorigin='anonymous'\x3e\x3c\/script\x3e");</script>
+<link rel='stylesheet' href='../share/calendar/calendar.css'>
+<script src='../share/calendar/calendar.js'>
+</script>
+<script src='../share/calendar/lang/calendar-en.js'>
+</script>
+<script src='../share/calendar/calendar-setup.js'>
+</script>
+<script src='${oscar_javascript_path}eforms/printControl.js'>
+</script>
+<script src='${oscar_javascript_path}eforms/faxControl.js'>
+</script>
+<script src='${oscar_image_path}signature_pad.min.js'>
+</script>
+<style>
+        *:required {
+            box-shadow: 0px 0px 5px red;
+        }
+        /* base style for pages */
+        .page_container {
+            position: relative;
+            background: #ffffff;
+            float: left;
+            border: solid 0;
+            margin: 0;
+        }
+
+        /* div containing form input elements */
+        .input_elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 14px; /*2020-Sep-24 Input box text size*/
+            width: 100%;
+            height: 100%;
+        }
+
+        /* base styling for input wrapper divs */
+        .gen-widget {
+            display: inline-block;
+            text-align: left;
+            vertical-align: top;
+            background: transparent;
+            border: 0;
+        }
+
+        /* style wrapped input elements */
+        .gen-widget input,
+        textarea {
+            position: absolute;
+            display: inline-block;
+            text-align: left;
+            font-weight: normal;
+            font-size: 14px; /*2020-Sep-24 TextArea Text size*/
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            background: transparent;
+            color: #000000;
+            border: 1px solid #d2d2d2;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            margin: 0;
+        }
+
+        /* remove firefox webkit so that checkboxes are resizable */
+        .gen-widget input[type=checkbox] {
+            -moz-appearance: none;
+        }
+
+        /* define other */
+        .noborder {
+            border-color: transparent !important;
+        }
+
+        /* print only styling */
+        @media print {
+            .DoNotPrint {
+                display: none;
+            }
+
+            ::-webkit-input-placeholder { /* WebKit browsers */
+                color: transparent;
+            }
+
+            ::-moz-placeholder { /* Mozilla Firefox 19+ */
+                color: transparent;
+            }
+
+            .noborderPrint {
+                border-color: transparent !important;
+            }
+
+            .page_container {
+                page-break-after: always;
+            }
+        }
+
+		label {
+			font-family: 'Helvetica', 'Arial', sans-serif;
+		}
+
+        /* define label styling (only used by generated labels) */
+        .label-style_1 {
+            color: #000000;
+            font-size: 12px;
+            font-weight: normal;
+            font-family: Verdana, Arial, sans-serif;
+        }
+
+
+	
+        /* define xbox styling */
+        .gen-xBox input {
+            background: aquamarine;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        .gen-xBox input:focus {
+            outline: none;
+            color: transparent;
+            text-shadow: 0 0 0 #000;
+        }
+        /* print only styling */
+        @media print {
+            .gen-xBox input {
+				background: white;
+				border: 1px solid black;
+            }
+        }
+    
+	    [class^="only-one-radio"] {
+            height: 12px;
+            width: 12px;
+            font-size: 12px;
+            border: 1px solid #000000;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            background: pink;
+        }
+
+        .only-one-radio input {
+            background: pink;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            border: 1px solid black;
+            cursor: pointer;
+            /*Rounds- delete comment if preferred */
+            -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 10px;
+        }
+
+        .only-one-radio input:focus {
+            outline: none;
+            color: transparent;
+            text-shadow: 0 0 0 #000;
+        }
+
+		/* print only styling */
+        @media print {
+            .only-one-radio input {
+				background: white;
+				border: 1px solid black;
+            }
+        }
+    
+	    .signatureStamp {
+            background-color: #efefef;
+            opacity: 0.6;
+        }
+        /* print only styling */
+        @media print {
+            .signatureStamp {
+                background-color: transparent;
+            }
+        }
+	
+        /* signature pad styling */
+        .signaturePad {
+            background-color: #efefef;
+            opacity: 0.6;
+        }
+
+        .signaturePad canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .signaturePad .canvas_frame {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .signaturePad .clearBtn {
+            position: relative;
+            float: right;
+            padding: 1px;
+            line-height: 1em;
+            font-size: 14px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .signaturePad .clearBtn:active {
+            color: red;
+        }
+
+        .signaturePad .signature_image {
+            display: inline-block;
+            position: absolute;
+        }
+
+        /* print only styling */
+        @media print {
+            .signaturePad {
+                background-color: transparent;
+                opacity: 1;
+            }
+
+            .signaturePad canvas {
+                /* always hide canvas for printing. print image instead */
+                display: none !important;
+            }
+
+            .signature_image {
+                /* always show signature image when printing */
+                display: inline-block !important;
+            }
+        }
+    </style>
+<script>
+<!-- a collection of standard scripts for the base eform -->
+
+        var needToConfirm = false;
+        document.onkeyup=setDirtyFlag();
+
+        /** call this to prevent closing the window without a confirmation */
+        function setDirtyFlag() {
+            needToConfirm = true;
+        }
+        /** call this to prevent the exit confirmation popup when closing the window */
+        function releaseDirtyFlag() {
+            needToConfirm = false;
+        }
+
+        window.onbeforeunload = confirmExit;
+        /** This function will prevent the window from closing
+         * without confirmation when unsaved changes have been made */
+        function confirmExit(){
+            if (needToConfirm){
+                return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+            }
+        }
+
+        /** This function is called onload to activate onblur events if needed */
+        function focusAll() {
+            $('.gen_input').each(function() {
+                var x = $(this).attr("onblur")
+                if (x) {
+                    if (x.indexOf("fixSin(this)") > -1) {
+                        $(this).blur()
+                    }
+                    if (x.indexOf("dateReformat(this") > -1) {
+                        $(this).blur()
+                    }
+                }
+            });
+        }
+
+        /** This function is called when the print button is clicked */
+        function onEformPrint() {
+            window.print();
+        }
+
+        /** This function is called when the eform submit button is clicked */
+        function onEformSubmit() {
+            releaseDirtyFlag();
+            document.forms[0].submit();
+        }
+
+        /** This function is called when the eform print & submit button is clicked */
+        function onEformPrintSubmit() {
+            onEformPrint();
+            releaseDirtyFlag();
+            setTimeout('document.forms[0].submit()', 2000);
+        }
+
+    <!-- eForm specific scripts below -->
+
+
+        /** This function is called on load to initialse DHTML date picker */
+		function initCalendar() {
+            var dlist = document.getElementsByClassName("hasDatepicker")
+            for (i = 0; i < dlist.length; i++) {
+                Calendar.setup( { inputField : dlist[i].id, ifFormat : "%Y-%m-%d",  button : dlist[i].id } ); //reference to calendar-setup.js
+            }
+			// Format date fields to date only
+            var dlist = document.getElementsByClassName("hasDatepicker")
+            for (i = 0; i < dlist.length; i++) {
+            dlist[i].value = dlist[i].value.substring(0, 10);
+            }
+			//update all date classes
+            var x = document.getElementsByClassName('mydateclass');
+            for (i = 0; i < x.length; i++) {
+                x[i].focus()
+            }
+        }
+    
+
+        /** initializes x-box input functionality.
+         *  should be called once on eform load */
+        function initXBoxes() {
+			var $selector = $(".input_elements");
+            $selector.find(".xBox").click(function() {
+                $(this).val($(this).val() === 'X' ? '' : 'X');
+				$(this).css("background", "white");
+            }).keypress(function(event) {
+                // any key press except tab will constitute a value change to the checkbox
+                if (event.which != 0) {
+                    $(this).click();
+                    return false;
+                }
+            });
+        }
+    
+
+        /** This function ensures only one box in the radio group will be checked */
+        function myupdate(vid) {
+            var x = document.getElementsByClassName(vid.getAttribute("class"));
+            var mygroup = $(x).attr("class").split(" ");
+            for (i = 0; i < mygroup.length; i++) {
+                if (mygroup[i].indexOf("only-one-radio") > -1) {
+                    var getmyclass = mygroup[i]
+                }
+            }
+            var x = document.getElementsByClassName(getmyclass);
+            if (getmyclass.indexOf("only-one-radio#") < 0) { //if there is only one member of the radiogroup...
+                alert("This will act like a checkbox");
+                if (vid.value == "X") {
+                    vid.value = "";
+                    return
+                } else {
+                    vid.value = "X"
+                    return
+                }
+            } else {
+                for (var i = 0; i < x.length; i++) {
+                    x[i].style.boxShadow = "inset 0 0 0 1000px white"
+                    x[i].value = "";
+                    vid.value = "X"
+                    //vid.style.boxShadow = "inset 0 0 0 1000px black"  //comment this line to inactivate black box*************************************
+                }
+            }
+        }
+    
+        /** this function is run on page load to make signature pads work. */
+        $(function() {
+            $(".signaturePad").each(function() {
+                var $this = $(this);
+                var $canvasFrame = $this.children(".canvas_frame");
+                var $clearBtn = $this.children(".clearBtn");
+                var canvas = $canvasFrame.children("canvas").get(0);
+                var $data = $canvasFrame.children(".signature_data");
+                var src = $data.val();
+                // the image is needed even when signature pads are loaded for printing/faxing
+                var $img = $("<img>", {
+                    src: src,
+					alt: "signature",
+                    class: "signature_image"
+                });
+                if (src && src.length > 0) {
+                    $img.appendTo($canvasFrame);
+                }
+
+                // if signature pad loaded correctly and eform viewed on screen
+                /* NOTE: media type does not currently work in wkhtmltopdf
+                 See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1737 */
+                if (typeof SignaturePad !== 'undefined' && window.matchMedia("screen").matches) {
+                    console.info("editable signature pad initializing ");
+                    $img.hide();
+                    var updateSlaveSignature = function(src_canvas, dest_canvas) {
+                        // write to the destination with image scaling
+                        var dest_context = dest_canvas.getContext("2d");
+                        dest_context.clearRect(0, 0, dest_canvas.width, dest_canvas.height);
+                        dest_context.drawImage(src_canvas, 0, 0, dest_canvas.width, dest_canvas.height);
+                    };
+                    // initialize the signature pad
+                    var signPad = new SignaturePad(canvas, {
+                        minWidth: 1,
+                        maxWidth: 2,
+                        onEnd: function() {
+                            $this.trigger("signatureChange");
+                        }
+                    });
+                    // load the image data to the canvas ofter initialization
+                    if (src != null && src != "") {
+                        signPad.fromDataURL(src);
+                    }
+                    // define a custom update trigger action. this allows the eform to store the signature.
+                    $this.on("signatureChange", function() {
+                        $data.val(signPad.toDataURL());
+                        $img.prop('src', signPad.toDataURL());
+                        if ($this.attr('slaveSigPad')) {
+                            var $slavePad = $("#" + $this.attr('slaveSigPad')); // get slave pad by id
+                            updateSlaveSignature(canvas, $slavePad.find("canvas").get(0));
+                            $slavePad.trigger("signatureChange"); // be careful of infinite loops
+                        }
+                        return false;
+                    });
+                    // init the clear button
+                    $clearBtn.on('click', function() {
+                        signPad.clear();
+                        $this.trigger("signatureChange");
+                        return false;
+                    });
+                }
+                // not using the canvas, show signature as an image instead.
+                else {
+                    console.info("static signature pad initializing");
+                    $img.show();
+                }
+            });
+        });
+    
+    <!-- functions to support signature stamps -->
+
+        /** this function toggles visibility of the individual stamp. */
+        function toggleMe(el){
+	        if (el.src.indexOf("BNK.png")>-1){
+		        sign(el);
+	        } else {
+		        el.src = "../eform/displayImage.do?imagefile=BNK.png";
+	        }
+        }
+        /** this function stamp by delegation model */
+        function sign(el){
+	        var provNum = '';
+			if (!document.getElementById('user_ohip_no')) { return; }
+	        var userBillingNo = document.getElementById('user_ohip_no').value;
+	        if (parseInt(userBillingNo) > 100) {
+		        // then a valid billing number so use the current user id
+		        provNum = document.getElementById('user_id').value;
+		        if (provNum != document.getElementById('doctor_no').value && !!document.getElementById('doctor')) {
+			        document.getElementById('doctor').value=document.getElementById('CurrentUserName').value + ' CC: ' + document.getElementById('doctor').value;
+		        }
+	        } else {
+		        provNum = document.getElementById('doctor_no').value;
+	        }
+			if ( provNum.length > 0 ) {
+				el.src = '${oscar_image_path}consult_sig_'+provNum+'.png';
+			}
+        }
+
+        /** this function initialises each stamp */
+        function signForm(){
+            var els = document.getElementsByClassName( "stamp" );
+            Array.prototype.forEach.call(els, function(el) {
+                sign(el);
+            });
+        }
+    
+	function mydclick2(id){}
+
+</script>
+</head>
+<body onload='focusAll(); initCalendar(); initCalendar(); initXBoxes(); signForm()'>
+<div id='eform_container' style='max-width: 800px'>
+<form id="inputForm" action="get">
+<div id="page_1" class="page_container ui-droppable" style="width: 800px; height: 1000px;">
+<img alt="background" id="gen_backgroundImage1" class="gen-layer1" src="${oscar_image_path}ONdrivers2024a.png" style="width: auto; height: 100%; z-index: 0;">
+<div class="input_elements">
+<div id="gen_widgetId1" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 17; top: 169px; left: 339px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId1" name="gen_inputId1">
+</div>
+<div id="gen_widgetId2" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 18; top: 169px; left: 507px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId2" name="gen_inputId2">
+</div>
+<div id="gen_widgetId3" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 19; top: 227px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="" id="gen_inputId3" name="gen_inputId3">
+</div>
+<div id="gen_widgetId4" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 20; top: 227px; left: 365px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="" id="gen_inputId4" name="gen_inputId4">
+</div>
+<div id="gen_widgetId5" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 21; top: 227px; left: 594px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="dobc2" title="dobc2" oscardb="dobc2" id="gen_inputId5" name="gen_inputId5">
+</div>
+<div id="gen_widgetId6" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 22; top: 262px; left: 23px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="patient_nameL" title="patient_nameL" oscardb="patient_nameL" id="gen_inputId6" name="gen_inputId6">
+</div>
+<div id="gen_widgetId7" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 23; top: 263px; left: 363px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="patient_nameF" title="patient_nameF" oscardb="patient_nameF" id="gen_inputId7" name="gen_inputId7">
+</div>
+<div id="gen_widgetId8" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 24; top: 264px; left: 591px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId8" name="gen_inputId8">
+</div>
+<div id="gen_widgetId9" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 25; top: 371px; left: 22px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="email" title="email" oscardb="email" id="gen_inputId9" name="gen_inputId9">
+</div>
+<div id="gen_widgetId10" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 26; top: 374px; left: 363px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="preferredPhone" title="preferredPhone" oscardb="preferredPhone" id="gen_inputId10" name="gen_inputId10">
+</div>
+<div id="gen_widgetId11" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 27; top: 524px; left: 213px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId11" name="gen_inputId11">
+</div>
+<div id="gen_widgetId12" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 28; top: 523px; left: 395px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId12" name="gen_inputId12">
+</div>
+<div id="gen_widgetId13" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 29; top: 546px; left: 213px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId13" name="gen_inputId13">
+</div>
+<div id="gen_widgetId14" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 30; top: 546px; left: 394px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId14" name="gen_inputId14">
+</div>
+<div id="gen_widgetId15" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 31; top: 568px; left: 214px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId15" name="gen_inputId15">
+</div>
+<div id="gen_widgetId16" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 32; top: 570px; left: 394px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId16" name="gen_inputId16">
+</div>
+<div id="gen_widgetId17" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 33; top: 526px; left: 500px;" ondblclick="mydclick(this)" title="hfOD">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId17 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId17" required="" name="gen_inputId17" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId18" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 170; top: 525px; left: 582px;" ondblclick="mydclick(this)" title="hfOD">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId17 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId18" required="" name="gen_inputId18" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId19" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 168; top: 548px; left: 500px;" ondblclick="mydclick(this)" title="hfOS">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId19 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId19" required="" name="gen_inputId19" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId20" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 169; top: 546px; left: 582px;" ondblclick="mydclick(this)" title="hfOS">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId19 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId20" required="" name="gen_inputId20" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId21" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 34; top: 570px; left: 501px;" ondblclick="mydclick(this)" title="hfOU">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId21 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId21" required="" name="gen_inputId21" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId22" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 171; top: 570px; left: 582px;" ondblclick="mydclick(this)" title="hfOU">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId21 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId22" required="" name="gen_inputId22" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId23" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 35; top: 593px; left: 272px;" ondblclick="mydclick(this)" title="ocularHx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId23 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId23" required="" name="gen_inputId23" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId24" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 36; top: 592px; left: 326px;" ondblclick="mydclick(this)" title="ocularHx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId23 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId24" required="" name="gen_inputId24" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId25" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 37; top: 616px; left: 272px;" ondblclick="mydclick(this)" title="newOcularFindings">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId25 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId25" required="" name="gen_inputId25" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId26" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 38; top: 616px; left: 326px;" ondblclick="mydclick(this)" title="newOcularFindings">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId25 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId26" required="" name="gen_inputId26" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId27" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 39; top: 590px; left: 509px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="OcularHistory" id="gen_inputId27" name="gen_inputId27">
+</div>
+<div id="gen_widgetId28" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 40; top: 613px; left: 510px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="OcularFindings" id="gen_inputId28" name="gen_inputId28">
+</div>
+<div id="gen_widgetId29" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 41; top: 647px; left: 641px;" ondblclick="mydclick(this)" title="ocularStandardMet">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId30 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId29" required="" name="gen_inputId29" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId30" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 42; top: 647px; left: 696px;" ondblclick="mydclick(this)" title="ocularStandardMet">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId30 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId30" required="" name="gen_inputId30" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId31" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 43; top: 705px; left: 641px;" ondblclick="mydclick(this)" title="CVDpresent">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId31 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId31" required="" name="gen_inputId31" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId32" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 44; top: 704px; left: 695px;" ondblclick="mydclick(this)" title="CVDpresent">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId31 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId32" required="" name="gen_inputId32" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId33" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 45; top: 746px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId33" name="gen_inputId33">
+</div>
+<div id="gen_widgetId34" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 46; top: 747px; left: 193px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId34" name="gen_inputId34">
+</div>
+<div id="gen_widgetId35" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 47; top: 746px; left: 338px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId35" name="gen_inputId35">
+</div>
+<div id="gen_widgetId36" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 48; top: 747px; left: 581px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId36" name="gen_inputId36">
+</div>
+<div id="gen_widgetId37" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 600px; height: 16px; position: absolute; z-index: 49; top: 789px; left: 25px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="CVDdx" id="gen_inputId37" name="gen_inputId37">
+</div>
+<div id="gen_widgetId38" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 50; top: 833px; left: 23px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="click" autocomplete="off" id="gen_inputId38" name="gen_inputId38">
+</div>
+<div id="gen_widgetId39" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 51; top: 856px; left: 24px;" ondblclick="mydclick(this)" title="stableCVD">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId39 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId39" name="gen_inputId39" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId40" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 52; top: 856px; left: 169px;" ondblclick="mydclick(this)" title="stableCVD">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId39 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId40" name="gen_inputId40" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId41" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 53; top: 834px; left: 266px;" ondblclick="mydclick(this)" title="NYHA">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId41 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId41" name="gen_inputId41" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId42" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 54; top: 834px; left: 321px;" ondblclick="mydclick(this)" title="NYHA">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId41 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId42" name="gen_inputId42" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId43" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 55; top: 835px; left: 375px;" ondblclick="mydclick(this)" title="NYHA">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId41 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId43" name="gen_inputId43" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId44" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 56; top: 834px; left: 429px;" ondblclick="mydclick(this)" title="NYHA">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId41 noborderPrint" autocomplete="off" onclick="myupdate(this)" id="gen_inputId44" name="gen_inputId44" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId45" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 57; top: 834px; left: 486px;" ondblclick="mydclick(this)" title="EF">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId45 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="EFunder40" id="gen_inputId45" name="gen_inputId45" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId46" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 58; top: 833px; left: 553px;" ondblclick="mydclick(this)" title="EF">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId45 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="EFover40" id="gen_inputId46" name="gen_inputId46" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId47" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 59; top: 834px; left: 618px;" ondblclick="mydclick(this)" title="EF">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId45 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="EFover50" id="gen_inputId47" name="gen_inputId47" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId48" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 60; top: 888px; left: 642px;" ondblclick="mydclick(this)" title="Resp">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId48 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="EFover50" id="gen_inputId48" required="" name="gen_inputId48" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId49" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 61; top: 888px; left: 696px;" ondblclick="mydclick(this)" title="Resp">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId48 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="EFover50" id="gen_inputId49" required="" name="gen_inputId49" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId50" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 62; top: 909px; left: 169px;" ondblclick="mydclick(this)" title="RespImpairment">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId50 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Mild" id="gen_inputId50" name="gen_inputId50" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId51" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 63; top: 908px; left: 268px;" ondblclick="mydclick(this)" title="RespImpairment">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId50 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Moderate" id="gen_inputId51" name="gen_inputId51" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId52" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 64; top: 910px; left: 385px;" ondblclick="mydclick(this)" title="RespImpairment">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId50 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Severe" id="gen_inputId52" name="gen_inputId52" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId53" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 65; top: 932px; left: 170px;" ondblclick="mydclick(this)" title="suppO2">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId53 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="OccasionalO2" id="gen_inputId53" name="gen_inputId53" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId54" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 66; top: 932px; left: 270px;" ondblclick="mydclick(this)" title="suppO2">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId53 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="ContinuousO2" id="gen_inputId54" name="gen_inputId54" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId170" class="gen-widget signaturePad gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 255px; height: 50px; position: absolute; z-index: 15; top: 354px; left: 516px;" title="Click to drag. DoubleClick to activate">
+<div class="canvas_frame">
+<canvas style="touch-action: none;" width="255" height="50">
+</canvas>
+<input type="hidden" class="signature_data" id="gen_signatureData1" name="gen_signatureData1">
+</div>
+<button type="button" class="clearBtn DoNotPrint" id="gen_inputId169" name="gen_inputId169">clear</button>
+</div>
+</div>
+</div>
+<div id="page_2" class="page_container ui-droppable" style="width: 800px; height: 1000px;">
+<img alt="background" id="gen_backgroundImage2" class="gen-layer1" src="${oscar_image_path}ONdrivers2024b.png" style="width: auto; height: 100%; z-index: 2;">
+<div class="input_elements">
+<div id="gen_widgetId55" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 67; top: 40px; left: 26px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="" id="gen_inputId55" name="gen_inputId55">
+</div>
+<div id="gen_widgetId56" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 68; top: 39px; left: 199px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="patient_nameL" title="patient_nameL" oscardb="patient_nameL" id="gen_inputId56" name="gen_inputId56">
+</div>
+<div id="gen_widgetId57" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 69; top: 40px; left: 434px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="patient_nameF" title="patient_nameF" oscardb="patient_nameF" id="gen_inputId57" name="gen_inputId57">
+</div>
+<div id="gen_widgetId58" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 70; top: 39px; left: 629px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId58" name="gen_inputId58">
+</div>
+<div id="gen_widgetId59" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 71; top: 70px; left: 642px;" ondblclick="mydclick(this)" title="MSK">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId59 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId59" required="" name="gen_inputId59" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId60" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 72; top: 71px; left: 696px;" ondblclick="mydclick(this)" title="MSK">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId59 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId60" required="" name="gen_inputId60" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId61" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 73; top: 94px; left: 229px;" ondblclick="mydclick(this)" title="MSKfunction">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId61 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId61" name="gen_inputId61" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId62" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 74; top: 93px; left: 294px;" ondblclick="mydclick(this)" title="MSKfunction">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId61 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId62" name="gen_inputId62" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId63" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 75; top: 90px; left: 474px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="FunctionalLoss" id="gen_inputId63" name="gen_inputId63">
+</div>
+<div id="gen_widgetId64" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 76; top: 116px; left: 292px;" ondblclick="mydclick(this)" title="painOrMedFCN">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId64 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId64" name="gen_inputId64" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId65" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 77; top: 117px; left: 358px;" ondblclick="mydclick(this)" title="painOrMedFCN">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId64 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId65" name="gen_inputId65" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId66" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 78; top: 113px; left: 542px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="" id="gen_inputId66" name="gen_inputId66">
+</div>
+<div id="gen_widgetId67" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 79; top: 146px; left: 639px;" ondblclick="mydclick(this)" title="DM">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId67 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="DM" id="gen_inputId67" required="" name="gen_inputId67" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId68" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 80; top: 145px; left: 695px;" ondblclick="mydclick(this)" title="DM">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId67 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId68" required="" name="gen_inputId68" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId69" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 81; top: 193px; left: 24px;" ondblclick="mydclick(this)" title="DMtype">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId69 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Type1" id="gen_inputId69" name="gen_inputId69" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId70" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 82; top: 194px; left: 97px;" ondblclick="mydclick(this)" title="DMtype">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId69 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Type2" id="gen_inputId70" name="gen_inputId70" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId71" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 83; top: 222px; left: 121px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId71" name="gen_inputId71">
+</div>
+<div id="gen_widgetId72" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 84; top: 223px; left: 177px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId72" name="gen_inputId72">
+</div>
+<div id="gen_widgetId73" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 85; top: 223px; left: 267px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId73" name="gen_inputId73">
+</div>
+<div id="gen_widgetId74" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 86; top: 224px; left: 333px;" ondblclick="mydclick(this)" title="hypo">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId74 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId74" name="gen_inputId74" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId75" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 87; top: 224px; left: 387px;" ondblclick="mydclick(this)" title="hypo">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId74 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId75" name="gen_inputId75" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId76" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 88; top: 223px; left: 443px;" ondblclick="mydclick(this)" title="hypo">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId74 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId76" name="gen_inputId76" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId77" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 89; top: 253px; left: 641px;" ondblclick="mydclick(this)" title="Psych">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId77 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Psych" id="gen_inputId77" required="" name="gen_inputId77" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId78" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 90; top: 254px; left: 696px;" ondblclick="mydclick(this)" title="Psych">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId77 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId78" required="" name="gen_inputId78" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId79" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 91; top: 296px; left: 22px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId79" name="gen_inputId79">
+</div>
+<div id="gen_widgetId80" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 92; top: 319px; left: 22px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId80" name="gen_inputId80">
+</div>
+<div id="gen_widgetId81" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 93; top: 342px; left: 23px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId81" name="gen_inputId81">
+</div>
+<div id="gen_widgetId82" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 94; top: 363px; left: 23px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId82" name="gen_inputId82">
+</div>
+<div id="gen_widgetId83" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 95; top: 389px; left: 23px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId83" name="gen_inputId83">
+</div>
+<div id="gen_widgetId84" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 96; top: 391px; left: 83px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="" id="gen_inputId84" name="gen_inputId84">
+</div>
+<div id="gen_widgetId85" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 97; top: 296px; left: 276px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId85" name="gen_inputId85">
+</div>
+<div id="gen_widgetId86" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 98; top: 319px; left: 276px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId86" name="gen_inputId86">
+</div>
+<div id="gen_widgetId87" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 99; top: 342px; left: 276px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId87" name="gen_inputId87">
+</div>
+<div id="gen_widgetId88" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 100; top: 377px; left: 277px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId88" name="gen_inputId88">
+</div>
+<div id="gen_widgetId89" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 101; top: 296px; left: 504px;" ondblclick="mydclick(this)" title="psychStability">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId89 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId89" name="gen_inputId89" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId90" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 102; top: 318px; left: 504px;" ondblclick="mydclick(this)" title="psychStability">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId89 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId90" name="gen_inputId90" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId91" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 103; top: 340px; left: 504px;" ondblclick="mydclick(this)" title="psychStability">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId89 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId91" name="gen_inputId91" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId92" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 104; top: 364px; left: 504px;" ondblclick="mydclick(this)" title="psychStability">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId89 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId92" name="gen_inputId92" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId93" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 105; top: 421px; left: 643px;" ondblclick="mydclick(this)" title="Substance">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId94 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Substance" id="gen_inputId93" required="" name="gen_inputId93" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId94" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 172; top: 420px; left: 695px;" ondblclick="mydclick(this)" title="Substance">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId94 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId94" required="" name="gen_inputId94" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId95" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 106; top: 463px; left: 643px;" ondblclick="mydclick(this)" title="hazardous">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId95 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId95" name="gen_inputId95" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId96" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 173; top: 463px; left: 695px;" ondblclick="mydclick(this)" title="hazardous">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId95 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId96" name="gen_inputId96" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId97" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 107; top: 485px; left: 643px;" ondblclick="mydclick(this)" title="drugSx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId97 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId97" name="gen_inputId97" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId98" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 174; top: 485px; left: 695px;" ondblclick="mydclick(this)" title="drugSx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId97 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId98" name="gen_inputId98" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId99" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 108; top: 509px; left: 643px;" ondblclick="mydclick(this)" title="furtherIx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId99 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId99" name="gen_inputId99" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId100" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 175; top: 509px; left: 695px;" ondblclick="mydclick(this)" title="furtherIx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId99 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId100" name="gen_inputId100" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId101" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 109; top: 550px; left: 643px;" ondblclick="mydclick(this)" title="drugTx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId102 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId101" name="gen_inputId101" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId102" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 176; top: 550px; left: 695px;" ondblclick="mydclick(this)" title="drugTx">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId102 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId102" name="gen_inputId102" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId103" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 110; top: 573px; left: 643px;" ondblclick="mydclick(this)" title="compliant">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId104 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId103" name="gen_inputId103" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId104" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 177; top: 573px; left: 695px;" ondblclick="mydclick(this)" title="compliant">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId104 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId104" name="gen_inputId104" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId105" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 111; top: 595px; left: 643px;" ondblclick="mydclick(this)" title="cognition">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId106 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId105" name="gen_inputId105" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId106" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 178; top: 595px; left: 695px;" ondblclick="mydclick(this)" title="cognition">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId106 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId106" name="gen_inputId106" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId107" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 112; top: 626px; left: 643px;" ondblclick="mydclick(this)" title="Seizures">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId108 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Seizures" id="gen_inputId107" required="" name="gen_inputId107" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId108" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 179; top: 625px; left: 695px;" ondblclick="mydclick(this)" title="Seizures">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId108 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId108" required="" name="gen_inputId108" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId109" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 113; top: 647px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId109" name="gen_inputId109">
+</div>
+<div id="gen_widgetId110" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 114; top: 649px; left: 397px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId110" name="gen_inputId110">
+</div>
+<div id="gen_widgetId111" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 115; top: 647px; left: 598px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId111" name="gen_inputId111">
+</div>
+<div id="gen_widgetId112" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 116; top: 670px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId112" name="gen_inputId112">
+</div>
+<div id="gen_widgetId113" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 117; top: 694px; left: 155px;" ondblclick="mydclick(this)" title="SxWu">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId113 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId113" name="gen_inputId113" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId114" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 118; top: 693px; left: 217px;" ondblclick="mydclick(this)" title="SxWu">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId113 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId114" name="gen_inputId114" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId115" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 119; top: 692px; left: 494px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox hasDatepicker noborderPrint" title="" id="gen_inputId115" name="gen_inputId115">
+</div>
+<div id="gen_widgetId116" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 120; top: 728px; left: 643px;" ondblclick="mydclick(this)" title="Neuro">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId116 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Neuro" id="gen_inputId116" required="" name="gen_inputId116" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId117" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 121; top: 728px; left: 696px;" ondblclick="mydclick(this)" title="Neuro">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId116 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId117" required="" name="gen_inputId117" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId118" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 122; top: 751px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId118" name="gen_inputId118">
+</div>
+<div id="gen_widgetId119" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 123; top: 751px; left: 219px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId119" name="gen_inputId119">
+</div>
+<div id="gen_widgetId120" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 124; top: 752px; left: 400px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId120" name="gen_inputId120">
+</div>
+<div id="gen_widgetId121" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 125; top: 752px; left: 598px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId121" name="gen_inputId121">
+</div>
+<div id="gen_widgetId122" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 126; top: 773px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId122" name="gen_inputId122">
+</div>
+<div id="gen_widgetId123" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 450px; height: 16px; position: absolute; z-index: 127; top: 772px; left: 179px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox hasDatepicker noborderPrint" title="OtherNeuro" id="gen_inputId123" name="gen_inputId123">
+</div>
+<div id="gen_widgetId124" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 450px; height: 16px; position: absolute; z-index: 128; top: 797px; left: 229px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox hasDatepicker noborderPrint" title="NeuroLimitations" id="gen_inputId124" name="gen_inputId124">
+</div>
+<div id="gen_widgetId125" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 129; top: 842px; left: 643px;" ondblclick="mydclick(this)" title="Sleep">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId125 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Sleep" id="gen_inputId125" required="" name="gen_inputId125" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId126" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 130; top: 841px; left: 695px;" ondblclick="mydclick(this)" title="Sleep">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId125 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId126" required="" name="gen_inputId126" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId127" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 131; top: 864px; left: 22px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId127" name="gen_inputId127">
+</div>
+<div id="gen_widgetId128" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 132; top: 864px; left: 139px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId128" name="gen_inputId128">
+</div>
+<div id="gen_widgetId129" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 133; top: 888px; left: 587px;" ondblclick="mydclick(this)" title="ApneaTxcompliant">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId129 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId129" name="gen_inputId129" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId130" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 180; top: 887px; left: 642px;" ondblclick="mydclick(this)" title="ApneaTxcompliant">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId129 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId130" name="gen_inputId130" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId131" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 134; top: 911px; left: 587px;" ondblclick="mydclick(this)" title="TxEffective">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId131 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId131" name="gen_inputId131" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId132" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 135; top: 909px; left: 641px;" ondblclick="mydclick(this)" title="TxEffective">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId131 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId132" name="gen_inputId132" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId133" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 136; top: 932px; left: 587px;" ondblclick="mydclick(this)" title="daytimeCataplexy">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId135 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId133" name="gen_inputId133" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId134" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 181; top: 933px; left: 642px;" ondblclick="mydclick(this)" title="daytimeCataplexy">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId135 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId134" name="gen_inputId134" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId135" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 137; top: 933px; left: 695px;" ondblclick="mydclick(this)" title="daytimeCataplexy">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId135 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId135" name="gen_inputId135" style="background-color: aquamarine;">
+</div>
+</div>
+</div>
+<div id="page_3" class="page_container ui-droppable" style="width: 800px; height: 1000px;">
+<img alt="background" id="gen_backgroundImage3" class="gen-layer1" src="${oscar_image_path}ONdrivers2024c.png" style="width: auto; height: 100%; z-index: 14;">
+<div class="input_elements">
+<div id="gen_widgetId136" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 138; top: 38px; left: 434px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="patient_nameF" placeholder="patient_nameF" oscardb="patient_nameF" id="gen_inputId136" name="gen_inputId136">
+</div>
+<div id="gen_widgetId137" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 139; top: 36px; left: 198px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="patient_nameL" title="patient_nameL" oscardb="patient_nameL" id="gen_inputId137" name="gen_inputId137">
+</div>
+<div id="gen_widgetId138" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 140; top: 39px; left: 22px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId138" name="gen_inputId138">
+</div>
+<div id="gen_widgetId139" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 141; top: 36px; left: 628px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId139" name="gen_inputId139">
+</div>
+<div id="gen_widgetId140" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 142; top: 70px; left: 640px;" ondblclick="mydclick(this)" title="dementia">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId140 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Dementia" id="gen_inputId140" required="" name="gen_inputId140" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId141" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 182; top: 70px; left: 695px;" ondblclick="mydclick(this)" title="dementia">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId140 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId141" required="" name="gen_inputId141" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId142" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 143; top: 166px; left: 24px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId142" name="gen_inputId142">
+</div>
+<div id="gen_widgetId143" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 144; top: 165px; left: 119px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId143" name="gen_inputId143">
+</div>
+<div id="gen_widgetId144" class="gen-widget gen-xBox gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 145; top: 165px; left: 285px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input xBox" title="" autocomplete="off" id="gen_inputId144" name="gen_inputId144">
+</div>
+<div id="gen_widgetId145" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 146; top: 142px; left: 64px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="MMSE" id="gen_inputId145" name="gen_inputId145">
+</div>
+<div id="gen_widgetId146" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 50px; height: 16px; position: absolute; z-index: 147; top: 141px; left: 178px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" title="m$MOCA#value" oscardb="m$MOCA#value" id="gen_inputId146" name="m$MOCA#value">
+</div>
+<div id="gen_widgetId147" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 350px; height: 16px; position: absolute; z-index: 148; top: 163px; left: 434px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId147" name="gen_inputId147">
+</div>
+<div id="gen_widgetId148" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 149; top: 196px; left: 640px;" ondblclick="mydclick(this)" title="hearing">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId148 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="Hearing" id="gen_inputId148" required="" name="gen_inputId148" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId149" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 183; top: 195px; left: 695px;" ondblclick="mydclick(this)" title="hearing">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId148 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId149" required="" name="gen_inputId149" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId150" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 150; top: 217px; left: 640px;" ondblclick="mydclick(this)" title="forcedWhisper">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId150 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId150" name="gen_inputId150" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId151" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 184; top: 217px; left: 695px;" ondblclick="mydclick(this)" title="forcedWhisper">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId150 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId151" name="gen_inputId151" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId152" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 151; top: 241px; left: 640px;" ondblclick="mydclick(this)" title="aid">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId152 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId152" name="gen_inputId152" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId153" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 185; top: 241px; left: 695px;" ondblclick="mydclick(this)" title="aid">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId152 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId153" name="gen_inputId153" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId154" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 550px; height: 32px; position: absolute; z-index: 153; top: 301px; left: 152px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<textarea style="resize: none;" class="gen_input TextArea noborderPrint" title="" id="gen_inputId154" name="gen_inputId154">
+</textarea>
+</div>
+<div id="gen_widgetId155" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 154; top: 371px; left: 141px;" ondblclick="mydclick(this)" title="clinician">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId155 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId155" required="" name="gen_inputId155" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId156" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 155; top: 394px; left: 141px;" ondblclick="mydclick(this)" title="clinician">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId155 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId156" required="" name="gen_inputId156" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId157" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 156; top: 371px; left: 399px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="doctor_ohip_no" title="doctor_ohip_no" oscardb="doctor_ohip_no" id="gen_inputId157" name="gen_inputId157">
+</div>
+<div id="gen_widgetId158" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 157; top: 392px; left: 322px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="current_user_cpsid" title="current_user_cpsid" oscardb="current_user_cpsid" id="gen_inputId158" name="gen_inputId158">
+</div>
+<div id="gen_widgetId159" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 158; top: 372px; left: 614px;" ondblclick="mydclick(this)" title="familiarity">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId159 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId159" required="" name="gen_inputId159" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId160" class="gen-widget only-one-radio gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 14px; height: 14px; position: absolute; z-index: 159; top: 396px; left: 614px;" ondblclick="mydclick(this)" title="familiarity">
+<input type="text" class="gen_input cradio only-one-radio#gen_inputId159 noborderPrint" autocomplete="off" onclick="myupdate(this)" title="" id="gen_inputId160" required="" name="gen_inputId160" style="background-color: aquamarine;">
+</div>
+<div id="gen_widgetId161" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 160; top: 426px; left: 94px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="doctor" title="doctor" oscardb="doctor" id="gen_inputId161" name="gen_inputId161">
+</div>
+<div id="gen_widgetId162" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 161; top: 430px; left: 391px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" id="gen_inputId162" name="gen_inputId162">
+</div>
+<div id="gen_widgetId163" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 162; top: 489px; left: 186px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="clinic_addressLine" title="clinic_addressLine" oscardb="clinic_addressLine" id="gen_inputId163" name="gen_inputId163">
+</div>
+<div id="gen_widgetId164" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 163; top: 525px; left: 26px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="clinic_city" title="clinic_city" oscardb="clinic_city" id="gen_inputId164" name="gen_inputId164">
+</div>
+<div id="gen_widgetId165" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 250px; height: 16px; position: absolute; z-index: 164; top: 526px; left: 391px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="clinic_province" title="clinic_province" oscardb="clinic_province" id="gen_inputId165" name="gen_inputId165">
+</div>
+<div id="gen_widgetId166" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 100px; height: 16px; position: absolute; z-index: 165; top: 527px; left: 655px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="clinic_postal" title="clinic_postal" oscardb="clinic_postal" id="gen_inputId166" name="gen_inputId166">
+</div>
+<div id="gen_widgetId167" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 100px; height: 16px; position: absolute; z-index: 166; top: 577px; left: 25px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox noborderPrint" placeholder="clinic_phone" title="clinic_phone" oscardb="clinic_phone" id="gen_inputId167" name="gen_inputId167">
+</div>
+<div id="gen_widgetId168" class="gen-widget gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 150px; height: 16px; position: absolute; z-index: 167; top: 577px; left: 572px;" title="Click to drag. DoubleClick to activate" ondblclick="mydclick2(this)">
+<input type="text" class="gen_input TextBox hasDatepicker noborderPrint" placeholder="today" title="today" oscardb="today" id="gen_inputId168" name="gen_inputId168">
+</div>
+<div id="gen_widgetId169" class="gen-widget signatureStamp gen-layer3 gen-resize-destroyed gen-draggable-destroyed" style="width: 350px; height: 50px; position: absolute; z-index: 16; top: 556px; left: 211px;">
+<img src="${oscar_image_path}BNK.png" alt="stamp" style="width: 100%; height: 100%;" class="stamp" onclick="toggleMe(this);">
+</div>
+</div>
+</div>
+<div id="BottomButtons" class="DoNotPrint">
+<!-- Form Control Buttons -->
+<label for="subject">Subject:</label>
+<input id="subject" name="subject" style="width: 220px;" type="text">
+<input id="SubmitButton" name="SubmitButton" onclick="onEformSubmit();" type="button" value="Submit">
+<input id="PrintButton" name="PrintButton" onclick="onEformPrint()" type="button" value="Print">
+<input id="PrintSubmitButton" name="PrintSubmitButton" onclick="onEformPrintSubmit();" type="button" value="Print &amp; Submit">
+<div id="faxControl">
+</div>
+</div>
+<input type="hidden" id="DoctorName" name="DoctorName" oscardb="doctor">
+<input type="hidden" id="CurrentUserName" name="CurrentUserName" oscardb="current_user">
+<input type="hidden" id="user_id" name="user_id" oscardb="current_user_id">
+<input type="hidden" id="user_ohip_no" name="user_ohip_no" oscardb="current_user_ohip_no">
+<input type="hidden" id="doctor_no" name="doctor_no" oscardb="doctor_provider_no">
+</form>
+</div>
+</body>
+</html>

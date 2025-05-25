@@ -1,0 +1,425 @@
+<html>
+<head>
+
+<!--- V4_Aug23_2018, Kintec Referral form - a collaborative effort between M Hvidsten, J Yap, and J Robertson -->
+
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style type="text/css" media="all">
+ textarea {
+	position:absolute; 
+	font-family:sans-serif; 
+	font-style:normal; 
+	font-weight:normal; 
+	font-size:16px; 
+	text-align:left; 
+	background:transparent;
+	resize: none;
+ }
+ .formInput {
+	height:15px;
+	position:absolute;
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+	font-family: sans-serif; 
+	font-style: normal; 
+	font-weight: normal; 
+	font-size: 16px; 
+	text-align: left; 
+	background: transparent;
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background: white;
+ }
+ .Xbox {
+		border: 1px solid #000000;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+		background: aquamarine;
+		position:absolute; 
+		width:14px; 
+		height:14px; 
+		font-size:16px;
+		-webkit-box-sizing: content-box;
+	}
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+ .sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background: transparent;
+ }
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script src="jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="${oscar_image_path}jquery-1.12.0.min.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+// set document title
+function setDocumentTitle(Title, PatientNameL) {
+	document.title = Title + '_' + PatientNameL;
+}
+
+// determine if new or reloaded form
+function setFlag() {
+	// indicate that the form has been submitted
+	if (document.getElementById("newForm").value == 'True')
+		document.getElementById("newForm").value = 'False';
+}
+
+// startup functions
+function startUp() {
+	setDocumentTitle('Kintec Referral', document.getElementById('PatientNameL').value);
+	setDefaults();
+
+	// Optimize window size/width
+	top.window.resizeTo(1100, screen.availHeight) ;
+}			
+
+function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+
+			// Load with electronic signature as default
+				E_Sign();
+
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById('current_user_name').value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.CurrentProviderDoctor.value = First_Last_Name;
+			}
+
+			// if reloaded eForm select submitted signature format
+			if (document.getElementById("eSign_chosen").value == '') {
+			document.getElementById("eSignature").className = 'DoNotPrint';
+			document.getElementById("CanvasSignature4").className = 'sig';
+			}
+
+		}
+
+		/****************************
+			Show/Hide classic Electronic Signature and new Signature
+		****************************/
+		function E_Sign() {
+			if (document.getElementById("eSignature").className == 'Show') {
+				// move canvasSignature to the front so it can be used again
+				document.getElementById("CanvasSignature4").style.zIndex = 10;
+				document.getElementById("eSignature").className = 'DoNotPrint';
+				document.getElementById("CanvasSignature4").className = 'sig';
+				document.getElementById("eSign_chosen").value = '';
+			}
+			else if (document.getElementById("eSignature").className == 'DoNotPrint') {
+				// clear canvasSignature and hide it behind
+				clearSig();
+				document.getElementById("CanvasSignature4").style.zIndex = 0;
+				document.getElementById("eSignature").className = 'Show';
+				document.getElementById("CanvasSignature4").className = 'Hide';
+				document.getElementById("eSign_chosen").value = 'x';
+			}
+		}
+</script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature4").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)', 'height':'inherit', 'width':'inherit'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature4");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature4").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature4").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature4");
+	var data
+	data=document.getElementById("StoreSignature4").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		var src2 = document.getElementById("BGImage2").src;
+		document.getElementById("BGImage2").src = src2.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg(); startUp(); loadSig();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctor" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<div id="page1" style="position:relative;">
+<img id="BGImage1" src="${oscar_image_path}KintecRefPadJan2018Editable1.png" style="position:relative; left:0px; top:0px; width:750px;">
+	<a href="http://www.kintec.net" style="position:absolute; left:497px; top:946px; width:125px; height:17px; background: transparent;" target="_blank"></a>
+
+    <div id="CanvasSignature4" class="Hide" style="position:absolute; left:161px; top:233px; width:290px; height:26px; z-index: 10;"></div>
+	<input type="hidden" name="StoreSignature4" id="StoreSignature4" value="">
+	<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" class="DoNotPrint" onclick="clearSig();" style="position:absolute; top:233px; left:-8px; color:green;"> 
+
+<!-- Classic Electronically Signed -->
+<span id="eSignature" class="DoNotPrint" style="position:absolute; left:161px; top:235px; width:290px; font-family:Arial; font-size:18px; font-style:italic; text-align:center;"><b>"Electronically signed"</b></span>
+<input value="E-Signature" name="ESign" id="ESign" type="button" class="DoNotPrint" style="position:absolute; left:-8px; top:253px;" title="click to toggle" onclick="E_Sign();"> 
+<!-- Hidden input for eSignature status save -->
+<input type="hidden" name="eSign_chosen" id="eSign_chosen" value="">
+
+<input name="patient_name" class="formInput" id="patient_name" type="text" style="left:182px; top:184px; width:263px;" oscarDB=patient_name>
+<input name="today" class="formInput" id="today" type="text" style="left:505px; top:184px; width:130px;" oscarDB=today>
+<input name="CurrentProviderDoctor" class="formInput" id="CurrentProviderDoctor" type="text" style="left:262px; top:209px; width:184px;" value="">
+<input name="MSP" class="formInput" id="MSP" type="text" style="left:511px; top:209px; width:126px;" oscarDB=hinc>
+<input name="phone" class="formInput" id="phone" type="text" style="left:503px; top:235px; width:133px;" oscarDB=phone>
+
+<textarea name="Dx" id="Dx" type="text" style="left:102px; top:267px; width:454px; height:43px;"></textarea>
+<textarea name="Rx" id="Rx" type="text" style="left:102px; top:310px; width:454px; height:63px;"></textarea>
+
+<!--  Common Dx -->
+<input name="PlantarViewR" id="PlantarViewR" type="text" class="Xbox" style="left:589px; top:336px; width:18px;">
+<input name="PlantarViewL" id="PlantarViewL" type="text" class="Xbox" style="left:638px; top:335px; width:18px;">
+
+<input name="plantarFasciitis" id="plantarFasciitis" type="text" class="Xbox" style="left:71px; top:423px;">
+<input name="metatarsagia" id="metatarsagia" type="text" class="Xbox" style="left:71px; top:443px;">
+<input name="bunions" id="bunions" type="text" class="Xbox" style="left:71px; top:463px;">
+<input name="achillesTendinopathy" id="achillesTendinopathy" type="text" class="Xbox" style="left:71px; top:483px;">
+<input name="lowerLimbCirculatoryIssues" id="lowerLimbCirculatoryIssues" type="text" class="Xbox" style="left:71px; top:503px;">
+<input name="diabeticComplications" id="diabeticComplications" type="text" class="Xbox" style="left:71px; top:523px;">
+
+<input name="ankleSprain" id="ankleSprain" type="text" class="Xbox" style="left:369px; top:427px;">
+
+<input name="knee" id="knee" type="text" class="Xbox" style="left:369px; top:447px;">
+<input name="PFS" id="PFS" type="text" class="Xbox" style="left:393px; top:465px;">
+<input name="ACL" id="ACL" type="text" class="Xbox" style="left:473px; top:465px;">
+<input name="MCL" id="MCL" type="text" class="Xbox" style="left:552px; top:465px;">
+<input name="PCL" id="PCL" type="text" class="Xbox" style="left:623px; top:465px;">
+
+<input name="osteoarthritis" id="osteoarthritis" type="text" class="Xbox" style="left:369px; top:488px;">
+<input name="osteoarthritisKnee" id="osteoarthritisKnee" type="text" class="Xbox" style="left:394px; top:506px;">
+<input name="osteoarthritisHip" id="osteoarthritisHip" type="text" class="Xbox" style="left:624px; top:506px;">
+
+<input name="epicondylitis" id="epicondylitis" type="text" class="Xbox" style="left:369px; top:526px;">
+
+<input name="commonDiagnosesOtherCheckbox" id="commonDiagnosesOtherCheckbox" type="text" class="Xbox" style="left:369px; top:546px;">
+<input name="commonDiagnosesOtherInput" class="formInput" id="commonDiagnosesOtherInput" type="text" style="left:439px; top:543px; width:220px; height:19px;">
+
+<!--  Common Rx -->
+<input name="footOrthotics" id="footOrthotics" type="text" class="Xbox" style="left:73px; top:589px;">
+<input name="asRequired" id="asRequired" type="text" class="Xbox" style="left:95px; top:609px;">
+<input name="customCasted" id="customCasted" type="text" class="Xbox" style="left:95px; top:629px;">
+<input name="footOrthoticsOts" id="footOrthoticsOts" type="text" class="Xbox" style="left:95px; top:649px;">
+
+<input name="footwearModifications" id="footwearModifications" type="text" class="Xbox" style="left:73px; top:670px;">
+<input name="lift" id="lift" type="text" class="Xbox" style="left:95px; top:691px;">
+<input name="footwearModificationLiftHeight" class="formInput" id="footwearModificationLiftHeight" type="text" style="left:284px; top:685px; width:56px; height:16px;">
+<input name="rockerSole" id="rockerSole" type="text" class="Xbox" style="left:95px; top:711px;">
+<input name="excavation" id="excavation" type="text" class="Xbox" style="left:95px; top:731px;">
+<input name="stretch" id="stretch" type="text" class="Xbox" style="left:95px; top:751px;">
+
+<input name="customFootwear" id="customFootwear" type="text" class="Xbox" style="left:73px; top:769px;">
+<input name="nightSplint" id="nightSplint" type="text" class="Xbox" style="left:73px; top:790px;">
+
+<input name="ankleBrace" id="ankleBrace" type="text" class="Xbox" style="left:73px; top:810px;">
+<input name="ankleBraceOts" id="ankleBraceOts" type="text" class="Xbox" style="left:95px; top:831px;">
+<input name="customAFO" id="customAFO" type="text" class="Xbox" style="left:95px; top:851px;">
+<input name="ankleBraceSpecifyCheckbox" id="ankleBraceSpecifyCheckbox" type="text" class="Xbox" style="left:95px; top:871px;">
+<input name="ankleBraceSpecifyInput" class="formInput" id="ankleBraceSpecifyInput" type="text" style="left:165px; top:867px; width:169px; height:19px;">
+
+<input name="compressionSock" id="compressionSock" type="text" class="Xbox" style="left:369px; top:589px;">
+<input name="grade" class="formInput" id="grade" type="text" style="left:563px; top:585px; width:29px; height:16px;">
+
+<input name="walkerBoot" id="walkerBoot" type="text" class="Xbox" style="left:369px; top:609px;">
+<input name="tall" id="tall" type="text" class="Xbox" style="left:391px; top:627px;">
+<input name="short" id="short" type="text" class="Xbox" style="left:471px; top:627px;">
+
+<input name="kneeBrace" id="kneeBrace" type="text" class="Xbox" style="left:369px; top:650px;">
+<input name="customLigament" id="customLigament" type="text" class="Xbox" style="left:391px; top:667px;">
+<input name="patellaStabilizer" id="patellaStabilizer" type="text" class="Xbox" style="left:551px; top:667px;">
+<input name="customOA" id="customOA" type="text" class="Xbox" style="left:391px; top:689px;">
+<input name="kneeBraceOTS" id="kneeBraceOTS" type="text" class="Xbox" style="left:620px; top:689px;">
+
+<input name="upperLimbBrace" id="upperLimbBrace" type="text" class="Xbox" style="left:369px; top:710px;">
+<input name="tennisElbowBand" id="tennisElbowBand" type="text" class="Xbox" style="left:391px; top:728px;">
+<input name="wristBrace" id="wristBrace" type="text" class="Xbox" style="left:550px; top:728px;">
+<input name="thumbSpica" id="thumbSpica" type="text" class="Xbox" style="left:391px; top:749px;">
+<input name="upperLimbBraceSpecifyCheckbox" id="upperLimbBraceSpecifyCheckbox" type="text" class="Xbox" style="left:391px; top:769px;">
+<input name="upperLimbBraceSpecifyInput" id="upperLimbBraceSpecifyInput" class="formInput" type="text" style="left:463px; top:767px; width:200px; height:18px;">
+
+<input name="backBrace" id="backBrace" type="text" class="Xbox" style="left:369px; top:790px;">
+<input name="SIBelt" id="SIBelt" type="text" class="Xbox" style="left:391px; top:809px;">
+<input name="backBraceSpecify" id="backBraceSpecify" type="text" class="Xbox" style="left:471px; top:809px;">
+<input name="backBraceSpecify" id="backBraceSpecify" class="formInput" type="text" style="left:540px; top:807px; width:121px; height:18px;">
+
+<input name="postSurgical" id="postSurgical" type="text" class="Xbox" style="left:369px; top:830px;">
+<input name="cryotherapy" id="cryotherapy" type="text" class="Xbox" style="left:391px; top:849px;">
+<input name="shoulderSling" id="shoulderSling" type="text" class="Xbox" style="left:550px; top:849px;">
+<input name="postOpKneeBrace" id="postOpKneeBrace" type="text" class="Xbox" style="left:391px; top:869px;">
+
+<input name="commonTreatmentsOtherCheckbox" id="commonTreatmentsOtherCheckbox" type="text" class="Xbox" style="left:369px; top:890px;">
+<input name="commonTreatmentsOtherInput" class="formInput" id="commonTreatmentsOtherInput" type="text" style="left:440px; top:887px; width:220px; height:19px;">
+
+<input name="complimentaryFootwareConsulatation" id="complimentaryFootwareConsulatation" type="text" class="Xbox" style="left:73px; top:912px;">
+
+</form>
+
+<div id="page2" style="page-break-after:always;position:relative;">
+    <img id="BGImage2" src="${oscar_image_path}Kintec-Ref-Pad-OCT-2020-web.png" width="500"> <!-- Because the img is within a div that has a relative position its not necessary to express the position  -->
+	<a href="http://www.kintec.net/book-now" style="position:absolute; left:265px; top:870px; width:200px; height:15px; background:transparent;" target="_blank"></a>
+	<a href="http://www.kintec.net" style="position:absolute; left:300px; top:942px; width:158px; height:15px; background: transparent;" target="_blank"></a>
+</div>
+
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; top:1940px; left:0px;">
+	<table><tr><td style="background: #e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" id="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="saveSig(); setFlag(); releaseDirtyFlag(); setTimeout('document.FormName.submit()',2000);"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0)"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint(); setTimeout('SubmitButton.click()',2000);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+ <a rel="licence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> created October 26<sup>th</sup> 2020 by <a href="https://giphy.com/gifs/jQVYFoAicMNIs9m4xZ/html5" target="_blank" >Dr. John Robertson</a>, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. <span style="color:forestgreen;">Please consider supporting </span> <a href="http://oscarbc.ca/" target="_blank" >oscarbc.ca</a>| <a id="emailLnk1" style="cursor: pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC" >info@oscarbc.ca</a>|  <a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank" >Facebook</a>|  <a href="https://twitter.com/OSCARBCemr" target="_blank" >Twitter </a>|  <a href="https://www.linkedin.com/company/oscarbc/" target="_blank" >LinkedIn </a>|<br>
+</div>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d", showsTime:false, button:"today", singleClick:true, step:1 } );
+</script>
+
+</body>
+</html>

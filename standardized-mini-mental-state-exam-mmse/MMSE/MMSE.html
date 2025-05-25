@@ -1,0 +1,594 @@
+<html>
+<head>
+
+<!--SMMSE/Folstein Score, created by Dr. John Yap, July 2014; using background as per W Molloy, as prepared for ADTI; requires MMSE measurement to track -->
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<!-- V6 Mar13_2016: John Yap - remove redundant score button.  Add reference -->
+<!-- V7 Aug1_2017: John Yap - minor cosmetic tweaks, sidelines -->
+<!-- V8 Dec12_2017: John Yap - clean up javascript; jQuery X-boxes -->
+
+<!-- Create MMSE measurement:  measurement type="MMSE" typeDesc="MMSE" typeDisplayName="MMSE" validationRule="Numeric Value: 0 to 100" -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, inside double quotations, and to the right of the double slashes
+// "${oscar_image_path}SMMSE.png"
+// "${oscar_image_path}SMMSE_reference.png"
+</script>
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+
+<style type="text/css" media="print">
+.DoNotPrint {display:none; }
+.noborder {
+	 border:0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 overflow:hidden;
+ }
+.Show {visibility:visible; display:inline; }
+.Hide {visibility:hidden; display:none;}
+</style>
+
+<style type="text/css">
+.noborder {background:transparent;}
+.Show {visibility:visible; display:inline;}
+.Hide{visibility:hidden; display:none;}
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width:16px;
+	height:16px;
+	font-size: 14px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: yellow;
+}
+.box2 {
+	position: absolute;
+	width:12px;
+	height:12px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+	font-size: 12px;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {			
+			// new offline architecture as per K Yap
+			setDocumentTitle('SMMSE',document.getElementById('PatientNameL').value);
+			changeImage("SMMSE.png", "BGImage");
+			changeImage("SMMSE_reference.png", "BGImage1");
+			setDefaults();
+
+			//optimize window size/width
+			top.window.resizeTo(1030, screen.availHeight);
+		}
+
+		function changeImage(img,imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				//document.getElementById('').value = '';
+			}
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			releaseDirtyFlag();			
+			submission();
+		}
+
+		function printLetter() {
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+
+	/****************************
+		checkbox functions 
+	****************************/
+		$( document ).ready(function() {
+			$('.XBox').prop("readonly","true");
+			$('.XBox').mousedown(function(evt) {
+				changeValue(evt.target);
+				});
+			$('.XBox').keydown(function(evt) {
+				displayKeyCode(evt);
+			});	
+		});
+
+		function changeValue(element) {
+			if (element.val == undefined) {
+			element = $(element); // Convert to jquery element
+		}
+			if (element.val() == '') {
+			element.val('X');
+			}
+			else {element.val('');}
+			//updates score with every X-box input
+			totalScore();
+		}
+
+		/****************************
+			scripts to confirm closing of window if it has not been saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = false;
+			document.onkeyup=setDirtyFlag;
+		function setDirtyFlag() {
+		needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+			return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+</script>
+
+<!-- Script for StopWatch -->
+<script language="JavaScript" type="text/javascript">
+<!-- Copyright 2001, Sandeep Gangadharan -->
+<!-- For more free scripts go to http://www.sivamdesign.com/scripts/ -->
+
+var sec = 0;
+var min = 0;
+var hour = 0;
+function stopwatch(text) {
+   sec++;
+  if (sec == 60) {
+   sec = 0;
+   min = min + 1; }
+  else {
+   min = min; }
+  if (min == 60) {
+   min = 0; 
+   hour += 1; }
+
+if (sec<=9) { sec = "0" + sec; }
+   document.clock.stwa.value = ((hour<=9) ? "0"+hour : hour) + " : " + ((min<=9) ? "0" + min : min) + " : " + sec;
+
+  if (text == "Start") { document.clock.theButton.value = "Stop"; document.getElementById("theButton").style.background='red';}
+  if (text == "Stop") { document.clock.theButton.value = "Start"; document.getElementById("theButton").style.background='lightgreen';}
+
+  if (document.clock.theButton.value == "Start") {
+   window.clearTimeout(SD);
+   return true; }
+SD=window.setTimeout("stopwatch();", 1000);
+}
+
+function resetIt() {
+  sec = -1;
+  min = 0;
+  hour = 0;
+  if (document.clock.theButton.value == "Stop") {document.clock.theButton.value = "Start"; document.getElementById("theButton").style.background='lightgreen';}
+  window.clearTimeout(SD);
+ }
+
+ function restart() {
+ 	resetIt();
+	document.clock.theButton.value = "Stop";
+	document.getElementById("theButton").style.background='red';
+ 	stopwatch();
+ }
+</script>
+<!-- End of StopWatch -->
+
+<!-- Print Handout Script -->
+<script type="text/javascript" language="javascript">
+function OpenPrint(){
+	var TempWin=window.open('','name');
+	TempWin.document.write('<html><head><title>MMSE Handout</title></head><body>');
+	TempWin.document.write('<img src="${oscar_image_path}MMSEworksheet.png" width="700" onLoad="javascript:window.print();self.close(); ">');
+	TempWin.document.write('<div style="position: absolute; left: 10px; top: 10px;"> ');
+	TempWin.document.write('Name:<input name="PatientSurnameFirstName" type="text" style="width:200; border:0px;" oscarDB=patient_name> ');
+	TempWin.document.write('DOB:<input name="DateOfBirth" type="text" style="width:200; border:0px;" oscardb=dob> ');
+	TempWin.document.write('Date:<input name="Date" type="text" style="width:200; border:0px;" oscardb=today> ');
+	TempWin.document.write('</div>');
+	TempWin.document.write('</body></html>');
+	TempWin.document.close();
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getCheckedValue(radioObj) {
+
+	if(!radioObj)
+		return parseInt(0);
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return parseInt(radioObj.value);
+		else
+			return parseInt(value);
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return parseInt(radioObj[i].value);
+		}
+	}
+	return parseInt(0);
+}
+
+function totalScore(){
+var i=0;
+	if (document.getElementById("WhatYear").value == ''){i += 0; document.getElementById("WhatYearValue").value = 0;}
+		else {i += 1; document.getElementById("WhatYearValue").value = 1;}
+	if (document.getElementById("WhatSeason").value == ''){i += 0; document.getElementById("WhatSeasonValue").value = 0;}
+		else {i += 1; document.getElementById("WhatSeasonValue").value = 1;}
+	if (document.getElementById("WhatMonth").value == ''){i += 0; document.getElementById("WhatMonthValue").value = 0;}
+		else {i += 1; document.getElementById("WhatMonthValue").value = 1;}
+	if (document.getElementById("WhatDate").value == ''){i += 0; document.getElementById("WhatDateValue").value = 0;}
+		else {i += 1; document.getElementById("WhatDateValue").value = 1;}
+	if (document.getElementById("WhatDay").value == ''){i += 0; document.getElementById("WhatDayValue").value = 0;}
+		else {i += 1; document.getElementById("WhatDayValue").value = 1;}
+	if (document.getElementById("WhatCountry").value == ''){i += 0; document.getElementById("WhatCountryValue").value = 0;}
+		else {i += 1; document.getElementById("WhatCountryValue").value = 1;}
+	if (document.getElementById("WhatProvince").value == ''){i += 0; document.getElementById("WhatProvinceValue").value = 0;}
+		else {i += 1; document.getElementById("WhatProvinceValue").value = 1;}
+	if (document.getElementById("WhatCity").value == ''){i += 0; document.getElementById("WhatCityValue").value = 0;}
+		else {i += 1; document.getElementById("WhatCityValue").value = 1;}
+	if (document.getElementById("WhatBuilding").value == ''){i += 0; document.getElementById("WhatBuildingValue").value = 0;}
+		else {i += 1; document.getElementById("WhatBuildingValue").value = 1;}
+	if (document.getElementById("WhatFloor").value == ''){i += 0; document.getElementById("WhatFloorValue").value = 0;}
+		else {i += 1; document.getElementById("WhatFloorValue").value = 1;}
+
+var j=0;
+	if (document.getElementById("Register1").value == ''){i += 0; j += 0;}
+		else {i += 1; j += 1;}
+	if (document.getElementById("Register2").value == ''){i += 0; j += 0;}
+		else {i += 1; j += 1;}
+	if (document.getElementById("Register3").value == ''){i += 0; j += 0;}
+		else {i += 1; j += 1;}
+
+	document.FormName.RegisterValue.value = j;
+
+var k=0;
+	if (document.getElementById("D93").value == ''){i += 0; k += 0;}
+		else {i += 1; k += 1;}
+	if (document.getElementById("L86").value == ''){i += 0; k += 0;}
+		else {i += 1; k += 1;}
+	if (document.getElementById("R79").value == ''){i += 0; k += 0;}
+		else {i += 1; k += 1;}
+	if (document.getElementById("O72").value == ''){i += 0; k += 0;}
+		else {i += 1; k += 1;}
+	if (document.getElementById("W65").value == ''){i += 0; k += 0;}
+		else {i += 1; k += 1;}
+
+	document.FormName.AttentionValue.value = k;
+
+var l=0;
+	if (document.getElementById("Recall1").value == ''){i += 0;  l += 0;}
+		else {i += 1; l += 1;}
+	if (document.getElementById("Recall2").value == ''){i += 0;  l += 0;}
+		else {i += 1; l += 1;}
+	if (document.getElementById("Recall3").value == ''){i += 0;  l += 0;}
+		else {i += 1; l += 1;}
+
+	document.FormName.RecallValue.value = l;
+
+	if (document.getElementById("Watch").value == ''){i += 0; document.getElementById("WatchValue").value = 0;}
+		else {i += 1; document.getElementById("WatchValue").value = 1;}
+	if (document.getElementById("Pencil_Pen").value == ''){i += 0; document.getElementById("Pencil_PenValue").value = 0;}
+		else {i += 1; document.getElementById("Pencil_PenValue").value = 1;}
+	if (document.getElementById("IfsAndsButs").value == ''){i += 0; document.getElementById("IfsAndsButsValue").value = 0;}
+		else {i += 1; document.getElementById("IfsAndsButsValue").value = 1;}
+	if (document.getElementById("Read_Obey").value == ''){i += 0; document.getElementById("Read_ObeyValue").value = 0;}
+		else {i += 1; document.getElementById("Read_ObeyValue").value = 1;}
+	if (document.getElementById("Sentence").value == ''){i += 0; document.getElementById("SentenceValue").value = 0;}
+		else {i += 1; document.getElementById("SentenceValue").value = 1;}
+	if (document.getElementById("Pentagons").value == ''){i += 0; document.getElementById("PentagonsValue").value = 0;}
+		else {i += 1; document.getElementById("PentagonsValue").value = 1;}
+	if (document.getElementById("Command1").value == ''){i += 0; document.getElementById("Command1Value").value = 0;}
+		else {i += 1; document.getElementById("Command1Value").value = 1;}
+	if (document.getElementById("Command2").value == ''){i += 0; document.getElementById("Command2Value").value = 0;}
+		else {i += 1; document.getElementById("Command2Value").value = 1;}
+	if (document.getElementById("Command3").value == ''){i += 0; document.getElementById("Command3Value").value = 0;}
+		else {i += 1; document.getElementById("Command3Value").value = 1;}
+
+
+	if (i<15){document.getElementById("Dementia_detail").className = 'Show';}
+		else {document.getElementById("Dementia_detail").className = 'Hide';}
+
+	if (i>14 && i<24){document.getElementById("CognitiveLoss_detail").className = 'Show';}
+		else {document.getElementById("CognitiveLoss_detail").className = 'Hide';}
+
+	if (i>=24){document.getElementById("Normal_detail").className = 'Show';}
+		else {document.getElementById("Normal_detail").className = 'Hide';}
+
+	document.FormName.subject.value = "score = " +i+"/30";
+	document.FormName.MMSE_Score.value = i;
+	document.getElementById("MMSEa").value = i;
+	document.getElementById("MMSEb").value = i;
+}
+</script>
+</head>
+
+<body onload="startUp();">
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<img id="BGImage" SRC="" width="850px">
+
+<form method="post" action="" name="FormName" id="FormName">
+
+
+<!-- Hidden input for title name -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<span class="DoNotPrint" style="position:absolute; left:175px; top:87px; width:380px; font-family:Arial; font-size:13px; color:green;">Click on yellow check box if answer correct. Add comments if needed. Print Handout for parts 9-12, and for additional notes.</span>
+
+<a name="Reference" id="BGImage1" class="DoNotPrint" style="position:absolute; left:815px; top:55px;" href="" target="_blank">Reference</a>
+<a name="Handout" class="DoNotPrint" style="position:absolute; left:815px; top:75px; width:110px;" href="javascript:OpenPrint();">Print Handout</a>
+
+<!-- Demographics -->
+<span style="position:absolute; left:50px; top:30px; font-family:Arial; font-size:14px;">Date:</span>
+<input class="noborder" name="TodaysDate" type="text" style="position:absolute; left:90px; top:30px; width:100px; font-family:Arial; font-size:14px;" oscarDB=today>
+
+<span style="position:absolute; left:210px; top:30px; font-family:Arial; font-size:14px;">Name:</span>
+<input class="noborder" name="PatientName" id="PatientName" type="text" style="position:absolute; left:260px; top:30px; width:325px; font-family:Arial; font-size:14px;" oscarDB=patient_name>
+
+<span style="position:absolute; left:610px; top:30px; font-family:Arial; font-size:14px;">DOB:</span>
+<input class="noborder" name="Birthdate" type="text" style="position:absolute; left:650px; top:30px; width:140px; font-family:Arial; font-size:14px;" oscarDB=DOB>
+
+<!-- Orientation -->
+<input name="WhatYear_value" type="text" class="noborder" style="position:absolute; left:440px; top:128px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatYear" id="WhatYear" type="text" class="Xbox box1" style="left:590px; top:131px;">
+<input name="WhatYearValue" id="WhatYearValue" type="text" class="noborder" style="position:absolute; left:740px; top:130px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatSeason_value" type="text" class="noborder" style="position:absolute; left:440px; top:153px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatSeason" id="WhatSeason" type="text" class="Xbox box1" style="left:590px; top:156px;">
+<input name="WhatSeasonValue" id="WhatSeasonValue" type="text" class="noborder" style="position:absolute; left:740px; top:155px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatMonth_value" type="text" class="noborder" style="position:absolute; left:440px; top:178px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatMonth" id="WhatMonth" type="text" class="Xbox box1" style="left:590px; top:181px;">
+<input name="WhatMonthValue" id="WhatMonthValue" type="text" class="noborder" style="position:absolute; left:740px; top:180px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatDate_value" type="text" class="noborder" style="position:absolute; left:440px; top:203px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatDate" id="WhatDate" type="text" class="Xbox box1" style="left:590px; top:206px;">
+<input name="WhatDateValue" id="WhatDateValue" type="text" class="noborder" style="position:absolute; left:740px; top:205px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatDay_value" type="text" class="noborder" style="position:absolute; left:440px; top:228px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatDay" id="WhatDay" type="text" class="Xbox box1" style="left:590px; top:231px;">
+<input name="WhatDayValue" id="WhatDayValue" type="text" class="noborder" style="position:absolute; left:740px; top:230px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatCountry_value" type="text" class="noborder" style="position:absolute; left:440px; top:253px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatCountry" id="WhatCountry" type="text" class="Xbox box1" style="left:590px; top:256px;">
+<input name="WhatCountryValue" id="WhatCountryValue" type="text" class="noborder" style="position:absolute; left:740px; top:255px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatProvince_value" type="text" class="noborder" style="position:absolute; left:440px; top:278px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatProvince" id="WhatProvince" type="text" class="Xbox box1" style="left:590px; top:281px;">
+<input name="WhatProvinceValue" id="WhatProvinceValue" type="text" class="noborder" style="position:absolute; left:740px; top:280px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatCity_value" type="text" class="noborder" style="position:absolute; left:440px; top:303px; width:140px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatCity" id="WhatCity" type="text" class="Xbox box1" style="left:590px; top:306px;">
+<input name="WhatCityValue" id="WhatCityValue" type="text" class="noborder" style="position:absolute; left:740px; top:305px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<textarea name="WhatBuilding_value" type="text" class="noborder" style="position:absolute; left:440px; top:328px; width:140px; height:37px; font-family:Arial; font-size:14px; background:transparent;" value=""></textarea>
+<input name="WhatBuilding" id="WhatBuilding" type="text" class="Xbox box1" style="left:590px; top:331px;">
+<input name="WhatBuildingValue" id="WhatBuildingValue" type="text" class="noborder" style="position:absolute; left:740px; top:330px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="WhatFloor_value" type="text" class="noborder" style="position:absolute; left:528px; top:370px; width:52px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<input name="WhatFloor" id="WhatFloor" type="text" class="Xbox box1" style="left:590px; top:373px;">
+<input name="WhatFloorValue" id="WhatFloorValue" type="text" class="noborder" style="position:absolute; left:740px; top:372px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- Registration -->
+<input name="Register1" id="Register1" type="text" class="Xbox box1" style="left:590px; top:398px;">
+
+<input name="Register2" id="Register2" type="text" class="Xbox box1" style="left:590px; top:414px;">
+
+<input name="Register3" id="Register3" type="text" class="Xbox box1" style="left:590px; top:430px;">
+
+<span class="DoNotPrint" style="position:absolute; left:622px; top:414px; font-family:Arial; font-size:12px;">Presentations:</span>
+	<select name="Registration" class="DoNotPrint" style="position:absolute; left:622px; top:430px; text-align:center;">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="fail">failed</option>
+	</select>
+
+<input name="RegisterValue" id="RegisterValue" type="text" class="noborder" style="position:absolute; left:740px; top:397px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<span class="DoNotPrint" style="position:absolute; left:815px; top:390px; width:200px; font-family:Arial; font-size:13px; color:green;">Alternates: pencil/bicycle/shoe; orange/car/dog. Present up to 6x to complete. Otherwise fail.</span>
+
+<!-- Attention -->
+<span style="position:absolute; left:370px; top:457px; font-family:Arial; font-size:12px;">D/93</span>
+<input name="D93" id="D93" type="text" class="Xbox box1" style="left:397px; top:455px;">
+<span style="position:absolute; left:417px; top:457px; font-family:Arial; font-size:12px;">L/86</span>
+<input name="L86" id="L86" type="text" class="Xbox box1" style="left:442px; top:455px;">
+<span style="position:absolute; left:462px; top:457px; font-family:Arial; font-size:12px;">R/79</span>
+<input name="R79" id="R79" type="text" class="Xbox box1" style="left:489px; top:455px;">
+<span style="position:absolute; left:509px; top:457px; font-family:Arial; font-size:12px;">O/72</span>
+<input name="O72" id="O72" type="text" class="Xbox box1" style="left:538px; top:455px;">
+<span style="position:absolute; left:558px; top:457px; font-family:Arial; font-size:12px;">W/65</span>
+<input name="W65" id="W65" type="text" class="Xbox box1" style="left:590px; top:455px;">
+
+<input name="AttentionValue" id="AttentionValue" type="text" class="noborder" style="position:absolute; left:740px; top:456px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<span class="DoNotPrint" style="position:absolute; left:815px; top:457px; width:180px; font-family:Arial; font-size:13px; color:green;">Or serial 7&#8217;s.</span>
+
+<!-- Recall -->
+<input name="Recall1" id="Recall1" type="text" class="Xbox box1" style="left:530px; top:480px;">
+<input name="Recall2" id="Recall2" type="text" class="Xbox box1" style="left:560px; top:480px;">
+<input name="Recall3" id="Recall3" type="text" class="Xbox box1" style="left:590px; top:480px;">
+
+<input name="RecallValue" id="RecallValue" type="text" class="noborder" style="position:absolute; left:740px; top:479px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- Naming -->
+<input name="Watch" id="Watch" type="text" class="Xbox box1" style="left:590px; top:505px;">
+<input name="WatchValue" id="WatchValue" type="text" class="noborder" style="position:absolute; left:740px; top:504px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="Pencil_Pen" id="Pencil_Pen" type="text" class="Xbox box1" style="left:590px; top:530px;">
+<input name="Pencil_PenValue" id="Pencil_PenValue" type="text" class="noborder" style="position:absolute; left:740px; top:529px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- Repetition -->
+<input name="IfsAndsButs" id="IfsAndsButs" type="text" class="Xbox box1" style="left:590px; top:555px;">
+<input name="IfsAndsButsValue" id="IfsAndsButsValue" type="text" class="noborder" style="position:absolute; left:740px; top:554px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- Read and Obey -->
+<input name="Read_Obey" id="Read_Obey" type="text" class="Xbox box1" style="left:590px; top:580px;">
+<input name="Read_ObeyValue" id="Read_ObeyValue" type="text" class="noborder" style="position:absolute; left:740px; top:579px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- Sentence -->
+<input name="Sentence" id="Sentence" type="text" class="Xbox box1" style="left:590px; top:637px;">
+<input name="SentenceValue" id="SentenceValue" type="text" class="noborder" style="position:absolute; left:740px; top:636px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- Pentagons -->
+<input name="Pentagons" id="Pentagons" type="text" class="Xbox box1" style="left:590px; top:677px;">
+<input name="PentagonsValue" id="PentagonsValue" type="text" class="noborder" style="position:absolute; left:740px; top:676px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<!-- 3 stage command -->
+<input name="Command1" id="Command1" type="text" class="Xbox box1" style="left:590px; top:930px;">
+<input name="Command1Value" id="Command1Value" type="text" class="noborder" style="position:absolute; left:740px; top:929px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="Command2" id="Command2" type="text" class="Xbox box1" style="left:590px; top:948px;">
+<input name="Command2Value" id="Command2Value" type="text" class="noborder" style="position:absolute; left:740px; top:947px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+
+<input name="Command3" id="Command3" type="text" class="Xbox box1" style="left:590px; top:966px;">
+<input name="Command3Value" id="Command3Value" type="text" class="noborder" style="position:absolute; left:740px; top:968px; width:15px; height:18px; font-family:Arial; font-size:14px; background:transparent;" value="">
+<!-- End of Questionnaire -->
+
+<!-- Scoring Guide -->
+<!-- allows for measurement-less function; pulls value from previous eForm  -->
+<input id="MMSEa" type="hidden" name="MMSEa">
+<input id="MMSEdate" type="hidden" name="MMSEdate" oscarDB=today>
+<!-- adds score to existing measurements -->
+<input id="MMSEb" type="hidden" name="m$MMSE#value">
+
+<span class="DoNotPrint" style="position:absolute; left:820px; top:930px; width:120px; color:green;">Previous score:</span>
+<input type="text" class="DoNotPrint" name="MMSEScorePrevious" style="position:absolute; left:940px; top:930px; width:40px; text-align:center; font-size:14px;" oscardb=e$last#MMSEa>
+
+<span class="DoNotPrint" style="position:absolute; left:820px; top:954px; width:120px; color:green;">Previous date:</span>
+<input type="text" class="DoNotPrint" name="MMSEPreviousDate" style="position:absolute; left:940px; top:954px; width:75px; text-align:center; font-size:11px;" oscardb=e$last#MMSEdate>
+
+<input name="MMSE_Score" id="MMSE_Score" type="text" class="noborder" name="Score" style="position:absolute; left:726px; top:993px; width:25px; font-family:Arial; font-size:14px; font-weight:bold; text-align:center; background:transparent;" value="">
+
+<!-- Interpretation of Scores -->
+<div id="Dementia_detail" class="Hide" style="position:absolute; left:780px; top:980px; width:220px; font-family:sans-serif; font-size:12px; color:red;">
+<ul class="DoNotPrint"><li>Score 0-14 suggests <b>Dementia</b></li></ul>
+</div>
+
+<div id="CognitiveLoss_detail" class="Hide" style="position:absolute; left:780px; top:980px; width:220px; font-family:sans-serif; font-size:12px; color:orange;">
+<ul class="DoNotPrint"><li>Score 15-23 suggests <b>Cognitive Loss/depression</b></li></ul>
+</div>
+
+<div id="Normal_detail" class="Hide" style="position:absolute; left:780px; top:980px; width:220px; font-family:sans-serif; font-size:12px; color:green;">
+<ul class="DoNotPrint"><li>Score 24-30 suggests <b>Normal cognitive</b></li></ul>
+</div>
+<!-- End of Inputs -->
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:50px; top:1100px;">
+	<table><tr><td style="background-color:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />				
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission()">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0)"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter()"> 			
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="printSubmit()">
+	</td></tr></table>
+</div>
+<!-- End of submit/print/reset buttons -->
+</form>
+
+<!-- StopWatch  -->
+<div name="StopWatch class="DoNotPrint" class="DoNotPrint" style="position:absolute; left:820px; top:140px;">
+	<table bgcolor="#c0c0c0" align="center" border="0" width="100" cellspacing="0">
+	<tr><td align="center">
+		<font face="verdana, arial, helvetica, sans-serif" size="1"><b>STOPWATCH</b></font>
+	</td></tr>
+	<tr><td align="center">
+		<form name="clock">
+		<input type="text" size="12" name="stwa" value="00 : 00 : 00" style="text-align: center"><br>
+		<input type="button" name="theButton" id="theButton" style="background:lightgreen;" onClick="stopwatch(this.value);" value="Start" />
+		<input type="button" value="Reset" onClick="resetIt(); reset();">
+		<input type="button" value="ReStart" onClick="restart();">
+		</form>
+	</td></tr>
+	</table>
+</div>
+
+</body></html>

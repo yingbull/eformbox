@@ -1,0 +1,289 @@
+
+<html>
+<head>
+<title>Outpatient Anticoagulation Orders Page 1</title>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+
+<script language="javascript">
+function formPrint(){
+			window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+		needToConfirm = true;
+}
+function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	 if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script language="JavaScript">
+	 top.window.moveTo(0,0);
+	 if (document.all) {
+	 top.window.resizeTo(screen.availWidth,screen.availHeight);
+	 }
+	 else if (document.layers||document.getElementById) {
+	 if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+		 top.window.outerHeight = screen.availHeight;
+		 top.window.outerWidth = screen.availWidth;
+	}
+}
+ </script>
+ 
+ <script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp()
+		{			
+			// shows the forms on development machine from notepad ++ - saves you from uploading to the server to input alignments
+			var strLoc = window.location.href.toLowerCase();
+			if(strLoc.indexOf("https") == -1)
+			{
+				//page1
+				var src = document.getElementById('BGImage').src;				
+				document.getElementById('BGImage').src = src.replace('$%7Boscar_image_path%7D','');
+				
+			}
+			setDocumentTitle('Outpatient Anticoagulation Orders Page 1',document.getElementById('Surname').value);
+		}
+		
+		function setDocumentTitle(Title,Surname)
+		{
+			// set document title
+			document.title = Title + ' - ' + Surname;					
+							
+		}
+		
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit()
+		{
+			printLetter();
+			releaseDirtyFlag();			
+			submission();
+		}
+
+		function printLetter()
+		{
+			// hide the bottom buttons
+			if (document.getElementById('BottomButtons').style.display == '')
+				document.getElementById('BottomButtons').style.display = 'none';
+			// print the letter
+			window.print();
+		} 
+
+		function submission()
+		{
+			setFlag();
+			setTimeout('document.FormName.submit()',1000);			
+		}
+
+		function setFlag()
+		{
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		function showButtons()
+		{
+			//show the bottom buttons if they are hidden
+			if (document.getElementById('BottomButtons').style.display == 'none')
+				document.getElementById('BottomButtons').style.display = '';
+		}
+		
+		/****************************
+			checkbox functions 
+		****************************/
+		function changeValue(x)
+		{
+			if (document.getElementById(x).value == '')
+				document.getElementById(x).value = 'X';
+			else
+				document.getElementById(x).value = '';
+		}
+
+		function displayKeyCode(evt,x)
+		{
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			// any key press except tab will constitute a value change to the checkbox
+			if (charCode != 9)
+			{
+				changeValue(x);
+				return false;
+			}
+		}
+		</script>
+
+		<!-----------------script for current time--------->
+<script language="javascript">
+
+<!-- hide javascript
+
+function StartClock12() {
+Time12 = new Date();
+Cur12Hour = Time12.getHours();
+Cur12Mins = Time12.getMinutes();
+The12Time = 0;
+The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+The12Time += (Cur12Hour > 11) ? ' PM': ' AM';
+window.status = The12Time;
+setTimeout('StartClock12()',1000);
+}
+
+// done hiding -->
+</script>
+
+<script language="javascript" type="text/javascript">
+function onLoad(){
+      if (document.getElementById("counter").value ==''){
+       (document.getElementById("counter").value = 1);
+	   StartClock12();
+
+       (document.FormName.Time.value=The12Time);
+	   
+      }  
+
+}
+</script>
+
+
+
+</head>
+
+<body onload="startUp();onLoad()" onMouseDown="showButtons();">
+<img id='BGImage' src="${oscar_image_path}outpatientanticoag1.png" style="position: absolute; left: 0px; top: 0px; width:750px">
+<form method="post" action="" name="FormName" id="FormName" >
+
+	<input type="hidden" name="counter" id="counter">
+
+	<input type="hidden" name="Surname" id="Surname" oscarDB=patient_nameL>
+	
+<textarea name="Label" id="Label" class="noborder" style="position:absolute; left:460px; top:20px; width:260px; height:120px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;"  oscarDB=label></textarea>
+
+
+<input name="allergies_des" id="allergies_des" type="text" class="noborder" style="position:absolute; left:63px; top:205px; width:654px; height:30px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;"  oscarDB=allergies_des>
+
+
+<input name="Today" id="Today" type="text" class="noborder" style="position:absolute; left:109px; top:254px; width:195px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;"  oscarDB=today>
+
+
+<input name="Time" id="Time" type="text" class="noborder" style="position:absolute; left:385px; top:254px; width:180px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="DVT" id="DVT" type="text" style="position:absolute; left:102px; top:295px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="DVTSite" id="DVTSite" type="text" class="noborder" style="position:absolute; left:178px; top:293px; width:144px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="AFib" id="AFib" type="text" style="position:absolute; left:102px; top:314px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="PE" id="PE" type="text" style="position:absolute; left:102px; top:333px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="Other" id="Other" type="text" style="position:absolute; left:102px; top:352px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="OtherText" id="OtherText" type="text" class="noborder" style="position:absolute; left:162px; top:348px; width:159px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="">
+
+
+<textarea name="MedicalHistory" id="MedicalHistory" class="noborder" style="position:absolute; left:347px; top:298px; width:370px; height:71px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;"  oscarDB=medical_history></textarea>
+
+
+<input name="Weight" id="Weight" type="text" class="noborder" style="position:absolute; left:533px; top:370px; width:90px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="MRP" id="MRP" type="text" class="noborder" style="position:absolute; left:105px; top:370px; width:167px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;"  oscarDB=current_user>
+
+
+<input name="OtherLabTests" id="OtherLabTests" type="text" class="noborder" style="position:absolute; left:148px; top:445px; width:222px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="Dalteparin" id="Dalteparin" type="text" style="position:absolute; left:94px; top:473px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="DalteparinUnits" id="DalteparinUnits" type="text" class="noborder" style="position:absolute; left:274px; top:469px; width:94px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="Enoxaparin" id="Enoxaparin" type="text" style="position:absolute; left:94px; top:691px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="EnoxaparinMg" id="EnoxaparinMg" type="text" class="noborder" style="position:absolute; left:258px; top:689px; width:78px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:right; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="Warfarin10" id="Warfarin10" type="text" style="position:absolute; left:111px; top:750px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="Warfarin5" id="Warfarin5" type="text" style="position:absolute; left:111px; top:767px; width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background-color:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id);setDirtyFlag()" onkeypress="javascript:return displayKeyCode(event,this.id);" >
+
+
+<input name="WarfarinMg" id="WarfarinMg" type="text" class="noborder" style="position:absolute; left:420px; top:781px; width:88px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:right; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="WarfarinDays" id="WarfarinDays" type="text" class="noborder" style="position:absolute; left:541px; top:781px; width:44px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:right; text-decoration:underline; background-color:white;" value="">
+
+
+<input name="ElectronicallySigned" id="ElectronicallySigned" type="text" class="noborder" style="position:absolute; left:200px; top:923px; width:185px; height:24px; font-family:sans-serif; font-style:italic; font-weight:bold; font-size:14px; text-align:left; text-decoration:underline; background-color:white;" value="Electronically Signed">
+
+
+<input name="DoctorPrintedName" id="DoctorPrintedName" type="text" class="noborder" style="position:absolute; left:490px; top:923px; width:192px; height:24px; font-family:sans-serif; font-style:italic; font-weight:bold; font-size:14px; text-align:left; text-decoration:underline; background-color:white;"  oscarDB=current_user>
+
+
+
+
+<!-- The submit/print/reset buttons ------------------------------------------------------------->
+<div style="position: absolute; left: 10px; top: 975px;" class="DoNotPrint" id="BottomButtons" >
+		<table>
+		<tr><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />				
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="releaseDirtyFlag();document.FormName.submit()">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter()"> 			
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="printSubmit()">
+		</td></tr>
+		</table>
+</div>
+<!-- ------End of submit/print/reset buttons----------------------------------------------------->
+</form>
+
+</body>
+</html>

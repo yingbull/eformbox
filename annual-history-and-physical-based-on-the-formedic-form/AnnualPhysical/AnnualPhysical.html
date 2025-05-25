@@ -1,0 +1,955 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>H&P</title>
+<style type="text/css" media="screen" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+ }
+    /* Drawing the 'gripper' for touch-enabled devices */
+    html.touch #content {
+        float:left;
+        width:92%;
+    }
+    html.touch #scrollgrabber {
+        float:right;
+        width:4%;
+        margin-right:2%;
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+    }
+    html.borderradius #scrollgrabber {
+        border-radius: 1em;
+    }
+ </style>
+
+<style type="text/css" media="print">
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+.sig {
+	border-style: solid;
+	border-color: transparent;
+	color: Black;
+	background-color: transparent;
+ }
+
+ </style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").click();
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").click();
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="checkGender();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div>
+</div>
+
+
+<div id="page1" style="position:relative;" >
+
+<img id="BGImage1" src="${oscar_image_path}Annual.jpg" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="Male" id="Male" type="checkbox" style="position:absolute; left:359px; top:33px; ">
+
+<input name="Female" id="Female" type="checkbox" style="position:absolute; left:359px; top:45px; ">
+
+<input name="patient_name" id="patient_name" type="text" class="noborder" style="position:absolute; left:52px; top:36px; width:299px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:497px; top:14px; width:144px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+
+<input name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:73px; top:59px; width:383px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=addressline>
+
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:521px; top:63px; width:108px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:508px; top:37px; width:133px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dob>
+
+<input name="page1_3" id="page1_3" type="text" class="noborder" style="position:absolute; left:90px; top:85px; width:367px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_4" id="page1_4" type="checkbox" style="position:absolute; left:13px; top:121px; ">
+
+<input name="page1_5" id="page1_5" type="checkbox" style="position:absolute; left:13px; top:135px; ">
+
+<input name="page1_6" id="page1_6" type="checkbox" style="position:absolute; left:13px; top:152px; ">
+
+<input name="page1_7" id="page1_7" type="checkbox" style="position:absolute; left:13px; top:167px; ">
+
+<input name="page1_8" id="page1_8" type="checkbox" style="position:absolute; left:13px; top:182px; ">
+
+<input name="page1_9" id="page1_9" type="checkbox" style="position:absolute; left:105px; top:122px; ">
+
+<input name="page1_10" id="page1_10" type="checkbox" style="position:absolute; left:105px; top:136px; ">
+
+<input name="page1_11" id="page1_11" type="checkbox" style="position:absolute; left:105px; top:154px; ">
+
+<input name="page1_12" id="page1_12" type="checkbox" style="position:absolute; left:105px; top:169px; ">
+
+<input name="page1_13" id="page1_13" type="checkbox" style="position:absolute; left:105px; top:183px; ">
+
+<input name="page1_14" id="page1_14" type="checkbox" style="position:absolute; left:214px; top:123px; ">
+
+<input name="page1_15" id="page1_15" type="checkbox" style="position:absolute; left:214px; top:138px; ">
+
+<input name="page1_16" id="page1_16" type="checkbox" style="position:absolute; left:214px; top:153px; ">
+
+<input name="page1_17" id="page1_17" type="checkbox" style="position:absolute; left:214px; top:169px; ">
+
+<input name="page1_18" id="page1_18" type="checkbox" style="position:absolute; left:214px; top:186px; ">
+
+<input name="page1_19" id="page1_19" type="checkbox" style="position:absolute; left:351px; top:123px; ">
+
+<input name="page1_20" id="page1_20" type="checkbox" style="position:absolute; left:351px; top:139px; ">
+
+<input name="page1_21" id="page1_21" type="checkbox" style="position:absolute; left:351px; top:155px; ">
+
+<input name="page1_22" id="page1_22" type="checkbox" style="position:absolute; left:351px; top:170px; ">
+
+<input name="page1_23" id="page1_23" type="checkbox" style="position:absolute; left:351px; top:185px; ">
+
+<textarea name="page1_24" id="page1_24" class="noborder" style="position:absolute; left:440px; top:125px; width:302px; height:77px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="page1_25" id="page1_25" type="text" class="noborder" style="position:absolute; left:94px; top:220px; width:55px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_26" id="page1_26" type="text" class="noborder" style="position:absolute; left:94px; top:220px; width:56px; height:39px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_27" id="page1_27" type="text" class="noborder" style="position:absolute; left:94px; top:220px; width:55px; height:59px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_28" id="page1_28" type="text" class="noborder" style="position:absolute; left:156px; top:219px; width:265px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_30" id="page1_30" type="text" class="noborder" style="position:absolute; left:156px; top:262px; width:260px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_31" id="page1_31" type="text" class="noborder" style="position:absolute; left:156px; top:241px; width:261px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_32" id="page1_32" type="text" class="noborder" style="position:absolute; left:421px; top:220px; width:39px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_33" id="page1_33" type="text" class="noborder" style="position:absolute; left:421px; top:244px; width:41px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_34" id="page1_34" type="text" class="noborder" style="position:absolute; left:421px; top:265px; width:40px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_35" id="page1_35" type="text" class="noborder" style="position:absolute; left:463px; top:219px; width:280px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_36" id="page1_36" type="text" class="noborder" style="position:absolute; left:463px; top:241px; width:279px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_37" id="page1_37" type="text" class="noborder" style="position:absolute; left:463px; top:263px; width:280px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="page1_38" id="page1_38" class="noborder" style="position:absolute; left:18px; top:295px; width:402px; height:74px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="page1_39" id="page1_39" class="noborder" style="position:absolute; left:422px; top:296px; width:99px; height:76px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="page1_40" id="page1_40" type="text" class="noborder" style="position:absolute; left:582px; top:300px; width:47px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_41" id="page1_41" type="text" class="noborder" style="position:absolute; left:582px; top:315px; width:47px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_42" id="page1_42" type="text" class="noborder" style="position:absolute; left:582px; top:328px; width:47px; height:10px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_43" id="page1_43" type="text" class="noborder" style="position:absolute; left:582px; top:341px; width:49px; height:11px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_44" id="page1_44" type="text" class="noborder" style="position:absolute; left:582px; top:355px; width:49px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_45" id="page1_45" type="text" class="noborder" style="position:absolute; left:698px; top:301px; width:39px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_46" id="page1_46" type="text" class="noborder" style="position:absolute; left:698px; top:315px; width:38px; height:10px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_47" id="page1_47" type="text" class="noborder" style="position:absolute; left:698px; top:327px; width:38px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_48" id="page1_48" type="text" class="noborder" style="position:absolute; left:698px; top:341px; width:40px; height:11px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_49" id="page1_49" type="checkbox" style="position:absolute; left:14px; top:403px; ">
+
+<input name="page1_50" id="page1_50" type="checkbox" style="position:absolute; left:14px; top:419px; ">
+
+<input name="page1_51" id="page1_51" type="checkbox" style="position:absolute; left:13px; top:435px; ">
+
+<input name="page1_52" id="page1_52" type="checkbox" style="position:absolute; left:13px; top:452px; ">
+
+<input name="page1_53" id="page1_53" type="checkbox" style="position:absolute; left:13px; top:470px; ">
+
+<input name="page1_54" id="page1_54" type="checkbox" style="position:absolute; left:13px; top:485px; ">
+
+<input name="page1_55" id="page1_55" type="checkbox" style="position:absolute; left:12px; top:502px; ">
+
+<input name="page1_56" id="page1_56" type="checkbox" style="position:absolute; left:12px; top:519px; ">
+
+<input name="page1_57" id="page1_57" type="checkbox" style="position:absolute; left:12px; top:536px; ">
+
+<input name="page1_58" id="page1_58" type="checkbox" style="position:absolute; left:12px; top:552px; ">
+
+<input name="page1_59" id="page1_59" type="checkbox" style="position:absolute; left:11px; top:568px; ">
+
+<input name="page1_60" id="page1_60" type="checkbox" style="position:absolute; left:11px; top:586px; ">
+
+<input name="page1_61" id="page1_61" type="checkbox" style="position:absolute; left:20px; top:600px; ">
+
+<input name="page1_62" id="page1_62" type="checkbox" style="position:absolute; left:13px; top:616px; ">
+
+<input name="page1_63" id="page1_63" type="checkbox" style="position:absolute; left:12px; top:633px; ">
+
+<input name="page1_64" id="page1_64" type="checkbox" style="position:absolute; left:12px; top:649px; ">
+
+<input name="page1_65" id="page1_65" type="checkbox" style="position:absolute; left:12px; top:665px; ">
+
+<input name="page1_66" id="page1_66" type="checkbox" style="position:absolute; left:11px; top:681px; ">
+
+<input name="page1_67" id="page1_67" type="checkbox" style="position:absolute; left:11px; top:697px; ">
+
+<input name="page1_68" id="page1_68" type="checkbox" style="position:absolute; left:11px; top:713px; ">
+
+<input name="page1_69" id="page1_69" type="checkbox" style="position:absolute; left:105px; top:403px; ">
+
+<input name="page1_70" id="page1_70" type="checkbox" style="position:absolute; left:105px; top:420px; ">
+
+<input name="page1_71" id="page1_71" type="checkbox" style="position:absolute; left:105px; top:436px; ">
+
+<input name="page1_72" id="page1_72" type="checkbox" style="position:absolute; left:104px; top:600px; ">
+
+<input name="page1_73" id="page1_73" type="checkbox" style="position:absolute; left:103px; top:648px; ">
+
+<input name="page1_74" id="page1_74" type="checkbox" style="position:absolute; left:103px; top:667px; ">
+
+<input name="page1_75" id="page1_75" type="checkbox" style="position:absolute; left:103px; top:682px; ">
+
+<input name="page1_76" id="page1_76" type="checkbox" style="position:absolute; left:96px; top:715px; ">
+
+<input name="page1_77" id="page1_77" type="checkbox" style="position:absolute; left:195px; top:403px; ">
+
+<input name="page1_78" id="page1_78" type="checkbox" style="position:absolute; left:195px; top:420px; ">
+
+<input name="page1_79" id="page1_79" type="checkbox" style="position:absolute; left:289px; top:404px; ">
+
+<input name="page1_80" id="page1_80" type="checkbox" style="position:absolute; left:289px; top:420px; ">
+
+<input name="page1_81" id="page1_81" type="checkbox" style="position:absolute; left:194px; top:438px; ">
+
+<input name="page1_82" id="page1_82" type="checkbox" style="position:absolute; left:193px; top:454px; ">
+
+<input name="page1_83" id="page1_83" type="checkbox" style="position:absolute; left:193px; top:470px; ">
+
+<input name="page1_84" id="page1_84" type="checkbox" style="position:absolute; left:193px; top:486px; ">
+
+<input name="page1_85" id="page1_85" type="checkbox" style="position:absolute; left:193px; top:504px; ">
+
+<input name="page1_86" id="page1_86" type="checkbox" style="position:absolute; left:194px; top:520px; ">
+
+<input name="page1_87" id="page1_87" type="checkbox" style="position:absolute; left:290px; top:471px; ">
+
+<input name="page1_88" id="page1_88" type="checkbox" style="position:absolute; left:289px; top:488px; ">
+
+<input name="page1_89" id="page1_89" type="checkbox" style="position:absolute; left:289px; top:521px; ">
+
+<input name="page1_90" id="page1_90" type="checkbox" style="position:absolute; left:198px; top:551px; ">
+
+<input name="page1_91" id="page1_91" type="checkbox" style="position:absolute; left:198px; top:564px; ">
+
+<input name="page1_92" id="page1_92" type="checkbox" style="position:absolute; left:198px; top:577px; ">
+
+<input name="page1_93" id="page1_93" type="checkbox" style="position:absolute; left:193px; top:593px; ">
+
+<input name="page1_94" id="page1_94" type="checkbox" style="position:absolute; left:193px; top:608px; ">
+
+<input name="page1_95" id="page1_95" type="checkbox" style="position:absolute; left:307px; top:577px; ">
+
+<input name="page1_96" id="page1_96" type="checkbox" style="position:absolute; left:305px; top:593px; ">
+
+<input name="page1_97" id="page1_97" type="checkbox" style="position:absolute; left:194px; top:635px; ">
+
+<input name="page1_98" id="page1_98" type="checkbox" style="position:absolute; left:194px; top:649px; ">
+
+<input name="page1_99" id="page1_99" type="checkbox" style="position:absolute; left:193px; top:667px; ">
+
+<input name="page1_100" id="page1_100" type="checkbox" style="position:absolute; left:193px; top:682px; ">
+
+<input name="page1_101" id="page1_101" type="checkbox" style="position:absolute; left:192px; top:698px; ">
+
+<input name="page1_102" id="page1_102" type="checkbox" style="position:absolute; left:192px; top:717px; ">
+
+<input name="page1_103" id="page1_103" type="checkbox" style="position:absolute; left:289px; top:651px; ">
+
+<input name="page1_104" id="page1_104" type="checkbox" style="position:absolute; left:288px; top:683px; ">
+
+<input name="page1_105" id="page1_105" type="checkbox" style="position:absolute; left:289px; top:717px; ">
+
+<input name="page1_106" id="page1_106" type="checkbox" style="position:absolute; left:321px; top:685px; ">
+
+<input name="page1_107" id="page1_107" type="checkbox" style="position:absolute; left:378px; top:406px; ">
+
+<input name="page1_108" id="page1_108" type="checkbox" style="position:absolute; left:377px; top:421px; ">
+
+<input name="page1_109" id="page1_109" type="checkbox" style="position:absolute; left:377px; top:438px; ">
+
+<input name="page1_110" id="page1_110" type="checkbox" style="position:absolute; left:376px; top:454px; ">
+
+<input name="page1_111" id="page1_111" type="checkbox" style="position:absolute; left:376px; top:472px; ">
+
+<input name="page1_112" id="page1_112" type="checkbox" style="position:absolute; left:375px; top:486px; ">
+
+<input name="page1_113" id="page1_113" type="checkbox" style="position:absolute; left:376px; top:503px; ">
+
+<input name="page1_114" id="page1_114" type="checkbox" style="position:absolute; left:376px; top:520px; ">
+
+<input name="page1_115" id="page1_115" type="checkbox" style="position:absolute; left:376px; top:538px; ">
+
+<input name="page1_116" id="page1_116" type="checkbox" style="position:absolute; left:377px; top:555px; ">
+
+<input name="page1_117" id="page1_117" type="checkbox" style="position:absolute; left:376px; top:570px; ">
+
+<input name="page1_118" id="page1_118" type="checkbox" style="position:absolute; left:375px; top:588px; ">
+
+<input name="page1_119" id="page1_119" type="checkbox" style="position:absolute; left:377px; top:605px; ">
+
+<input name="page1_120" id="page1_120" type="checkbox" style="position:absolute; left:376px; top:621px; ">
+
+<input name="page1_121" id="page1_121" type="checkbox" style="position:absolute; left:376px; top:639px; ">
+
+<input name="page1_122" id="page1_122" type="checkbox" style="position:absolute; left:376px; top:655px; ">
+
+<input name="page1_123" id="page1_123" type="checkbox" style="position:absolute; left:376px; top:670px; ">
+
+<input name="page1_124" id="page1_124" type="checkbox" style="position:absolute; left:376px; top:688px; ">
+
+<input name="page1_125" id="page1_125" type="checkbox" style="position:absolute; left:376px; top:703px; ">
+
+<input name="page1_126" id="page1_126" type="checkbox" style="position:absolute; left:376px; top:718px; ">
+
+<input name="page1_127" id="page1_127" type="checkbox" style="position:absolute; left:452px; top:719px; ">
+
+<input name="page1_128" id="page1_128" type="checkbox" style="position:absolute; left:452px; top:705px; ">
+
+<input name="page1_129" id="page1_129" type="checkbox" style="position:absolute; left:451px; top:688px; ">
+
+<input name="page1_130" id="page1_130" type="checkbox" style="position:absolute; left:495px; top:689px; ">
+
+<input name="page1_131" id="page1_131" type="checkbox" style="position:absolute; left:476px; top:672px; ">
+
+<input name="page1_132" id="page1_132" type="checkbox" style="position:absolute; left:452px; top:656px; ">
+
+<input name="page1_133" id="page1_133" type="checkbox" style="position:absolute; left:451px; top:639px; ">
+
+<input name="page1_134" id="page1_134" type="checkbox" style="position:absolute; left:451px; top:621px; ">
+
+<input name="page1_135" id="page1_135" type="checkbox" style="position:absolute; left:453px; top:591px; ">
+
+<input name="page1_136" id="page1_136" type="checkbox" style="position:absolute; left:452px; top:574px; ">
+
+<input name="page1_137" id="page1_137" type="checkbox" style="position:absolute; left:451px; top:556px; ">
+
+<input name="page1_138" id="page1_138" type="checkbox" style="position:absolute; left:453px; top:473px; ">
+
+<input name="page1_139" id="page1_139" type="checkbox" style="position:absolute; left:454px; top:456px; ">
+
+<input name="page1_140" id="page1_140" type="checkbox" style="position:absolute; left:452px; top:442px; ">
+
+<input name="page1_141" id="page1_141" type="checkbox" style="position:absolute; left:452px; top:424px; ">
+
+<input name="page1_142" id="page1_142" type="checkbox" style="position:absolute; left:451px; top:406px; ">
+
+<input name="page1_143" id="page1_143" type="checkbox" style="position:absolute; left:560px; top:407px; ">
+
+<input name="page1_144" id="page1_144" type="checkbox" style="position:absolute; left:557px; top:424px; ">
+
+<input name="page1_145" id="page1_145" type="checkbox" style="position:absolute; left:557px; top:439px; ">
+
+<input name="page1_146" id="page1_146" type="checkbox" style="position:absolute; left:558px; top:469px; ">
+
+<input name="page1_147" id="page1_147" type="checkbox" style="position:absolute; left:558px; top:484px; ">
+
+<input name="page1_148" id="page1_148" type="checkbox" style="position:absolute; left:558px; top:529px; ">
+
+<input name="page1_149" id="page1_149" type="checkbox" style="position:absolute; left:559px; top:575px; ">
+
+<input name="page1_150" id="page1_150" type="checkbox" style="position:absolute; left:558px; top:664px; ">
+
+<input name="page1_151" id="page1_151" type="checkbox" style="position:absolute; left:558px; top:724px; ">
+
+<input name="page1_152" id="page1_152" type="checkbox" style="position:absolute; left:599px; top:530px; ">
+
+<input name="page1_153" id="page1_153" type="checkbox" style="position:absolute; left:644px; top:531px; ">
+
+<input name="page1_154" id="page1_154" type="checkbox" style="position:absolute; left:571px; top:691px; ">
+
+<input name="page1_155" id="page1_155" type="checkbox" style="position:absolute; left:617px; top:690px; ">
+
+<input name="page1_156" id="page1_156" type="checkbox" style="position:absolute; left:568px; top:715px; ">
+
+<input name="page1_157" id="page1_157" type="checkbox" style="position:absolute; left:617px; top:715px; ">
+
+<input name="page1_158" id="page1_158" type="checkbox" style="position:absolute; left:598px; top:727px; ">
+
+<input name="page1_159" id="page1_159" type="checkbox" style="position:absolute; left:633px; top:727px; ">
+
+<input name="page1_160" id="page1_160" type="checkbox" style="position:absolute; left:46px; top:1671px; ">
+
+<input name="page1_161" id="page1_161" type="checkbox" style="position:absolute; left:45px; top:1732px; ">
+
+<input name="page1_162" id="page1_162" type="checkbox" style="position:absolute; left:45px; top:1754px; ">
+
+<input name="page1_163" id="page1_163" type="checkbox" style="position:absolute; left:284px; top:1670px; ">
+
+<input name="page1_164" id="page1_164" type="checkbox" style="position:absolute; left:283px; top:1692px; ">
+
+<input name="page1_165" id="page1_165" type="checkbox" style="position:absolute; left:499px; top:1669px; ">
+
+<input name="page1_166" id="page1_166" type="checkbox" style="position:absolute; left:150px; top:1256px; ">
+
+<input name="page1_167" id="page1_167" type="checkbox" style="position:absolute; left:150px; top:1274px; ">
+
+<input name="page1_168" id="page1_168" type="checkbox" style="position:absolute; left:150px; top:1291px; ">
+
+<input name="page1_169" id="page1_169" type="checkbox" style="position:absolute; left:150px; top:1309px; ">
+
+<input name="page1_170" id="page1_170" type="checkbox" style="position:absolute; left:150px; top:1327px; ">
+
+<input name="page1_171" id="page1_171" type="checkbox" style="position:absolute; left:150px; top:1345px; ">
+
+<input name="page1_172" id="page1_172" type="checkbox" style="position:absolute; left:150px; top:1365px; ">
+
+<input name="page1_173" id="page1_173" type="checkbox" style="position:absolute; left:150px; top:1381px; ">
+
+<input name="page1_174" id="page1_174" type="checkbox" style="position:absolute; left:150px; top:1400px; ">
+
+<input name="page1_175" id="page1_175" type="checkbox" style="position:absolute; left:150px; top:1420px; ">
+
+<input name="page1_176" id="page1_176" type="checkbox" style="position:absolute; left:150px; top:1440px; ">
+
+<input name="page1_177" id="page1_177" type="checkbox" style="position:absolute; left:150px; top:1459px; ">
+
+<input name="page1_178" id="page1_178" type="checkbox" style="position:absolute; left:150px; top:1475px; ">
+
+<input name="page1_179" id="page1_179" type="checkbox" style="position:absolute; left:150px; top:1515px; ">
+
+<input name="page1_180" id="page1_180" type="checkbox" style="position:absolute; left:150px; top:1534px; ">
+
+<input name="page1_181" id="page1_181" type="checkbox" style="position:absolute; left:150px; top:1550px; ">
+
+<input name="page1_182" id="page1_182" type="checkbox" style="position:absolute; left:150px; top:1571px; ">
+
+<input name="page1_183" id="page1_183" type="checkbox" style="position:absolute; left:150px; top:1589px; ">
+
+<input name="page1_184" id="page1_184" type="checkbox" style="position:absolute; left:150px; top:1608px; ">
+
+<input name="page1_185" id="page1_185" type="checkbox" style="position:absolute; left:150px; top:1624px; ">
+
+<input name="page1_186" id="page1_186" type="checkbox" style="position:absolute; left:150px; top:1645px; ">
+
+<input name="page1_187" id="page1_187" type="checkbox" style="position:absolute; left:166px; top:1254px; ">
+
+<input name="page1_188" id="page1_188" type="checkbox" style="position:absolute; left:166px; top:1274px; ">
+
+<input name="page1_189" id="page1_189" type="checkbox" style="position:absolute; left:166px; top:1292px; ">
+
+<input name="page1_190" id="page1_190" type="checkbox" style="position:absolute; left:166px; top:1310px; ">
+
+<input name="page1_191" id="page1_191" type="checkbox" style="position:absolute; left:166px; top:1329px; ">
+
+<input name="page1_192" id="page1_192" type="checkbox" style="position:absolute; left:166px; top:1345px; ">
+
+<input name="page1_193" id="page1_193" type="checkbox" style="position:absolute; left:166px; top:1365px; ">
+
+<input name="page1_194" id="page1_194" type="checkbox" style="position:absolute; left:166px; top:1383px; ">
+
+<input name="page1_195" id="page1_195" type="checkbox" style="position:absolute; left:166px; top:1400px; ">
+
+<input name="page1_196" id="page1_196" type="checkbox" style="position:absolute; left:166px; top:1418px; ">
+
+<input name="page1_197" id="page1_197" type="checkbox" style="position:absolute; left:166px; top:1437px; ">
+
+<input name="page1_198" id="page1_198" type="checkbox" style="position:absolute; left:166px; top:1455px; ">
+
+<input name="page1_199" id="page1_199" type="checkbox" style="position:absolute; left:166px; top:1475px; ">
+
+<input name="page1_200" id="page1_200" type="checkbox" style="position:absolute; left:166px; top:1515px; ">
+
+<input name="page1_201" id="page1_201" type="checkbox" style="position:absolute; left:166px; top:1531px; ">
+
+<input name="page1_202" id="page1_202" type="checkbox" style="position:absolute; left:166px; top:1548px; ">
+
+<input name="page1_203" id="page1_203" type="checkbox" style="position:absolute; left:166px; top:1570px; ">
+
+<input name="page1_204" id="page1_204" type="checkbox" style="position:absolute; left:166px; top:1587px; ">
+
+<input name="page1_205" id="page1_205" type="checkbox" style="position:absolute; left:166px; top:1605px; ">
+
+<input name="page1_206" id="page1_206" type="checkbox" style="position:absolute; left:166px; top:1623px; ">
+
+<input name="page1_207" id="page1_207" type="checkbox" style="position:absolute; left:166px; top:1645px; ">
+
+<input name="page1_208" id="page1_208" type="checkbox" style="position:absolute; left:436px; top:1256px; ">
+
+<input name="page1_209" id="page1_209" type="checkbox" style="position:absolute; left:436px; top:1271px; ">
+
+<input name="page1_210" id="page1_210" type="checkbox" style="position:absolute; left:436px; top:1289px; ">
+
+<input name="page1_211" id="page1_211" type="checkbox" style="position:absolute; left:436px; top:1306px; ">
+
+<input name="page1_212" id="page1_212" type="checkbox" style="position:absolute; left:436px; top:1327px; ">
+
+<input name="page1_213" id="page1_213" type="checkbox" style="position:absolute; left:436px; top:1347px; ">
+
+<input name="page1_214" id="page1_214" type="checkbox" style="position:absolute; left:436px; top:1364px; ">
+
+<input name="page1_215" id="page1_215" type="checkbox" style="position:absolute; left:436px; top:1380px; ">
+
+<input name="page1_216" id="page1_216" type="checkbox" style="position:absolute; left:436px; top:1401px; ">
+
+<input name="page1_217" id="page1_217" type="checkbox" style="position:absolute; left:436px; top:1418px; ">
+
+<input name="page1_218" id="page1_218" type="checkbox" style="position:absolute; left:436px; top:1437px; ">
+
+<input name="page1_219" id="page1_219" type="checkbox" style="position:absolute; left:436px; top:1456px; ">
+
+<input name="page1_220" id="page1_220" type="checkbox" style="position:absolute; left:436px; top:1475px; ">
+
+<input name="page1_221" id="page1_221" type="checkbox" style="position:absolute; left:436px; top:1493px; ">
+
+<input name="page1_222" id="page1_222" type="checkbox" style="position:absolute; left:436px; top:1512px; ">
+
+<input name="page1_223" id="page1_223" type="checkbox" style="position:absolute; left:436px; top:1532px; ">
+
+<input name="page1_224" id="page1_224" type="checkbox" style="position:absolute; left:436px; top:1548px; ">
+
+<input name="page1_225" id="page1_225" type="checkbox" style="position:absolute; left:436px; top:1603px; ">
+
+<input name="page1_226" id="page1_226" type="checkbox" style="position:absolute; left:436px; top:1624px; ">
+
+<input name="page1_227" id="page1_227" type="checkbox" style="position:absolute; left:436px; top:1642px; ">
+
+<input name="page1_228" id="page1_228" type="checkbox" style="position:absolute; left:600px; top:1254px; ">
+
+<input name="page1_229" id="page1_229" type="checkbox" style="position:absolute; left:600px; top:1274px; ">
+
+<input name="page1_230" id="page1_230" type="checkbox" style="position:absolute; left:600px; top:1291px; ">
+
+<input name="page1_231" id="page1_231" type="checkbox" style="position:absolute; left:600px; top:1310px; ">
+
+<input name="page1_232" id="page1_232" type="checkbox" style="position:absolute; left:600px; top:1332px; ">
+
+<input name="page1_233" id="page1_233" type="checkbox" style="position:absolute; left:600px; top:1348px; ">
+
+<input name="page1_234" id="page1_234" type="checkbox" style="position:absolute; left:600px; top:1367px; ">
+
+<input name="page1_235" id="page1_235" type="checkbox" style="position:absolute; left:600px; top:1386px; ">
+
+<input name="page1_236" id="page1_236" type="checkbox" style="position:absolute; left:600px; top:1404px; ">
+
+<input name="page1_237" id="page1_237" type="checkbox" style="position:absolute; left:600px; top:1423px; ">
+
+<input name="page1_238" id="page1_238" type="checkbox" style="position:absolute; left:600px; top:1441px; ">
+
+<input name="page1_239" id="page1_239" type="checkbox" style="position:absolute; left:600px; top:1461px; ">
+
+<input name="page1_240" id="page1_240" type="checkbox" style="position:absolute; left:600px; top:1481px; ">
+
+<input name="page1_241" id="page1_241" type="checkbox" style="position:absolute; left:600px; top:1499px; ">
+
+<input name="page1_242" id="page1_242" type="checkbox" style="position:absolute; left:600px; top:1517px; ">
+
+<input name="page1_243" id="page1_243" type="checkbox" style="position:absolute; left:600px; top:1536px; ">
+
+<input name="page1_244" id="page1_244" type="checkbox" style="position:absolute; left:600px; top:1555px; ">
+
+<input name="page1_245" id="page1_245" type="checkbox" style="position:absolute; left:600px; top:1574px; ">
+
+<input name="page1_246" id="page1_246" type="checkbox" style="position:absolute; left:600px; top:1593px; ">
+
+<input name="page1_247" id="page1_247" type="checkbox" style="position:absolute; left:600px; top:1610px; ">
+
+<input name="page1_248" id="page1_248" type="checkbox" style="position:absolute; left:600px; top:1631px; ">
+
+<input name="page1_249" id="page1_249" type="checkbox" style="position:absolute; left:600px; top:1648px; ">
+
+<input name="page1_250" id="page1_250" type="checkbox" style="position:absolute; left:616px; top:1253px; ">
+
+<input name="page1_251" id="page1_251" type="checkbox" style="position:absolute; left:616px; top:1274px; ">
+
+<input name="page1_252" id="page1_252" type="checkbox" style="position:absolute; left:616px; top:1290px; ">
+
+<input name="page1_253" id="page1_253" type="checkbox" style="position:absolute; left:616px; top:1311px; ">
+
+<input name="page1_254" id="page1_254" type="checkbox" style="position:absolute; left:616px; top:1332px; ">
+
+<input name="page1_255" id="page1_255" type="checkbox" style="position:absolute; left:616px; top:1347px; ">
+
+<input name="page1_256" id="page1_256" type="checkbox" style="position:absolute; left:616px; top:1368px; ">
+
+<input name="page1_257" id="page1_257" type="checkbox" style="position:absolute; left:616px; top:1388px; ">
+
+<input name="page1_258" id="page1_258" type="checkbox" style="position:absolute; left:616px; top:1406px; ">
+
+<input name="page1_259" id="page1_259" type="checkbox" style="position:absolute; left:616px; top:1424px; ">
+
+<input name="page1_260" id="page1_260" type="checkbox" style="position:absolute; left:616px; top:1442px; ">
+
+<input name="page1_261" id="page1_261" type="checkbox" style="position:absolute; left:616px; top:1461px; ">
+
+<input name="page1_262" id="page1_262" type="checkbox" style="position:absolute; left:616px; top:1480px; ">
+
+<input name="page1_263" id="page1_263" type="checkbox" style="position:absolute; left:616px; top:1501px; ">
+
+<input name="page1_264" id="page1_264" type="checkbox" style="position:absolute; left:616px; top:1517px; ">
+
+<input name="page1_265" id="page1_265" type="checkbox" style="position:absolute; left:616px; top:1538px; ">
+
+<input name="page1_266" id="page1_266" type="checkbox" style="position:absolute; left:616px; top:1558px; ">
+
+<input name="page1_267" id="page1_267" type="checkbox" style="position:absolute; left:616px; top:1575px; ">
+
+<input name="page1_268" id="page1_268" type="checkbox" style="position:absolute; left:616px; top:1595px; ">
+
+<input name="page1_269" id="page1_269" type="checkbox" style="position:absolute; left:616px; top:1612px; ">
+
+<input name="page1_270" id="page1_270" type="checkbox" style="position:absolute; left:616px; top:1630px; ">
+
+<input name="page1_271" id="page1_271" type="checkbox" style="position:absolute; left:616px; top:1649px; ">
+
+<input name="page1_272" id="page1_272" type="checkbox" style="position:absolute; left:452px; top:1256px; ">
+
+<input name="page1_273" id="page1_273" type="checkbox" style="position:absolute; left:452px; top:1273px; ">
+
+<input name="page1_274" id="page1_274" type="checkbox" style="position:absolute; left:452px; top:1289px; ">
+
+<input name="page1_275" id="page1_275" type="checkbox" style="position:absolute; left:452px; top:1307px; ">
+
+<input name="page1_276" id="page1_276" type="checkbox" style="position:absolute; left:452px; top:1327px; ">
+
+<input name="page1_277" id="page1_277" type="checkbox" style="position:absolute; left:452px; top:1345px; ">
+
+<input name="page1_278" id="page1_278" type="checkbox" style="position:absolute; left:452px; top:1364px; ">
+
+<input name="page1_279" id="page1_279" type="checkbox" style="position:absolute; left:452px; top:1385px; ">
+
+<input name="page1_280" id="page1_280" type="checkbox" style="position:absolute; left:452px; top:1400px; ">
+
+<input name="page1_281" id="page1_281" type="checkbox" style="position:absolute; left:452px; top:1420px; ">
+
+<input name="page1_282" id="page1_282" type="checkbox" style="position:absolute; left:452px; top:1439px; ">
+
+<input name="page1_283" id="page1_283" type="checkbox" style="position:absolute; left:452px; top:1456px; ">
+
+<input name="page1_284" id="page1_284" type="checkbox" style="position:absolute; left:452px; top:1473px; ">
+
+<input name="page1_285" id="page1_285" type="checkbox" style="position:absolute; left:452px; top:1493px; ">
+
+<input name="page1_286" id="page1_286" type="checkbox" style="position:absolute; left:452px; top:1514px; ">
+
+<input name="page1_287" id="page1_287" type="checkbox" style="position:absolute; left:452px; top:1531px; ">
+
+<input name="page1_288" id="page1_288" type="checkbox" style="position:absolute; left:452px; top:1550px; ">
+
+<input name="page1_289" id="page1_289" type="checkbox" style="position:absolute; left:452px; top:1605px; ">
+
+<input name="page1_290" id="page1_290" type="checkbox" style="position:absolute; left:452px; top:1627px; ">
+
+<input name="page1_291" id="page1_291" type="checkbox" style="position:absolute; left:452px; top:1647px; ">
+
+<input name="page1_292" id="page1_292" type="text" class="noborder" style="position:absolute; left:125px; top:392px; width:188px; height:10px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_293" id="page1_293" type="text" class="noborder" style="position:absolute; left:334px; top:391px; width:199px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_294" id="page1_294" type="text" class="noborder" style="position:absolute; left:551px; top:390px; width:180px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_295" id="page1_295" type="text" class="noborder" style="position:absolute; left:610px; top:409px; width:47px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_296" id="page1_296" type="text" class="noborder" style="position:absolute; left:630px; top:425px; width:29px; height:12px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_297" id="page1_297" type="text" class="noborder" style="position:absolute; left:656px; top:442px; width:22px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_298" id="page1_298" type="text" class="noborder" style="position:absolute; left:617px; top:456px; width:32px; height:11px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_299" id="page1_299" type="text" class="noborder" style="position:absolute; left:614px; top:470px; width:100px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_300" id="page1_300" type="text" class="noborder" style="position:absolute; left:632px; top:486px; width:83px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_301" id="page1_301" type="text" class="noborder" style="position:absolute; left:618px; top:549px; width:22px; height:11px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_302" id="page1_302" type="text" class="noborder" style="position:absolute; left:713px; top:545px; width:27px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_303" id="page1_303" type="text" class="noborder" style="position:absolute; left:680px; top:561px; width:58px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_304" id="page1_304" type="text" class="noborder" style="position:absolute; left:624px; top:599px; width:22px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_305" id="page1_305" type="text" class="noborder" style="position:absolute; left:699px; top:600px; width:28px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_306" id="page1_306" type="text" class="noborder" style="position:absolute; left:624px; top:621px; width:23px; height:11px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_307" id="page1_307" type="text" class="noborder" style="position:absolute; left:703px; top:618px; width:28px; height:10px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_308" id="page1_308" type="text" class="noborder" style="position:absolute; left:652px; top:633px; width:84px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_309" id="page1_309" type="text" class="noborder" style="position:absolute; left:631px; top:648px; width:102px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_310" id="page1_310" type="text" class="noborder" style="position:absolute; left:655px; top:679px; width:79px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_311" id="page1_311" type="text" class="noborder" style="position:absolute; left:667px; top:704px; width:73px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<textarea name="page1_312" id="page1_312" class="noborder" style="position:absolute; left:16px; top:760px; width:722px; height:219px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="page1_313" id="page1_313" class="noborder" style="position:absolute; left:24px; top:1799px; width:473px; height:112px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="page1_314" id="page1_314" class="noborder" style="position:absolute; left:500px; top:1799px; width:235px; height:117px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<textarea name="page1_315" id="page1_315" class="noborder" style="position:absolute; left:22px; top:1917px; width:711px; height:87px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" ></textarea>
+
+<input name="page1_316" id="page1_316" type="text" class="noborder" style="position:absolute; left:85px; top:1673px; width:179px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_317" id="page1_317" type="text" class="noborder" style="position:absolute; left:84px; top:1734px; width:198px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_318" id="page1_318" type="text" class="noborder" style="position:absolute; left:143px; top:1758px; width:138px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_319" id="page1_319" type="text" class="noborder" style="position:absolute; left:371px; top:1673px; width:124px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_320" id="page1_320" type="text" class="noborder" style="position:absolute; left:324px; top:1693px; width:171px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_321" id="page1_321" type="text" class="noborder" style="position:absolute; left:506px; top:1691px; width:225px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_322" id="page1_322" type="text" class="noborder" style="position:absolute; left:187px; top:1254px; width:85px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_323" id="page1_323" type="text" class="noborder" style="position:absolute; left:187px; top:1272px; width:85px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_324" id="page1_324" type="text" class="noborder" style="position:absolute; left:187px; top:1290px; width:83px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_325" id="page1_325" type="text" class="noborder" style="position:absolute; left:187px; top:1308px; width:83px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_326" id="page1_326" type="text" class="noborder" style="position:absolute; left:187px; top:1328px; width:83px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_327" id="page1_327" type="text" class="noborder" style="position:absolute; left:187px; top:1348px; width:85px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_328" id="page1_328" type="text" class="noborder" style="position:absolute; left:187px; top:1365px; width:85px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_329" id="page1_329" type="text" class="noborder" style="position:absolute; left:187px; top:1385px; width:87px; height:11px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_330" id="page1_330" type="text" class="noborder" style="position:absolute; left:187px; top:1402px; width:83px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_331" id="page1_331" type="text" class="noborder" style="position:absolute; left:187px; top:1421px; width:83px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_332" id="page1_332" type="text" class="noborder" style="position:absolute; left:187px; top:1441px; width:87px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_333" id="page1_333" type="text" class="noborder" style="position:absolute; left:187px; top:1459px; width:82px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_334" id="page1_334" type="text" class="noborder" style="position:absolute; left:187px; top:1479px; width:84px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_335" id="page1_335" type="text" class="noborder" style="position:absolute; left:187px; top:1497px; width:114px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_336" id="page1_336" type="text" class="noborder" style="position:absolute; left:187px; top:1515px; width:84px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_337" id="page1_337" type="text" class="noborder" style="position:absolute; left:187px; top:1532px; width:82px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_338" id="page1_338" type="text" class="noborder" style="position:absolute; left:187px; top:1552px; width:82px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_339" id="page1_339" type="text" class="noborder" style="position:absolute; left:187px; top:1569px; width:81px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_340" id="page1_340" type="text" class="noborder" style="position:absolute; left:187px; top:1587px; width:83px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_341" id="page1_341" type="text" class="noborder" style="position:absolute; left:187px; top:1607px; width:84px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_342" id="page1_342" type="text" class="noborder" style="position:absolute; left:187px; top:1624px; width:82px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_343" id="page1_343" type="text" class="noborder" style="position:absolute; left:187px; top:1646px; width:80px; height:13px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_344" id="page1_344" type="text" class="noborder" style="position:absolute; left:401px; top:1570px; width:149px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_345" id="page1_345" type="text" class="noborder" style="position:absolute; left:321px; top:1585px; width:230px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_346" id="page1_346" type="text" class="noborder" style="position:absolute; left:469px; top:1252px; width:86px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_347" id="page1_347" type="text" class="noborder" style="position:absolute; left:470px; top:1271px; width:86px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_348" id="page1_348" type="text" class="noborder" style="position:absolute; left:470px; top:1271px; width:85px; height:35px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_349" id="page1_349" type="text" class="noborder" style="position:absolute; left:470px; top:1309px; width:85px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_350" id="page1_350" type="text" class="noborder" style="position:absolute; left:472px; top:1328px; width:84px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_351" id="page1_351" type="text" class="noborder" style="position:absolute; left:472px; top:1328px; width:84px; height:34px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_352" id="page1_352" type="text" class="noborder" style="position:absolute; left:472px; top:1328px; width:85px; height:52px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_353" id="page1_353" type="text" class="noborder" style="position:absolute; left:472px; top:1328px; width:85px; height:70px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_354" id="page1_354" type="text" class="noborder" style="position:absolute; left:472px; top:1400px; width:86px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_355" id="page1_355" type="text" class="noborder" style="position:absolute; left:472px; top:1400px; width:86px; height:35px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_356" id="page1_356" type="text" class="noborder" style="position:absolute; left:472px; top:1400px; width:86px; height:54px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_357" id="page1_357" type="text" class="noborder" style="position:absolute; left:472px; top:1400px; width:86px; height:72px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_358" id="page1_358" type="text" class="noborder" style="position:absolute; left:472px; top:1476px; width:86px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_359" id="page1_359" type="text" class="noborder" style="position:absolute; left:473px; top:1495px; width:86px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_360" id="page1_360" type="text" class="noborder" style="position:absolute; left:471px; top:1514px; width:88px; height:15px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_361" id="page1_361" type="text" class="noborder" style="position:absolute; left:471px; top:1530px; width:89px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_362" id="page1_362" type="text" class="noborder" style="position:absolute; left:471px; top:1551px; width:89px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_363" id="page1_363" type="text" class="noborder" style="position:absolute; left:472px; top:1606px; width:87px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_364" id="page1_364" type="text" class="noborder" style="position:absolute; left:473px; top:1626px; width:86px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_365" id="page1_365" type="text" class="noborder" style="position:absolute; left:473px; top:1645px; width:86px; height:14px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_366" id="page1_366" type="text" class="noborder" style="position:absolute; left:148px; top:1197px; width:586px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_367" id="page1_367" type="text" class="noborder" style="position:absolute; left:89px; top:1174px; width:643px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_368" id="page1_368" type="text" class="noborder" style="position:absolute; left:51px; top:1151px; width:40px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_369" id="page1_369" type="text" class="noborder" style="position:absolute; left:144px; top:1151px; width:46px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_370" id="page1_370" type="text" class="noborder" style="position:absolute; left:201px; top:1151px; width:341px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_371" id="page1_371" type="text" class="noborder" style="position:absolute; left:120px; top:1106px; width:27px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_372" id="page1_372" type="text" class="noborder" style="position:absolute; left:159px; top:1105px; width:23px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_373" id="page1_373" type="text" class="noborder" style="position:absolute; left:235px; top:1106px; width:27px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_374" id="page1_374" type="text" class="noborder" style="position:absolute; left:277px; top:1107px; width:22px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_375" id="page1_375" type="text" class="noborder" style="position:absolute; left:356px; top:1107px; width:26px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_376" id="page1_376" type="text" class="noborder" style="position:absolute; left:398px; top:1107px; width:22px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_377" id="page1_377" type="text" class="noborder" style="position:absolute; left:467px; top:1107px; width:26px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_378" id="page1_378" type="text" class="noborder" style="position:absolute; left:506px; top:1108px; width:24px; height:24px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_379" id="page1_379" type="text" class="noborder" style="position:absolute; left:569px; top:1109px; width:35px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_380" id="page1_380" type="text" class="noborder" style="position:absolute; left:659px; top:1110px; width:30px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_381" id="page1_381" type="text" class="noborder" style="position:absolute; left:700px; top:1111px; width:33px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_382" id="page1_382" type="text" class="noborder" style="position:absolute; left:577px; top:1087px; width:46px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_383" id="page1_383" type="text" class="noborder" style="position:absolute; left:491px; top:1087px; width:49px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_384" id="page1_384" type="text" class="noborder" style="position:absolute; left:416px; top:1087px; width:44px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="m$BP#value" id="m$BP#value" type="text" class="noborder" style="position:absolute; left:339px; top:1087px; width:44px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$BP#value>
+
+<input name="m$HT#value" id="m$HT#value" type="text" class="noborder" style="position:absolute; left:106px; top:1082px; width:24px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$HT#value>
+
+<input name="m$WT#value" id="m$WT#value" type="text" class="noborder" style="position:absolute; left:143px; top:1081px; width:31px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$WT#value>
+
+<input name="m$BMI#value" id="m$BMI#value" type="text" class="noborder" style="position:absolute; left:191px; top:1083px; width:31px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$BMI#value>
+
+<input name="page1_385" id="page1_385" type="text" class="noborder" style="position:absolute; left:255px; top:1084px; width:47px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" value="">
+
+<input name="page1_386" id="page1_386" type="checkbox" style="position:absolute; left:364px; top:1382px; ">
+
+<input name="page1_387" id="page1_387" type="checkbox" style="position:absolute; left:364px; top:1362px; ">
+
+<input name="page1_388" id="page1_388" type="checkbox" style="position:absolute; left:401px; top:1494px; ">
+
+<input name="page1_389" id="page1_389" type="checkbox" style="position:absolute; left:414px; top:1494px; ">
+
+<input name="page1_390" id="page1_390" type="checkbox" style="position:absolute; left:377px; top:42px; ">
+
+<input name="page1_391" id="page1_391" type="checkbox" style="position:absolute; left:389px; top:42px; ">
+
+<input name="page1_392" id="page1_392" type="checkbox" style="position:absolute; left:401px; top:43px; ">
+
+<input name="page1_393" id="page1_393" type="checkbox" style="position:absolute; left:413px; top:42px; ">
+
+<input name="page1_394" id="page1_394" type="checkbox" style="position:absolute; left:425px; top:43px; ">
+
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+</div>
+
+
+ <div class="DoNotPrint" style="position: absolute; top:2037px; left:0px;" id="BottomButtons" >
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	 </td></tr></table>
+ </div>
+ </form>
+
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+</script>
+
+</body>
+</html>

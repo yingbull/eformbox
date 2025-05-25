@@ -1,0 +1,270 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>STI_Notification_BCCDC_HLTH208</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	let patientGenderVal = document.getElementById("PatientGender").value;
+	if (patientGenderVal == "M" || patientGenderVal == "F") {
+		let inputCheckEle = document.getElementById(patientGenderVal == "M" ? "Male" : "Female");
+		if (inputCheckEle.classList.contains("Xbox")) {
+		// xbox
+		inputCheckEle.value = "X";
+		} else {
+		// checkbox
+		inputCheckEle.checked = true;
+		}
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+	document.getElementById('FormName').submit()
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src2 = document.getElementById("BGImage2").src;
+		document.getElementById("BGImage2").src = src2.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="checkGender();reImg();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+</div>
+
+<div id="page2" style="position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}ConfIDofSTI.BCCDC.HLTH208.Aug2018.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<input name="patient_nameL" id="patient_nameL" type="text" class=" noborder" style="position:absolute; left:69px; top:161px; width:251px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class=" noborder" style="position:absolute; left:333px; top:161px; width:226px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=patient_nameF>
+<input name="PtPreferredName" id="PtPreferredName" type="text" class=" noborder" style="position:absolute; left:34px; top:195px; width:307px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:413px; top:192px; width:164px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=dobc>
+<input name="hin" id="hin" type="text" class=" noborder" style="position:absolute; left:615px; top:192px; width:164px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=hin>
+<input name="ID_Male" id="ID_Male" type="text" class="Xbox" style="position:absolute; left:31px; top:230px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="ID_Female" id="ID_Female" type="text" class="Xbox" style="position:absolute; left:175px; top:230px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="ID_Trans" id="ID_Trans" type="text" class="Xbox" style="position:absolute; left:327px; top:230px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="ID_NonBinary" id="ID_NonBinary" type="text" class="Xbox" style="position:absolute; left:498px; top:230px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="ID_TwoSpirit" id="ID_TwoSpirit" type="text" class="Xbox" style="position:absolute; left:653px; top:230px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="ID_Unsure" id="ID_Unsure" type="text" class="Xbox" style="position:absolute; left:31px; top:249px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="ID_OtherGender" id="ID_OtherGender" type="text" class="Xbox" style="position:absolute; left:175px; top:249px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="ID_OtherGender_Description" id="ID_OtherGender_Description" type="text" class=" noborder" style="position:absolute; left:266px; top:249px; width:313px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="ID_NoAnsw" id="ID_NoAnsw" type="text" class="Xbox" style="position:absolute; left:653px; top:249px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Male" id="Male" type="text" class="Xbox" style="position:absolute; left:433px; top:275px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Female" id="Female" type="text" class="Xbox" style="position:absolute; left:548px; top:275px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:transparent;" >
+<input name="Abo_Y" id="Abo_Y" type="text" class="Xbox" style="position:absolute; left:462px; top:299px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Abo_N" id="Abo_N" type="text" class="Xbox" style="position:absolute; left:623px; top:299px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="FN" id="FN" type="text" class="Xbox" style="position:absolute; left:31px; top:317px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Inuit" id="Inuit" type="text" class="Xbox" style="position:absolute; left:156px; top:317px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Metis" id="Metis" type="text" class="Xbox" style="position:absolute; left:252px; top:317px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Abo_Unknown" id="Abo_Unknown" type="text" class="Xbox" style="position:absolute; left:347px; top:317px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Abo_Undisclosed" id="Abo_Undisclosed" type="text" class="Xbox" style="position:absolute; left:518px; top:317px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Abo_DidNotAsk" id="Abo_DidNotAsk" type="text" class="Xbox" style="position:absolute; left:691px; top:317px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="White" id="White" type="text" class="Xbox" style="position:absolute; left:32px; top:364px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="WAsianArab" id="WAsianArab" type="text" class="Xbox" style="position:absolute; left:32px; top:383px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="OtherMixed" id="OtherMixed" type="text" class="Xbox" style="position:absolute; left:32px; top:401px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Black" id="Black" type="text" class="Xbox" style="position:absolute; left:176px; top:364px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Korean" id="Korean" type="text" class="Xbox" style="position:absolute; left:176px; top:383px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Unknown" id="Unknown" type="text" class="Xbox" style="position:absolute; left:176px; top:401px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Chinese" id="Chinese" type="text" class="Xbox" style="position:absolute; left:321px; top:364px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Japanese" id="Japanese" type="text" class="Xbox" style="position:absolute; left:321px; top:383px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Eth_NoResp" id="Eth_NoResp" type="text" class="Xbox" style="position:absolute; left:321px; top:401px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="SouthAsian" id="SouthAsian" type="text" class="Xbox" style="position:absolute; left:473px; top:364px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Filipino" id="Filipino" type="text" class="Xbox" style="position:absolute; left:473px; top:383px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="SEAsian" id="SEAsian" type="text" class="Xbox" style="position:absolute; left:634px; top:364px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Latin" id="Latin" type="text" class="Xbox" style="position:absolute; left:634px; top:383px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="address" id="address" type="text" class=" noborder" style="position:absolute; left:113px; top:423px; width:263px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=address>
+<input name="city" id="city" type="text" class=" noborder" style="position:absolute; left:410px; top:423px; width:178px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=city>
+<input name="postal" id="postal" type="text" class=" noborder" style="position:absolute; left:599px; top:423px; width:114px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=postal>
+<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:719px; top:423px; width:63px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=province>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:37px; top:455px; width:204px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:304px; top:455px; width:204px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=cell>
+<input name="email" id="email" type="text" class=" noborder" style="position:absolute; left:565px; top:455px; width:217px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=email>
+<input name="Reason_Routine" id="Reason_Routine" type="text" class="Xbox" style="position:absolute; left:33px; top:492px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Reason_Symp" id="Reason_Symp" type="text" class="Xbox" style="position:absolute; left:33px; top:509px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Reason_Partner" id="Reason_Partner" type="text" class="Xbox" style="position:absolute; left:33px; top:527px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Reason_Other" id="Reason_Other" type="text" class="Xbox" style="position:absolute; left:33px; top:546px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Reason_OtherDescription" id="Reason_OtherDescription" type="text" class=" noborder" style="position:absolute; left:85px; top:545px; width:187px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="Preg_Y" id="Preg_Y" type="text" class="Xbox" style="position:absolute; left:279px; top:501px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="EDC" id="EDC" type="text" class=" noborder" style="position:absolute; left:438px; top:500px; width:58px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$EDC#value>
+<input name="Preg_N" id="Preg_N" type="text" class="Xbox" style="position:absolute; left:279px; top:520px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Preg_Unknown" id="Preg_Unknown" type="text" class="Xbox" style="position:absolute; left:279px; top:539px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Partners_M" id="Partners_M" type="text" class="Xbox" style="position:absolute; left:499px; top:502px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Partners_F" id="Partners_F" type="text" class="Xbox" style="position:absolute; left:499px; top:520px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="Partners_Trans" id="Partners_Trans" type="text" class="Xbox" style="position:absolute; left:499px; top:539px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="HIVPrEP_Y" id="HIVPrEP_Y" type="text" class="Xbox" style="position:absolute; left:642px; top:501px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="HIVPrEP_N" id="HIVPrEP_N" type="text" class="Xbox" style="position:absolute; left:642px; top:522px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="HIVPrEP_Unknown" id="HIVPrEP_Unknown" type="text" class="Xbox" style="position:absolute; left:642px; top:540px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLM_Date" id="CHLM_Date" type="text" class=" noborder" style="position:absolute; left:160px; top:608px; width:137px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$CHLM#dateObserved>
+<input name="CHLMDxSite_Urethra" id="CHLMDxSite_Urethra" type="text" class="Xbox" style="position:absolute; left:33px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_Rectum" id="CHLMDxSite_Rectum" type="text" class="Xbox" style="position:absolute; left:33px; top:667px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_Urine" id="CHLMDxSite_Urine" type="text" class="Xbox" style="position:absolute; left:108px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_Throat" id="CHLMDxSite_Throat" type="text" class="Xbox" style="position:absolute; left:108px; top:667px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_Vagina" id="CHLMDxSite_Vagina" type="text" class="Xbox" style="position:absolute; left:184px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_Other" id="CHLMDxSite_Other" type="text" class="Xbox" style="position:absolute; left:184px; top:667px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_Cervix" id="CHLMDxSite_Cervix" type="text" class="Xbox" style="position:absolute; left:283px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMDxSite_OtherDescription" id="CHLMDxSite_OtherDescription" type="text" class=" noborder" style="position:absolute; left:255px; top:664px; width:105px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="CHLMTreat_Doxy" id="CHLMTreat_Doxy" type="text" class="Xbox" style="position:absolute; left:33px; top:706px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMTreat_Azith" id="CHLMTreat_Azith" type="text" class="Xbox" style="position:absolute; left:33px; top:725px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMTreat_Other" id="CHLMTreat_Other" type="text" class="Xbox" style="position:absolute; left:33px; top:743px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMTreat_OtherDescription" id="CHLMTreat_OtherDescription" type="text" class=" noborder" style="position:absolute; left:83px; top:743px; width:276px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="CHLMTreat_NotTreat" id="CHLMTreat_NotTreat" type="text" class="Xbox" style="position:absolute; left:33px; top:762px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="CHLMTreat_StartDate" id="CHLMTreat_StartDate" type="date" class=" noborder" style="position:absolute; left:152px; top:785px; width:191px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="GC_TestDate" id="GC_TestDate" type="text" class=" noborder" style="position:absolute; left:493px; top:608px; width:171px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=m$GC#dateObserved>
+<input name="GCDxSite_Urethra" id="GCDxSite_Urethra" type="text" class="Xbox" style="position:absolute; left:366px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_Rectum" id="GCDxSite_Rectum" type="text" class="Xbox" style="position:absolute; left:366px; top:667px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_Urine" id="GCDxSite_Urine" type="text" class="Xbox" style="position:absolute; left:442px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_Throat" id="GCDxSite_Throat" type="text" class="Xbox" style="position:absolute; left:442px; top:667px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_Vagina" id="GCDxSite_Vagina" type="text" class="Xbox" style="position:absolute; left:519px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_Other" id="GCDxSite_Other" type="text" class="Xbox" style="position:absolute; left:519px; top:667px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_Cervix" id="GCDxSite_Cervix" type="text" class="Xbox" style="position:absolute; left:615px; top:647px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCDxSite_OtherDescription" id="GCDxSite_OtherDescription" type="text" class=" noborder" style="position:absolute; left:589px; top:664px; width:186px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="GCTreat_Cefix" id="GCTreat_Cefix" type="text" class="Xbox" style="position:absolute; left:366px; top:706px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCTreat_Ceftri" id="GCTreat_Ceftri" type="text" class="Xbox" style="position:absolute; left:366px; top:725px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCTreat_Other" id="GCTreat_Other" type="text" class="Xbox" style="position:absolute; left:366px; top:743px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCTreat_NotTreat" id="GCTreat_NotTreat" type="text" class="Xbox" style="position:absolute; left:366px; top:761px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="GCTreat_OtherDescription" id="GCTreat_OtherDescription" type="text" class=" noborder" style="position:absolute; left:417px; top:743px; width:363px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="GCTreat_StartDate" id="GCTreat_StartDate" type="date" class=" noborder" style="position:absolute; left:486px; top:785px; width:186px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="PartnerNotify_Provider" id="PartnerNotify_Provider" type="text" class="Xbox" style="position:absolute; left:33px; top:846px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="PartnerNotify_Client" id="PartnerNotify_Client" type="text" class="Xbox" style="position:absolute; left:33px; top:865px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="PartnerNotify_PubHealth" id="PartnerNotify_PubHealth" type="text" class="Xbox" style="position:absolute; left:33px; top:883px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="PartnerNotify_Other" id="PartnerNotify_Other" type="text" class="Xbox" style="position:absolute; left:33px; top:903px; width:14px; height:14px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:center; background-color:white;" >
+<input name="PartnerNotify_OtherDescription" id="PartnerNotify_OtherDescription" type="text" class=" noborder" style="position:absolute; left:124px; top:903px; width:637px; height:16px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" >
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:32px; top:950px; width:252px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user>
+<input name="clinic_name" id="clinic_name" type="text" class=" noborder" style="position:absolute; left:287px; top:950px; width:252px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_name>
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class=" noborder" style="position:absolute; left:547px; top:950px; width:232px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=current_user_ohip_no>
+<input name="clinic_addressLine" id="clinic_addressLine" type="text" class=" noborder" style="position:absolute; left:33px; top:976px; width:508px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_addressLine>
+<input name="clinic_city" id="clinic_city" type="text" class=" noborder" style="position:absolute; left:33px; top:1005px; width:249px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_city>
+<input name="clinic_postal" id="clinic_postal" type="text" class=" noborder" style="position:absolute; left:357px; top:1005px; width:183px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_postal>
+<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:546px; top:976px; width:116px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:666px; top:976px; width:116px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=clinic_fax>
+<input name="DateFormCompleted" id="DateFormCompleted" type="text" class=" noborder" style="position:absolute; left:653px; top:1005px; width:128px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;"  oscarDB=today>
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1067px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" id="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick=" releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+</script>
+
+</body>
+</html>

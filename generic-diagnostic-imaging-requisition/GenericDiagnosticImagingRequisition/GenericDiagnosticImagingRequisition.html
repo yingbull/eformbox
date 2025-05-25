@@ -1,0 +1,153 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Generic Diagnostic Imaging Requisition</title>
+<style type="text/css" media="print">
+@media print {
+    @page {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    body {
+        padding-top: 36px;
+        padding-bottom: 36px ;
+    }
+}
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+textarea {
+  position: static;
+}
+input {
+  position: static;
+}
+label {
+  position: static;
+}
+ </style>
+
+ <!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+<script language="javascript">
+function SignForm() {
+		var provNum = $('#current_user_id').val();
+		document.getElementById('signature').src = "../eform/displayImage.do?imagefile=sig_"+provNum+".png";
+		$('#signature').attr(onerror, "this.style.display='none'");
+		document.getElementById('signature').alt= provNum;
+}
+</script>
+
+</head>
+
+<body onload="SignForm();">
+<form method="POST" action="">
+
+<h2 style="font-family:sans-serif;">Request for Diagnostic Imaging</h2>
+<hr>
+<h5 style="font-family:sans-serif;">Patient Details:</h5>
+<textarea name="patient_info" id="patient_info" type="text" class="noborder" readonly style="border:0; width:315px; height:63px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent; resize:none;" oscardb=label></textarea>
+<label for="weight" style="font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">Weight:</label>
+<input name="weight" id="weight" type="text" class="noborder" style="width:126px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscardb=wt_lastvalue>
+
+<h5 style="font-family:sans-serif;">Examination Requested:</h5>
+<textarea required name="exam" id="exam" placeholder="Examination Requested (REQUIRED)" type="text" style="width:750px; height:100px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent; resize:none;"></textarea>
+
+<h5 style="font-family:sans-serif;">Historical/Clinical Findings/Other Relevant Info:</h5>
+<textarea required name="history" id="history" placeholder="Historical/Clinical Findings (REQUIRED)" type="text" style="width:750px; height:100px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent; resize:none;"></textarea>
+<hr>
+
+<h5 style="font-family:sans-serif;">Requesting Physician:</h5>
+<input name="current_user" id="current_user" type="text" class="noborder" style="width:240px; height:17px; font-family:sans-serif; font-style:normal; font-weight:bold; font-size:12px; text-align:left; background-color:transparent;border:0;" oscardb=current_user_fname_lname>
+<br>
+<label for="signature" style="font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">Signature:</label>
+
+<img id="signature" name="signature" src="${oscar_image_path}BNK.png" width="150" height="25"  style="position: static;">
+<input type="hidden" id="current_user_id" name="current_user_id" oscardb=current_user_id>
+<br>
+<label for="current_user_cpsid" style="font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">CPSO #:</label>
+<input name="current_user_cpsid" id="current_user_cpsid" type="text" class="noborder" style="width:90px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent; border:0;" oscardb=current_user_cpsid>
+<br>
+<label for="current_user_ohip_no" style="font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">Billing #:</label>
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="width:92px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;border:0;" oscardb=current_user_ohip_no>
+<br>
+<label for="today" style="font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">Referral Date:</label>
+<input name="today" id="today" type="text" class="noborder" style="border:0; width:300px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;" oscardb=today>
+<p style="font-family:sans-serif; text-decoration: italic; font-style:normal; font-weight:normal; font-size:10px; text-align:left;"><i>Requisition valid for 3 months after date issued</i></p>
+
+<label for="current_user_label" style="font-family:sans-serif; text-decoration: underline; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">Physician Address/Phone/Fax:</label>
+<br>
+<textarea name="current_user_label" id="current_user_label" type="text" class="noborder" style="border:0; width:315px; height:75px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent; resize:none;" oscardb=clinic_label></textarea>
+<br>
+<hr>
+<h5 style="font-family:sans-serif;">Copy To Physician (Name & Address):</h5>
+<label for="copyto" style="font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left;">CC:</label>
+<input name="copyto" id="copyto" type="text" class="noborder" style="width:270px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<input name="copyto_address" id="copyto_address" type="text" class="noborder" style="width:430px; height:17px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:12px; text-align:left; background-color:transparent;">
+<hr>
+<p style="font-family:sans-serif; text-decoration: italic; font-style:normal; font-weight:normal; font-size:10px; text-align:left;"><i>Generic Diagnostic Imaging Requisition EForm: This requisition form can be taken to any licensed facility providing healthcare services, including independent healthcare facilities (IHFs) and hospitals, such as those listed on the IHF Program website (http://www.health.gov.on.ca/en/public/programs/ihf/facilities.aspx).</i></p>
+
+<div class="DoNotPrint" id="BottomButtons" style="position: static;">
+<!-- Copy Left -->
+ <br><a rel="licence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> created by Adrian Starzynski, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">Creative Commons Attribution-Share Alike 3.0 Unported License</a>.<br><br>
+	 <table><tr><td>
+		 Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+</div>
+
+ </form>
+
+</body>
+</html>

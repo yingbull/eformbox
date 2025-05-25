@@ -1,0 +1,430 @@
+<html>
+<head>
+
+<title>CHADS2</title>
+
+<style type="text/css">
+p.title{
+	text-transform: uppercase;
+	font-size: 16;
+	font-family: Arial;
+	font-weight: bolder;
+	text-align: left;
+  	color: black;
+}
+p.heading{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bolder;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+}
+p.normaltext{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+}
+td.heading1{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: top;
+	color: white;
+	background:#444444;
+	border-width: 1;
+}
+td.QuestionHeading{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	color: white;
+	background: #505050;
+	border-width: 1;
+}
+td.AnswerHeading{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: top;
+	color: white;
+	background: #505050;
+	border-width: 1;
+}
+tr.odd{
+	background: #ffffff;
+}
+tr.even{
+	background: #dddddd;
+}
+td.question{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	border-width: 1;
+}
+td.answer{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	color: black;
+	border-width: 1;
+}
+td.normaltext{
+	width: 100%;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background: white;
+	border-width: 0;
+}
+input.formtext{
+	width: 100%;
+	height: 100%;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background: white;
+	border-width: 1;
+	border-style: solid; 
+}
+textarea.formtext{
+	width: 100%;
+	height: auto;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background: white;
+	border-width: 1;
+	border-style: solid;
+}
+</style>
+
+<!-- CSS Script that removes textarea and textbox borders when printing - (put this inbetween <header></header>) -->
+<style type="text/css" media="print">
+.DoNotPrint {display: none;}
+.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	border: 0px;
+}
+</style>
+
+<script type="text/javascript" language="javascript">
+	function passAge() {
+		if (document.getElementById("Age").value >= 75) {
+			document.getElementById("75").checked =true;
+		}
+		if (document.getElementById("Age").value >= 80) {
+			document.getElementById("high").style.background='yellow';
+			document.getElementById("low").style.background='transparent';
+		}
+		else if ((document.getElementById("Age").value >0)&&(document.getElementById("Age").value <80)) {
+			document.getElementById("high").style.background='transparent';
+			document.getElementById("low").style.background='yellow';
+		}
+	}
+
+	function getCheckedValue(radioObj) {
+		if(!radioObj)
+		return parseInt(0);
+		var radioLength = radioObj.length;
+		if(radioLength == undefined)
+		if(radioObj.checked)
+		return parseInt(radioObj.value);
+		else
+		return parseInt(value);
+		for(var i = 0; i < radioLength; i++) {
+			if(radioObj[i].checked) {
+			return parseInt(radioObj[i].value);
+			}
+		}
+		return parseInt(0);
+	}
+
+	function totalScore() {
+		var i = 0;
+
+		i += getCheckedValue(document.FormName.Q1);
+		i += getCheckedValue(document.FormName.Q2);
+		i += getCheckedValue(document.FormName.Q3);
+		i += getCheckedValue(document.FormName.Q4);
+		i += getCheckedValue(document.FormName.Q5);
+
+		document.FormName.Score.value = i;
+		document.FormName.subject.value = 'CHADS2 score ' + i;
+
+		if (i==0) {
+			document.getElementById("0").style.background='pink';
+			document.getElementById("1").style.background='white';
+			document.getElementById("2").style.background='white';
+			document.getElementById("3").style.background='white';
+			document.getElementById("4").style.background='white';
+			document.getElementById("5").style.background='white';
+			document.getElementById("6").style.background='white';
+
+			document.getElementById("Low_risk").style.background='lightgreen';
+			document.getElementById("High_risk").style.background='white';
+		}
+
+		if (i==1) {
+			document.getElementById("0").style.background='white';
+			document.getElementById("1").style.background='pink';
+			document.getElementById("2").style.background='white';
+			document.getElementById("3").style.background='white';
+			document.getElementById("4").style.background='white';
+			document.getElementById("5").style.background='white';
+			document.getElementById("6").style.background='white';
+		}
+
+		if (i==2) {
+			document.getElementById("0").style.background='white';
+			document.getElementById("1").style.background='white';
+			document.getElementById("2").style.background='pink';
+			document.getElementById("3").style.background='white';
+			document.getElementById("4").style.background='white';
+			document.getElementById("5").style.background='white';
+			document.getElementById("6").style.background='white';
+		}
+
+		if (i==3) {
+			document.getElementById("0").style.background='white';
+			document.getElementById("1").style.background='white';
+			document.getElementById("2").style.background='white';
+			document.getElementById("3").style.background='pink';
+			document.getElementById("4").style.background='white';
+			document.getElementById("5").style.background='white';
+			document.getElementById("6").style.background='white';
+		}
+
+		if (i==4) {
+			document.getElementById("0").style.background='white';
+			document.getElementById("1").style.background='white';
+			document.getElementById("2").style.background='white';
+			document.getElementById("3").style.background='white';
+			document.getElementById("4").style.background='pink';
+			document.getElementById("5").style.background='white';
+			document.getElementById("6").style.background='white';
+		}
+
+		if (i==5) {
+			document.getElementById("0").style.background='white';
+			document.getElementById("1").style.background='white';
+			document.getElementById("2").style.background='white';
+			document.getElementById("3").style.background='white';
+			document.getElementById("4").style.background='white';
+			document.getElementById("5").style.background='pink';
+			document.getElementById("6").style.background='white';
+		}
+
+		if (i==6) {
+			document.getElementById("0").style.background='white';
+			document.getElementById("1").style.background='white';
+			document.getElementById("2").style.background='white';
+			document.getElementById("3").style.background='white';
+			document.getElementById("4").style.background='white';
+			document.getElementById("5").style.background='white';
+			document.getElementById("6").style.background='pink';
+		}
+
+		else if (i>=1) {
+			document.getElementById("Low_risk").style.background='white';
+			document.getElementById("High_risk").style.background='red';
+		}
+	}
+</script>
+</head>
+
+<body onload="passAge();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<p class="title">CHADS2: &nbsp; Atrial Fibrillation Stroke Risk Assessment</p>
+<p class="heading" style="font-size:14px;" title="No prosthetic valve, or rheumatic valve disease, especially mitral stenosis.">(Non-Valvular Heart Disease; incorporating Canadian Cardiovascular Society Guidelines 2014)</p>
+
+<div name="demographics">
+	<table width="70%">
+		<tr><td class="heading1" width=16% style="text-align:left;">Patient name:</td>
+			<td class="formtext"><input class="formtext" name="PatientName" type="text" style="width:250px;" oscarDB=patient_name>
+		</tr>
+		<tr><td class="heading1" style="text-align:left;">Date:</td>
+			<td class="formtext"><input class="formtext" name="TodaysDate" type="text" style="width:250px;" oscarDB=today>
+		</tr>
+        <tr><td class="heading1" style="text-align:left;">Patients age:</td>
+			<td class="formtext"><input class="formtext" name="Age" id = "Age" type="text" style="width:250px;" oscarDB=age>
+		</tr>
+	</table>
+</div><br>
+
+<div name="Questionnaire">
+	<table width="50%">
+		<tr><td class="heading1" width=50% style="text-align:left;">Associated medical conditions</u>:</td>
+			<td class="heading1" width=20%>Absent</td>
+			<td class="heading1" width=20%>Present</td>
+		</tr>
+
+		<tr class="even"><td class="question"><p class="normal"><b>C</b>ongestive heart failure within 90 days </p></td>
+			<td class="answer"><input type="radio" name="Q1" value="0"checked></td>
+			<td class="answer"><input type="radio" name="Q1" value="1"></td>
+		<tr>
+
+		<tr class="even"><td class="question"><p class="normal"><b>H</b>TN - whether on treatment or not</p></td>
+			<td class="answer"><input type="radio" name="Q2" value="0"checked></td>
+			<td class="answer"><input type="radio" name="Q2" value="1"></td>
+		</tr>
+
+		<tr class="even"><td class="question"><p class="normal"><b>A</b>ge &ge; 75yrs</p></td>
+			<td class="answer"><input type="radio" name="Q3" value="0"checked></td>
+			<td class="answer"><input type="radio" name="Q3" id = "75" value="1"></td>
+		</tr>
+
+		<tr class="even"><td class="question"><p class="normal"><b>D</b>iabetes </p></td>
+			<td class="answer"><input type="radio" name="Q4" value="0"checked></td>
+			<td class="answer"><input type="radio" name="Q4" value="1"></td>
+		</tr>
+
+        <tr class="even"><td class="question"><p class="normal"><b>S</b>troke or TIA - at any time</p></td>
+			<td class="answer"><input type="radio" name="Q5" value="0"checked></td>
+			<td class="answer"><input type="radio" name="Q5" value="2"></td>
+		<tr>
+	</table>
+<br>
+	<table>
+		<tr><td><input type="button" style="color:green;" onclick="totalScore()" value="CHADS2 Score" title="Click to calculate"></td>
+			<td><input type="text" name="Score" size="2" style="text-align:center;" value=""></td>
+			<td> &nbsp;  &nbsp; &nbsp; </td>
+			<td><input name="CHADS_Vasc_Link" type="button" class="DoNotPrint" style="color:green;" value="to CHA2DS2 VASc" title="eForm" oscarOPEN="Atrial Fibrillation Stroke Risk Advisor"></td>
+		</tr>
+	</table>
+</div>
+<br>
+
+<div name="Risk" class="DoNotPrint">
+	<table width=50%>
+		<tr><td class="heading1" width=10%>CHADS2 Score</td>
+			<td class="heading1" width=10%>Yearly Risk of Stroke</td>
+			<td class="heading1" width=10%>Event rate off warfarin (% per year)</td>
+			<td class="heading1" width=10%>Event rate on warfarin (% per year)</td>
+			<td class="heading1" width=10%>NNT</td>
+		</tr>
+		<tr id="0"><td class="answer">0</td>
+			<td class="answer">1.9%  (1.2-3.0)</td>
+			<td class="answer">0.49</td>
+			<td class="answer">0.25</td>
+			<td class="answer">417</td>
+		</tr>
+		<tr id="1"><td class="answer">1</td>
+			<td class="answer">2.8%  (2.0-3.8)</td>
+			<td class="answer">1.52</td>
+			<td class="answer">0.72</td>
+			<td class="answer">125</td>
+		</tr>
+		<tr id="2"><td class="answer">2</td>
+			<td class="answer">4.0%  (3.1-5.1)</td>
+			<td class="answer">2.50</td>
+			<td class="answer">1.27</td>
+			<td class="answer">81</td>
+		</tr>
+		<tr id="3"><td class="answer">3</td>
+			<td class="answer">5.9%  (4.6-7.3)</td>
+			<td class="answer">5.27</td>
+			<td class="answer">2.20</td>
+			<td class="answer">33</td>
+		</tr>
+		<tr id="4"><td class="answer">4</td>
+			<td class="answer">8.5%  (6.3-11.1)</td>
+			<td class="answer">6.02</td>
+			<td class="answer">2.35</td>
+			<td class="answer">27</td>
+		</tr>
+		<tr id="5"><td class="answer">5</td>
+			<td class="answer">12.5%  (8.2-17.5)</td>
+			<td class="answer">6.88</td>
+			<td class="answer">4.60</td>
+			<td class="answer">44</td>
+		</tr>
+		<tr id="6"><td class="answer">6</td>
+			<td class="answer">18.2%  (10.5-27.4)</td>
+			<td class="answer">-</td>
+			<td class="answer">-</td>
+			<td class="answer">-</td>
+		</tr>
+	</table>
+<br>
+	<table width=50%>
+		<tr><td class="heading1" width=10%>Risk of major bleed</td>
+			<td class="heading1" width=10%>Less significant but worrisome bleed</td>
+		</tr>
+		<tr id= "low"><td class="answer">Age &lt; 80yrs: risk of major bleed 1% per year.</td>
+			<td class="answer">Age &gt; 50yrs: risk of minor bleed 5% per year.</td>
+		</tr>
+		<tr id="high"><td class="answer">Age &gt; 80 yrs: risk of major bleed 3.4% per year.</td>
+			<td class="answer"></td>
+		</tr>
+	</table>
+<br>
+
+<div name="Recommendations" class="DoNotPrint">
+	<table width=50%>
+		<tr><td class="heading1">CHADS2 Score</td>
+			<td class="heading1">Consideration</tr>
+
+		<tr id="Low_risk"><td class="answer">0</td>
+			<td title="AVD = arteriovascular disease">Low Risk of stroke (&lt;2%). Treat with ASA if CAD/AVD present. Otherwise no OAC if &lt; 65.</td>
+		</tr>
+		<tr id="High_risk"><td class="answer">1-6</td>
+			<td title="OAC = oral anticoagulant">Higher Risk of stroke. Recommend OAC. Discuss risks and benefits.</td>
+		</tr>
+	</table>
+<br>
+
+<div name="Notes" class="DoNotPrint">
+	<table width=50%>
+		<tr><td class="heading1" colspan="2">Notes:</td></tr>
+		<tr><td>1. Check TSH: hyperthyroidism is a major cause of atrial fibrillation.</td></tr>
+		<tr><td>2. Echocardiogram to determine existence of LV dysfunction, and presence of intra-cardiac thrombus.</td></tr>
+		<tr><td>3. Establish rate control with either B-blocker or a calcium channel blocker.</td></tr>
+		<tr><td>4. Treatment with warfarin reduces the risk of stroke in atrial fibrillation by about 66% compared to aspirin, about 22%. See AF advisor <input name="AF_Advisor_Link" type="button" style="color:green;" value="to AF Advisor" title="eForm" oscarOPEN="Atrial Fibrillation Stroke Risk Advisor"></td></tr>
+		<tr><td>5. The risk of major bleeding on warfarin varies with the patients medical problems but is generally less than 2%. See CHADS-VASC and HAS-BLEED eForm.</td></tr>
+	</table>
+</div><br>
+
+<!-- The submit/print/reset buttons -->
+<div name="FunctionButtons" class="DoNotPrint">
+	<table><tr><td class="subjectline" style="background:#e5f2ff;">
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" type="submit">
+		<input value="Reset" name="ResetButton" type="reset" onClick="history.go(0)"> 
+		<input value="Print" name="PrintButton" onclick="javascript:window.print()" type="button">
+	</td></tr></table>
+</div>
+
+</form></body></html>

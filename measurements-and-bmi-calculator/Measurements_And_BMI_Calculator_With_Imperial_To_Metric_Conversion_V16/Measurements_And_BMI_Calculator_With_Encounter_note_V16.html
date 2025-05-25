@@ -1,0 +1,374 @@
+
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>BMI Calculator and Vital Measurements Input</title>
+
+
+<!-- Updated 2015-3-15.  Converts height from feet and inches to centimetres, converts weight from pounds to kilograms, converts waist from inches to cm, calculates body mass index, (also pushes and pulls these values back to Oscar measurements). Captures Waist Circumference, BP, Pulse, Respiratory Rate. Writes to the encounter pane including imperial measurements for Height, Weight, and Waist circ. There is a button to blank out all fields except height-->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<style>
+ input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+ .sig {
+	 border: 2px dotted blue;
+	 background-color: lightgrey;
+ }
+ </style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+.sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background-color: transparent;
+ }
+ </style>
+ 
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+ <script type="text/javascript">
+     function Form(ElementId) {
+          return document.getElementById(ElementId);
+     }
+     /* function to update encounter note */
+     function copyToEncounter() {
+          try {
+               if (window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+                    window.parent.opener.document.getElementById("newNoteImg").onclick();
+                    TextAreaId = window.parent.opener.document.getElementsByClassName('txtArea')[0];
+                    window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.document.getElementById(TextAreaId.id).value + Form("transferBox").value;
+                    window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+               } else if (window.parent.opener.window.parent.opener.document.forms["caseManagementEntryForm"] != undefined) {
+                    window.parent.opener.window.parent.opener.document.getElementById("newNoteImg").onclick();
+                    TextAreaId = window.parent.opener.window.parent.opener.document.getElementsByClassName('txtArea')[0];
+                    window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).value + Form("transferBox").value;
+                    window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).style.height = window.parent.opener.window.parent.opener.document.getElementById(TextAreaId.id).scrollHeight + "px";
+               }
+          } catch(e) {
+               alert("The note could not be copied to the encounter note.");
+          }
+     }
+  </script>
+
+
+<script type="text/javascript" language="javascript">
+	function isNumber(ss) {
+		var s = ss.value;
+        var i;
+        for (i = 0; i < s.length; i++) {
+            // Check that current character is number.
+            var c = s.charAt(i);
+			if (c == '.') {
+				continue;
+			}
+			else if (((c < "0") || (c > "9"))) {
+				alert('Invalid '+s+' in field ' + ss.name + '. Please use digits only, no letters.');
+				ss.focus();
+				return false;
+			}
+		}
+	        // All characters are numbers.
+        return true;
+	}
+</script>	
+
+<script type="text/javascript" language="javascript">
+	function wtEnglish2Metric(obj) {
+		if(isNumber(obj)) {
+			weight = obj.value;
+			weightM = Math.round(weight * 10 * 0.4536) / 10;
+
+			if(confirm("Are you sure you want to change " + weight + " pounds to " + weightM +"kg?")) {
+				(obj.value = weightM ); (document.getElementById("Pounds").value = weight);
+			}
+		}
+	}
+	function checkweight() {
+    if (document.getElementById("Pounds").value ==''){
+		(document.getElementById("Pounds").value = Math.round(document.getElementById("Weight").value*2.2046)*10/10);
+		}
+  }
+  </script>
+
+<script type="text/javascript" language="javascript">
+	function startUp() {			
+		//optimize window size/width
+		top.window.resizeTo(1200, screen.availHeight);
+	}
+		
+	function htEnglish2Metric(obj) {
+		height = obj.value;
+		if(height.length > 1 && height.indexOf("'") > 0 ) {
+			feet = height.substring(0, height.indexOf("'"));
+			inch = height.substring(height.indexOf("'"));
+			if(inch.length == 1) {
+				inch = 0;
+			}
+			else {
+				inch = inch.charAt(inch.length-1)=='"' ? inch.substring(0, inch.length-1) : inch;
+				inch = inch.substring(1);
+			}
+		height = Math.round((feet * 30.48 + inch * 2.54) * 10) / 10;
+
+			if(confirm("Are you sure you want to change " + feet + " feet " + inch + " inch(es) to " + height +"cm?") ) {
+				(obj.value = height); (document.getElementById("Feet").value = feet);
+		(document.getElementById("Inches").value = inch);
+			}
+		}
+	}
+	
+	function checkheight() {
+	if (document.getElementById("Feet").value ==''  && document.getElementById("Inches").value ==''){
+		(document.getElementById("Feet").value = (Math.floor(document.getElementById("Height").value/30.48)));
+		(document.getElementById("Inches").value = Math.round((document.getElementById("Height").value-((Math.floor(document.getElementById("Height").value/30.48))*30.48))/2.54));
+		}
+  }
+
+</script>
+
+<script type="text/javascript" language="javascript">
+	function bmi() {
+		var height = document.getElementById('Height').value;
+		var weight = document.getElementById('Weight').value;
+
+		if ((height.length>0)&&(weight.length>0)) {
+			document.getElementById('BMI').value=Math.round(100000*weight/(height*height))/10;
+		}
+	}		
+</script>
+
+<script type="text/javascript" language="javascript">
+	function waist(obj) {
+		if(isNumber(obj)) {
+			WaistInch = obj.value;
+			WaistM = Math.round(WaistInch * 10 * 2.54) / 10;
+
+			if(confirm("Are you sure you want to change " + WaistInch + " inches to " + WaistM +"cm?")) {
+				(obj.value = WaistM ); (document.getElementById("WaistInches").value = WaistInch);
+			}
+		}
+	}
+	function checkwaist() {
+    if (document.getElementById("WaistInches").value ==''){
+		(document.getElementById("WaistInches").value = Math.round(document.getElementById("Waist").value*0.393701)*10/10);
+		}
+  }
+</script>
+
+
+<script type="text/javascript" language="javascript">
+	function Imperial() {
+	checkweight();
+	checkheight();
+	checkwaist();
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function MeasurementNote1() {
+    Aa = "-----------------"
+	A = "Taken from BMI Calculator eForm"; 
+	B = "Ht =  "   +$('#Height').val() +" cm or " +$('#Feet').val() +" ft " +$('#Inches').val() +" inches ";
+	C = "Wt = " +$('#Weight').val() +" kg or " +$('#Pounds').val() +" lb ";
+	D = "BMI = "  +$('#BMI').val() +" kg/m2 ";
+	E = "Waist = "  +$('#Waist').val() +" cm or "  +$('#WaistInches').val() +" inches ";
+	F = "BP = "  +$('#BP').val() +" (sitting) " +$('#BPComment').val() +" arm";
+	G = "Pulse = "  +$('#Pulse').val() +" bpm, rhythm was "  +$('#PulseComment').val() ;
+	H = "Resp. Rate = "  +$('#RR').val() ;
+    z =  Aa + "\n" + B + "\n" + C + "\n" + D + "\n" + E + "\n" + F + "\n" + G + "\n" + H + "\n" + Aa + "\n";
+        $('#transferBox').val(z);
+     }
+function WriteToSubject() {
+	B = "Ht =  "   +$('#Height').val() +" cm, ";
+	C = "Wt = " +$('#Weight').val() +" kg, ";
+	D = "BMI = "  +$('#BMI').val() +" , ";
+	E = "Waist = "  +$('#Waist').val() +" cm, ";
+	F = "BP = "  +$('#BP').val() +" , " +$('#BPComment').val() +" arm, ";
+	G = "Pulse = "  +$('#Pulse').val() +" , rhythm was " +$('#PulseComment').val() +" , ";
+	H = "Resp. Rate = "  +$('#RR').val() ;
+    z =  B + C + D + E + F + G + H ;
+        $('#subject').val(z);
+     }
+function Blanks() {
+
+	a=""
+
+    $('#Weight').val(a);
+    $('#BMI').val(a);
+    $('#Waist').val(a);
+    $('#BP').val(a);
+    $('#BPComment').val(a);
+    $('#Pulse').val(a);
+    $('#PulseComment').val(a);
+    $('#RR').val(a);
+     }
+function BlanksAll() {
+
+	a=""
+
+    $('#Weight').val(a);
+    $('#Height').val(a);
+    $('#BMI').val(a);
+    $('#Waist').val(a);
+    $('#BP').val(a);
+    $('#BPComment').val(a);
+    $('#Pulse').val(a);
+    $('#PulseComment').val(a);
+    $('#RR').val(a);
+}
+
+function NoBlanks() {
+
+		var weight = document.getElementById('Weight').value;
+		var pounds = document.getElementById('Pounds').value;
+
+   if (weight.value !== null)
+	{(document.getElementByID("transferbox").value += "Wt = ");( document.getElementByID("transferbox").value += weight) ; (document.getElementByID("transferbox").value += " kg or");( document.getElementByID("transferbox").value += pounds) ; (document.getElementByID("transferbox").value += " lb");}
+(end)}
+</script>
+</head>
+
+<body onload="BlanksAll();">
+
+<form method="post" action="" name="FormName" id="FormName">
+
+
+<!-- ---------------------------Hidden inputs   ------ -->
+<textarea name="transferBox" style="display:none;" id="transferBox" ></textarea>
+<input type="hidden" name="Feet" id="Feet" >
+<input type="hidden" name="Inches" id="Inches" >
+<input type="hidden" name="Pounds" id="Pounds" >
+<input type="hidden" name="WaistInches" id="WaistInches" >
+<!-- ---------------------- -->
+
+
+<span style="position:absolute; left:20px; top:20px; font-family:sans-serif; font-size:15px;">
+
+Name&#58; <input name="first_last_name" id="first_last_name" type="text" class="noborder" style="width:300px; height:23px; font-family:sans-serif; font-size:14px; font-weight:bolder; text-align:left; background-color:transparent;" oscarDB=first_last_name><br><br>
+
+DOB&#58; <input name="DOB" id="DOB" type="text" class="noborder" style="width:150px; height:23px; font-family:sans-serif; font-size:14px; text-align:left; background-color:transparent;" oscarDB=dob><br><br>
+
+
+Weight&#58; <input name="m$WT#value" id="Weight" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" title="doubleclick to convert lbs to kg" onDblClick="wtEnglish2Metric(this)" oscarDB=m$WT#value> kg<br><br>
+
+Height&#58; <input name="m$HT#value" id="Height" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"   title="doubleclick to convert ft and in to cm" onDblClick="htEnglish2Metric(this)" oscarDB=m$HT#value> cm<br><br>
+
+BMI&#58; <input name="m$BMI#value" id="BMI" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" oscarDB=m$BMI#value> kg/m<sup>2</sup>&nbsp;&nbsp;&nbsp;<input value="Calculate BMI" name="CalculateBMI" id="CalculateBMI" type="button" class="DoNotPrint" style="color:green; background-color:#9FF781; font-family:sans-serif; font-size:16px" onclick="bmi();"><br><br>
+
+Waist&#58; <input name="m$WAIS#value" id="Waist" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" title="doubleclick to convert in to cm" onDblClick="waist(this)" oscarDB=m$WAIS#value> cm <br><br>
+
+BP&#58; <input name="m$BP#value" id="BP" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" oscarDB=m$BP#value> mmHg &#40;sitting&#41; <input name="m$BP#comments" id="BPComment" type="text" class="noborder" style="width:10px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" oscarDB=m$BP#comments> arm<br><br>
+
+Pulse&#58; <input name="m$HR#value" id="Pulse" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" oscarDB=m$HR#value> bpm &#45; rhythm was&nbsp;<input name="m$HR#comments" id="PulseComment" type="text" class="noborder" style="width:80px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" oscarDB=m$HR#comments><br><br>
+
+RR&#58; <input name="m$RESP#value" id="RR" type="text" class="noborder" style="width:50px; height:23px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" oscarDB=m$RESP#value> resp/min <br><br>
+
+<input value="Show previous measurements" name="ResetButton" id="ResetButton" type="reset" class="DoNotPrint" style=" background-color:#9FF781; font-family:sans-serif; font-size:14px"><br><br>
+
+<input value="Write only fields that are not empty" name="FullFields" id="FullFields" type="button" class="DoNotPrint" style=" background-color:#9FF781; font-family:sans-serif; font-size:14px" onclick="NoBlanks(); copyToEncounter();"><br><br>
+
+<input value="Clear all fields (except height)" name="ResetAllButHeight" id="ResetAllButHeight" type="button" class="DoNotPrint" style=" background-color:#9FF781; font-family:sans-serif; font-size:14px" onclick="Blanks();"><br><br><br><br>
+
+
+ <div class="DoNotPrint" id="BottomButtons" >
+	 <table><tr><td>
+		 Subject: <input name="subject" id="subject" size="40" type="text"> 
+		<!--
+		<input value="WriteToSubject" name="WriteSubjectButton" onclick="WriteToSubject();" type="button">
+		-->
+		<br> 
+		<input value="Write to Encounter" name="WriteButton" style="font-family:sans-serif;  background-color:#81DAF5; font-size:16px" onclick=" Imperial();  MeasurementNote1(); copyToEncounter();" type="button">
+		<input value="Submit" name="SubmitButton" style="font-family:sans-serif;  background-color:#81DAF5; font-size:16px" onclick="releaseDirtyFlag(); WriteToSubject(); document.FormName.submit();" type="button">
+		<input value="Write & Submit" name="WriteSubmitButton" style="font-family:sans-serif;  background-color:#81DAF5; font-size:16px" onclick="releaseDirtyFlag(); Imperial(); MeasurementNote1(); copyToEncounter(); WriteToSubject(); document.FormName.submit();" type="button">
+		<input value="Reset" name="ClearAllButton" id="ClearAllButton" type="button" style="font-family:sans-serif;  background-color:#81DAF5; font-size:16px" onclick="BlanksAll()"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" style="font-family:sans-serif;  background-color:#81DAF5; font-size:16px" onclick="formPrint();"> 
+		<input value="Print, Write & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" style="font-family:sans-serif;  background-color:#81DAF5; font-size:16px" onclick="formPrint(); releaseDirtyFlag(); Imperial(); MeasurementNote1(); copyToEncounter(); WriteToSubject(); document.FormName.submit();">
+	 </td></tr></table>
+	 	 
+<!-- Copy Left -->
+<div class="DoNotPrint" id="CopyLeft" style="font-family:sans-serif; font-size:12px">
+	<p><br></p>	
+	<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><br><img alt="Creative Commons License" style="border-width:0;" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a><br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Measurements form including body mass index (BMI)  calculator with conversion from imperial to metric </span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">John Robertson, G&uuml;nther Klein, Herb Chang, and John Yap </span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br>Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.oscarcanada.org/" rel="cc:morePermissions">http://www.oscarcanada.org/</a>.
+</div>
+</span>
+
+ </form>
+
+ 
+<!-- Sidebar instructions -->
+<div id="UserInstructions1" class="DoNotPrint" style="position:absolute; left:400px; top:1px; width:330px; background:lavender; border-style:solid; border-color:black; border-width:1px; font-family:sans-serif; font-size:12; padding:15px;">
+
+	<p style="text-align:center; font-weight:bold;"> INSTRUCTIONS: </p>
+	<li>To convert pounds to kg please type the value in pounds without any suffix (no &quot;lb&quot;) and double click on the box.</li><br>
+	<li>To convert (Height) feet and inches to cm please type in the style 5&#39; 9&quot; and double click.</li><br>
+	<li>To convert (Waist) inches to cm please type the value in inches without any suffix (no &quot;) and double click.</li><br>
+	<li>Clicking &quot;Submit&quot; or &quot;Write&nbsp;&amp;&nbsp;Submit&quot; will also store the values in the &quot;Measurements&quot; section for use in other areas of OSCAR. <span style="color:red;">However</span>, clicking &quot;Write to Encounter&quot; will only paste the numbers into the chart text note, it will <span style="color:red;">not</span> save the values to &quot;Measurements&quot;.</li><br>
+	<li>Both metric and imperial measurements will write to the chart note &#47; encounter, but only metric values will save in &quot;Measurements&quot;.</li><br>
+	<li>If you have started typing a chart note before opening this eForm and &quot;Click&quot; on one of the &quot;Write&quot; buttons, you will be prompted to save your chart note. Click &quot;Cancel&quot; when this happens. You will still be able to save your chart note later after you&#39;ve submitted and closed this eForm.</li><br>
+
+</div>
+
+</body>
+</html>

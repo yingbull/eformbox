@@ -1,0 +1,247 @@
+<html>
+<head>
+
+<!-- Inlet Community Birth Program V1_Oct8_2018, created by Dina Davidson using eForm Generator V15 -->
+<!-- V2_Oct9_2018, upgrades and mods as per John Yap -->
+<!-- V3_Oct11_2018, validity check for database tag, email validity check added, and email link to info@inletbirth.ca added as per JohnR -->
+
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Inlet Birth Referral</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+
+<style type="text/css">
+	.FontSizeChange {
+		position:absolute;
+		width:16px;
+		height:15px;
+		font-size:13px;
+		cursor:pointer;
+		background:yellow;
+		text-align:center;
+		border: 1px solid #000000;
+	}
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript" type="text/javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+
+		/****************************
+			script to Increase or Decrease the Font Size
+			name = input name/id, delta = increase (+) or decrease (-) increment #
+			Requires loadFontSize(); in startUp, or in onload line
+		****************************/
+		function changeFontSize(name, delta) {
+			var element = $("#" + name)
+			var oldSize = parseInt(element.css("font-size"));
+			var newSize = oldSize + delta;
+	
+			// Save new font size into "value" field of hidden element
+			$("#" + name + "_fontsize").attr('value', newSize);
+	
+			// Set font size
+			element.css({'font-size': newSize + 'px'});
+		}
+
+		// Retains altered font size when eForm is reopened; 
+		// Requires hidden inputs with format for each field using this feature: 
+		// <input type="hidden" name="Input_fontsize" id="Input_fontsize" value="">
+		function loadFontSize() {
+			$.each($("input[name*='_fontsize'"), function(index, element) {
+				var fontSize = element.value;
+	
+				if (!!fontSize) {
+					var name = element.name.split('_')[0];
+					$("#" + name).css({'font-size': fontSize + 'px'});
+				}
+			});
+		}
+</script>
+<script>
+function Names() {
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById('Doctor').value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+			var CurrentUserFLName = document.getElementById('CurrentUserFLName').value;
+	if(CurrentUserFLName){
+		document.FormName.current_user_fname_lname.value = CurrentUserFLName ;
+		}
+	else{
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+				}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+				}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.current_user_fname_lname.value = First_Last_Name ;
+
+}
+}
+</script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+<script type="text/javascript" src='jquery-1.12.0.min.js'></script>
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+
+</head>
+
+<body onload="loadFontSize();reImg();Names();">
+<form method="post" action="" name="FormName" id="FormName" >
+
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}inlet_referral_10oct2018.png" style="position:relative; left:0px; top:0px; width:750px;">
+
+<!-- Hidden input for font size changer inputs -->
+<input type="hidden" name="drugList_fontsize" id="drugList_fontsize" value="">
+<input type="hidden" name="allergies_fontsize" id="allergies_fontsize" value="">
+<input type="hidden" name="comments_fontsize" id="comments_fontsize" value="">
+<input type="hidden" name="Doctor" id="Doctor" oscarDB=current_user>
+<input type="hidden" name="CurrentUserFLName" id="CurrentUserFLName" oscarDB=current_user_fname_lname>
+
+
+<!-- web link -->
+<a id="InletBirth" class="DoNotPrint" style="position:absolute; left:85px; top:40px; width:185px; height:130px;" href="http://inletbirth.ca/" target="_blank" title="Website"></a>
+
+<!-- email link -->
+<a class="DoNotPrint" style="position:absolute; left:515px; top:140px; width:150px; height:20px;" href="mailto:info@inletbirth.ca.ca?Subject=Patient%20Referral&body=Please see the attached referral form." target="_top" title="email to info@inletbirth.ca"></a>
+
+<input name="first_last_name" id="first_last_name" type="text" class="noborder" style="position:absolute; left:170px; top:287px; width:195px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=first_last_name>
+
+<input name="hin" id="hin" type="text" class="noborder" style="position:absolute; left:130px; top:317px; width:235px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=hin>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:170px; top:347px; width:195px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=dob>
+
+<input name="EDD" id="EDD" type="text" class="noborder" style="position:absolute; left:225px; top:376px; width:140px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=m$EDD#value>
+
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:475px; top:284px; width:155px; height:23px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=today>
+
+<input name="current_user_fname_lname" id="current_user_fname_lname" type="text" class="noborder" style="position:absolute; left:456px; top:318px; width:177px; height:15px; font-family:sans-serif; font-size:14px; background:transparent;" >
+
+<input name="Discipline" id="fp" type="radio" style="position:absolute; left:433px; top:347px;">
+<input name="Discipline" id="ob" type="radio" style="position:absolute; left:465px; top:347px;">
+<input name="Discipline" id="rn" type="radio" style="position:absolute; left:502px; top:347px;">
+<input name="Discipline" id="np" type="radio" style="position:absolute; left:536px; top:347px;">
+<input name="Discipline" id="rm" type="radio" style="position:absolute; left:572px; top:347px;">
+
+<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class="noborder" style="position:absolute; left:496px; top:376px; width:135px; height:16px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=current_user_ohip_no>
+
+<input name="addressline" id="addressline" type="text" class="noborder" style="position:absolute; left:185px; top:431px; width:470px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=addressline>
+
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:155px; top:461px; width:200px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=cell>
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:440px; top:461px; width:215px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=phone>
+
+<input name="phone2" id="phone2" type="text" class="noborder" style="position:absolute; left:165px; top:490px; width:190px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=phone2>
+<input name="email" id="email" type="email" class="noborder" style="position:absolute; left:450px; top:490px; width:205px; font-family:sans-serif; font-size:14px; background:transparent;" oscarDB=email>
+
+<textarea name="drugList" id="drugList" type="text" class="noborder" style="position:absolute; left:90px; top:670px; width:285px; height:32px; resize:none; font-family:sans-serif; font-size:12px; background:transparent;" oscarDB=druglist_line></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:65px; top:672px;" onclick="changeFontSize('drugList', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:65px; top:687px;" onclick="changeFontSize('drugList', -1);">&#9660;</span>
+
+<textarea name="allergies" id="allergies" type="text" class="noborder" style="position:absolute; left:380px; top:670px; width:280px; height:32px; resize:none; font-family:sans-serif; font-size:12px; background:transparent;" oscarDB=allergies_des_no_archived></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:665px; top:672px;" onclick="changeFontSize('allergies', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:665px; top:687px;" onclick="changeFontSize('allergies', -1);">&#9660;</span>
+
+<textarea name="comments" id="comments" type="text" class="noborder" style="position:absolute; left:90px; top:735px; width:570px; height:144px; resize:none; font-family:sans-serif; font-size:16px; background:transparent;"></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:665px; top:737px;" onclick="changeFontSize('comments', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:665px; top:752px;" onclick="changeFontSize('comments', -1);">&#9660;</span>
+
+<a id="InletBirth2" class="DoNotPrint" style="position:absolute; left:85px; top:903px; width:185px; height:20px;" href="http://inletbirth.ca/" target="_blank" title="Website"></a>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:80px; top:950px;">
+	<table><tr><td style="background: #e5f2ff;">
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="releaseDirtyFlag(); setTimeout('document.FormName.submit()',2000);"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag(); SubmitButton.click();"> 
+	 </td></tr></table>
+</div>
+
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d", showsTime:false, button : "today" } );
+</script>
+
+</body>
+</html>

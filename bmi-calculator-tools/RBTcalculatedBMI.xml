@@ -1,0 +1,106 @@
+<report title="Calculate BMI" description="Create patient lists based on age, adult height, weight and calculated BMI Version 2" active="1">
+<query>
+		SELECT 
+			first_name, 
+			last_name, 
+			FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				NOW() ) ) / 365.25 ) as "Age",
+			CONCAT( "<a  target='_blank' href=../../oscarEncounter/IncomingEncounter.do?appointmentNo=&demographicNo=",d.demographic_no,"&curProviderNo=&reason=Tel-Progress+Note&encType=&curDate=",
+				CURDATE(),"&appointmentDate=&startTime=&status=>",d.demographic_no,"<a/>" ) AS "eChart" ,
+			d.phone as "Phone",
+			(select value FROM demographicExt de WHERE de.demographic_no=d.demographic_no AND de.key_val="demo_cell" limit 1) as "Cell",
+			ROUND(BMI.dataField,1) as "BMI",
+			IFNULL(IF(HT.dataField>0,ROUND(10000*WT.dataField/(HT.dataField*HT.dataField),1),''),'') as "cBMI",
+			IFNULL( DATE_FORMAT( WT.dateObserved, '%m-%d-%Y' ), '') as "date"
+
+		FROM demographic d 
+
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = "BMI"
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                	AND m1.demographicNo = m2.demographicNo
+					AND m1.type = "BMI"
+                                	ORDER BY m1.id DESC
+
+				) BMI 
+				ON (d.demographic_no = BMI.demographicNo)
+			
+
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = "HT"
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                        AND m1.demographicNo = m2.demographicNo
+					AND m1.type = "HT"
+                                        ORDER BY m1.id DESC
+				) HT 
+				ON (d.demographic_no = HT.demographicNo)
+
+				LEFT JOIN ( 
+					SELECT m1.id, m1.dataField, m1.demographicNo, m1.dateObserved
+                                        FROM measurements m1
+                                        RIGHT JOIN (
+						SELECT demographicNo, MAX(DateObserved) as dateObserved
+                                                FROM measurements
+                                                WHERE type = "WT"
+                                                AND demographicNo > 0
+                                                GROUP BY demographicNo
+                                        ) m2
+					ON m1.dateObserved = m2.dateObserved
+                                        AND m1.demographicNo = m2.demographicNo
+					AND m1.type = "WT"
+                                        ORDER BY m1.id DESC
+
+				) WT 
+				ON (d.demographic_no = WT.demographicNo)
+			
+	
+		
+			WHERE d.patient_status='AC'
+			AND 
+			(("{provider}" = "ALL")
+				OR
+			("{provider}" = d.provider_no))
+			AND d.demographic_no > 0 
+			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				NOW() ) ) / 365.25 ) >= 18 )
+			AND ( FLOOR( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), 
+				HT.dateObserved ) ) / 365.25 ) >= 18 )
+
+			GROUP BY d.demographic_no HAVING COUNT(d.demographic_no) > -1
+			ORDER BY (CASE WHEN '{sort}' = 'last_name'  THEN CONCAT(d.last_name,d.first_name)  END) ASC,
+         			(CASE WHEN '{sort}' = 'age'  THEN DATE(CONCAT(d.year_of_birth, "-", d.month_of_birth, "-", d.date_of_birth)) END) ASC,	
+         			(CASE WHEN '{sort}' = 'cBMI'  THEN ROUND(cBMI*10,0) END) DESC
+</query>
+
+<param id="provider" type="list" description="Provider"> 
+    <param-query> ( SELECT provider_no, CONCAT(first_name,' ',last_name) AS name
+                    FROM provider where provider_type='doctor' and status=1 and ohip_no!='' AND provider_no <180)
+                  UNION 
+                  ( SELECT 'ALL', ' All providers' )
+                  ORDER BY name ;
+    </param-query>  </param>
+
+   <param id="sort" type="list" description="Sort by Name Age or BMI">
+      <choice id="cBMI">BMI</choice>
+      <choice id="last_name">Last Name</choice>
+      <choice id="age">Age</choice>
+   </param>
+
+
+</report>

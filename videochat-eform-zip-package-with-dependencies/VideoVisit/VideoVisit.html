@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<!-- Video e-Platform (Jitsi Meet OSCAR Integration) Courtesy of OscarOntario and Get Well Clinic 
+Original Design by KC Lai (v.1.1-2020.11.27)
+-->
+<TITLE>Video e-Platform by OscarON</TITLE>
+
+<script language="javascript">
+// IMPORTANT: EDIT THESE SETTINGS to customize before implementing in a production server //
+server='meet.jit.si';     <!-- Enter your private Jitsi Meet server for more security, exercise caution if using the public Jitsi server (for demonstration purposes) -->
+salt='oscar';             <!-- Enter a different secret word to salt the scrambled video link URL -->
+intro='Patient';     <!-- Enter any word with first letter capitalized to start you meeting room name -->
+clinicname='Medical Clinic'     <!-- Enter your Clinic Name for the email template -->
+instructions='Please do not reply. We do not monitor this email. Thanks! '        <!-- Enter any further instructions to paste in the email template -->
+disclaimer='Electronic communication is not a substitute for in-person communication or clinical examinations with a doctor, where appropriate, or for attending the Emergency Department when needed (including for any urgent care that may be required). Please understand that any communications through email, text, or video-conferencing has inherent security and privacy risks. By using this service, you understand and accept these risks. As much as possible, you endeavor to engage in safe communication practices. We cannot guarantee confidentiality when communicating with insecure methods.'
+</script>
+
+<!-- Disclaimer 
+eFORM DISCLAIMER: As is: eForms are shared as-is, on a share-alike basis with absolutely no guarantee or warranty. No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control. Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. This applies to both eForms shared by others, and those created by users themselves. Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm. Free: eForms so shared may not be sold or purchased. Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms. eForms are not part of the OSCAR core program functionality and code base. For this reason eForms are not subject to provincial validation testing and conformance criteria. eForms are also not subject to the ISO production process for OSCAR.
+-->
+
+<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script language="javascript" type="text/javascript" src="https://www.myersdaily.org/joseph/javascript/md5.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}md5.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_javascript_path}eforms/APCache.js"></script>
+
+<script language="javascript" type="text/javascript">
+
+function maximize() {
+        var width=900;
+        var height=925
+	window.resizeTo(width,height) ; // width, height
+	loads=false;
+}
+
+function CollectEmail(){
+	var email = document.getElementById("PatientEmail").value;
+	//alert(email);
+	return email;
+}
+
+function CollectCurrentUser(){
+	var currentuser = document.getElementById("CurrentUserName").value;
+	return currentuser;
+}
+
+function CollectToday(){
+	var today = document.getElementById("Today").value;
+	return today;
+}
+
+function CollectTime(){
+	var time = document.getElementById("Time").value;
+	return time;
+}
+
+function CollectPatient(){
+	var patientname = document.getElementById("PatientName").value;
+	return patientname;
+}
+
+function CollectDemographicNo(){
+	var demographicno = document.getElementById("DemographicNo").value;
+	return demographicno;
+}
+
+function CollectDob(){
+	var birthday = document.getElementById("Dob").value;
+	return birthday;
+}
+
+function CollectPhone(){
+	var phone = document.getElementById("Phone").value;
+	return phone;
+}
+
+function CollectCell(){
+	var cellphone = document.getElementById("CellPhone").value;
+	return cellphone;
+}
+
+function SwitchDate(){
+	var switchdate=document.getElementById("AppDate").value;
+	return switchdate;
+}
+</script>
+
+</HEAD>
+<BODY onload="maximize();" style="background-color:#e6f3ff">
+<!-- Important Oscar variables for this form -->
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="PatientEmail" id="PatientEmail" oscarDB=email>
+<input type="hidden" name="Today" id="Today" oscarDB=today>
+<input type="hidden" name="Time" id="Time" oscarDB=time>
+<input type="hidden" name="PatientName" id="PatientName" oscarDB=patient_name>
+<input type="hidden" name="DemographicNo" id="DemographicNo" oscarDB=patient_id>
+<input type="hidden" name="Dob" id="Dob" oscarDB=dob>
+<input type="hidden" name="Phone" id="Phone" oscarDB=phone>
+<input type="hidden" name="CellPhone" id="CellPhone" oscarDB=cell>
+
+<a href="https://oscaron.ca" border="no" target="_blank"><img src="https://oscaron.ca/images/eform/oscaron-transparent-eform.gif" align="left" width=75px></a>
+<a href="https://www.facebook.com/groups/oscarontario" border="no" target="_blank"><img src="https://oscaron.ca/images/eform/oscarontario-eform.png" align="right" width=150px></a>
+<H1>Video e-Platform by OscarON</H1>
+
+
+<!-- Work in progress
+Appointment Date:&nbsp;&nbsp;&nbsp;&nbsp; <input type="date" name="AppDate" id="AppDate" oscarDB=today>
+<input type="button" value="ChangeDate" id="ChangeDate" onClick="SwitchDate();">
+-->
+
+<script language="javascript" type="text/javascript">
+var currentuser=CollectCurrentUser();
+var linkcurrentuser=CollectCurrentUser().toUpperCase();
+var videodate=CollectToday();
+<!-- var videodate=SwitchDate(); -->
+var demono=CollectDemographicNo();
+var email=CollectEmail();
+var linkemail=CollectEmail().toUpperCase();
+var patientname=CollectPatient();
+var birthday=CollectDob();
+var phone=CollectPhone();
+var cellphone=CollectCell();
+var unique=currentuser+videodate+patientname+salt;
+var code=md5(unique);
+var link='https://'+server+'/'+intro+code;
+document.write('Today: '+videodate+'&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; PROVIDER: '+currentuser+' <P />');
+document.write('<a href="' + link + '" target="_blank"><B>Video Conference</B></a><BR />');
+document.write('Patient (No.): <B>'+patientname+'</B> ('+demono+') &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; Date of Birth: '+birthday+'<BR />');
+document.write('Email: <a href="mailto:'+email+'?subject=Virtual Visit Link for '+clinicname+'&body=Dear '+patientname+'%0D%0A%0D%0AThis is your e-visit video link for your appointment at '+clinicname+' on '+videodate+'.%0D%0A%0D%0A'+link+'%0D%0A%0D%0A Please click the above link to start your video connection.%0D%0A%0D%0A'+instructions+'%0D%0A%0D%0A Sincerely, %0D%0A%0D%0A'+clinicname+'%0D%0A%0D%0A TROUBLESHOOTING: %0D%0APlease use Firefox or Chrome web browser. If your default browser is different, please copy and paste the link in Firefox or Chrome.%0D%0A If you are using a smart phone or an iPad, be sure to download and install Jitsi Meet app, and then try to click the above link again.%0D%0A%0D%0A-----Disclaimer-----%0D%0A'+disclaimer+' " target="_blank">'+email+'</a>');
+document.write('&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp Phone: '+phone+' &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; Mobile: '+cellphone+'<BR />');
+document.write('<iframe allow="microphone; camera; fullscreen;" frameborder="0" height="600" width="100%" scrolling="no" src="' + link + '"></iframe>');
+</script>
+
+<P style="text-align:right;">[ Remember to enable Lobby feature and add a Room Password for added Security Options ]</P>
+<I>KC Version v.1-2020.11.26&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;(eForm Commissioned by:<a href="https://www.getwellclinic.ca" border="no" target="_blank"><img src="https://oscaron.ca/images/eform/shc-gwc-circle-eform.png" height=30px align="center"></a> Get Well Clinic)</I><BR />
+<!-- Disclaimer 
+eFORM DISCLAIMER: As is: eForms are shared as-is, on a share-alike basis with absolutely no guarantee or warranty. No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control. Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. This applies to both eForms shared by others, and those created by users themselves. Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm. Free: eForms so shared may not be sold or purchased. Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms. eForms are not part of the OSCAR core program functionality and code base. For this reason eForms are not subject to provincial validation testing and conformance criteria. eForms are also not subject to the ISO production process for OSCAR.
+-->
+</BODY>

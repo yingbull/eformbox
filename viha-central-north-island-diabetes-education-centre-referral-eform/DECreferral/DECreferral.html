@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>North Island DEC Referral 2022</title>
+
+<!-- v22.1.1, initial build of the form by Gunther Klein 09-Jan-2022 -->
+<!-- v22.1.2, added accordion side panel 09-Jan-2022 /gk -->
+<!-- v22.1.3, added text paste buttons to accordion drawers 11-Jan-2022  /gk -->
+<!-- v22.3.1, minor bug fixes and added text paste options for insulin 16-Mar-2022  /gk -->
+<!-- v22.3.3, added city site selection menu and the second page attachment show/hide for extra text 18-Mar-2022  /gk -->
+<!-- v22.3.4, added an addressline field for pt address, CSS and formatting tweaks 19-Mar-2022 /gk -->
+
+<!-- E-FORM DISCLAIMER: 
+	Licensing: This eForm was developed by Gunther Klein, and is distributed under the Creative Commons, Attribution-ShareAlike 3.0 Unported Licenses (CC BY-SA 3.0)
+	As is: eForms are shared as-is, free of charge on a share-alike basis 
+	with absolutely no guarantee or warranty. 
+	No Quality Control: The author does not vet any eForms 
+	and does not purport to apply any manner of quality control. 
+	Responsibility: The responsibility for the clinical and medical-legal consequences 
+	of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. 
+	This applies to both eForms shared by others, and those created by users themselves. 
+	Attribution: eForms are shared freely among the user community, 
+	with attribution to the original author of the eForm. 
+	Free: eForms so shared may not be sold or purchased. 
+	Provincial validation:  eForms are optional and non-essential add-ons, 
+	separate from OSCAR, and with their own license terms.
+	eForms are not part of the OSCAR core program functionality and code base. 
+	For this reason eForms are not subject to provincial validation testing and conformance criteria.
+	eForms are also not subject to the ISO production process for OSCAR. -->
+
+
+<style type="text/css" media="screen" >
+
+	.Show{
+		visibility: visible;
+		display: block;
+	}
+	.Hide{
+		visibility: hidden;
+		display: none;
+	}
+
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+ .sig {
+	border: 2px dotted blue;
+	color: Black;
+	background-color: white;
+	cursor: crosshair;
+ }
+
+	 .noborder {
+		border : 0px solid black;
+		background-color: transparent;
+		padding: 3px;
+		overflow: auto;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 1px solid lightgray;
+		background-color: #e6f2ff;
+		padding: 2px;
+		overflow: auto;
+		resize: none;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 11px;
+		height: 11px;
+		font-size: 11px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		cursor: pointer;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+
+	#Sidepanel {
+		position:absolute; 
+		left:860px; 
+		top:50px; 
+		min-width: 500px; 
+		width: auto;
+		height: auto; 
+		padding:20px 40px 50px; 
+		background:#eeeeee; 
+		border:3px solid #4984b4;
+	}
+	p {
+		font: bold 14px Arial, sans-serif;
+		color: #444;
+		text-decoration: none;
+		padding: none;
+	}
+
+	a:link {	
+	 	font: normal 14px/20px Arial, sans-serif;			
+		color: black; 
+		text-decoration: none; 	
+		padding: 8px;
+	} 
+	a:visited { 
+		color: indigo;
+	}
+	a:hover {
+		color: blue;	
+		font-weight: normal;
+		text-decoration: underline;
+	}
+	a:active {
+		font-weight: bold;
+	}
+
+	.lab_button {
+		font: normal 12px Arial, sans-serif;
+		color: green
+	}
+
+	.sidebutton {
+		background-color: transparent;
+	  	border: none;
+	 	color: black;
+	 	text-align: left;
+	 	text-decoration: none;
+		display: inline-block;
+	 	font: normal 14px/20px Arial, sans-serif;
+	 	margin: none;
+		padding: none;
+		cursor: pointer;
+	} 
+	.sidebutton:hover {
+		font-weight: normal;
+		text-decoration: underline;	
+	}
+	.sidebutton:active {
+		font-weight: bold;
+		color: darkgreen;
+		}
+	.sidebuttongreen {
+		background-color: transparent;
+	 	color: black;
+		border: none;
+	 	text-align: left;
+	 	text-decoration: none;
+		display: inline-block;
+	 	font: normal 14px/22px Arial, sans-serif;
+	 	margin: none;
+		padding: none;
+		cursor: pointer;
+		width: 95%;
+		} 
+	.sidebuttongreen:hover {
+			background-color: #e6f2ff;
+			outline: 0.5px solid  #4984b4;
+			font-weight: normal;
+			text-decoration: none;
+	}
+	.sidebuttongreen:active {
+		font-weight: bold;
+	}
+
+	.sidebuttonreset {
+		background-color: transparent;
+	  	border: none;
+	 	color: black;
+	 	text-align: left;
+	 	text-decoration: none;
+		display: inline-block;
+	 	font: normal 14px/22px Arial, sans-serif;
+	 	margin: none;
+		padding: none;
+		cursor: pointer;
+		width: 95%;
+	} 
+	.sidebuttonreset:hover {
+		background-color: #eeeeee;
+		outline: 0.5px solid grey;
+		font-weight: normal;
+		text-decoration: none;
+	}
+	.sidebuttonreset:active {
+		color:red;
+	}
+
+	.historybuttons {
+		background-color: transparent;
+	 	color: black;
+		border: none;
+	 	text-align: left;
+	 	text-decoration: none;
+		display: inline-block;
+	 	font: normal 14px/22px Arial, sans-serif;
+	 	margin: none;
+		padding: none;
+		cursor: pointer;
+		width: 75%;
+	} 
+	.historybuttons:hover {
+		background-color: #e6f2ff;
+		outline: 0.5px solid #4984b4;
+		font-weight: normal;
+		text-decoration: none;
+	}
+	.historybuttons:active {
+		font-weight: bold;
+	}
+	.historybuttonsreset {
+		background-color: transparent;
+	  	border: none;
+	 	color: black;
+	 	text-align: center;
+	 	text-decoration: none;
+		display: inline-block;
+	 	font: normal 14px/22px Arial, sans-serif;
+	 	margin: none;
+		padding: none;
+		cursor: pointer;
+		width: 15%;
+	} 
+	.historybuttonsreset:hover {
+		background-color: #eeeeee;
+		outline: 0.5px solid grey;
+		font-weight: normal;
+		text-decoration: none;
+	}
+	.historybuttonsreset:active {
+		color: red;
+	}
+
+	.sidepaneltextbox {
+		position:relative; 
+		height: 400px; 
+		min-width:95%; 
+		padding:10px; 
+		background:white;
+		overflow: auto;
+		resize: both;
+		border : 1px solid lightgray;
+		font: normal 13px Arial sans-serif;
+		text-align:left;
+	}
+	li {
+		vertical-align: middle;
+		padding:1px;
+		list-style-type: none;
+	}
+
+	/* Drawing the 'gripper' for touch-enabled devices */
+	html.touch #content {
+		float: left;
+		width: 92%;
+	}
+	html.touch #scrollgrabber {
+		float: right;
+		width: 4%;
+		margin-right: 2%;
+		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+	}
+		html.borderradius #scrollgrabber {
+			border-radius: 1em;
+		 }
+
+	textarea {resize: none;}
+	
+	#pg2container { 
+		width: 720px;
+		height: auto; 
+		padding:10px 30px 40px; 
+		background:#eeeeee; 
+		border:1px solid #4984b4;
+		}
+</style>
+
+
+
+<style type="text/css" media="print">
+
+	.Show{
+		visibility: visible;
+		display: block;
+	}
+	.Hide{
+		visibility: hidden;
+		display: none;
+	}
+
+ 	.DoNotPrint {
+		display: none;
+ 	}
+
+ 	.sig {
+		border-style: solid;
+		border-color: transparent;
+		color: Black;
+		background-color: transparent;
+ 	}
+	.noborder {
+		border : 0px;
+		background: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	.border {
+		border : 0px;
+		background-color: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	 #DECfax {background-color: white;}
+
+
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+
+ </style>
+
+<!-- style script to blank out placeholders on printout -->
+<style>
+@media print {
+  ::-webkit-input-placeholder { 
+      color: transparent;
+  }
+  :-moz-placeholder { 
+      color: transparent;
+  }
+  ::-moz-placeholder { 
+      color: transparent;
+  }
+  :-ms-input-placeholder { 
+      color: transparent;
+  }
+}
+</style>
+
+<!-- style script for the accordion boxes -->
+<style>
+	.accordion {
+		background-color: #eee;
+		color: #444;
+		cursor: pointer;
+		padding: 12px;
+		width: 100%;
+		border: none;
+		text-align: left;
+		outline: none;
+		font-size: 14px;
+		font-weight: bold;
+		transition: 0.6s;
+	}
+
+	.active, .accordion:hover {
+		background-color: #ccc;
+		font-weight: bold;
+	}
+
+	.accordion:after {
+		content: '\002B';
+		color: #777;
+		float: right;
+		margin-left: 5px;
+	}
+
+	.active:after {
+		content: "\2212";
+	}
+
+	.panel {
+		padding: 0 18px;
+		background-color: #F8F8F8;
+		border: 1px solid lightgrey;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 1.1s ease-out;
+	}
+</style>
+
+<!-- Enable Links to other areas of Oscar -->
+<script language="javascript" src="${oscar_image_path}onBodyLoad_Dec2019.js"></script>
+<script language="javascript1.2" type="text/javascript" src="onBodyLoad_Dec2019.js"></script>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+
+<!-- jQuery for parent-child and radio fields -->
+<script>
+$(document).ready(function() {
+	$('[class^="child-"]').hide();
+	$('.parent-field').click(function() {
+		$('[class^="child-"]').hide();
+		$('.parent-field').each(function() {
+			if ( $(this).is('input:checkbox') ){
+				if(this.checked){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+			if ( $(this).is('input:text') ){
+				if($(this).val()=='X'){
+					$('.child-' +  $(this).prop('id')).show();
+				}else{
+				$('.child-' + $(this).val()).show();
+				}
+			}
+		});
+	});
+	$('[class^="only-one-"]').click(function() {
+		if ( $(this).is('input:checkbox') ){
+			$('.'+$(this).attr('class')).prop('checked', false);
+			$(this).prop('checked', true);
+		}
+
+		if ( $(this).is('input:text') ){
+			$('.'+$(this).attr('class')).val('');
+			$( this ).val('X');
+		}
+	});
+});
+</script>
+
+<!-- Freeform Signatures -->
+
+
+<!-- jSignature file for local testing outside of OSCAR -->
+<script type="text/javascript" src="jSignature.min.js"></script>
+
+<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();loadSig();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="page-break-after:always; position:relative;">
+<img id="BGImage1" src="${oscar_image_path}CR_DiabetesEducationReferralForm_v2022.1.png" style="position: relative; left: 0px; top: 0px; width:825px">
+
+<!-- Hidden input for adding PMHx -->
+<input type="hidden" name="PMHx_Hx" id="PMHx_Hx" oscarDB=medical_history>
+<input type="hidden" name="Social_Hx" id="Social_Hx" oscarDB=social_family_history>
+<input type="hidden" name="Ongoing_Hx" id="Ongoing_Hx" oscarDB=ongoingconcerns>
+<input type="hidden" name="Reminders_Hx" id="Reminders_Hx" oscarDB=reminders>
+<input type="hidden" name="Riskfactors_Hx" id="Riskfactors_Hx" oscarDB=risk_factors_json>
+<input type="hidden" name="Family_Hx" id="Family_Hx" oscarDB=family_history_json>
+<input type="hidden" name="dxregistry_Hx" id="dxregistry_Hx" oscarDB=dxregistry>
+<input type="hidden" name="medlist" id="medlist" oscarDB=druglist_line>
+<input type="hidden" name="medlist_generic" id="medlist_generic" oscarDB=druglist_generic>
+<input type="hidden" name="medlist_recent" id="medlist_recent" oscarDB=recent_rx>
+<input type="hidden" name="othermeds" id="othermeds" oscarDB=other_medications_history>
+<input type="hidden" name="allergies" id="allergies" oscarDB=allergies_des_no_archived>
+<!-- end of hidden inputs -->
+
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:254px; top:879px;  width:200px; height:50px; z-index:10;">
+	</div>
+
+	<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<!-- site selection fields -->
+<input name="DECsite" id="DECsite" type="text" class=" noborder" style="position:absolute; left:218px; top:60px; width:380px; height:20px; font-size:19px; font-weight:normal; text-align:center; background:white;"  value="North &#47; Central Island">
+
+<input name="DECfax" id="DECfax" type="text" class=" border" style="position:absolute; left:218px; top:132px; width:380px; height:20px; font-size:13px; font-weight:normal; text-align:center;" placeholder="double click here or use side menu for DEC site selection" list="Local" 
+		onFocus="document.getElementById('siteselectionmenu').click()"
+		onBlur="document.getElementById('siteselectionmenu').click()">
+
+		<datalist id="Local">
+			<option value="Please fax to Campbell River DEC (250) 286-7103">Campbell River</option>
+			<option value="Please fax to Comox Valley DEC (250) 331-5903">Comox Valley</option>
+			<option value="Please fax to Duncan &#47; Ladysmith DEC (250) 737-2033">Duncan&#47;Ladysmith DEC</option>
+			<option value="Please fax to Mt Waddington DEC (250) 956-6813">Mt Waddington</option>
+			<option value="Please fax to Nanaimo DEC (250) 716-7711">Nanaimo DEC</option>
+			<option value="Please fax to Nanaimo Inpatients DEC (250) 739-5855">Nanaimo Inpatients</option>
+			<option value="Please fax to Parksville DEC (250) 951-9516">Parksville</option>
+			<option value="Please fax to Port Alberni DEC (250) 724-8848">Port Alberni</option>
+			<option value="Please fax to Tofino DEC (250) 724-8848">Tofino</option>
+		</datalist>
+
+<!-- end of site selection boxes -->
+
+<span name="DateOfReferral" id="DateOfReferral" type="text" class=" noborder" style="position:absolute; left:58px; top:154px; width:70px; height:16px;">Date: </span>
+<input name="today" id="today" type="text" class=" noborder" style="position:absolute; left:107px; top:154px; width:75px; height:16px;"  oscarDB=today>
+
+<input name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:107px; top:178px; width:240px; height:16px; font-weight:bold;"  oscarDB=first_last_name>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:107px; top:196px; width:125px; height:16px; font-weight:bold;"  oscarDB=phone>
+<input name="cell" id="cell" type="text" class=" noborder" style="position:absolute; left:239px; top:196px; width:125px; height:16px; font-weight:bold;"  oscarDB=cell>
+<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:107px; top:214px; width:125px; height:16px; "  oscarDB=hinc>
+<input name="addressline" id="addressline" type="text" class=" noborder" style="position:absolute; left:107px; top:232px; width:435px; height:16px;"  oscarDB=addressline>
+
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:502px; top:178px; width:125px; height:16px; "  oscarDB=dobc>
+<input name="current_user" id="current_user" type="text" class=" noborder" style="position:absolute; left:551px; top:196px; width:182px; height:16px; font-weight:bold;"  oscarDB=current_user>
+<textarea name="FP" id="FP" type="text" class="border"  placeholder="Specify FP (if different from above):" style="position:absolute; left:551px; top:215px; width:177px; height:28px;" oscarDB=referral_name></textarea>
+
+<textarea name="Comments" id="Comments" type="text" class=" border" style="position:absolute; left:48px; top:282px; width:686px; height:55px; " ></textarea>
+
+<input name="NewDxY" id="NewDxY" type="text" class="only-one-newdiagnosisbox" style="position:absolute; left:165px; top:346px;" >
+<input name="NewDxN" id="NewDxN" type="text" class="only-one-newdiagnosisbox" style="position:absolute; left:224px; top:346px;" >
+
+<input name="m$A1C#value" id="m$A1C#value" type="text" class=" border" style="position:absolute; left:209px; top:362px; width:44px; height:16px; "  oscarDB=m$A1C#value>
+<input name="m$A1C#dateObserved" id="m$A1C#dateObserved" type="text" class=" border" style="position:absolute; left:262px; top:362px; width:68px; height:16px; font-size:11px;"  oscarDB=m$A1C#dateObserved>
+<input name="m$FBS#value" id="m$FBS#value" type="text" class=" border" style="position:absolute; left:372px; top:362px; width:44px; height:16px; "  oscarDB=m$FBS#value>
+<input name="m$FBS#dateObserved" id="m$FBS#dateObserved" type="text" class=" border" style="position:absolute; left:433px; top:362px; width:68px; height:16px; font-size:11px; "  oscarDB=m$FBS#dateObserved>
+<input name="GTT7" id="GTT7" type="text" class=" border" style="position:absolute; left:611px; top:362px; width:44px; height:16px; " >
+<input name="GTTdate8" id="GTTdate8" type="text" class=" border" style="position:absolute; left:675px; top:362px; width:68px; height:16px; font-size:11px;" >
+
+
+<input name="insulinstart9" id="insulinstart9" type="text" class="Xbox" style="position:absolute; left:49px; top:405px;" >
+<input name="insulinstartdose10" id="insulinstartdose10" type="text" class=" border" style="position:absolute; left:150px; top:438px; width:122px; height:16px; " >
+<input name="insulinstarttype11" id="insulinstarttype11" type="text" class=" border" style="position:absolute; left:317px; top:438px; width:91px; height:16px; " placeholder="click here!" list="Insulin">
+
+		<datalist id="Insulin">
+			<option value="Aspart">NovoRapid</option>
+			<option value="Glulisine">Apidra</option>
+			<option value="Lispro">Humalog</option>
+			<option value="Humulin R">Humulin R</option>
+			<option value="Toronto">Toronto</option>
+			<option value="Humulin N">Humulin N</option>
+			<option value="NPH">NPH</option>
+			<option value="Humulin 30/70">Humulin 30/70</option>
+			<option value="Detemir">Levemir</option>
+			<option value="Glargine">Lantus&#47;Basaglar</option>
+		</datalist>
+
+
+
+<input name="insulinadjust12" id="insulinadjust12" type="text" class=" border" style="position:absolute; left:97px; top:477px; width:50px; height:16px; " >
+<input name="insulinadjustby13" id="insulinadjustby13" type="text" class=" border" style="position:absolute; left:222px; top:477px; width:33px; height:16px; " >
+<input name="insulinadjustdays14" id="insulinadjustdays14" type="text" class=" border" style="position:absolute; left:333px; top:477px; width:31px; height:16px; " >
+
+<input name="Type1DM15" id="Type1DM15" type="text" class="Xbox" style="position:absolute; left:413px; top:405px;" >
+<textarea name="InsulinRoutine16" id="InsulinRoutine16" type="text" class=" border" style="position:absolute; left:415px; top:457px; width:352px; height:40px; " ></textarea>
+
+<input name="t2dm" id="t2dm" type="text" class="only-one-DMtypebox" style="position:absolute; left:51px; top:520px; 	 	" >
+<input name="prediabetes" id="prediabetes" type="text" class="only-one-DMtypebox" style="position:absolute; left:153px; top:520px;" >
+
+<input name="Dietonly" id="Dietonly" type="text" class="only-one-DMRxbox" style="position:absolute; left:65px; top:577px;" >
+
+<input name="oralagents" id="oralagents" type="text" class="only-one-DMRxbox" style="position:absolute; left:65px; top:595px;" 
+		onfocus="
+				document.getElementById('oralagents38').style.outline = '2px solid gold'
+		">
+<textarea name="oralagents38" id="oralagents38" type="text" class="border" style="position:absolute; left:65px; top:612px; width:338px; height:30px; " 
+		onblur="
+				document.getElementById('oralagents38').style.outline = '0px'
+		"></textarea>
+
+<input name="InsulinRoutine26" id="InsulinRoutine26" type="text" class="Xbox" style="position:absolute; left:65px; top:651px;"
+		onfocus="
+				document.getElementById('insulinroutine39').style.outline = '2px solid gold'
+		" >
+<textarea name="insulinroutine39" id="insulinroutine39" type="text" class=" border" style="position:absolute; left:65px; top:668px; width:338px; height:47px; " 
+		onblur="
+				document.getElementById('insulinroutine39').style.outline = '0px'
+		"></textarea>
+
+<input name="DMpreg" id="DMpreg" type="text" class="only-one-DMtypebox" style="position:absolute; left:415px; top:520px;" 
+		onfocus="
+				document.getElementById('T1D').style.outline = '3px solid gold'
+				document.getElementById('T2D').style.outline = '3px solid gold'
+				document.getElementById('GDM').style.outline = '3px solid gold'
+				document.getElementById('prepreg').style.outline = '3px solid gold'
+				">
+<input name="T1D" id="T1D" type="text" class="only-one-DMpregbox" style="position:absolute; left:415px; top:539px;"
+		onfocus="
+				document.getElementById('T1D').style.outline = '0px'
+				document.getElementById('T2D').style.outline = '0px'
+				document.getElementById('GDM').style.outline = '0px'
+				document.getElementById('prepreg').style.outline = '0px'
+				">
+<input name="T2D" id="T2D" type="text" class="only-one-DMpregbox" style="position:absolute; left:462px; top:539px;"
+		onfocus="
+				document.getElementById('T1D').style.outline = '0px'
+				document.getElementById('T2D').style.outline = '0px'
+				document.getElementById('GDM').style.outline = '0px'
+				document.getElementById('prepreg').style.outline = '0px'
+				">
+<input name="GDM" id="GDM" type="text" class="only-one-DMpregbox" style="position:absolute; left:510px; top:539px;"
+		onfocus="
+				document.getElementById('T1D').style.outline = '0px'
+				document.getElementById('T2D').style.outline = '0px'
+				document.getElementById('GDM').style.outline = '0px'
+				document.getElementById('prepreg').style.outline = '0px'
+				"	>
+<input name="prepreg" id="prepreg" type="text" class="Xbox" style="position:absolute; left:564px; top:539px;"
+		onfocus="
+				document.getElementById('T1D').style.outline = '0px'
+				document.getElementById('T2D').style.outline = '0px'
+				document.getElementById('GDM').style.outline = '0px'
+				document.getElementById('prepreg').style.outline = '0px'
+				">
+
+<input name="Ptref27" id="Ptref27" type="text" class="Xbox" style="position:absolute; left:415px; top:598px;"
+		onfocus="
+				document.getElementById('Endocrinologist').style.outline = '2px solid gold'
+				document.getElementById('Obgyn').style.outline = '2px solid gold'
+				">
+<input name="Endocrinologist" id="Endocrinologist" type="text" class=" border" style="position:absolute; left:545px; top:614px; width:223px; height:16px;"
+		onfocus="			
+				document.getElementById('Obgyn').style.outline = '0px'
+				"
+		onblur="			
+				document.getElementById('Endocrinologist').style.outline = '0px'
+				" >
+<input name="Obgyn" id="Obgyn" type="text" class=" border" style="position:absolute; left:545px; top:636px; width:223px; height:16px;"  
+		onfocus="			
+				document.getElementById('Endocrinologist').style.outline = '0px'
+				"
+		onblur="			
+				document.getElementById('Obgyn').style.outline = '0px'
+				" >
+
+<input name="EDCbox28" id="EDCbox28" type="text" class="Xbox" style="position:absolute; left:415px; top:657px;" >
+<input name="EDC" id="EDC" type="text" class=" border" style="position:absolute; left:464px; top:655px; width:76px; height:16px; " oscarDB=m$EDC#value >
+
+<textarea name="dateofGTTdxlabs41" id="dateofGTTdxlabs41" type="text" class=" border" style="position:absolute; left:415px; top:695px; width:353px; height:22px; " ></textarea>
+
+<input name="barriers30" id="barriers30" type="text" class="Xbox" style="position:absolute; left:182px; top:748px;" >
+<input name="barriers31" id="barriers31" type="text" class="Xbox" style="position:absolute; left:255px; top:748px;" >
+<input name="barriers32" id="barriers32" type="text" class="Xbox" style="position:absolute; left:315px; top:748px;" >
+<input name="barriers33" id="barriers33" type="text" class="Xbox" style="position:absolute; left:399px; top:748px;" >
+<input name="barriers34" id="barriers34" type="text" class="Xbox" style="position:absolute; left:457px; top:748px;" >
+<input name="barriers35" id="barriers35" type="text" class="Xbox" style="position:absolute; left:572px; top:748px;" >
+
+<textarea name="barriersNotes36" id="barriersNotes36" type="text" class="border" style="position:absolute; left:49px; top:782px; width:724px; height:45px; " ></textarea>
+<textarea name="OtherMedicationsField" id="OtherMedicationsField" type="text" class="border" style="position:absolute; left:165px; top:836px; width:607px; height:16px; "  ></textarea>
+<input name="otherhealth37" id="otherhealth37" type="text" class=" border" style="position:absolute; left:260px; top:856px; width:512px; height:16x; " >
+
+<!-- E-signed text stamp buttons -->
+	<textarea name="eSigned" id="eSigned" type="text" class="DoNotPrint" style="position:absolute; left:254px; top:879px; width:200px; height:13px; font-family:sans-serif; font-style:italic; font-weight:bold; font-size:12px; text-align:center; background-color:lightyellow; border-width:0; resize:none;" >&quot;electronically signed&quot;</textarea>
+
+
+	<input value="Clear Sig" name="ClearButton2" id="ClearButton" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:12px; left:480px; top:905px" 
+	onclick="
+			document.getElementById('CanvasSignature1').className = 'sig';
+			document.getElementById('eSigned').className = 'DoNotPrint';
+			clearSig();
+			">
+
+	<input value="eSign" name="eSigButton" id="eSigButton" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:12px; left:550px; top:905px" 
+	onclick="
+			document.getElementById('CanvasSignature1').className = 'Hide';
+			document.getElementById('eSigned').className = 'noborder';
+			">  
+<!-- end of e-signed buttons -->
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:1000px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+</div>
+</div>
+
+<div id="page2" style="page-break-after:always; position:relative;" >
+
+<div id="pg2container" name="pg2container" class="Hide">
+<input value="X" name="HideAttachments" id="Hideattachments" type="button" class="DoNotPrint" title="Close Page 2" style="float:right; width:10px; height:20px; border:0px; font-weight:bolder; background:lightgrey; cursor:pointer;"	onclick="	document.getElementById('pg2container').className = 'Hide';">
+
+
+<p style="text-align:center;font-size:15px; font-weight:bold;">
+<input name="first_last_name" id="first_last_name" type="text" class=" noborder"  oscarDB=first_last_name>
+<br>
+Addendum to DEC referral - further relevant information
+</p>
+
+<textarea name="secondpagetext" id="secondpagetext" type="text" class="border" style="left:5px; top:5px; width:700px; height:800px; resize:both; padding:5px;" placeholder="second page attachments here"></textarea>
+
+</div>
+
+
+</div>
+
+</form>
+
+<!-- Side Menu below -->
+<div id="Sidepanel" class="DoNotPrint">
+	<h2 style="text-align:center; color:#444;">EMR Toolbox</h2>
+
+	<p style="text-align:center;">
+	<a name="Diabetes.ca" title="URL to Diabetes.ca section for Health Care Providers" style="padding:10px; font-size:13px;" href="https://www.diabetes.ca/health-care-providers" target="_blank">Diabetes.ca</a>
+	</p>
+
+<button class="accordion" id="siteselectionmenu">DEC Site Selection</button>
+<div class="panel">
+	<p>Specify Referral Site:<p>
+
+		<li>
+		<input value="Campbell River" name="CRDEC_Buttons" class="historybuttons" title="send referral to Campbell River DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Campbell River DEC (250) 286-7103'
+		document.getElementById('DECsite').value = 'Campbell River'
+		"> 
+		<input value="reset" name="CRDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Comox Valley" name="ComoxDEC_Buttons" class="historybuttons" title="send referral to Comox DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Comox Valley DEC (250) 331-5903'
+		document.getElementById('DECsite').value = 'Comox Valley'
+		"> 
+		<input value="reset" name="ComoxDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Duncan &#47; Ladysmith" name="DuncanDEC_Buttons" class="historybuttons" title="send referral to Duncan or Ladysmith DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Duncan &#47; Ladysmith DEC (250) 737-2033'
+		document.getElementById('DECsite').value = 'Duncan &#47; Ladysmith'
+		"> 
+		<input value="reset" name="DuncanDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Mt Waddington" name="WaddingtonDEC_Buttons" class="historybuttons" title="send referral to Mt Waddington DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Mt Waddington DEC (250) 956-6813'
+		document.getElementById('DECsite').value = 'Mt Waddington'
+		"> 
+		<input value="reset" name="WaddingtonDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Nanaimo DEC" name="NanaimoDEC_Buttons" class="historybuttons" title="send referral to Nanaimo Outpatient DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Nanaimo DEC (250) 716-7711'
+		document.getElementById('DECsite').value = 'Nanaimo'
+		"> 
+		<input value="reset" name="NanaimoDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Nanaimo Inpatients" name="NanaimoInDEC_Buttons" class="historybuttons" title="send referral to Nanaimo Inpatient DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Nanaimo Inpatients DEC (250) 739-5855'
+		document.getElementById('DECsite').value = 'Nanaimo Inpatient'
+		"> 
+		<input value="reset" name="Nanaimo2DEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Parksville" name="ParksvilleDEC_Buttons" class="historybuttons" title="send referral to Nanaimo Inpatient DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Parksville DEC (250) 951-9516'
+		document.getElementById('DECsite').value = 'Parksville'
+		"> 
+		<input value="reset" name="ParksvilleDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Port Alberni" name="PortAlberniDEC_Buttons" class="historybuttons" title="send referral to Port Alberni DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Port Alberni DEC (250) 724-8848'
+		document.getElementById('DECsite').value = 'Port Alberni'
+		"> 
+		<input value="reset" name="PortAlberniDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+
+		<li>
+		<input value="Tofino" name="TofinoDEC_Buttons" class="historybuttons" title="send referral to Tofino DEC" type="button" 
+		onclick="
+		document.getElementById('DECfax').value = 'Please fax to Tofino DEC (250) 724-8848'
+		document.getElementById('DECsite').value = 'Tofino'
+		"> 
+		<input value="reset" name="PortAlberniDEC_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in site selection fields"
+		onclick="
+		document.FormName.DECfax.value = '';
+		document.FormName.DECsite.value = 'North &#47; Central Island';
+		"> 
+		</li>
+	<br>
+	</p>
+</div>
+
+
+
+<button class="accordion">EMR Tools</button>
+<div class="panel">
+	<p>Populate form text fields:<p>
+
+		<li><input value="standard DEC referral request" name="StdRequest" id="StdRequest" type="button" class="sidebuttongreen" title="paste text for a generic DEC referral request" onclick="document.FormName.Comments.value += 'Please see this diabetic patient for optimization of their glycemic and lifestyle management. ';">
+		</li>
+		
+		<li><input value="requires basic education" name="education" id="education" type="button" class="sidebuttongreen" title="paste text to indicate pt requires education" onclick="document.FormName.Comments.value += 'The patient would benefit from structured basic education sessions regarding DM management. ';">
+		</li>
+
+		<li><input value="requires insulin teaching" name="insulinteaching" id="insulinteaching" type="button" class="sidebuttongreen" title="paste text to indicate pt requires insulin teaching" onclick="document.FormName.Comments.value += 'Please provide teaching&#47;review regarding insulin management. ';">
+		</li>
+
+		<li><input value="comorbidity concerns" name="comorb" id="comorb" type="button" class="sidebuttongreen" title="paste text to indicate concern about comorbidities" onclick="document.FormName.Comments.value += 'Comorbidities are a concern in this case. ';">
+		</li>
+
+		<li><input value="adherence &#47; compliance concerns" name="compliance" id="compliance" type="button" class="sidebuttongreen" title="paste text to indicate concern about compliance" onclick="document.FormName.barriersNotes36.value += 'Significant concern about adherence to DM management in this case. ';">
+		</li>
+	<br>
+		<li><input value="reset &#47; clear &quot;Reason for Referral&quot; field" name="comments_reset" id="comments_reset" type="button" class="sidebuttonreset" title="clear text in the reason for referral field" onclick="document.FormName.Comments.value = '';">
+		</li>
+		<li><input value="reset &#47; clear &quot;Notes&quot; field" name="notes_reset" id="notes_reset" type="button" class="sidebuttonreset" title="clear text in the reason for referral field" onclick="document.FormName.barriersNotes36.value = '';">
+		</li>
+	<br>
+
+		<li><input value="populate &quot;Oral Agents&quot; field with EMR med list" name="OralAgent_Buttons" class="historybuttons" title="paste list of meds from EMR" type="button" onclick="document.getElementById('oralagents38').value += document.getElementById('medlist').value + '. ';
+		"> 
+			<input value="reset" name="OralAgent_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.oralagents38.value = '';"> 
+		</li>
+
+		<li><input value="populate &quot;Other Meds&quot; field with EMR med list" name="Rx_Buttons" class="historybuttons" title="import medication list from EMR" type="button" onclick="document.getElementById('OtherMedicationsField').value += document.getElementById('medlist').value + '. ';"> 
+			<input value="reset" name="Rx_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Other Meds field" onclick="document.getElementById('OtherMedicationsField').value = '';">
+		</li>
+
+		<li><input value="populate &quot;Other Meds&quot; field with EMR &quot;other meds&quot; list" name="othermedsbutton" class="historybuttons" title="import &quot;other meds&quot; list from EMR" type="button" onclick="document.getElementById('OtherMedicationsField').value += document.getElementById('othermeds').value + '. ';"> 
+			<input value="reset" name="othermedsbuttonreset" class="historybuttonsreset" type="button" title="clear the text in Other Meds field" onclick="document.getElementById('OtherMedicationsField').value = '';">
+		</li>
+
+		<li><input value="populate &quot;Notes&quot; field with pt history" name="PMHx_Buttons" class="historybuttons" title="paste the text from E-chart medical history box" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('PMHx_Hx').value + '. ';"> 
+			<input value="reset" name="PMHx_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.getElementById('barriersNotes36').value = '';">
+		</li>
+
+		<li><input value="populate &quot;Other health concerns&quot; with EMR problem list" name="OtherConcerns_Buttons" class="historybuttons" title="paste the text from E-chart medical history box" type="button" onclick="document.getElementById('otherhealth37').value += document.getElementById('Ongoing_Hx').value + '. ';"> 
+			<input value="reset" name="OtherConcerns_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.getElementById('otherhealth37').value = '';">
+		</li>
+	<br>
+	</p>
+
+	<p>Other EMR Resources:</p>
+		<li><input value="Lab Grid" name="Labgrid" id="labgrid" type="button" class="sidebutton" onclick="onBodyLoad(); labGrid();" title="view subset of pt lab history in a GRID display">
+			<input value="Lab Rows" name="LabSummary_link" id="labrow" type="button" class="sidebutton" onclick="onBodyLoad(); labRow();" title="view pt lab history in ROW display">
+			<input value="HL7 Reports" name="Lablist" id="lablist" type="button" class="sidebutton" onclick="onBodyLoad(); labs();" title="view pt lab and imaging history in a LIST view">
+		</li>
+		<li><input value="Lab Requisition" name="Link_SOPLR" id="SOPLR"type="button" class="sidebutton" title="Open Standard Lab Requisition eForm" oscarOPEN="1.1 Lab Requisition">
+			<a class="DoNotPrint" href="http://oscarcanada.org/oscar-users/emr-resource/eform/eform-examples/lab-requisitions/standard-outpatient-laboratory-requisition-soplr-2018/standard-outpatient-laboratory-requisition-soplr-lab_requisition_v25_mar3_2020.zip/view" target="_blank">
+				<span title="Install missing OSCAR eForm from oscarcanada.org" style="font-size:10px;">(get eForm)</span>
+			</a>
+		</li>
+		<li><input value="Documents on E-Chart" name="PtDocuments" id="PtDocuments"  type="button" class="sidebutton" title="view the PDF document attachments scanned and filed on this patient chart" onclick="onBodyLoad(); documents_all();">
+		</li>
+
+		<li><input value="Primary Care Provider Summary" name="Link_PCP_Patient_Summary2" id="PCP_Patient_Summary2" type="button" class="sidebutton" title="Open the VIHA Primary Care Provider Patient Summary eForm in another window" oscarOPEN="PCP Patient Summary">
+			<a href="http://oscarcanada.org/oscar-users/emr-resource/eform/eform-examples/communication-with-other-health-care-professionals/complex-care-plan-lite-2019/complex-care-plan-lite-2019-zip-file/view" target="_blank">
+			<span title="Install missing OSCAR eForm from oscarcanada.org" style="font-size:10px;">(get eForm)</span>
+			</a>
+		</li>
+		<li><input value="Attach a second page to this referral for extra text" name="ShowPg2" id="ShowPg2" type="button" class="sidebutton" title="Open a second page to append to this referral (for cases where the form fields are too small to contain all important info)" 
+			 onclick="document.getElementById('pg2container').className = 'Show';">
+		</li>
+	</p>
+</div>
+
+<button class="accordion" Id="RxConcise">EMR Rx History (concise)</button>
+<div class="panel">
+
+	<p style="text-align:center">Rx list (current meds - compact - one line)</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelRxlistLine" id="sidepanelRxlistLine" placeholder="click here!" style="height:100px"
+ onFocus="document.getElementById('sidepanelRxlistLine').value = document.getElementById('medlist').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Oral Agents&quot; form field" name="OralAgent_Button2" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('oralagents38').value += document.getElementById('sidepanelRxlistLine').value + '. ';
+		"> 
+		<input value="reset" name="OralAgent_Buttonreset2" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.oralagents38.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Insulin Routine&quot; form field" name="InsulinRoutine_Button" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('insulinroutine39').value += document.getElementById('sidepanelRxlistLine').value + '. ';
+		"> 
+		<input value="reset" name="InsulinRoutine_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Insulin Routine field" onclick="document.FormName.insulinroutine39.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Other Medications&quot; form field" name="OtherMeds_Button2" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('OtherMedicationsField').value += document.getElementById('sidepanelRxlistLine').value + '. ';
+		"> 
+		<input value="reset" name="othermedsbuttonreset2" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.OtherMedicationsField.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton0" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('oralagents38').value += 'see page 2 ';
+			document.getElementById('OtherMedicationsField').value += 'see page 2 ';
+			document.getElementById('secondpagetext').value += 'Current Medication List: '; 
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelRxlistLine').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset0" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+	<br>
+	<p style="text-align:center;">Rx list (current meds - generic names - line breaks)</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelRxlistGen" id="sidepanelRxlistGen" placeholder="click here!" style="height:200px"
+ onFocus="document.getElementById('sidepanelRxlistGen').value = document.getElementById('medlist_generic').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Oral Agents&quot; form field" name="OralAgent_Button3" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('oralagents38').value += document.getElementById('sidepanelRxlistGen').value + '. ';
+		"> 
+		<input value="reset" name="OralAgent_Buttonreset3" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.oralagents38.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Insulin Routine&quot; form field" name="InsulinRoutine_Button2" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('insulinroutine39').value += document.getElementById('sidepanelRxlistGen').value + '. ';
+		"> 
+		<input value="reset" name="InsulinRoutine_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Insulin Routine field" onclick="document.FormName.insulinroutine39.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Other Medications&quot; form field" name="OtherMeds_Button3" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('OtherMedicationsField').value += document.getElementById('sidepanelRxlistGen').value + '. ';
+		"> 
+		<input value="reset" name="othermedsbuttonreset3" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.OtherMedicationsField.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton1" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('oralagents38').value += 'see page 2 ';
+			document.getElementById('OtherMedicationsField').value += 'see page 2 ';
+			document.getElementById('secondpagetext').value += 'Current Medication List: '; 
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelRxlistGen').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset1" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+	<br>
+</div>
+
+<button class="accordion">EMR Rx History (extensive)</button>
+<div class="panel">
+		<p style="text-align:center">Rx history</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelRxlistRecent" id="sidepanelRxlistRecent" placeholder="click here!" style="height:400px"
+ onFocus="document.getElementById('sidepanelRxlistRecent').value = document.getElementById('medlist_recent').value;
+		"></textarea>
+	</p>
+
+	<li><input value="paste above into &quot;Oral Agents&quot; form field" name="OralAgent_Button4" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('oralagents38').value += document.getElementById('sidepanelRxlistRecent').value + '. ';
+		"> 
+		<input value="reset" name="OralAgent_Buttonreset4" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.oralagents38.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Insulin Routine&quot; form field" name="InsulinRoutine_Button3" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('insulinroutine39').value += document.getElementById('sidepanelRxlistRecent').value + '. ';
+		"> 
+		<input value="reset" name="InsulinRoutine_Buttonreset" class="historybuttonsreset" type="button" title="clear the text in Insulin Routine field" onclick="document.FormName.insulinroutine39.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Other Medications&quot; form field" name="OtherMeds_Button4" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('OtherMedicationsField').value += document.getElementById('sidepanelRxlistRecent').value + '. ';
+		"> 
+		<input value="reset" name="othermedsbuttonreset4" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.OtherMedicationsField.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton2" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('secondpagetext').value += 'Medication History: '; 
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelRxlistRecent').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset2" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+	
+</div>
+
+<button class="accordion">Other Meds</button>
+<div class="panel">
+	<p style="text-align:center">View the free-text &quot;Other Meds&quot; field in E-Chart</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelRxOtherMeds" id="sidepanelRxOtherMeds" placeholder="click here!" style="height:400px"
+ onFocus="document.getElementById('sidepanelRxOtherMeds').value = document.getElementById('othermeds').value;
+		"></textarea>
+	</p>
+
+	<li><input value="paste above into &quot;Oral Agents&quot; form field" name="OralAgent_Button5" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('oralagents38').value += document.getElementById('sidepanelRxOtherMeds').value + '. ';
+		"> 
+		<input value="reset" name="OralAgent_Buttonreset5" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.oralagents38.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Other Medications&quot; form field" name="OtherMeds_Button5" class="historybuttons" title="paste above list of meds into form field" type="button" onclick="document.getElementById('OtherMedicationsField').value += document.getElementById('sidepanelRxOtherMeds').value + '. ';
+		"> 
+		<input value="reset" name="othermedsbuttonreset5" class="historybuttonsreset" type="button" title="clear the text in Oral Agents field" onclick="document.FormName.OtherMedicationsField.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton3" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelRxOtherMeds').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset3" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+</div>
+
+<button class="accordion">Allergies</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Allergies&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelAllerg" id="sidepanelAllerg" placeholder="click here!" style="height:50px"
+ onFocus="document.getElementById('sidepanelAllerg').value = document.getElementById('allergies').value;
+		"></textarea>
+	</p>
+
+	<li><input value="paste above text into &quot;other health concerns&quot; field" name="OtherHealthConcerns_Button" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('otherhealth37').value += 'Allergies: ' + document.getElementById('sidepanelAllerg').value + '. ';
+		"> 
+		<input value="reset" name="otherhealthreset" class="historybuttonsreset" type="button" title="clear the text in other health concerns field" onclick="document.FormName.otherhealth37.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebuttonA" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('secondpagetext').value += 'Allergies: '; 
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelAllerg').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpageresetA" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+</div>
+
+<button class="accordion">Past Medical History</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Medical History&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelPMHx" id="sidepanelPMHx" placeholder="click here!" style="height:400px"
+ onFocus="document.getElementById('sidepanelPMHx').value = document.getElementById('PMHx_Hx').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button2" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelPMHx').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset2" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+		</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button2" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelPMHx').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset2" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton4" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('Comments').value += 'see page 2 ';
+			document.getElementById('barriersNotes36').value += 'see page 2 ';
+			document.getElementById('secondpagetext').value += 'Medical History Summary: ';
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelPMHx').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset4" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+</div>
+
+<button class="accordion">Ongoing Concerns</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Ongoing Concerns&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelOngoingConcerns" id="sidepanelOngoingConcerns" placeholder="click here!" style="height:100px"
+ onFocus="document.getElementById('sidepanelOngoingConcerns').value = document.getElementById('Ongoing_Hx').value;
+		"></textarea><br>
+	</p>
+	
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button2" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelOngoingConcerns').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset2" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button2" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelOngoingConcerns').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset2" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;other health concerns&quot; form field" name="OtherConcerns_Button2" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('otherhealth37').value += document.getElementById('sidepanelOngoingConcerns').value + '. ';
+		"> 
+		<input value="reset" name="OtherConcerns_Buttonreset2" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.otherhealth37.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton5" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('secondpagetext').value += 'EMR Problem List: ';
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelOngoingConcerns').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset5" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+</div>
+
+<button class="accordion">Reminders</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Reminders&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelReminders" id="sidepanelReminders" placeholder="click here!" style="height:100px"
+ onFocus="document.getElementById('sidepanelReminders').value = document.getElementById('Reminders_Hx').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button3" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelReminders').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset3" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button3" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelReminders').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset3" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>	
+	<li><input value="paste above text into second page" name="secondpagebutton6" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelReminders').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset6" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+</div>
+
+<button class="accordion">Social History</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Social History&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelSocialHx" id="sidepanelSocialHx" placeholder="click here!" style="height:200px"
+ onFocus="document.getElementById('sidepanelSocialHx').value = document.getElementById('Social_Hx').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button4" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelSocialHx').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset4" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button4" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelSocialHx').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset4" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>
+	<li><input value="paste above text into second page" name="secondpagebutton7" class="historybuttons" title="open second page and paste text as attachment " type="button"
+			onclick="
+			document.getElementById('secondpagetext').value += 'Social History: ';
+			document.getElementById('secondpagetext').value += document.getElementById('sidepanelSocialHx').value + '. '; 
+			document.getElementById('pg2container').className = 'Show';
+			">
+		<input value="reset" name="secondpagereset7" class="historybuttonsreset" type="button" title="clear second page" 
+			onclick="
+			document.FormName.secondpagetext.value = '';
+			"> 
+	</li>
+<br>
+</div>
+
+<!-- commented out Family History and Risk Factor drawers below due to quirky performance of these oscarDB database pulls on OSCAR EMR -->
+
+<!--
+
+<button class="accordion">Family History</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Family History&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelFamHx" id="sidepanelFamHx" placeholder="click here!" style="height:100px"
+ onFocus="document.getElementById('sidepanelFamHx').value = document.getElementById('Family_Hx').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button5" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelFamHx').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset5" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button5" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelFamHx').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset5" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>
+<br>
+</div>
+
+<button class="accordion">Risk Factors</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Risk Factors&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelRiskFactors" id="sidepanelRiskFactors" placeholder="click here!" style="height:100px"
+ onFocus="document.getElementById('sidepanelRiskFactors').value = document.getElementById('Riskfactors_Hx').value;
+		"></textarea><br>
+	</p>
+
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button6" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelRiskFactors').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset6" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button6" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelRiskFactors').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset6" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>
+<br>
+</div>
+
+-->
+
+<button class="accordion">Disease Registry</button>
+<div class="panel">
+	<p style="text-align:center">&quot;Disease Registry entries&quot;</p>
+	<p>
+		<textarea class="sidepaneltextbox" type="text" name="sidepanelDisReg" id="sidepanelDisReg" placeholder="click here!" style="height:50px"
+ onFocus="document.getElementById('sidepanelDisReg').value = document.getElementById('dxregistry_Hx').value;
+		"></textarea><br>
+	</p>
+	<li><input value="paste above into &quot;Reason for Referral&quot; form field" name="PMHx_Button7" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('Comments').value += document.getElementById('sidepanelDisReg').value + '. ';
+		"> 
+		<input value="reset" name="PMHx_Buttonreset7" class="historybuttonsreset" type="button" title="clear the text in Reason for Referral field" onclick="document.FormName.Comments.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;Notes&quot; form field" name="Notes_Button7" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('barriersNotes36').value += document.getElementById('sidepanelDisReg').value + '. ';
+		"> 
+		<input value="reset" name="Notes_Buttonreset7" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.barriersNotes36.value = '';"> 
+	</li>
+	<li><input value="paste above into &quot;other health concerns&quot; form field" name="OtherConcerns_Button3" class="historybuttons" title="paste above text into form field" type="button" onclick="document.getElementById('otherhealth37').value += document.getElementById('sidepanelDisReg').value + '. ';
+		"> 
+		<input value="reset" name="OtherConcerns_Buttonreset3" class="historybuttonsreset" type="button" title="clear the text in Notes field" onclick="document.FormName.otherhealth37.value = '';"> 
+	</li>
+<br>
+</div>
+
+<br>
+<p style="text-align:center;  font-size:13px; text-decoration:underline;">Note:</p>
+<p style="font-weight:normal; font-size:13px; padding:10px; width:480px;">Click on the accordion boxes above to view sections of the patient E-Chart, then copy &amp; paste into form as needed. 
+<br><br>Please also note that any text input into the drawers above does NOT save to E-chart on form submit. Any edits to history content should be made directly in the E-chart instead.
+</p>
+
+
+
+<!-- Accordion box template 
+<button class="accordion">Template</button>
+<div class="panel">	
+	<p>Specify risk, select all that may apply:<p>
+		<li><input value="xxx" name="1_name" id="1_name" type="button" class="sidebuttongreen" title="Set risk for xxx" onclick="
+			document.FormName.boxName.value = 'xxx, ';
+			document.FormName.boxName.style.backgroundColor = '#dff0d8'; 
+			document.FormName.boxName.style.borderColor = '#4caf50'; 
+			document.FormName.boxName.style.fontWeight = 'normal';">
+		</li>
+
+		<li><input value="xxx" name="2_name" id="2_name" type="button" class="sidebuttonyellow" title="Set risk for xxx" onclick="
+			document.FormName.boxName.value = 'xxx,  ';
+			document.FormName.boxName.style.backgroundColor = 'lightyellow'; 
+			document.FormName.boxName.style.borderColor = 'gold'; 
+			document.FormName.boxName.style.fontWeight = 'bold';">
+		</li>
+
+		<li><input value="xxx" name="3_name" id="3_name" type="button" class="sidebuttonred" title="Set risk for xxx" onclick="
+			document.FormName.boxName.value = 'xxx, ';
+			document.FormName.boxName.style.backgroundColor = 'mistyrose';
+			document.FormName.boxName.style.borderColor = 'tomato'; 
+			document.FormName.boxName.style.fontWeight = 'bold';">
+		</li>
+
+		<li><input value="xxx" name="4_name" id="4_name" type="button" class="sidebuttonreset" title="specify xxx, " onclick="
+				document.FormName.boxName.value += 'xxx, ';">
+		</li>
+
+		<li><input value="xxx" name="5_name" id="5_name" type="button" class="sidebuttonreset" title="specify xxx, " onclick="
+			document.FormName.boxName.value += 'xxx, ';">
+		</li>
+
+		<li><input name="6_name" id="6_name" type="button" class="sidebuttonreset" title="specify xxx" value="xxx, " onclick="
+			document.FormName.boxName.value += 'xxx, ';"></li>
+
+		<li><input  value="reset &#47; clear" name="Template_reset" id="Template_reset" type="button" class="sidebuttonreset" title="reset box" onclick="
+			document.FormName.boxName.value = 'xxx ';
+			document.FormName.boxName.style.backgroundColor = 'white'; 
+			document.FormName.boxName.style.borderColor = 'lightgrey'; 
+			document.FormName.boxName.style.fontWeight = 'normal';">
+		</li>
+	</p>
+
+	<p>Resources:</p>
+	<p>
+
+	</p>
+</div>
+-->
+
+<!-- Accordion box simple example -->
+<!--
+<button class="accordion">Section x</button>
+<div class="panel">
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+-->
+
+<!-- script to run the accordion -->
+<script>
+	var acc = document.getElementsByClassName("accordion");
+	var i;
+
+	for (i = 0; i < acc.length; i++) {
+	  acc[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var panel = this.nextElementSibling;
+		if (panel.style.maxHeight) {
+		  panel.style.maxHeight = null;
+		} else {
+		  panel.style.maxHeight = panel.scrollHeight + "px";
+		} 
+	});
+	}
+</script>
+</div> 
+<!-- end of side panel -->
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%d-%b-%Y",  button : "today" } );
+	Calendar.setup( { inputField : "m$A1C#dateObserved", ifFormat : "%Y-%m-%d",  button : "m$A1C#dateObserved" } );
+	Calendar.setup( { inputField : "m$FBS#dateObserved", ifFormat : "%Y-%m-%d",  button : "m$FBS#dateObserved" } );
+	Calendar.setup( { inputField : "GTTdate8", ifFormat : "%Y-%m-%d",  button : "GTTdate8" } );
+	Calendar.setup( { inputField : "EDC", ifFormat : "%d-%b-%Y",  button : "EDC" } );
+</script>
+
+</body>
+</html>

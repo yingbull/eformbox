@@ -1,0 +1,404 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Peripheral_Blood_Chromosome_Analysis_and_FISH</title>
+<style type="text/css" media="screen" >
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display: none;
+ }
+ .noborder {
+	border : 0px;
+	background: transparent;
+	background: transparent;
+	overflow: hidden;
+ }
+</style>
+
+<!-- jQuery for greater functionality -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+<script>
+if (typeof jQuery === 'undefined') {
+	document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+}
+</script>
+
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp()
+		{			
+			setDocumentTitle('Peripheral_Blood_Chromosome_Analysis_and_FISH_2018',document.getElementById('patient_nameL').value);
+			setDefaults();
+			//optimize window size/width
+			top.window.resizeTo(900, screen.availHeight);
+		}
+		
+		function setDocumentTitle(Title,patient_nameL)
+		{
+			// set document title
+			document.title = Title + ' - ' + patient_nameL;					
+							
+		}
+
+        function setDefaults() {
+            // check the newform flag to ensure this is the initial load of the form
+            if (document.getElementById("newForm").value == 'True') {
+                document.getElementById("Country").value = 'Canada';
+				parseDate1();
+				Names();
+				StartClock12();
+                }
+}
+
+        function parseDate1() {
+                // Change date field to dd/mmm/yyyy format
+                // Function expects an array of date components in yyyy-mm-dd format
+                // Get the date
+				var FullDate = document.getElementById("Date1").value; 
+				if ( FullDate ){
+                
+                var delimiter = '-';
+                // Split the value
+                var Year = FullDate.split(delimiter)[0];
+                var MonthNum = FullDate.split(delimiter)[1];
+                var Day = FullDate.split(delimiter)[2];
+                var Month  = "";
+
+                // Convert Numeric Month to 3 letter month
+                if(MonthNum == 1) { Month = "Jan"; }
+                if(MonthNum == 2) { Month = "Feb"; }
+                if(MonthNum == 3) { Month = "Mar"; }
+                if(MonthNum == 4) { Month = "Apr"; }
+                if(MonthNum == 5) { Month = "May"; }
+                if(MonthNum == 6) { Month = "Jun"; }
+                if(MonthNum == 7) { Month = "Jul"; }
+                if(MonthNum == 8) { Month = "Aug"; }
+                if(MonthNum == 9) { Month = "Sep"; }
+                if(MonthNum == 10) { Month = "Oct"; }
+                if(MonthNum == 11) { Month = "Nov"; }
+                if(MonthNum == 12) { Month = "Dec"; }
+
+                var MixedDate = Day + "/" + Month + "/" + Year;
+                var NumericDate = Day + "/" + MonthNum + "/" + Year;
+
+                // Show the fields on the page
+				document.FormName.TodayDate.value = NumericDate ;
+				}
+				else{
+					(document.FormName.TodayDate.value = "click for date" );}
+
+        }
+
+function Names() {
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById('Doctor').value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+				}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+				}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.PhysicianName.value = First_Last_Name ;
+			document.FormName.PhysicianName2.value = First_Last_Name ;
+
+    // Change referral name to full First Name, Last Name
+			// Get the name
+			var fullName1 = document.getElementById('referral_name').value;
+			var referralMSP = document.getElementById('bc_referral_no').value;
+	
+			// Split the value
+			var splitName1 = fullName1.split(",");
+			var firstName1 = "";
+			var lastName1  = "";
+			// Check for last name
+			if(splitName1.length >= 1) {
+				lastName1 = splitName1[0].trim();
+				}
+			if(splitName1.length >= 2) {
+				firstName1 = splitName1[1].trim();
+				}
+			var firstInitial = firstName1.charAt(0);
+			var First_Last_Name1 = firstName1 + " " + lastName1;
+			var First_Intial_Last_Name1 = firstInitial + ". " + lastName1
+	
+			// Show the fields on the page
+			document.getElementById("CopyTo1").value = First_Intial_Last_Name1 + ' MSP# ' + referralMSP;
+			}
+		
+		<!-- script for current time -->
+
+		function StartClock12() {
+			Time12 = new Date();
+			Cur12Hour = Time12.getHours();
+			Cur12Mins = Time12.getMinutes();
+			The12Time = 0;
+			The12Time = (Cur12Hour > 12) ? Cur12Hour - 12 : Cur12Hour;
+			The12Time += ((Cur12Mins < 10) ? ':0' : ':') + Cur12Mins;
+			The12Time += (Cur12Hour > 11) ? ' PM' : ' AM';
+			window.status = The12Time;
+			setTimeout('StartClock12()', 1000);
+		}
+		
+</script>
+
+<!-- scripts for Xbox functions -->
+<script language="javascript">
+$(document).ready(function() {
+	$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+			$( this ).val("");
+		} else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+	// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0){
+			$( this ).click();
+			return false;
+			}
+	});
+
+});
+</script>
+
+	<!-- Xbox styling -->
+
+	<style type="text/css">
+
+		.box1 {
+			position: absolute;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #000000;
+            cursor: pointer;
+            font-weight: bold;
+			font-size: 14px;
+			font-family:sans-serif;
+            text-align: center;
+            background: aqua;
+		}
+
+		.box2 {
+			position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000000;
+            cursor: pointer;
+            font-weight: bold;
+			font-size: 16px;
+			font-family:sans-serif;
+            text-align: center;
+            background: aqua;
+		}
+
+		.box3 {
+			position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000000;
+            cursor: pointer;
+            font-weight: bold;
+			font-size: 12px;
+			font-family:sans-serif;
+            text-align: center;
+            background: aqua;
+		}
+
+	</style>
+
+<!-- auto ticking gender Xboxes OR checkboxes -->
+<script type="text/javascript" language="javascript">
+function checkGender(){
+	 if (document.getElementById("PatientGender").value == "M"){
+	 document.getElementById("Male").value = "X";
+	 }else if (document.getElementById("PatientGender").value == "F"){
+	 document.getElementById("Female").value = "X";
+	}
+ }
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+
+function setFlag()
+{
+// indicate that the form has been submitted
+if (document.getElementById("newForm").value == 'True')
+	document.getElementById("newForm").value = 'False';
+}
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript">
+function reImg(){
+// for stand alone development without uploading to OSCAR
+	var strLoc = window.location.href.toLowerCase();
+	if(strLoc.indexOf("https") == -1) {
+		var src1 = document.getElementById("BGImage1").src;
+		document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+	}
+}
+</script>
+</head>
+
+<body onload="reImg();startUp();checkGender();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}Peripheral-Blood-Chromosome-Analysis-and-FISH.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<!-- Hidden Inputs -->
+<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+<input name="patient_nameL" id="patient_nameL" type="hidden" oscarDB=patient_nameL>
+<input name="Date1" id="Date1" type="hidden" oscarDB=today>
+<input name="Doctor" id="Doctor" type="hidden" oscarDB=doctor>
+<input name="referral_name" id="referral_name" type="hidden" oscarDB=referral_name>
+<input name="bc_referral_no" id="bc_referral_no" type="hidden" oscarDB=bc_referral_no>
+
+<!-- Demographics -->
+<input name="patient_name" id="patient_name" type="text" class=" noborder" style="position:absolute; left:455px; top:4px; width:254px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=patient_name>
+<input name="dobc" id="dobc" type="text" class=" noborder" style="position:absolute; left:450px; top:45px; width:146px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=dobc>
+<input name="Male" id="Male" type="text" class="Xbox box1" style="left:631px; top:54px; width:14px;" >
+<input name="Female" id="Female" type="text" class="Xbox box1" style="left:673px; top:54px; width:14px;" >
+<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:407px; top:79px; width:302px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=hinc>
+<input name="PhysicianName" id="PhysicianName" type="text" class=" noborder" style="position:absolute; left:465px; top:155px; width:150px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;">
+<input name="doctor_ohip_no" id="doctor_ohip_no" type="text" class=" noborder" style="position:absolute; left:618px; top:155px; width:80px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=doctor_ohip_no>
+<input name="MedicalGeneticsNumber" id="MedicalGeneticsNumber" type="text" class=" noborder" style="position:absolute; left:460px; top:194px; width:227px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="address_street_number_and_name" id="address_street_number_and_name" type="text" class=" noborder" style="position:absolute; left:168px; top:238px; width:342px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=address_street_number_and_name>
+<input name="city" id="city" type="text" class=" noborder" style="position:absolute; left:546px; top:238px; width:168px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=city>
+<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:158px; top:268px; width:39px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=province>
+<input name="Country" id="Country" type="text" class=" noborder" style="position:absolute; left:256px; top:268px; width:97px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="postal" id="postal" type="text" class=" noborder" style="position:absolute; left:435px; top:268px; width:71px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=postal>
+<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:554px; top:268px; width:162px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=phone>
+
+
+<input name="CopyTo1" id="CopyTo1" type="text" class=" noborder" style="position:absolute; left:187px; top:309px; width:167px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="CopyTo2" id="CopyTo2" type="text" class=" noborder" style="position:absolute; left:358px; top:309px; width:171px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="CopyTo3" id="CopyTo3" type="text" class=" noborder" style="position:absolute; left:534px; top:309px; width:174px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+
+<input name="TodayDate" id="TodayDate" type="text" class=" noborder" style="position:absolute; left:163px; top:447px; width:109px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;">
+<input name="Time" id="Time" type="text" class=" noborder" style="position:absolute; left:394px; top:447px; width:68px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="CollectedBy" id="CollectedBy" type="text" class=" noborder" style="position:absolute; left:549px; top:447px; width:133px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input value="Click for Time" name="TimeClick" id="TimeClick" type="button" class="DoNotPrint" style="position:absolute; left:690px; top:447px; color:green;" onclick="document.FormName.Time.value = The12Time;"> 
+
+<input name="Developmental" id="Developmental" type="text" class="Xbox box2" style="left:66px; top:509px;" >
+<input name="Developmental_Specify" id="Developmental_Specify" type="text" class=" noborder" style="position:absolute; left:418px; top:501px; width:254px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Seizures" id="Seizures" type="text" class="Xbox box2" style="left:66px; top:541px;" >
+<input name="Seizures_Specify" id="Seizures_Specify" type="text" class=" noborder" style="position:absolute; left:224px; top:534px; width:449px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Behavioural" id="Behavioural" type="text" class="Xbox box2" style="left:66px; top:568px;" >
+<input name="Behavioural_Specify" id="Behavioural_Specify" type="text" class=" noborder" style="position:absolute; left:426px; top:561px; width:244px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Congenital" id="Congenital" type="text" class="Xbox box2" style="left:66px; top:598px;" >
+<input name="Klinefelter" id="Klinefelter" type="text" class="Xbox box3" style="left:162px; top:613px;" >
+<input name="Down" id="Down" type="text" class="Xbox box3" style="left:162px; top:628px;" >
+<input name="X_Linked" id="X_Linked" type="text" class="Xbox box3" style="left:162px; top:643px;" >
+<input name="Turners" id="Turners" type="text" class="Xbox box3" style="left:162px; top:658px;" >
+<input name="Growth" id="Growth" type="text" class="Xbox box2" style="left:66px; top:670px;" >
+<input name="Cranio_Faciala" id="Cranio_Faciala" type="text" class="Xbox box2" style="left:66px; top:698px;" >
+<input name="Cranio_Facial_Specify" id="Cranio_Facial_Specify" type="text" class=" noborder" style="position:absolute; left:434px; top:691px; width:239px; height:22px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Other" id="Other" type="text" class="Xbox box2" style="left:66px; top:727px;" >
+<input name="Other_Specify" id="Other_Specify" type="text" class=" noborder" style="position:absolute; left:206px; top:723px; width:274px; height:20px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="RPL" id="RPL" type="text" class="Xbox box1" style="position:absolute; left:66px; top:757px;" >
+<input name="m$G#value" id="G" type="text" class=" noborder" style="position:absolute; left:390px; top:755px; width:25px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=m$G#value>
+<input name="m$P#value" id="P" type="text" class=" noborder" style="position:absolute; left:443px; top:755px; width:25px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"  oscarDB=m$P#value>
+<input name="Aborta" id="Aborta" type="text" class=" noborder" style="position:absolute; left:496px; top:755px; width:25px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="LIVE" id="LIVE" type="text" class=" noborder" style="position:absolute; left:545px; top:755px; width:25px; height:19px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Partner" id="Partner" type="text" class=" noborder" style="position:absolute; left:641px; top:755px; width:104px; height:21px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;" >
+<input name="Karyotype" id="Karyotype" type="text" class="Xbox box1" style="left:68px; top:806px;" >
+<input name="FISH" id="FISH" type="text" class="Xbox box1" style="left:159px; top:806px;" >
+<input name="MicroArray" id="MicroArray" type="text" class="Xbox box1" style="left:438px; top:806px;" >
+<span style="position:absolute; left:295px; top:840px;"><b><i><q> Electronically Signed </q></i></b> &nbsp; <input name="PhysicianName2" id="PhysicianName2" type="text" class=" noborder" style="width:150px;font-family:sans-serif; font-style:normal; font-weight:normal; font-size:14px; text-align:left; background-color:transparent;"></span>
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:990px; left:0px;">
+	<table><tr><td>
+		<input type="hidden" name="newForm" id="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" releaseDirtyFlag();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1800);"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+ <a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"> created September 3<sup>rd</sup> 2018 by Dr. John Robertson, </span>licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL</a>. <span style="color:forestgreen;">Please consider supporting  </span> <a  href="http://oscarbc.ca/" target="_blank" >OSCAR BC</a>.<br>
+</div>
+</div>
+</form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "TodayDate", ifFormat : "%d/%m/%Y",  button : "TodayDate" } );
+</script>
+
+</body>
+</html>

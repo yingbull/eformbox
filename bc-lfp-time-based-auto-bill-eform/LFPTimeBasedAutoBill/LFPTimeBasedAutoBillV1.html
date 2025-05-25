@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LFP Auto Bill</title>
+  
+ <script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+
+  <style>
+    input[type="text"] {
+      width: 100px;
+      height: 20px;
+      padding: 5px;
+      margin: 5px;
+    }
+    input[type="radio"] {
+      margin: 5px;
+    }
+    #result {
+      margin: 10px;
+      font-weight: bold;
+    }
+  </style>
+  
+    <script>
+    function calculateTimeBlocks() {
+      var startTime = document.getElementById("start_time").value;
+      var endTime = document.getElementById("end_time").value;
+      var billingType = document.querySelector('input[name="billing_type"]:checked').value;
+      var start = new Date("01/01/2020 " + startTime);
+      var end = new Date("01/01/2020 " + endTime);
+      if (end <= start) {
+        document.getElementById("result").innerHTML = "Error: End time must be greater than start time. Make sure to use 24 Hr Time";
+        return;
+      }
+      var diff = end - start;
+      var timeBlocks = diff / (1000 * 60 * 15);
+      timeBlocks = Math.floor(timeBlocks);
+	  
+      var billingCode;
+      if (billingType === "direct") {
+        billingCode = 98010;
+      } else if (billingType === "indirect") {
+        billingCode = 98011;
+      } else if (billingType === "admin") {
+        billingCode = 98012;
+      }
+
+  		var pathArray = window.location.href;
+		var mydemographic=  /demographic_no=(.*?)&appointment/;
+		var demoNumber = (mydemographic.exec(pathArray))[1]; 
+		var myURL=  /^(.*?)\/eform/;
+		var URL = (myURL.exec(pathArray))[1]; 
+		var diagCode="L23";
+		var date=$('#dateService').val();
+		var providerNumber=$('#providerNo').val();
+
+        var Start_hour = startTime.split(":")[0];
+        var Start_minute = startTime.split(":")[1];
+        var End_hour = endTime.split(":")[0];
+        var End_minute = endTime.split(":")[1];
+		
+		var BillingNotes = "Billing Type: "+ billingType + ". Start Time: " + startTime + ". End Time: " + endTime + ". Number of 15 minute time blocks: " + timeBlocks + ".";
+
+
+//      document.getElementById("result").innerHTML = 
+//        "Billing Type: "+ billingType + ". Start Time: " + startTime + ". End Time: " + endTime + ". Number of 15 minute time blocks: " + timeBlocks + ".";
+		
+	    var billingWindow = window.open(URL+"/billing.do?billRegion=BC&billForm=GP&hotclick=&appointment_no=0&demographic_name=none&demographic_no="+demoNumber+"&providerview=1&user_no="+providerNumber+"&apptProvider_no="+providerNumber+"&appointment_date="+date+"&start_time="+startTime+"&end_time="+endTime+"&bNewForm=1&status=t",'_blank',"width=1024,height=1024");
+        billingWindow.addEventListener('load',function(){
+		  $('[name=xml_diagnostic_detail1]',billingWindow.document).val(diagCode);
+		  $('[name=xml_other1]',billingWindow.document).val(billingCode);
+		  $('[name=xml_other1_unit]',billingWindow.document).val(timeBlocks);
+		  $('[name=messageNotes]',billingWindow.document).val(BillingNotes);
+		  $('[name=xml_starttime_hr]',billingWindow.document).val(Start_hour);
+		  $('[name=xml_starttime_min]',billingWindow.document).val(Start_minute);
+		  $('[name=xml_endtime_hr]',billingWindow.document).val(End_hour);
+		  $('[name=xml_endtime_min]',billingWindow.document).val(End_minute);
+
+      }, true);
+
+     setTimeout("window.close()", 3000)
+    }
+  </script>
+  
+</head>
+<body> 
+  <h1>LFP Time Based Auto Bill</h1>
+  <form>
+  	Provider number:<input type="text" name="providerNo" id="providerNo" oscarDB=appt_provider_id><br>
+ 	Date of service:<input type="text" name="dateService" id="dateService" oscarDB=today><br>
+    <label for="start_time">Start Time (24Hr):</label>
+    <input type="text" id="start_time" name="start_time" oscarDB=appt_time><br>
+    <label for="end_time">End Time  (24Hr):</label>
+    <input type="text" id="end_time" name="end_time"><br>
+    <label for="direct_billing">Direct Billing:</label>
+    <input type="radio" id="direct_billing" name="billing_type" value="direct"><br>
+    <label for="indirect_billing">Indirect Billing:</label>
+    <input type="radio" id="indirect_billing" name="billing_type" value="indirect"><br>
+	<label for="admin_billing">Admin Billing:</label>
+    <input type="radio" id="admin_billing" name="billing_type" value="admin"><br><br><br>
+	
+    <input type="button" value="Proceed To Billing Screen" onclick="calculateTimeBlocks()"> <br><br><br>
+	
+	<b>Instructions:</b> <br>
+	Enter Date, Start/End Time, Select Time category, then click "Proceed To Billing Screen" <br>
+	In BC Billing Screen, scroll to bottom and select "Continue". Do not change or enter any values in this screen. IE - do not enter start/stop times in the BC Billing screen or change the Billing Form.<br>
+        In final screen (BC Billing -Billing Summary) verify fields are correct before selecting "Save Bill"
+  </form>
+  <p id="result"></p>
+
+</body>
+</html>
+
+

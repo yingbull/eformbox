@@ -1,0 +1,328 @@
+<html>
+<!-- (C) 2023 P Hutten-Czapski -->
+<!-- licensed under the GPL2+ -->
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Special_Diet_Allowance</title>
+<style>
+ body, textarea {
+	font-size:12px;
+	font-family:sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	text-align:left;
+	background-color:transparent;
+ }
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+ }
+ .Xbox {
+	width:14px;
+	height:14px;
+	font-weight:bold;
+	text-align:center;
+	background-color:white;
+ }
+ .Radio {
+	width:14px;
+	height:14px;
+	font-weight:bold;
+	text-align:center;
+	background-color:white;
+ }
+</style>
+
+<style type="text/css" media="screen" >
+ .noborder {
+	border:1px solid; !important
+ }
+/* Drawing the 'gripper' for touch-enabled devices */
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display:none;
+ }
+ .noborder {
+	border:0px;
+	background: transparent;
+</style>
+
+<!-- Classic Signatures -->
+
+<script type="text/javascript">
+function SignForm2() {
+	//stamp by delegation model 
+	var provNum = '';
+	var userBillingNo = document.getElementById('user_ohip_no').value;
+	if (parseInt(userBillingNo) > 100) {
+		// then a valid billing number so use the current user id 
+		provNum = document.getElementById('user_id').value; 
+		if (provNum != document.getElementById('doctor_no').value && !!document.getElementById('doctor')) {
+			document.getElementById('doctor').value=document.getElementById('CurrentUserName').value + ' CC: ' + document.getElementById('doctor').value;
+		}
+	} else { 
+		provNum = document.getElementById('doctor_no').value; 
+	}
+	document.getElementById('Stamp').src = '../eform/displayImage.do?imagefile=consult_sig_'+provNum+'.png';
+}
+function toggleMe(){
+	if (document.getElementById("Stamp").src.indexOf("BNK.png")>0){
+		SignForm2()
+	} else {
+		document.getElementById("Stamp").src = "../eform/displayImage.do?imagefile=BNK.png";
+	}
+}
+</script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+	document.getElementById('FormName').submit()
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="SignForm2();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="page-break-after:always;position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}3111A2015.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="patient_nameL" id="patient_nameL" type="text" class="noborder" style="position:absolute; left:29px; top:218px; width:344px; height:21px; "  oscarDB=patient_nameL>
+<input name="patient_nameF" id="patient_nameF" type="text" class="noborder" style="position:absolute; left:383px; top:218px; width:229px; height:21px; "  oscarDB=patient_nameF>
+<input name="page1_1" id="page1_1" type="text" class="noborder" style="position:absolute; left:628px; top:218px; width:91px; height:21px; " >
+<input name="dob" id="dobc" type="text" class="noborder" style="position:absolute; left:26px; top:251px; width:147px; height:21px; "  oscarDB=dob>
+<input name="page1_2" id="page1_2" type="text" class="noborder" style="position:absolute; left:187px; top:251px; width:182px; height:21px; " >
+<input name="page1_3" id="page1_3" type="text" class="Radio only-one-radio" style="position:absolute; left:378px; top:254px;" >
+<input name="page1_4" id="page1_4" type="text" class="Radio only-one-radio" style="position:absolute; left:435px; top:254px;" >
+<input name="page1_5" id="page1_5" type="text" class="Radio only-one-radio" style="position:absolute; left:512px; top:254px;" >
+<input name="doctor_first_name" id="doctor_first_name" type="text" class="noborder" style="position:absolute; left:20px; top:486px; width:235px; height:19px; "  oscarDB=doctor_first_name>
+<input name="doctor_last_name" id="doctor_last_name" type="text" class="noborder" style="position:absolute; left:273px; top:486px; width:336px; height:19px; "  oscarDB=doctor_last_name>
+<input name="doc_init" id="doc_init" type="text" class="noborder" style="position:absolute; left:626px; top:486px; width:104px; height:19px; " >
+<textarea name="clinic_label" id="clinic_label" type="text" class=" noborder" style="position:absolute; left:387px; top:632px; width:348px; height:94px; "  oscarDB=clinic_label></textarea>
+<input name="prov1" id="prov1" type="text" class="Radio only-one-healthprov" style="position:absolute; left:25px; top:632px;background-color:transparent; " >
+<input name="prov2" id="prov2" type="text" class="Radio only-one-healthprov" style="position:absolute; left:25px; top:653px;background-color:transparent; " >
+<input name="prov3" id="prov3" type="text" class="Radio only-one-healthprov" style="position:absolute; left:25px; top:674px;background-color:transparent; " >
+<input name="prov4" id="prov4" type="text" class="Radio only-one-healthprov" style="position:absolute; left:25px; top:693px;background-color:transparent; " >
+<input name="numdiets" id="numdiets" type="text" class="noborder" style="position:absolute; left:261px; top:724px; width:96px; height:17px; " >
+<div style="position:absolute; left:84px; top:757px;">
+<img id="Stamp" src="../eform/displayImage.do?imagefile=BNK.png" width="192" height="61" onclick="toggleMe();">
+</div>
+
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:538px; top:776px; width:118px; height:27px; "  oscarDB=today>
+</div>
+
+<div id="page2" style="page-break-after:always;position:relative;" >
+<img id="BGImage2" src="${oscar_image_path}3111B2015.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="page2_9" id="page2_9" type="text" class="Xbox" style="position:absolute; left:27px; top:106px;" >
+<input name="page2_10" id="page2_10" type="text" class="Xbox" style="position:absolute; left:27px; top:151px;" >
+<input name="page2_11" id="page2_11" type="text" class="Xbox" style="position:absolute; left:27px; top:225px;" >
+<input name="page2_12" id="page2_12" type="text" class="Xbox" style="position:absolute; left:27px; top:279px;" >
+<input name="page2_13" id="page2_13" type="text" class="Xbox" style="position:absolute; left:27px; top:323px;" >
+<input name="page2_14" id="page2_14" type="text" class="Xbox" style="position:absolute; left:27px; top:363px;" >
+<input name="page2_15" id="page2_15" type="text" class="Xbox" style="position:absolute; left:27px; top:411px;" >
+<input name="page2_16" id="page2_16" type="text" class="Xbox" style="position:absolute; left:27px; top:456px;" >
+<input name="page2_17" id="page2_17" type="text" class="Xbox" style="position:absolute; left:27px; top:500px;" >
+<input name="page2_18" id="page2_18" type="text" class="Xbox" style="position:absolute; left:27px; top:579px;" >
+<input name="page2_19" id="page2_19" type="text" class="Xbox" style="position:absolute; left:27px; top:622px;" >
+<input name="page2_20" id="page2_20" type="text" class="Xbox" style="position:absolute; left:27px; top:665px;" >
+<input name="page2_21" id="page2_21" type="text" class="Xbox" style="position:absolute; left:27px; top:741px;" >
+<input name="page2_22" id="page2_22" type="text" class="Xbox" style="position:absolute; left:31px; top:831px;" >
+<input name="page2_23" id="page2_23" type="text" class="Radio only-one-dur1" style="position:absolute; left:357px; top:106px;" >
+<input name="page2_24" id="page2_24" type="text" class="Radio only-one-dur1" style="position:absolute; left:418px; top:106px;" >
+<input name="page2_25" id="page2_25" type="text" class="Radio only-one-dur1" style="position:absolute; left:479px; top:106px;" >
+<input name="page2_26" id="page2_26" type="text" class="Radio only-one-dur2" style="position:absolute; left:360px; top:149px;" >
+<input name="page2_27" id="page2_27" type="text" class="Radio only-one-dur2" style="position:absolute; left:417px; top:149px;" >
+<input name="page2_28" id="page2_28" type="text" class="Radio only-one-dur2" style="position:absolute; left:476px; top:149px;" >
+<input name="page2_29" id="page2_29" type="text" class="Radio only-one-dur3" style="position:absolute; left:356px; top:229px;" >
+<input name="page2_30" id="page2_30" type="text" class="Radio only-one-dur3" style="position:absolute; left:414px; top:229px;background-color:transparent; " >
+<input name="page2_31" id="page2_31" type="text" class="Radio only-one-dur3" style="position:absolute; left:476px; top:229px;background-color:transparent; " >
+<input name="page2_32" id="page2_32" type="text" class="Radio only-one-dur4" style="position:absolute; left:359px; top:278px;background-color:transparent; " >
+<input name="page2_33" id="page2_33" type="text" class="Radio only-one-dur4" style="position:absolute; left:415px; top:278px;background-color:transparent; " >
+<input name="page2_34" id="page2_34" type="text" class="Radio only-one-dur4" style="position:absolute; left:477px; top:278px;background-color:transparent; " >
+<input name="page2_35" id="page2_35" type="text" class="Radio only-one-dur5" style="position:absolute; left:357px; top:324px;background-color:transparent; " >
+<input name="page2_36" id="page2_36" type="text" class="Radio only-one-dur5" style="position:absolute; left:415px; top:324px;background-color:transparent; " >
+<input name="page2_37" id="page2_37" type="text" class="Radio only-one-dur5" style="position:absolute; left:477px; top:324px;background-color:transparent; " >
+<input name="page2_38" id="page2_38" type="text" class="Radio only-one-dur6" style="position:absolute; left:356px; top:411px;background-color:transparent; " >
+<input name="page2_39" id="page2_39" type="text" class="Radio only-one-dur6" style="position:absolute; left:415px; top:411px;background-color:transparent; " >
+<input name="page2_40" id="page2_40" type="text" class="Radio only-one-dur6" style="position:absolute; left:475px; top:411px;background-color:transparent; " >
+<input name="page2_41" id="page2_41" type="text" class="Radio only-one-dur7" style="position:absolute; left:359px; top:455px;background-color:transparent; " >
+<input name="page2_42" id="page2_42" type="text" class="Radio only-one-dur7" style="position:absolute; left:413px; top:455px;background-color:transparent; " >
+<input name="page2_43" id="page2_43" type="text" class="Radio only-one-dur7" style="position:absolute; left:477px; top:455px;background-color:transparent; " >
+<input name="page2_44" id="page2_44" type="text" class="Radio only-one-dur8" style="position:absolute; left:357px; top:496px;background-color:transparent; " >
+<input name="page2_45" id="page2_45" type="text" class="Radio only-one-dur8" style="position:absolute; left:417px; top:496px;background-color:transparent; " >
+<input name="page2_46" id="page2_46" type="text" class="Radio only-one-dur8" style="position:absolute; left:477px; top:496px;background-color:transparent; " >
+<input name="page2_47" id="page2_47" type="text" class="Radio only-one-dur9" style="position:absolute; left:357px; top:578px;background-color:transparent; " >
+<input name="page2_48" id="page2_48" type="text" class="Radio only-one-dur9" style="position:absolute; left:416px; top:578px;background-color:transparent; " >
+<input name="page2_49" id="page2_49" type="text" class="Radio only-one-dur9" style="position:absolute; left:476px; top:578px;background-color:transparent; " >
+<input name="page2_50" id="page2_50" type="text" class="Radio only-one-dur10" style="position:absolute; left:358px; top:623px;background-color:transparent; " >
+<input name="page2_51" id="page2_51" type="text" class="Radio only-one-dur10" style="position:absolute; left:416px; top:623px;background-color:transparent; " >
+<input name="page2_52" id="page2_52" type="text" class="Radio only-one-dur10" style="position:absolute; left:476px; top:623px;background-color:transparent; " >
+<input name="page2_53" id="page2_53" type="text" class="Radio only-one-dur11" style="position:absolute; left:356px; top:665px;background-color:transparent; " >
+<input name="page2_54" id="page2_54" type="text" class="Radio only-one-dur11" style="position:absolute; left:415px; top:665px;background-color:transparent; " >
+<input name="page2_55" id="page2_55" type="text" class="Radio only-one-dur11" style="position:absolute; left:477px; top:665px;background-color:transparent; " >
+<input name="infant_birth" id="infant_birth" type="text" class="noborder" style="position:absolute; left:390px; top:730px; width:137px; height:31px; " >
+<input name="page2_56" id="page2_56" type="text" class="Radio only-one-dur12" style="position:absolute; left:359px; top:829px;background-color:transparent; " >
+<input name="page2_57" id="page2_57" type="text" class="Radio only-one-dur12" style="position:absolute; left:415px; top:829px;background-color:transparent; " >
+<input name="page2_58" id="page2_58" type="text" class="Radio only-one-dur12" style="position:absolute; left:476px; top:829px;background-color:transparent; " >
+</div>
+
+<div id="page3" style="position:relative;" >
+<img id="BGImage3" src="${oscar_image_path}3111C2015.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="page3_59" id="page3_59" type="text" class="Xbox" style="position:absolute; left:30px; top:84px;" >
+<input name="page3_60" id="page3_60" type="text" class="Xbox" style="position:absolute; left:30px; top:128px;" >
+<input name="page3_61" id="page3_61" type="text" class="Xbox" style="position:absolute; left:30px; top:208px;" >
+<input name="page3_62" id="page3_62" type="text" class="Xbox" style="position:absolute; left:224px; top:208px;" >
+<input name="page3_63" id="page3_63" type="text" class="Xbox" style="position:absolute; left:30px; top:279px;" >
+<input name="page3_64" id="page3_64" type="text" class="Xbox" style="position:absolute; left:30px; top:399px;" >
+<input name="page3_65" id="page3_65" type="text" class="Xbox" style="position:absolute; left:30px; top:440px;" >
+<input name="page3_66" id="page3_66" type="text" class="Xbox" style="position:absolute; left:30px; top:482px;" >
+<input name="page3_67" id="page3_67" type="text" class="Xbox" style="position:absolute; left:30px; top:674px;" >
+<input name="page3_68" id="page3_68" type="text" class="Xbox" style="position:absolute; left:206px; top:674px;" >
+<input name="page3_69" id="page3_69" type="text" class="Radio only-one-dur13" style="position:absolute; left:358px; top:85px;" >
+<input name="page3_70" id="page3_70" type="text" class="Radio only-one-dur13" style="position:absolute; left:415px; top:85px;" >
+<input name="page3_71" id="page3_71" type="text" class="Radio only-one-dur13" style="position:absolute; left:476px; top:85px;" >
+<input name="page3_72" id="page3_72" type="text" class="Radio only-one-dur14" style="position:absolute; left:358px; top:130px;" >
+<input name="page3_73" id="page3_73" type="text" class="Radio only-one-dur14" style="position:absolute; left:416px; top:130px;" >
+<input name="page3_74" id="page3_74" type="text" class="Radio only-one-dur14" style="position:absolute; left:476px; top:130px;" >
+<input name="page3_75" id="page3_75" type="text" class="Radio only-one-dur15" style="position:absolute; left:359px; top:173px;" >
+<input name="page3_76" id="page3_76" type="text" class="Radio only-one-dur15" style="position:absolute; left:416px; top:173px;" >
+<input name="page3_77" id="page3_77" type="text" class="Radio only-one-dur15" style="position:absolute; left:477px; top:173px;" >
+<input name="page3_78" id="page3_78" type="text" class="Radio only-one-dur16" style="position:absolute; left:357px; top:278px;" >
+<input name="page3_79" id="page3_79" type="text" class="Radio only-one-dur16" style="position:absolute; left:414px; top:278px;" >
+<input name="page3_80" id="page3_80" type="text" class="Radio only-one-dur17" style="position:absolute; left:359px; top:398px;" >
+<input name="page3_81" id="page3_81" type="text" class="Radio only-one-dur17" style="position:absolute; left:416px; top:398px;" >
+<input name="page3_82" id="page3_82" type="text" class="Radio only-one-dur18" style="position:absolute; left:357px; top:441px;" >
+<input name="page3_83" id="page3_83" type="text" class="Radio only-one-dur18" style="position:absolute; left:415px; top:441px;" >
+<input name="page3_84" id="page3_84" type="text" class="Radio only-one-dur18" style="position:absolute; left:476px; top:441px;" >
+<input name="page3_85" id="page3_85" type="text" class="Radio only-one-dur19" style="position:absolute; left:359px; top:486px;" >
+<input name="page3_86" id="page3_86" type="text" class="Radio only-one-dur19" style="position:absolute; left:415px; top:486px;" >
+<input name="page3_87" id="page3_87" type="text" class="Radio only-one-dur19" style="position:absolute; left:476px; top:486px;" >
+<input name="page3_88" id="page3_88" type="text" class="Radio only-one-dur20" style="position:absolute; left:358px; top:640px;" >
+<input name="page3_89" id="page3_89" type="text" class="Radio only-one-dur20" style="position:absolute; left:414px; top:640px;" >
+<input name="page3_90" id="page3_90" type="text" class="Radio only-one-dur20" style="position:absolute; left:475px; top:640px;" >
+<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+<input type="hidden" name="user_id" id="user_id" oscarDB=current_user_id>
+<input type="hidden" name="user_ohip_no" id="user_ohip_no" oscarDB=current_user_ohip_no>
+<input type="hidden" name="doctor_no" id="doctor_no" oscarDB=doctor_provider_no>
+<div id="signatureDisplay"></div>
+<input type="hidden" name="signatureValue" id="signatureValue">
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" id="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick=" releaseDirtyFlag();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+	</td></tr></table>
+
+</div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "today", ifFormat : "%Y-%m-%d",  button : "today" } );
+	Calendar.setup( { inputField : "infant_birth", ifFormat : "%Y-%m-%d",  button : "infant_birth" } );
+</script>
+
+
+<!-- Xbox Script -->
+<script type="text/javascript">
+	var b = document.getElementsByClassName('Xbox');
+	for (var i = 0; i < b.length; i++) {
+		b[i].onclick = function(){
+			let x = this.id;
+			if (document.getElementById(x).value.length < 1) {
+				document.getElementById(x).value ='X';
+			} else {
+				document.getElementById(x).value ='';
+			}
+			return false;
+		}
+	}
+</script>
+
+
+<!-- Radio Script -->
+<script type="text/javascript">
+	var r = document.getElementsByClassName('Radio');
+	for ( var i = 0; i < r.length; i++) {
+		r[i].onclick = function(){
+			let x = this.id;
+			let series = '';
+			let classes = document.getElementById(x).getAttribute('class').split(' ');
+			for( j = 0; j < classes.length; j++ ) {
+				if (classes[j].indexOf('ly-one-') > 0) {let x = this.id;
+					series='.'+classes[j];;
+				}
+			}
+			if (series==''){ console.log('missing only-one-x class'); return;}
+			var partA=x.substring(0, x.indexOf('_'));
+			let items=document.querySelectorAll(series);
+			for(let item of items){
+				if(x!=item.id) {
+					item.value='';
+					item.removeAttribute('required');
+				} else {
+					if (document.getElementById(x).value !='X') {
+						document.getElementById(x).value = 'X';
+					} else {
+						document.getElementById(x).value ='';
+					}
+				}
+			}
+		}
+	} 
+</script>
+
+</body>
+</html>

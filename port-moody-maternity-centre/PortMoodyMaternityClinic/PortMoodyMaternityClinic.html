@@ -1,0 +1,510 @@
+<html>
+<head>
+
+<!-- Update Jun2014 add Ectopic and SA/TA; works better if measurements also created -->
+<!-- V2 update Jun29_2017 based on new background form C Clelland. Reflects new SIPS/NIPT/FTS guidelines -->
+<!-- V3 update Mar24_2020 changed name to Port Moody Maternity Clinic_was Community Maternity Clinic -->
+
+<!-- measurement type="ECTP" typeDesc="Ectopic" typeDisplayName="Ectopic" measuringInstrc="Ectopic Pregnancy" validationRule name="Numeric Value: 0 to 100"-->
+<!--  measurement type="SAB" typeDesc="SAB" typeDisplayName="Spontaneous Abortions" measuringInstrc="Number of miscarriages"><validationRule name="Numeric Value: 0 to 100" -->
+
+<!-- Do not use apostrophes - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+
+<!-- script to link to other pages -->
+<script language="javascript" src="${oscar_image_path}onBodyLoad.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="print">
+ .DoNotPrint {display:none;}
+ .noborder {
+	 border :0px;
+	 background:transparent;
+	 scrollbar-3dlight-color:transparent;
+	 scrollbar-arrow-color:transparent;
+	 scrollbar-base-color:transparent;
+	 scrollbar-darkshadow-color:transparent;
+	 scrollbar-face-color:transparent;
+	 scrollbar-highlight-color:transparent;
+	 scrollbar-shadow-color:transparent;
+	 scrollbar-track-color:transparent;
+	 overflow:hidden;
+ }
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 17px;
+	height: 17px;
+	font-size: 17px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	font-family: Arial;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.box2 {
+	position: absolute;
+	width:14px;
+	height:14px;
+	font-size: 14px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+.circle {
+	position:absolute;
+	width:32px;
+	height:34px;
+	font-family:Arial;
+	text-align:center;
+	font-size:36px;
+	background:transparent;
+	border:0px;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+.FontSizeChange {
+	position:absolute;
+	width:16px;
+	height:15px;
+	font-size:13px;
+	cursor:pointer;
+	background:yellow;
+	text-align:center;
+	border: 1px solid #000000;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {			
+			// new off-line architecture as per K Yap
+			setDocumentTitle('Port Moody Maternity Clinic',document.getElementById('PatientNameL').value);
+			loadFontSize();
+			setDefaults();
+
+			// Optimize window size/width
+			top.window.resizeTo(950, screen.availHeight);
+		}
+		
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PatientNameL) {
+			// set document title
+			document.title = Title + '_' + PatientNameL;
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				//document.getElementById('').value = 'X';
+
+			// Change user name to full First Name, Last Name
+			// Get the name
+			var fullName = document.getElementById("current_user_name").value;
+	
+			// Split the value
+			var splitName = fullName.split(",");
+			var firstName = "";
+			var lastName  = "";
+	
+			// Check for last name
+			if(splitName.length >= 1) {
+				lastName = splitName[0].trim();
+			}
+			if(splitName.length >= 2) {
+				firstName = splitName[1].trim();
+			}
+			var First_Last_Name = firstName + " " + lastName;
+	
+			// Show the fields on the page
+			document.FormName.CurrentProviderDoctor.value = First_Last_Name;
+			}
+		}
+
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag();
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		/****************************
+		Checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+				$( this ).click();
+				return false;
+				}
+			});
+		});
+
+		/****************************
+		Circle function
+		****************************/
+		function changeValueO(x) {
+			if (document.getElementById(x).value == '')
+				document.getElementById(x).value = 'O';
+			else
+				document.getElementById(x).value = '';
+		}
+
+		/****************************
+			scripts to confirm closing of window if have not saved yet
+		****************************/
+			//keypress events trigger dirty flag
+			var needToConfirm = true;
+			document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+			needToConfirm = true;
+		}
+
+		function releaseDirtyFlag() {
+			needToConfirm = false; //Call this function if does not require an alert.
+			//this could be called when save button is clicked
+		}
+			window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+			if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+			}
+		}
+
+	/****************************
+		script to Increase or Decrease the Font Size
+		name = input name/id, delta = increase (+) or decrease (-) increment #
+		Requires loadFontSize(); in startUp, or in onload line
+	****************************/
+	function changeFontSize(name, delta) {
+		var element = $("#" + name)
+		var oldSize = parseInt(element.css("font-size"));
+		var newSize = oldSize + delta;
+
+		// Save new font size into "value" field of hidden element
+		$("#" + name + "_fontsize").attr('value', newSize);
+
+		// Set font size
+		element.css({'font-size': newSize + 'px'});
+	}
+
+		// Retains altered font size when eForm is reopened; 
+		// Requires hidden inputs with format for each field using this feature: 
+		// <input type="hidden" name="Input_fontsize" id="Input_fontsize" value="">
+	function loadFontSize() {
+		$.each($("input[name*='_fontsize'"), function(index, element) {
+			var fontSize = element.value;
+
+			if (!!fontSize) {
+				var name = element.name.split('_')[0];
+				$("#" + name).css({'font-size': fontSize + 'px'});
+			}
+		});
+	}
+</script>
+
+</head>
+
+<body onload="startUp();">
+<form method="post" action="" name="FormName" id="FormName" >
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for checkGender -->
+<input type="hidden" name="checkGender" id="PatientGender" oscarDB=sex>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctorX" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<!-- Hidden input for font size changer inputs -->
+<input type="hidden" name="Medications_fontsize" id="Medications_fontsize" value="">
+<input type="hidden" name="Allergies_fontsize" id="Allergies_fontsize" value="">
+<input type="hidden" name="PastObstetricalHistory_fontsize" id="PastObstetricalHistory_fontsize" value="">
+<input type="hidden" name="PastMedicalSurgicalHistory_fontsize" id="PastMedicalSurgicalHistory_fontsize" value="">
+<input type="hidden" name="Comments_fontsize" id="Comments_fontsize" value="">
+
+<span style="position:absolute; left:50px; top:-5px; height:40px; width:750px; text-align:center; font-family:sans-serif; font-size:35px; font-weight:bold;">PORT MOODY MATERNITY CENTRE</span>
+<span style="position:absolute; left:50px; top:30px; height:40px; width:750px; text-align:center; font-family:sans-serif; font-size:25px; font-weight:bold;">Tel: 604-949-7248 &nbsp&nbsp Fax: 604-949-7249</span>
+
+<span style="position:absolute; left:25px; top:80px; font-family:sans-serif; font-size:18px; font-weight:bold">Port Moody Maternity Centre</span>
+<span style="position:absolute; left:25px; top:105px; font-family:sans-serif; font-size:18px; font-weight:bold">&#35;200 - 205 Newport Drive</span>
+<span style="position:absolute; left:25px; top:128px; font-family:sans-serif; font-size:18px; font-weight:bold">Port Moody, BC, V3H 5C9</span>
+
+<!-- Referring Physician Information -->
+<span style="position:absolute; left:345px; top:80px; font-family:sans-serif; font-size:18px; font-weight:bold">Referring Physician:</span>
+<input name="CurrentProviderDoctor" id="CurrentProviderDoctor" type="text" class="noborder" style="position:absolute; left:525px; top:80px; width:300px; font-family:sans-serif; font-size:16px;" value="">
+<textarea name="ClinicLabel" type="text" class="noborder" style="position:absolute; left:525px; top:105px; width:300px; height:100px; resize:none; font-family:sans-serif; font-size:14px;" oscarDB=clinic_label></textarea>
+
+<!-- Patient Information -->
+<span style="position:absolute; left:25px; top:210px; font-family:sans-serif; font-size:15px; text-decoration:underline;"><b>PATIENT INFORMATION&#58;</b></span>
+
+<span style="position:absolute; left:460px; top:210px; font-family:sans-serif; font-size:15px; text-decoration:underline;"><b>DATE&#58;</b></span>
+<input name="today" type="text" class="noborder" style="position:absolute; left:585px; top:205px; width:240px; font-family:sans-serif; font-size:18px;" oscardb=today>
+
+<span style="position:absolute; left:25px; top:240px; font-family:sans-serif; font-size:15px">NAME&#58;</span>
+<input name="PatientName" id="PatientName" type="text" class="noborder" style="position:absolute; left:75px; top:235px; width:350px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=patient_name>
+
+<span style="position:absolute; font-family:sans-serif; font-size:15px; top:240px; left:460px">HOME PHONE&#58;</span>
+<input name="phone1" type="text" class="noborder" style="position:absolute; left:585px; top:235px; width:240px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=phone>
+
+<span style="position:absolute; left:25px; top:270px; font-family:sans-serif; font-size:15px">DOB&#58;</span>
+<input name="DOB" type="text" class="noborder" style="position:absolute; left:75px; top:265px; width:350px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=dob>
+
+<span style="position:absolute; left:460px; top:270px; font-family:sans-serif; font-size:15px">WORK PHONE&#58;</span>
+<input name="phoneWork" type="text" class="noborder" style="position:absolute; left:585px; top:265px; width:240px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=phone2>
+
+<span style="position:absolute; left:25px; top:300px; font-family:sans-serif; font-size:15px">PHN&#58;</span>
+<input name="PHN" type="text" class="noborder" style="position:absolute; left:75px; top:295px; width:350px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=HIN>
+
+<span style="position:absolute; left:460px; top:300px; font-family:sans-serif; font-size:15px">CELL PHONE&#58;</span>
+<input name="phoneCell" type="text" class="noborder" style="position:absolute; left:585px; top:295px; width:240px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=cell>
+
+<span style="position:absolute; left:25px; top:330px; font-family:sans-serif; font-size:15px">ADDRESS&#58;</span>
+<input name="Address" type="text" class="noborder" style="position:absolute; left:105px; top:325px; width:720px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=addressLine>
+
+<!-- Obstetrical Information -->
+<span style="position:absolute; left:25px; top:360px; font-family:sans-serif; font-size:15px;"><b>G&#58;</b></span>
+<input id="Gravida" name="m$G#value" type="text" class="noborder" style="position:absolute; left:42px; top:359px; width:30px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscardb=m$G#value>
+
+<span style="position:absolute; left:80px; top:360px; font-family:sans-serif; font-size:15px;"><b>T&#58;</b></span>
+<input id="Term" name="m$TERM#value" type="text" class="noborder" style="position:absolute; left:95px; top:359px; width:20px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscardb=m$TERM#value>
+
+<span style="position:absolute; left:125px; top:360px; font-family:sans-serif; font-size:15px;"><b>P&#58;</b></span>
+<input id="PreTerm" name="m$PRET#value" type="text" class="noborder" style="position:absolute; left:142px; top:359px; width:20px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscardb=m$PRET#value>
+
+<span style="position:absolute; left:170px; top:360px; font-family:sans-serif; font-size:15px;"><b>Ect&#58;</b></span>
+<input id="Ectopic" name="m$ECTP#value" type="text" class="noborder" style="position:absolute; left:200px; top:359px; width:20px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscardb=m$ECTP#value>
+
+<span style="position:absolute; left:230px; top:360px; font-family:sans-serif; font-size:15px;"><b>SA&#58;</b></span>
+<input id="SA" name="m$SAB#value" type="text" class="noborder" style="position:absolute; left:257px; top:359px; width:20px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscarDB=m$SAB#value>
+
+<span style="position:absolute; left:280px; top:360px; font-family:sans-serif; font-size:15px;"><b>TA&#58;</b></span>
+<input id="TOP" name="m$TOP#value" type="text" class="noborder" style="position:absolute; left:307px; top:359px; width:20px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscarDB=m$TOP#value>
+
+<span style="position:absolute; left:330px; top:360px; font-family:sans-serif; font-size:15px;"><b>L&#58;</b></span>
+<input id="Live" name="m$LIVE#value" type="text" class="noborder" style="position:absolute; left:347px; top:359px; width:20px; font-family:sans-serif; font-size:15px; font-weight:bold; text-align:center;" oscarDB=m$LIVE#value>
+
+<span style="position:absolute; left:425px; top:360px; font-family:sans-serif; font-size:15px">LNMP&#58;</span>
+<span style="position:absolute; left:475px; top:385px; width:100px; text-align:center; font-family:sans-serif; font-size:10px">(yyyy-mm-dd)</span>
+<input name="m$LMP#value" id="m$LMP#value" type="text" class="noborder" style="position:absolute; left:475px; top:357px; width:100px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscardb=m$LMP#value>
+<span style="position:absolute; left:580px; top:360px; font-family:sans-serif; font-size:15px">EDC&#58;</span>
+<input name="EDC" type="text" class="noborder" style="position:absolute; left:620px; top:357px; width:100px; font-family:sans-serif; font-size:18px; text-decoration:underline;" oscarDB=m$EDD#value>
+
+<input name="Certain" id="Certain" type="text" class="Xbox box2" style="left:420px; top:400px;"
+	onclick="document.FormName.UnCertain.value='';">
+<span style="position:absolute; left:440px; top:400px; font-family:sans-serif; font-size:15px">Certain</span>
+<input name="UnCertain" id="UnCertain" type="text" class="Xbox box2" style="left:500px; top:400px;"
+	onclick="document.FormName.Certain.value='';">
+<span style="position:absolute; left:520px; top:400px; font-family:sans-serif; font-size:15px">Uncertain</span>
+
+<span style="position:absolute; left:25px; top:425px; font-family:sans-serif; font-size:15px; text-decoration:underline;"><i>PLEASE ENSURE THAT <b>PMMC</b> HAS BEEN COPIED ON <b><u>ALL</u></b> LAB WORK AND RADIOLOGY EXAMS ORDERED</i></span>
+
+<span style="position:absolute; left:25px; top:450px; font-family:sans-serif; font-size:18px;" title="Ideally done at 8-14 wks"><a style="color:black; text-decoration:none;" href="http://www.perinatalservicesbc.ca/Documents/Screening/Prenatal-Families/UnderstandingUltrasound.pdf" target="_blank"><b>Dating US&#58;</b></a></span>
+<input name="Dating_US_order" id="Dating_US_order" type="text" class="Xbox box1" style="left:140px; top:450px;"
+	onclick="document.FormName.Dating_US_done.value=''; document.FormName.Dating_US_Report.value='';">
+<span style="position:absolute; left:165px; top:450px; font-family:sans-serif; font-size:18px;">Ordered</span>
+<span style="position:absolute; left:240px; top:450px; font-family:sans-serif; font-size:18px;">- Location&#58;</span>
+<input name="Dating_US_Loc" type="text" class="noborder" style="position:absolute; left:330px; top:448px; width:225px; font-family:sans-serif; font-size:18px; text-decoration:underline;" value="">
+<input name="Dating_US_done" id="Dating_US_done" type="text" class="Xbox box1" style="left:575px; top:450px;"
+	onclick="document.FormName.Dating_US_order.value='';">
+<span style="position:absolute; left:600px; top:450px; font-family:sans-serif; font-size:18px;">Done</span>
+<input name="Dating_US_Report" id="Dating_US_Report" type="text" class="Xbox box1" style="left:665px; top:450px;">
+<span style="position:absolute; left:690px; top:450px; font-family:sans-serif; font-size:18px;">Report Attached</span>
+
+<span style="position:absolute; left:25px; top:475px; font-family:sans-serif; font-size:18px;" title="Nuchal Translucency"><a style="color:black; text-decoration:none;" href="http://www.perinatalservicesbc.ca/Documents/Screening/Prenatal-HCP/NTUltrasound.pdf" target="_blank"><b>NT Scan:</b></a></span>
+<input name="NT_Scan_order" id="NT_Scan_order" type="text" class="Xbox box1" style="left:140px; top:475px;"
+	onclick="document.FormName.NT_Scan_done.value=''; document.FormName.NT_Scan_Report.value='';">
+<span style="position:absolute; left:165px; top:475px; font-family:sans-serif; font-size:18px;">Ordered</span>
+<span style="position:absolute; left:240px; top:475px; font-family:sans-serif; font-size:18px;" title="Click for locations"><a style="color:black; text-decoration:none;" href="http://www.perinatalservicesbc.ca/health-professionals/professional-resources/screening/prenatal-genetic/nuchal-translucency-(nt)-sites-in-bc" target="_blank">- Location&#58;</a></span>
+<input name="NT_Scan_Loc" type="text" class="noborder" style="position:absolute; left:330px; top:473px; width:225px; font-family:sans-serif; font-size:18px; text-decoration:underline;" value="">
+<input name="NT_Scan_done" id="NT_Scan_done" type="text" class="Xbox box1" style="left:575px; top:475px;"
+	onclick="document.FormName.NT_Scan_order.value='';">
+<span style="position:absolute; left:600px; top:475px; font-family:sans-serif; font-size:18px;">Done</span>
+<input name="NT_Scan_Report" id="NT_Scan_Report" type="text" class="Xbox box1" style="left:665px; top:475px;">
+<span style="position:absolute; left:690px; top:475px; font-family:sans-serif; font-size:18px;">Report Attached</span>
+
+<span style="position:absolute; left:25px; top:500px; font-family:sans-serif; font-size:18px;" title="Serum Integrated Prenatal Screen/Non-Invasive Prenatal Testing/First Trimester Screening"><b>SIPS/NIPT/FTS&#58;</b></span>
+<input name="Discuss_Req" id="Discuss_Req" type="text" class="Xbox box1" style="left:165px; top:500px;"
+	onclick="document.FormName.Discuss_Decline.value=''; document.FormName.Discuss_Not.value='';">
+<span style="position:absolute; left:190px; top:500px; font-family:sans-serif; font-size:18px;">Discussed and requisition given</span>
+
+<input name="Discuss_Decline" id="Discuss_Decline" type="text" class="Xbox box1" style="left:165px; top:525px;"
+	onclick="document.FormName.Discuss_Req.value=''; document.FormName.Discuss_Not.value='';">
+<span style="position:absolute; left:190px; top:525px; font-family:sans-serif; font-size:18px;">Discussed and declined</span>
+<a class="DoNotPrint" style="position:absolute; left:575px; top:525px; font-family:sans-serif; font-size:18px; color:green;" href="http://www.perinatalservicesbc.ca/Documents/Guidelines-Standards/Maternal/PrenatalScreeningGuideline.pdf" target="_blank"  title="Perinatal Services BC Guidelines"><b>Reference</b></a>
+
+<input name="Discuss_Not" id="Discuss_Not" type="text" class="Xbox box1" style="left:165px; top:550px;"
+	onclick="document.FormName.Discuss_Decline.value=''; document.FormName.Discuss_Req.value='';">
+<span style="position:absolute; left:190px; top:550px; font-family:sans-serif; font-size:18px;">Not discussed</span>
+
+<span style="position:absolute; left:25px; top:575px; font-family:sans-serif; font-size:18px;"><b>Routine PN Labs&#42;:</b></span>
+<input name="Labs_order" id="Labs_order" type="text" class="Xbox box1" style="left:190px; top:575px;"
+	onclick="document.FormName.Labs_done.value=''; document.FormName.Labs_Report.value=''; document.FormName.Labs_Not.value='';">
+<span style="position:absolute; left:215px; top:575px; font-family:sans-serif; font-size:18px;">Ordered</span>
+<input name="Labs_done" id="Labs_done" type="text" class="Xbox box1" style="left:300px; top:575px;"
+	onclick="document.FormName.Labs_order.value=''; document.FormName.Labs_Not.value='';">
+<span style="position:absolute; left:325px; top:575px; font-family:sans-serif; font-size:18px;">Done</span>
+
+<input name="Labs_Report" id="Labs_Report" type="text" class="Xbox box1" style="left:390px; top:575px;">
+<span style="position:absolute; left:415px; top:575px; font-family:sans-serif; font-size:18px;">Report Attached</span>
+
+<input name="Labs_Not" id="Labs_Not" type="text" class="Xbox box1" style="left:565px; top:575px;"
+	onclick="document.FormName.Labs_order.value=''; document.FormName.Labs_done.value=''; document.FormName.Labs_Report.value='';">
+<span style="position:absolute; left:590px; top:575px; font-family:sans-serif; font-size:18px;">Not Ordered</span>
+
+<input name="labreq" id="labreq" type="button" class="DoNotPrint" style="position:absolute; left:705px; top:573px; background:lightskyblue;" value="Lab Requisition" oscarOPEN="1-1 Lab Req" title="to Lab Requisition eForm">
+
+<span style="position:absolute; left:25px; top:600px; font-family:sans-serif; font-size:13px;">&#91;&#42;CBC, TSH, Rubella titre, STS, HBsAg, Blood type-group &#43; screen, HepC Ab, Varicella Ab &#40;if status unknown&#41;, HIV &#40;with consent&#41;, urine C&amp;S&#93;</span>
+
+<span style="position:absolute; left:25px; top:625px; font-family:sans-serif; font-size:14px;">Please also include the following with referral&#58;</span>
+
+<span style="position:absolute; left:320px; top:625px; font-family:sans-serif; font-size:14px;">&#42; Prenatal records from your office</span>
+<span style="position:absolute; left:320px; top:645px; font-family:sans-serif; font-size:14px;">&#42; Previous Obstetric or Surgical reports</span>
+<span style="position:absolute; left:320px; top:665px; font-family:sans-serif; font-size:14px;">&#42; Last Pap smear and any relevant C&amp;S reports</span>
+
+<span style="position:absolute; left:25px; top:690px; font-family:sans-serif; font-size:16px; font-weight:bold; text-decoration:underline;">Medications&#58;</span>
+<textarea name="Medications" id="Medications" style="position:absolute; left:25px; top:707px; width:800px; height:50px; resize:none; font-family:sans-serif; font-size:15px;" oscarDB=druglist_line></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:709px;" onclick="changeFontSize('Medications', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:724px;" onclick="changeFontSize('Medications', -1);">&#9660;</span>
+
+<span style="position:absolute; left:25px; top:760px; font-family:sans-serif; font-size:16px; font-weight:bold; text-decoration:underline;">Allergies:</span>
+<textarea name="Allergies" id="Allergies" style="position:absolute; left:25px; top:777px; width:800px; height:50px; resize:none; font-family:sans-serif; font-size:15px;" oscarDB=allergies_des></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:779px;" onclick="changeFontSize('Allergies', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:794px;" onclick="changeFontSize('Allergies', -1);">&#9660;</span>
+
+<span style="position:absolute; left:25px; top:830px; font-family:sans-serif; font-size:16px; font-weight:bold; text-decoration:underline;">Past Obstetrical History:</span>
+<textarea name="PastObstetricalHistory" id="PastObstetricalHistory" style="position:absolute; left:25px; top:847px; width:800px; height:50px; resize:none; font-family:sans-serif; font-size:15px;"></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:849px;" onclick="changeFontSize('PastObstetricalHistory', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:864px;" onclick="changeFontSize('PastObstetricalHistory', -1);">&#9660;</span>
+
+<span style="position:absolute; left:25px; top:900px; font-family:sans-serif; font-size:16px; font-weight:bold; text-decoration:underline;">Past Medical&#47;Surgical History:</span>
+<textarea name="PastMedicalSurgicalHistory" id="PastMedicalSurgicalHistory" style="position:absolute; left:25px; top:917px; width:800px; height:50px; resize:none; font-family:sans-serif; font-size:15px;" oscarDB=Medical_History></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:919px;" onclick="changeFontSize('PastMedicalSurgicalHistory', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:934px;" onclick="changeFontSize('PastMedicalSurgicalHistory', -1);">&#9660;</span>
+
+<span style="position:absolute; left:25px; top:970px; font-family:sans-serif; font-size:16px; font-weight:bold; text-decoration:underline;">Comments:</span>
+<textarea name="Comments" id="Comments" style="position:absolute; left:25px; top:987px; width:800px; height:50px; resize:none; font-family:sans-serif; font-size:15px;"></textarea>
+<span class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:989px;" onclick="changeFontSize('Comments', 1);">&#9650;</span>
+<span class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:1004px;" onclick="changeFontSize('Comments', -1);">&#9660;</span>
+
+<span style="position:absolute; left:25px; top:1050px; width:800px; font-family:sans-serif; font-size:16px; font-weight:bold; text-align:center;">Your patient will be contacted directly with an appointment as soon as documents have been received.</span>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:25px; top:1100px; width:800px;">
+	<table><tr style="background:#e5f2ff;"><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onclick="history.go(0)"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="window.print();">
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onclick="printSubmit();">
+	</td></tr></table>
+<br>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border:0px;" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+<br>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Port Moody Maternity Centre Referral Form, </span>
+<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">created Jun29_2017 by Dr. John Yap is licensed under a</span> 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"> GPL</a>. 
+<span>Updated by Dr. Herbert Chang, Mar24_2020. Please consider supporting </span>
+<a href="https://oscar-emr.com/" target="_blank" style="color:green;">OSCAR EMR Canada</a> 
+<span> and/or </span>
+<a href="http://oscarbc.ca/" target="_blank" style="color:green;">OSCAR BC.</a>
+<br><br>
+</div>
+
+</div>
+ 
+</form>
+</body></html>

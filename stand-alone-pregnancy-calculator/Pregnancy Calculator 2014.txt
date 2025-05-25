@@ -1,0 +1,693 @@
+<html>
+
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Pregnancy Calculator V2a Updated Aug 2014 with latest SOGC Guidelines and CRL input</title>
+
+<!-- CSS Script that removes textarea and textbox borders when printing ---(put this inbetween <header></header>)----------------->
+<style type="text/css" media="print">
+div.DoNotPrint {
+	display: none;
+}
+
+input.noborder {
+	border : 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	//scrollbar : none;
+	border : 0px;
+}
+</style>
+
+<style type="text/css">
+/*!!
+Epoch DHTML JavaScript Calendar - Version 2.0.2
+English Edition
+CSS Style File
+(c) 2006-2007 MeanFreePath
+Free for NON-COMMERCIAL use - see website for details and updates
+http://www.meanfreepath.com/javascript_calendar/index.html
+!!*/
+
+table.calendar {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 0.8em;
+	border-collapse: collapse;
+	background-color: white;
+	border: solid #999999 1px;
+	background-color: white;
+	width: 215px;
+	text-align: center;
+	/*prevent user from selecting text in Mozilla & Safari - check calendar constructor for IE code)*/
+	-moz-user-select: none;
+    /*-khtml-user-select: none;*/
+}
+table.calendar a {
+}
+table.calendar a:hover {
+}
+table.calendar input, table.calendar select {
+	font-size: 10px;
+}
+table.calendar td, table.calendar th {
+	border: 0;
+	font-size: 10px;
+	text-align: center;
+}
+div.mainheading {
+	margin: 2px;
+}
+.closeBtn {
+	/*float: right;
+	width: 15px;
+	/*font-size: 1.5em;
+	height: 13px;
+
+	padding: 0 0 3px 0;
+	margin: 1px 8px 0 0;
+	border: solid black 1px;*/
+}
+/*all styles related to the main calendar grid*/
+table.cells {
+	border-collapse: collapse;
+	border: solid #CCCCCC 1px;
+	cursor: pointer;
+	empty-cells: show;
+	margin: 0 6px 0 6px;
+}
+/*the day headings*/
+table.cells th {
+	border: solid #CCCCCC 1px;
+	text-align: left;
+	font-weight: bold;
+	color: #0054E3;
+	width: 22px;
+}
+table.cells th.wkhead {
+	border-right: double #CCCCCC 3px;
+	cursor: default;
+	width: 22px;
+}
+/*The date cells*/
+table.cells td {
+	border: solid #CCCCCC 1px;
+	vertical-align: top;
+	text-align: left;
+	font-weight: bold;
+	height: 20px; /*IE doesn't like ems*/
+}
+table.cells td.wkhead {
+	background-color: white;
+	text-align: center;
+	border-right: double #CCCCCC 3px;
+	color: #0054E3;
+}
+table.cells td.noselect {
+	background-color: #EEEEEE;
+	color: #BBBBBB;
+	text-decoration: line-through;
+	cursor: default;
+}
+table.cells td.hlday {
+	background-color: #99FF99;
+}
+table.cells td.wkday {
+	background-color: #DDDDDD;
+}
+table.cells td.wkend {
+	background-color: #DDDDDD;
+}
+table.cells td.curdate {
+	background-color: #AAAADD;
+}
+table.cells td.cell_selected {
+	background-color: #99CCFF;
+	color: black;
+}
+table.cells td.notmnth {
+	background-color: #FFFFFF;
+	color: #CCCCCC;
+}
+table.cells td.notallowed {
+	background-color: white;
+	color: #EEEEEE;
+	font-style: italic;
+}
+table.cells td.hover {
+	background-color: #999999;
+}
+table.cells td div {
+	padding: 1px;
+	margin: 0;
+}
+</style>
+
+<script type="text/javascript">
+var calendarLMP, calendarEDDDates, calendarEDDUS, calendarToday, calendarGA, calendarUS1, calendarUS2; /*must be declared in global scope*/
+/*put the calendar initializations in the window's onload() method*/
+window.onload = function() {
+	calendarLMP = new Epoch('CalLMP','popup',document.getElementById('LMP'),false);
+	calendarEDDDates = new Epoch('CalEDDDates','popup',document.getElementById('EDDDates'),false);
+	calendarEDDUS = new Epoch('CalEDDUS','popup',document.getElementById('EDDUS'),false);
+	calendarToday = new Epoch('CalToday','popup',document.getElementById('CurrentDate'),false);
+	calendarGA = new Epoch('CalGA','popup',document.getElementById('GADate'),false);
+	calendarUS1 = new Epoch('CalUS1','popup',document.getElementById('US1Date'),false);
+	calendarUS2 = new Epoch('CalUS2','popup',document.getElementById('US2Date'),false);
+	calcEDD();
+	calcEDDFinal();
+	highlightEDD();
+};
+</script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}DHTMLJavascriptCalender.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}DateCalender.js"></script>
+<script type="text/javascript" src="DHTMLJavascriptCalender.js"></script>
+<script type="text/javascript" src="DateCalender.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}EDDfromCRL.js"></script>
+<script type="text/javascript" src="jquery-1.4.2.js"></script>
+<script type="text/javascript" src="EDDfromCRL.js"></script>
+
+<script type="text/javascript"> //pulls out the US variables
+ function calcEDDFinal(){
+ var lmpDate= $('#LMP').val();
+ if (!!lmpDate){
+ var lmpEDD= $('#EDDDates').val();
+ var lmpN= 162; //this is 23+1 weeks
+ //alert(lmpN);
+ var lmpT= lmpDate + '-' + lmpEDD;
+ //alert(lmpT);
+ }
+ var us1N=0;
+ var us1Date= $('#US1Date').val();
+ if (!!us1Date){
+ var us1EDD= $('#EDDUS1').val();
+ var us1W= $('#US1Week').val();
+ var us1D= $('#US1Day').val();
+ var us1N= (us1W*7)+(us1D*1);
+ //alert(us1N);
+ var us1T= us1Date +"-"+ us1W +"-"+ us1D;
+ //alert(us1T); 
+ }
+ var us2N=0;
+ var us2Date= $('#US2Date').val();
+ if (!!us2Date){
+ var us2EDD= $('#EDDUS2').val();
+ var us2W= $('#US2Week').val();
+ var us2D= $('#US2Day').val();
+ var us2N= (us2W*7)+(us2D*1);
+ //alert(us2N);
+ var us2T= us2Date +"-"+ us2W +"-"+ us2D;
+ //alert(us2T);
+  }
+  var EDD = "";
+ if ((((us1N < 49)||(us1N > 161)) && ((us2N < 49)||(us2N > 161))) &&(!!lmpDate)){   // if both US <7 or > 23 then use LMP
+    eddFinal= lmpEDD;
+	EDD = 'LMP';
+   }
+ if (((us1N >48)&&(us1N <162)) && ((us2N < 49)||(us2N > 161))) { //only one in range
+     eddFinal= us1EDD;
+	 EDD = 'US1';
+    }
+ if (((us1N <49)||(us1N >161)) && ((us2N > 48)&&(us2N < 162))) {
+     eddFinal= us2EDD;
+	 EDD = 'US2';
+    }
+ if ((((us1N >48)&&(us1N <162)) && ((us2N > 48)&&(us2N < 162)))&&(us1N < us2N)){  // both in range use the earliest US
+     eddFinal= us1EDD;
+	 EDD = 'US1';
+    }
+ if ((((us1N >48)&&(us1N <162)) && ((us2N > 48)&&(us2N < 162)))&&(us2N < us1N)){
+     eddFinal= us2EDD;
+	 EDD = 'US2';
+    }
+		//alert(eddFinal);
+document.getElementById('EDDtype').value = EDD;
+highlightEDD();
+}
+function highlightEDD(){
+x = document.getElementById('EDDtype').value;
+	if (x == "LMP"){
+		document.getElementById('EDDDatesRow').style.background = 'yellow';
+		document.getElementById('EDDDatesRow').style.outline = ' thin solid black';
+		document.getElementById('EDDUS1Row').style.background = 'white';
+		document.getElementById('EDDUS1Row').style.outline = 'thin none black';
+		document.getElementById('EDDUS2Row').style.background = 'white';
+		document.getElementById('EDDUS2Row').style.outline = 'thin none black';
+		var EDDConfirmed = $('#EDDDates').val();
+	} else if (x == "US1"){
+		document.getElementById('EDDDatesRow').style.background = 'white';
+		document.getElementById('EDDDatesRow').style.outline = ' thin none black';
+		document.getElementById('EDDUS1Row').style.background = 'yellow';
+		document.getElementById('EDDUS1Row').style.outline = 'thin solid black';
+		document.getElementById('EDDUS2Row').style.background = 'white';
+		document.getElementById('EDDUS2Row').style.outline = 'thin none black';
+        var EDDConfirmed = $('#EDDUS1').val();
+	} else if (x == "US2"){
+		document.getElementById('EDDDatesRow').style.background = 'white';
+		document.getElementById('EDDDatesRow').style.outline = ' thin none black';
+		document.getElementById('EDDUS1Row').style.background = 'white';
+		document.getElementById('EDDUS1Row').style.outline = 'thin none black';
+		document.getElementById('EDDUS2Row').style.background = 'yellow';
+		document.getElementById('EDDUS2Row').style.outline = 'thin solid black';
+		var EDDConfirmed = $('#EDDUS2').val();
+	}else{
+		document.getElementById('EDDDatesRow').style.background = 'white';
+		document.getElementById('EDDDatesRow').style.outline = ' thin none black';
+		document.getElementById('EDDUS1Row').style.background = 'white';
+		document.getElementById('EDDUS1Row').style.outline = 'thin none black';
+		document.getElementById('EDDUS2Row').style.background = 'white';
+		document.getElementById('EDDUS2Row').style.outline = 'thin none black';
+		var EDDConfirmed = "";
+	}
+	
+	var LMPVal= $('#LMP').val();
+	var LMPEDD= $('#EDDDates').val();
+	var LMPOut = LMPVal + "-" + LMPEDD + "-" + EDDConfirmed;  //Output this value as LMPComposite, output EDDConfirmed and LMPVal
+	var usDate1= $('#US1Date').val();var usDate2= $('#US2Date').val();
+	var usWeek1= $('#US1Week').val();var usWeek2= $('#US2Week').val();
+	var usDay1= $('#US1Day').val();var usDay2= $('#US2Day').val();
+	var usEDD1= $('#EDDUS1').val();var usEDD2= $('#EDDUS2').val();
+	var USOut1 = usDate1 + "-" + usWeek1 + "-" + usDay1 + "-" + usEDD1;
+	var USOut2 = usDate2 + "-" + usWeek2 + "-" + usDay2 + "-" + usEDD2;
+	 var us1N=0;var us1Date= $('#US1Date').val();if (!!us1Date){var us1W= $('#US1Week').val();var us1D= $('#US1Day').val();var us1N= (us1W*7)+(us1D*1);
+	   }
+	 var us2N=0;var us2Date= $('#US2Date').val();if (!!us2Date){var us2W= $('#US2Week').val();var us2D= $('#US2Day').val();var us2N= (us2W*7)+(us2D*1);
+       }
+	   //output one of these values as USComposite
+	 $('#UScomposite').val('');
+	if ((us1N > 48)&&((us2N < 49)||(!us2N))){
+	   if ( USOut1 != $('#USMeasurementComposite').val()) {
+	   $('#USComposite').val(USOut1);
+	}
+	}
+	if ((us2N > 48)&&((us1N < 49)||(!us1N))){
+	   if ( USOut2 != $('#USMeasurementComposite').val()) {
+	   $('#USComposite').val(USOut2);
+	}
+	}
+	if (((us1N > 48)&&(us2N > 48))&&(us1N<us2N)){
+	   if ( USOut1 != $('#USMeasurementComposite').val()) {
+	   $('#USComposite').val(USOut1);
+	}
+	}	 
+	if (((us1N > 48)&&(us2N > 48))&&(us1N>us2N)){
+	   if ( USOut2 != $('#USMeasurementComposite').val()) {
+	   $('#USComposite').val(USOut2);
+	}
+	}
+	
+	$('#LMPComposite').val('');
+	if ( LMPOut != $(LMPMeasurementComposite).val()) {
+	  $('#LMPComposite').val(LMPOut);
+	}
+	$('#LMPOutputDate').val('');
+	if ($('#LMP').val() != $('#LMPMeasurementDate').val()) {
+	  $('#LMPOutputDate').val(LMPVal);
+	}
+	$('#EDDOutputDate').val('');$('#EDCOutputDate').val('');
+	if (EDDConfirmed != $('#EDDMeasurementDate').val()) {
+	  $('#EDDOutputDate').val(EDDConfirmed);
+	}
+	if (EDDConfirmed != $('#EDCMeasurementDate').val()) {
+	  $('#EDCOutputDate').val(EDDConfirmed);
+	}
+	
+	
+}
+
+function calcEDD(){
+    $('#EDDcalc').css("color","green");
+	$('#EDDv1calc').css("color","black");
+	var d1 = Date.parse(document.getElementById('LMP').value);
+	if (d1){
+		var d1EDD = d1.clone().addWeeks(40);
+		document.getElementById('EDDDates').value = d1EDD.toString('yyyy-MM-dd');
+	}
+	var d2 = Date.parse(document.getElementById('US1Date').value);
+	if (d2){
+		var US1Week = document.getElementById('US1Week').value;
+			if (!US1Week){ US1Week = 0};
+		var US1Day = document.getElementById('US1Day').value;
+			if (!US1Day) {US1Day = 0};
+		var d2DaysPassed = (parseInt(US1Week * 7)) + parseInt(US1Day);
+		var d2DaysToEDD = 280 - d2DaysPassed;
+		var d2EDD = d2.clone().add({days:d2DaysToEDD});
+		document.getElementById('EDDUS1').value = d2EDD.toString('yyyy-MM-dd');	
+	}
+
+	var d3 = Date.parse(document.getElementById('US2Date').value);
+	if (d3){
+		var US2Week = document.getElementById('US2Week').value;
+			if (!US2Week){ US2Week = 0};
+		var US2Day = document.getElementById('US2Day').value;
+			if (!US2Day) {US2Day = 0};
+		var d3DaysPassed = (parseInt(US2Week)*7) + parseInt(US2Day);
+		var d3DaysToEDD = 280 - d3DaysPassed;
+		var d3EDD = d3.clone().add({days:d3DaysToEDD});
+		document.getElementById('EDDUS2').value = d3EDD.toString('yyyy-MM-dd');
+		}
+}
+
+
+function calcEDDV1(){
+    $('#EDDcalc').css("color","black");
+	$('#EDDv1calc').css("color","red");
+	var d1 = Date.parse(document.getElementById('LMP').value);
+
+	if (d1){
+		var d1EDD = d1.clone().addWeeks(40);
+		document.getElementById('EDDDates').value = d1EDD.toString('yyyy-MM-dd');
+		
+		if (!d2 && !d3){
+			EDD = "LMP";
+		}
+	}
+	var d2 = Date.parse(document.getElementById('US1Date').value);
+	var d2Trimester = 0;
+	if (d2){
+		var US1Week = document.getElementById('US1Week').value;
+			if (!US1Week){ US1Week = 0};
+		var US1Day = document.getElementById('US1Day').value;
+			if (!US1Day) {US1Day = 0};
+		var d2DaysPassed = (parseInt(US1Week * 7)) + parseInt(US1Day);
+			if (d2DaysPassed < (14 * 7)){
+				d2Trimester = 1;
+			}else if (d2DaysPassed >= (14 * 7)){
+				d2Trimester = 2;
+			}
+		var d2DaysToEDD = 280 - d2DaysPassed;
+		var d2EDD = d2.clone().add({days:d2DaysToEDD});
+		document.getElementById('EDDUS1').value = d2EDD.toString('yyyy-MM-dd');
+		
+		if (!d1 && !d3){ 
+			EDD = "US1";
+		}
+		if ((d1 && !d3)){
+			var diff = Math.abs(d1EDD - d2EDD); //in milliseconds
+			var diffDays =  diff/1000/60/60/24; // in days
+			if (d2Trimester == 1){
+				if (diffDays > 5){
+						EDD = "US1";
+				} else if (diffDays <=5){
+						EDD = "LMP";
+				}
+			}else if (d2Trimester == 2){
+				if (diffDays > 10){
+						EDD = "US1";
+					} else if (diffDays <=10){
+						EDD = "LMP";
+					}
+			}
+		}
+		if (d3 && (d2<d3)){
+			var diff = Math.abs(d1EDD - d2EDD); //in milliseconds
+			var diffDays =  diff/1000/60/60/24; // in days
+			if (d2Trimester == 1){
+				if (diffDays > 5){
+						EDD = "US1";
+				} else if (diffDays <=5){
+						EDD = "LMP";
+				}
+			}else if (d2Trimester == 2){
+				if (diffDays > 10){
+						EDD = "US1";
+					} else if (diffDays <=10){
+						EDD = "LMP";
+					}
+			}
+		}
+	}
+
+	var d3 = Date.parse(document.getElementById('US2Date').value);
+	var d3Trimester = 0;
+	if (d3){
+		var US2Week = document.getElementById('US2Week').value;
+			if (!US2Week){ US2Week = 0};
+		var US2Day = document.getElementById('US2Day').value;
+			if (!US2Day) {US2Day = 0};
+		var d3DaysPassed = (parseInt(US2Week)*7) + parseInt(US2Day);
+			if (d3DaysPassed < (14 * 7)){
+				d3Trimester = 1;
+			}else if (d3DaysPassed >= (14 * 7)){
+				d3Trimester = 2;
+			}
+		var d3DaysToEDD = 280 - d3DaysPassed;
+		var d3EDD = d3.clone().add({days:d3DaysToEDD});
+		document.getElementById('EDDUS2').value = d3EDD.toString('yyyy-MM-dd');
+
+		if (!d1 && !d2){ 
+			EDD = "US2";
+		}
+		if (d1 && !d2){
+			var diff = Math.abs(d1EDD - d3EDD); //in milliseconds
+			var diffDays =  diff/1000/60/60/24; // in days
+			if (d3Trimester == 1){
+				if (diffDays > 5){
+						EDD = "US2";
+				} else if (diffDays <=5){
+						EDD = "LMP";
+				}
+			}else if (d3Trimester == 2){
+				if (diffDays > 10){
+						EDD = "US2";
+					} else if (diffDays <=10){
+						EDD = "LMP";
+					}
+			}
+		}
+		if (d2 && (d3<d2)){
+			var diff = Math.abs(d1EDD - d3EDD); //in milliseconds
+			var diffDays =  diff/1000/60/60/24; // in days
+			if (d3Trimester == 1){
+				if (diffDays > 5){
+						EDD = "US2";
+				} else if (diffDays <=5){
+						EDD = "LMP";
+				}
+			}else if (d3Trimester == 2){
+				if (diffDays > 10){
+						EDD = "US2";
+					} else if (diffDays <=10){
+						EDD = "LMP";
+					}
+			}
+		}
+	}
+	document.getElementById('EDDtype').value = EDD;
+	highlightEDD();
+}
+
+function selectEDD(d1,d2,d3){
+	if (d1 && !d2 && !d3){
+		EDD = "LMP";
+	}
+	if (d1 && d2){
+		var diff = Math.abs(d1 - d2); //in milliseconds
+		var diffDays =  diff/1000/60/60/24; // in days
+		if (diffDays > 5){
+				EDD = "US1"
+			} else if (diffDays <=5){
+				EDD = "LMP"
+		}
+	}
+	if (d1 && !d2 && d3){
+		var diff = Math.abs(d1 - d3); //in milliseconds
+		var diffDays =  diff/1000/60/60/24; // in days
+		if (diffDays > 10){
+				EDD = "US2";
+			} else if (diffDays <=10){
+				EDD = "LMP";
+		}		
+	}
+	if (!d1 && d2){
+		EDD = "US1";
+	}
+	if (!d1 && !d2 && d3){
+		EDD = "US2";
+	}
+	
+	document.getElementById('EDDtype').value = EDD;
+	highlightEDD();
+}
+
+function calcGA(){
+    var EDD = document.getElementById('EDDtype').value;
+	if (EDD == "LMP"){
+		 var d2 = Date.parse(document.getElementById('EDDDates').value);  //use EDD by Dates
+	}else if(EDD == "US1"){
+		 var d2 = Date.parse(document.getElementById('EDDUS1').value);  //use EDD by 1st trimester US
+	}else if(EDD == "US2"){
+		 var d2 = Date.parse(document.getElementById('EDDUS2').value);  //use EDD by 2nd trimester US
+	}
+	d1 = Date.parse(document.getElementById('GADate').value);
+	if (d1){
+		var dx = d2 - d1; //in milliseconds
+		var DaysLeft = Math.round(dx/1000/60/60/24);
+		var DaysPassed = 280 - DaysLeft;
+		var WeeksPassed = Math.floor(DaysPassed/7);
+		var WeekRemainder = DaysPassed - (WeeksPassed * 7);
+		document.getElementById('GAWeek').value = WeeksPassed;
+		document.getElementById('GADay').value = WeekRemainder;
+	}
+}
+
+function calcDateAtWeek(){
+    var EDD = document.getElementById('EDDtype').value;
+	if (EDD == "LMP"){
+		 var d2 = Date.parse(document.getElementById('EDDDates').value);  //use EDD by Dates
+	}else if(EDD == "US1"){
+		 var d2 = Date.parse(document.getElementById('EDDUS1').value);  //use EDD by 1st trimester US
+	}else if(EDD == "US2"){
+		 var d2 = Date.parse(document.getElementById('EDDUS2').value);  //use EDD by 2nd trimester US
+	}
+	var GAWeek2 = parseInt(document.getElementById('GAWeek2').value);
+	var GADay2 = parseInt(document.getElementById('GADay2').value);
+	var GADayLeft = parseInt(280 - ((GAWeek2*7) + GADay2));
+	var DateAtGA = d2.add({days: -GADayLeft});
+	var DateAtGAString = DateAtGA.toString('yyyy-MM-dd');
+	document.getElementById('DateAtWeek').value = DateAtGAString;
+}
+
+</script>
+
+</head>
+
+<body>
+<form method="post" action="" name="FormName">
+<h1>Pregnancy Calculator V2a</h1>
+
+<table width="600">
+<tr>
+	<td width="300">Name:</td><td width="300"><input type="text" name="PatientName" id="PatientName" style="width:100%;" oscarDB=patient_name></td>
+</tr>
+<tr>
+	<td>Birthdate:</td><td><input type="text" name="DOB" id="DOB" style="width:100%;" oscarDB=DOB></td>
+</tr>
+<tr>
+	<td>Today (yyyy-mm-dd):</td><td><input type="text" name="CurrentDate" id="CurrentDate" style="width:100%;" oscarDB=today></td>
+</tr>
+</table>
+<br>
+<br>
+<table>
+<tr>
+	<td>LMP:</td><td><input type="text" name="LMP" id="LMP" oscarDB=m$LMP#value></td>
+</tr>
+<tr>
+	<td>1st ultrasound on <input type="text" name="US1Date" id="US1Date">:</td>
+        <td>       CRL: <input type="text" name="CRL1" id="CRL1" style="width:20px; background-color:#CCCCCC" value="0" class="noborder" onChange= "calcGAfromCRL1();" ></td>
+
+	<td><input type="text" name="US1Week" id="US1Week" style="width:40px;" value="0">Weeks<input type="text" name="US1Day" id="US1Day" style="width:40px;"  value="0">Days</td>
+</tr>
+<tr>
+	<td>2nd ultrasound on <input type="text" name="US2Date" id="US2Date">:</td>
+        <td>CRL: <input type="text" name="CRL2" id="CRL2" style="width:20px; background-color:#CCCCCC" value="0" class="noborder" onChange= "calcGAfromCRL2();" ></td>
+	<td><input type="text" name="US2Week" id="US2Week" style="width:40px;" value="0">Weeks<input type="text" name="US2Day" id="US2Day" style="width:40px;" value="0">Days</td>
+</tr>
+<tr>
+	<td><input type="button" value="Calculate EDD" id="EDDcalc" onClick="calcEDD(),calcEDDFinal();"></td>
+</tr>
+<tr>
+	<td colspan="2">The most accurate EDD, as per <a href="http://sogc.org/guidelines/determination-gestational-age-ultrasound/" target="_new">SOGC guidelines</a>,(Feb 2014) is highlighted below.</td>
+</tr>
+
+<tr id="EDDDatesRow">
+	<td>EDD by LMP:</td><td><input type="text" name="EDDDates" id="EDDDates"></td>
+</tr>
+<tr id="EDDUS1Row">
+	<td>EDD by 1st US:</td><td><input type="text" name="EDDUS1" id="EDDUS1"></td>
+</tr>
+<tr id="EDDUS2Row">
+	<td>EDD by 2nd US:</td><td><input type="text" name="EDDUS2" id="EDDUS2"></td>
+</tr>
+<tr>
+     <td><input type="button" value="Previous guideline" id="EDDv1calc" onClick="calcEDDV1();"></td>
+</tr>
+<input type="hidden" name="EDDtype" id="EDDtype">
+<input type="hidden" name="EDDConfirmedDate" id = "EDDConfirmedDate">
+<input type="hidden" name="LMPMeasurementDate" id = "LMPMeasurementDate" oscarDB=m$LMP#value >
+<input type="hidden" name="EDDMeasurementDate" id = "EDDMeasurementDate" oscarDB=m$EDD#value>
+<input type="hidden" name="EDCMeasurementDate" id = "EDCMeasurementDate" oscarDB=m$EDC#value>
+<input type="hidden" name="LMPMeasurementComposite" id = "LMPMeasurementComposite" oscarDB=m$LMPC#value>
+<input type="hidden" name="USMeasurementComposite" id = "USMeasurementComposite" oscarDB=m$USC#value>
+<input type="hidden" name="m$LMP#value" id = "LMPOutputDate">
+<input type="hidden" name="m$EDD#value" id = "EDDOutputDate">
+<input type="hidden" name="m$EDC#value" id = "EDCOutputDate">
+<input type="hidden" name="m$LMPC#value" id = "LMPComposite">
+<input type="hidden" name="m$USC#value" id = "USComposite">
+</table>
+
+<br>
+<br>
+<table width="300">
+<tr>
+	<td colspan="2">If spontaneous onset of labour, then the likelihood of delivery occuring:</td>
+</tr>
+<tr>
+	<td>At 40 weeks exactly</td><td>4%</td>
+</tr>
+<tr>
+	<td>Week of EDD</td><td>30%</td>
+</tr>
+<tr>
+	<td>+/- 1 week</td><td>50%</td>
+</tr>
+<tr>
+	<td>Term 37-42 weeks</td><td>85%</td>
+</tr>
+</table>
+
+<br>
+<br>
+
+<table width="600">
+<tr colspan="2">
+	<td>Based on the above EDD:</td>
+</tr>
+<tr>
+	<td width="400">On <input type="text" name="GADate" id="GADate" oscarDB=today> baby will be:<input type="button" value="Calculate" onClick="calcGA();"></td>
+	<td><input type="text" name="GAWeek" id="GAWeek" style="width:40px;">Weeks<input type="text" name="GADay" id="GADay" style="width:40px;">Days</td>
+</tr>
+
+<tr>
+	<td>Baby will be <input type="text" name="GAWeek2" id="GAWeek2" value="41" style="width:40px;">Weeks <input type="text" name="GADay2" id="GADay2" value="3" style="width:40px;"> Days on:<input type="button" value="Calculate" onclick="calcDateAtWeek()"></td>
+	<td><input type="text" name="DateAtWeek" id="DateAtWeek" ></td>
+</tr>
+</table>
+
+<br>
+<br>
+
+
+
+
+<!-- The submit/print/reset buttons ------------------------------------------------------------->
+<div class="DoNotPrint">
+<table>
+	<tr>
+		<td>
+			Subject: <input name="subject" size="40" type="text">
+			<input value="Submit" name="B1" type="submit">
+			<input value="Reset" name="B2" type="reset">
+			<input value="Print" onclick="window.print()" type="button">
+			<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="window.print(); document.FormName.submit()">
+		</td>
+	</tr>
+</table>
+</div>
+</form>
+<!-- ------End of submit/print/reset buttons----------------------------------------------------->
+</body>
+</html>

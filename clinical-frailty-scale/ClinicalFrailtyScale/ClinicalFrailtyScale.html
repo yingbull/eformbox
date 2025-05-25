@@ -1,0 +1,247 @@
+<html>
+<head>
+
+	<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+	<!--<script language="javascript" type="text/javascript" media="print" src="${oscar_image_path}JSMPC.js"></script>	-->
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	 display: none;
+ }
+ .noborder {
+	 border : 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 background: transparent;
+	 overflow: hidden;
+ }
+ </style>
+  
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {
+			// shows the forms on development machine from notepad ++ - saves you from uploading to the server to input alignments
+			var strLoc = window.location.href.toLowerCase();
+			if(strLoc.indexOf("https") == -1) {
+				//page1
+				var src = document.getElementById('BGImage').src;
+				document.getElementById('BGImage').src = src.replace('$%7Boscar_image_path%7D','');
+			}
+			setDocumentTitle('Clinical Frailty Scale',document.getElementById('PatientName').value);
+			setDefaults();
+		}
+		
+		function setDocumentTitle(Title,PatientName) {
+			// set document title
+			document.title = Title + ' - ' + PatientName;
+		}
+		
+		function setDefaults() {
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+				//document.getElementById("").value = 'X';
+			}
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			releaseDirtyFlag();
+			submission();
+		}
+
+		function printLetter() {
+			// hide the bottom buttons
+			if (document.getElementById('BottomButtons').style.display == '')
+				document.getElementById('BottomButtons').style.display = 'none';
+			// print the letter
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			setTimeout('document.FormName.submit()', 1800);
+		}
+
+		function setFlag() {
+		// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+			document.getElementById("newForm").value = 'False';
+		}
+		
+		function showButtons() {
+			//show the bottom buttons if they are hidden
+			if (document.getElementById('BottomButtons').style.display == 'none')
+				document.getElementById('BottomButtons').style.display = '';
+		}
+
+		/****************************
+			checkbox functions 
+		****************************/
+		function changeValue(x) {
+			if (document.getElementById(x).value == '') {
+				document.getElementById(x).value = 'X';
+			} else {
+				document.getElementById(x).value = '';
+			}
+		}
+
+		function displayKeyCode(evt,x) {
+			var charCode = (evt.which) ? evt.which :event.keyCode
+			// any key press except tab will constitute a value change to the checkbox
+			if (charCode != 9) {
+				changeValue(x);
+				return false;
+			}
+		}
+</script>
+
+<!-- Script to optimize window on loading -->
+<script language="JavaScript">
+
+top.window.moveTo(0,0);
+if (document.all) {
+top.window.resizeTo(screen.availWidth,screen.availHeight);
+}
+else if (document.layers||document.getElementById) {
+if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+top.window.outerHeight = 700;
+top.window.outerWidth = 775;
+}
+}
+</script>
+<!-- End optimize window script -->
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+
+function setDirtyFlag() {
+		needToConfirm = true;
+}
+
+function releaseDirtyFlag() {
+	needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+
+function confirmExit() {
+	 if (needToConfirm) {
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+function getCheckedValue(radioObj) {
+	if(!radioObj)
+		return parseInt(0);
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return parseInt(radioObj.value);
+		else
+			return parseInt(value);
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return parseInt(radioObj[i].value);
+		}
+	}
+	return parseInt(0);
+}
+
+function totalScore() {
+	var i = 0;
+	i += getCheckedValue(document.FormName.Score);
+	
+	document.FormName.ScaleScore.value = i;
+	document.FormName.subject.value = "Frailty Score "+i;
+}
+</script>
+
+</head>
+
+<body onload="startUp();" onMouseDown="showButtons();">
+
+<form method="post" action="" name="FormName" id="FormName" >
+
+
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;">
+	<img id="BGImage" SRC="${oscar_image_path}FrailtyScale.png" style="position:absolute; left:0px; top:0px;">
+
+<span style="position:absolute; left:20px; top:1px; font-family:Arial; font-size:14px; font-weight:bold;">Date:</span>
+<input name="Today" id="Today" type="text" class="noborder" style="position:absolute; left:60px; top:0px; width:100px; font-family:Arial; font-size:14px; font-weight:bold;" oscarDB=Today >
+<span style="position:absolute; left:180px; top:1px; font-family:Arial; font-size:14px; font-weight:bold;">Patient:</span>
+<input name="PatientName" id="PatientName" type="text" class="noborder" style="position:absolute; left:240px; top:0px; width:400px; font-family:Arial; font-size:14px; font-weight:bold;" oscarDB=patient_name>
+
+<a class="DoNotPrint" style="position:absolute; left:180px; top:60px; font-size:8px; font-family:Arial; font-style:italic;" href="https://www.dal.ca/sites/gmr/our-tools/clinical-frailty-scale.html" target="_blank">REFERENCE</a>
+
+
+<input name="Score" type="radio" value="1" style="position:absolute; left:65px; top:75px;" onclick="totalScore();">
+<input name="Score" type="radio" value="2" style="position:absolute; left:65px; top:146px;" onclick="totalScore();">
+<input name="Score" type="radio" value="3" style="position:absolute; left:65px; top:221px;" onclick="totalScore();">
+<input name="Score" type="radio" value="4" style="position:absolute; left:65px; top:297px;" onclick="totalScore();">
+<input name="Score" type="radio" value="5" style="position:absolute; left:65px; top:389px;" onclick="totalScore();">
+<input name="Score" type="radio" value="6" style="position:absolute; left:65px; top:518px;" onclick="totalScore();">
+
+<input name="Score" type="radio" value="7" style="position:absolute; left:517px; top:55px;" onclick="totalScore();">
+<input name="Score" type="radio" value="8" style="position:absolute; left:517px; top:152px;" onclick="totalScore();">
+<input name="Score" type="radio" value="9" style="position:absolute; left:517px; top:256px;" onclick="totalScore();">
+</div>
+
+<div>
+<table style="position:absolute; left:20px; top:640px;">
+	<tr>
+		<td><span><b>FRAILTY SCORE:</b></span></td>
+		<td><input name="m$FRAI#value" id="ScaleScore" type="text" class="noborder" style="width:30px; font-family:sans-serif; font-size:14px; text-align:center;"></td>
+	</tr>
+</table>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons">
+		<table style="position:absolute; left:20px; top:690px; text-align:left; width:90%; font-size:12px; font-family:Arial;" border="0" cellpadding="0" cellspacing="0">
+		<tr><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="releaseDirtyFlag(); submission();">
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();">
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="printSubmit();">
+		</td></tr>
+		</table>
+		
+<table style="position:absolute; left:20px; top:730px;text-align:left; width:90%;   font-size:12px; font-family:Arial; font-style:italic;" border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td>To capture the results of this eform you must add FRAI as a measurement.</td>
+</tr>
+<tr>
+<td>Go to Admin - oscarEncounter - Customize oscarMeasurements - Add Measurement type.</td>
+</tr>
+<tr>
+<td> Type=FRAI ;  Type Description=Frailty Index ; Display Name=Frailty Index   ; Measuring Instruction=Score from 1 to 9; Validation=  Numeric Value: 0 to 10</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</form>
+
+</body>
+</html>

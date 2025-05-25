@@ -1,0 +1,459 @@
+<html>
+<head>
+<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+
+<!-- TESTING ONLY: autorefresh every 3 seconds -->
+<!-- <meta http-equiv="refresh" content="3"> -->
+
+<title>MRI Questionnaire and Consent - En</title>
+
+<!-- EW Apr  2,2024 - sig box definition moved to ready() -->
+<!-- EW Mar 28,2024 - show sig box on print -->
+<!-- EW Mar 15,2024 - added patient signature input -->
+<!-- EW Feb 12,2024 - new for Dr.Muresan -->
+
+<style type="text/css">
+body{
+	font-family: Arial;
+	font-size: 14;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background-color: white;
+}
+.title{
+	text-transform: uppercase;
+	font-size: 16;
+	font-weight: bolder;
+	text-align: center;
+	color: black;
+    border: 0px;
+	background: transparent;
+}
+.YNBox {
+    box-sizing:border-box; width:16px; height:16px; border:1px solid black; padding:0px;
+	font-family: Arial;
+    font-style:normal; 
+    font-weight:bold; 
+    font-size:14px; 
+    text-align:center; 
+    background-color:white;
+}
+</style>
+
+
+<!-- Signature related -->
+<style type="text/css" media="screen" >
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+.sig {
+	 border: 2px dotted blue;
+     color: Black;
+	 background-color : lightgrey;
+}
+
+/* Drawing the 'gripper' for touch-enabled devices */
+html.touch #content {
+	float:left;
+	width:92%;
+}
+html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==);
+}
+html.borderradius #scrollgrabber {
+	border-radius: 1em;
+}
+</style>
+
+<!-- CSS Script that removes textarea and textbox borders when printing ---(put this inbetween <header></header>)----------------->
+<style type="text/css" media="print">
+.DoNotPrint {
+	 display: none;
+}
+.noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+	//scrollbar : none;
+	border : 0px;
+}
+.sig {
+	border-style: solid;
+	border-color: Black;
+	color: Black;
+	background-color: transparent;
+}
+</style>
+
+<!-- OSCAR based files for greater functionality -->
+<!-- Mar 2024 <script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script> -->
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>') </script>
+<script> window.jQuery || document.write('<script src="jquery-1.7.1.min.js">< \/script>') </script>
+
+<script type="text/javascript" src="${oscar_javascript_path}eforms/printControl.js"></script>
+<script type="text/javascript" src="${oscar_javascript_path}eforms/faxControl.js"></script>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadn't been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function if doesn't requires an alert.
+//this could be called when save button is clicked
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+<!-- scripts for YNBox functions -->
+<script language="javascript">
+function changeValue(x)
+{
+   if (document.getElementById(x).value == '')
+	document.getElementById(x).value = 'X';
+   else
+	document.getElementById(x).value = '';
+}
+
+function displayKeyCode(evt,x)
+{
+   var charCode = (evt.which) ? evt.which : event.keyCode
+   // any key press except tab will constitute a value change to the checkbox
+   if (charCode != 9)
+   {
+	changeValue(x);
+	return false;
+   }
+}
+    // used to flip YN boxes
+function ChkBoxYN(checkboxid,uncheckboxid) { 
+    if(document.getElementById(checkboxid).value == 'X') { 
+        document.getElementById(uncheckboxid).value = '';
+    }
+}
+</script>
+
+<!-- Stamped Signatures -->
+<script type="text/javascript">
+function SignForm(){
+// 
+  document.getElementById("Stamp").src = "${oscar_image_path}sig-" + document.getElementById("DoctorCPSID").value + ".png";
+}
+</script>
+
+<!-- Signature entry -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jSignature.min.js"></script>
+<!-- TEST <script type="text/javascript" src="jSignature.min.js"></script>  -->
+
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)', height: 70, width: 430 })
+	var pdf = jQuery("input[name='pdfButton']");
+	if (pdf.size() != 0) {
+		pdf.attr('onclick', '').unbind('click');
+		pdf.attr('value', 'PDF');
+		pdf.click(function(){saveSig();submitPrintButton(false);});
+		}
+	var pdfSave = jQuery("input[name='pdfSaveButton']");
+	if (pdfSave.size() != 0) {
+		pdfSave.attr('onclick', '').unbind('click');
+		pdfSave.attr('value', 'Submit & PDF');
+		pdfSave.click(function(){saveSig();submitPrintButton(true);});
+		}
+})
+</script>
+
+<script type="text/javascript">
+function saveSig(){
+	var $sig=$("#CanvasSignature1");
+	var datapair=new Array();
+	datapair=$sig.jSignature("getData","base30");
+	document.getElementById("StoreSignature1").value=datapair.join(",");
+}
+function clearSig(){
+	$("#CanvasSignature1").jSignature("reset");
+}
+function loadSig(){
+	var $sig=$("#CanvasSignature1");
+	var data
+	data=document.getElementById("StoreSignature1").value;
+	$sig.jSignature("setData","data:"+ data) ;
+}
+</script>
+
+</head>
+
+<!-- ----------------------------------------------------------------------------------------- -->
+
+<body onload="SignForm();loadSig();">
+
+<form method="post" action="" name="FormName" id="FormName">
+
+<p class="title" style="width:750px;">Medical Imaging / Magnetic Resonance</p>
+
+<!-- top boxes -->
+<div style="position:absolute; left:10px; top:70px; width:400px;">
+<!-- Clinic Info -->
+   <textarea name="Clinic label" class="noborder" style="height:100px; width:350px; font-size: 14px" oscardb=clinic_label ></textarea><br>
+</div>
+
+<div style="position:absolute; left:400px; top:70px; width:350px;">
+<!-- Demographics -->
+   <input name="HIN"    class="noborder" type="text" style="width: 230px; font-size: 16px;" oscardb=HIN >
+   <br>
+   <input name="PatNam" class="noborder" type="text" style="width: 230px; font-size: 14px;" oscardb=patient_name>
+   <br>
+   <input name="DOB"    class="noborder" type="text" style="width: 140px; font-size: 14px;" oscardb=dobc2>  &nbsp;&nbsp;
+   <input name="Sex"    class="noborder" type="text" style="width: 30px;  font-size: 14px;" oscardb=sex>
+   <br>
+   Tel.(H): 
+   <input name="PatHTel" class="noborder" type="text" style="width: 100px; font-size: 12px;" oscardb=phone>
+   Tel.(C):
+   <input name="PatCTel" class="noborder" type="text" style="width: 100px; font-size: 12px;" oscardb=cell>
+</div>
+
+<div type="text" style="position:absolute; left:10px; top:170px; width:730px;"><hr/></div>    
+
+<div style="position: absolute; left: 40px; top: 180px;">
+Questionnaire and consent form to be completed by the patient and physician prior to booking appointment
+</div>
+
+<div style="position:absolute; left:10px; top:195px; width:730px;"><hr/></div>    
+
+<div style="position: absolute; left:10px; top:210px;">
+   Region to be examined:
+   <input name="ExamR" type="text" style="width:270px; font-size: 14px;">
+   Weight (kg):
+   <input name="m$WT#value" type="text" style="width:40px; font-size: 14px;" oscardb=m$WT#value>
+   &nbsp;&nbsp;Height (cm):
+   <input name="m$HT#value" type="text" style="width:50px; font-size: 14px;" oscardb=m$HT#value>
+   <br><br>
+   Diagnosis:
+   <input name="Diag" type="text" style="width:353px; font-size: 14px;">
+   Physician Sig.:
+   <div class="sig" style="position: absolute; left:525px; top:30px;"><img id="Stamp" src="${oscar_image_path}BNK.png" width="200" height="45"></div>  
+</div>
+
+
+<!-- input fields -->
+<div style="position:absolute; left:10px; top:290px; width:360px;">   
+   <span style="line-height: 20px">&nbsp;&nbsp;Women<br>YES&nbsp;&nbsp;&nbsp;NO<br>&nbsp;
+
+   <input name="FPregY" id="FPregY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FPregY', 'FPregN');">&nbsp;&nbsp;&nbsp;
+   <input name="FPregN" id="FPregN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FPregN', 'FPregY');">&nbsp;&nbsp;&nbsp;
+   Pregnant<br>&nbsp;
+
+   <input name="FBFedY" id="FBFedY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FBFedY', 'FBFedN');">&nbsp;&nbsp;&nbsp;
+   <input name="FBFedN" id="FBFedN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FBFedN', 'FBFedY');">&nbsp;&nbsp;&nbsp;
+   Breast feeding<br>&nbsp;
+   
+   <input name="FEyeMY" id="FEyeMY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FEyeMY', 'FEyeMN');">&nbsp;&nbsp;&nbsp;
+   <input name="FEyeMN" id="FEyeMN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FEyeMN', 'FEyeMY');">&nbsp;&nbsp;&nbsp;
+   Eye makeup<br>&nbsp;
+   
+   <input name="FIUDY"  id="FIUDY"  type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FIUDY', 'FIUDN');">&nbsp;&nbsp;&nbsp;
+   <input name="FIUDN"  id="FIUDN"  type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FIUDN', 'FIUDY');">&nbsp;&nbsp;&nbsp;
+   IUD<br>&nbsp;
+   
+   <input name="FBImpY" id="FBImpY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FBImpY', 'FBImpN');">&nbsp;&nbsp;&nbsp;
+   <input name="FBImpN" id="FBImpN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('FBImpN', 'FBImpY');">&nbsp;&nbsp;&nbsp;
+   Breast implants
+   </span>
+</div>
+
+<div style="position:absolute; left:380px; top:290px; width:350px;">
+   <span style="line-height:20px">&nbsp;&nbsp;&nbsp;Men<br>YES&nbsp;&nbsp;&nbsp;NO<br>&nbsp;
+
+   <input name="MPImpY" id="MPImpY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('MPImpY', 'MPImpN');">&nbsp;&nbsp;&nbsp;
+   <input name="MPImpN" id="MPImpN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('MPImpN', 'MPImpY');">&nbsp;&nbsp;&nbsp;
+   Penile implant
+</div>
+
+<div style="position:absolute; left:10px; top:430px; width:730px;"><hr/></div>    
+
+<div style="position:absolute; left:10px; top:440px; width:360px;">
+   <span style="line-height: 20px"><u>Do you have:</u><br><br>YES&nbsp;&nbsp;&nbsp;NO<br>&nbsp;
+
+   <input name="HTatoY" id="HTatoY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HTatoY', 'HTatoN');">&nbsp;&nbsp;&nbsp;
+   <input name="HTatoN" id="HTatoN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HTatoN', 'HTatoY');">&nbsp;&nbsp;&nbsp;
+   Tatoos/body piercings<br>&nbsp;
+
+   <input name="HCornY" id="HCornY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HCornY', 'HCornN');">&nbsp;&nbsp;&nbsp;
+   <input name="HCornN" id="HCornN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HCornN', 'HCornY');">&nbsp;&nbsp;&nbsp;
+   Corneal implant/eye injury/metal fragments<br><span style="position:absolute; left:75px"> in eyes</span><br>&nbsp;
+
+   <input name="HContY" id="HContY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HContY', 'HContN');">&nbsp;&nbsp;&nbsp;
+   <input name="HContN" id="HContN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HContN', 'HContY');">&nbsp;&nbsp;&nbsp;
+   Contact lenses<br>&nbsp;
+
+   <input name="HDentY" id="HDentY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HDentY', 'HDentN');">&nbsp;&nbsp;&nbsp;
+   <input name="HDentN" id="HDentN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HDentN', 'HDentY');">&nbsp;&nbsp;&nbsp;
+   Dentures/partials/braces<br>&nbsp;
+
+   <input name="HHearY" id="HHearY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HHearY', 'HTatoY');">&nbsp;&nbsp;&nbsp;
+   <input name="HHearN" id="HHearN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HHearY', 'HHearY');">&nbsp;&nbsp;&nbsp;
+   Hearing aid/cochlear implant<br>&nbsp;
+
+   <input name="HCaPaY" id="HCaPaY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HCaPaY', 'HCaPaN');">&nbsp;&nbsp;&nbsp;
+   <input name="HCaPaN" id="HCaPaN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HCaPaN', 'HCaPaY');">&nbsp;&nbsp;&nbsp;
+   Cardiac pacemaker<br>&nbsp;
+
+   <input name="HAnClY" id="HAnClY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HAnClY', 'HAnClN');">&nbsp;&nbsp;&nbsp;
+   <input name="HAnClN" id="HAnClN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HAnClN', 'HAnClY');">&nbsp;&nbsp;&nbsp;
+   Aneurysm clips<br>&nbsp;
+
+   <input name="HPrHVY" id="HPrHVY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HPrHVY', 'HPrHVN');">&nbsp;&nbsp;&nbsp;
+   <input name="HPrHVN" id="HPrHVN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HPrHVN', 'HPrHVY');">&nbsp;&nbsp;&nbsp;
+   Prosthetic heart valve/stent/coils/filters<br>&nbsp;
+
+   <input name="HImpPY" id="HImpPY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HImpPY', 'HImpPN');">&nbsp;&nbsp;&nbsp;
+   <input name="HImpPN" id="HImpPN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HImpPN', 'HImpPY');">&nbsp;&nbsp;&nbsp;
+   Implanted insulin/chemotherapy pump<br>&nbsp;
+
+   <input name="HMetSY" id="HMetSY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HMetSY', 'HMetSN');">&nbsp;&nbsp;&nbsp;
+   <input name="HMetSN" id="HMetSN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HMetSN', 'HMetSY');">&nbsp;&nbsp;&nbsp;
+   Metallic shunt
+   </span> 
+</div>
+
+<div style="position:absolute; left:380px; top:440px; width:350px;">
+   <span style="line-height: 20px">YES&nbsp;&nbsp;&nbsp;NO<br>&nbsp;
+   
+   <input name="HSterY" id="HSterY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HSterY', 'HSterN');">&nbsp;&nbsp;&nbsp;
+   <input name="HSterN" id="HSterN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HSterN', 'HSterY');">&nbsp;&nbsp;&nbsp;
+   Sternal wires<br>&nbsp;
+
+   <input name="HNDevY" id="HNDevY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HNDevY', 'HNDevN');">&nbsp;&nbsp;&nbsp;
+   <input name="HNDevN" id="HNDevN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HNDevN', 'HNDevY');">&nbsp;&nbsp;&nbsp;
+   Neurosurgery devices/stimulator<br>&nbsp;
+
+   <input name="HMetaY" id="HMetaY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HMetaY', 'HMetaN');">&nbsp;&nbsp;&nbsp;
+   <input name="HMetaN" id="HMetaN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HMetaN', 'HMetaY');">&nbsp;&nbsp;&nbsp;
+   Metal fragments/rods/screws/plates in your<br><span style="position:absolute; left:70px"> body. If yes, where?</span>
+   <input name="HMetLo" id="HMetLo" type="text" style="position:absolute; left:200px; top:80px; width:150px; font-size: 14px;"><br>&nbsp;
+
+   <input name="HArtLY" id="HArtLY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HArtLY', 'HArtLN');">&nbsp;&nbsp;&nbsp;
+   <input name="HArtLN" id="HArtLN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HArtLN', 'HArtLY');">&nbsp;&nbsp;&nbsp;
+   Artificial limb or joint<br>&nbsp;
+
+   <input name="HMPatY" id="HMPatY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HMPatY', 'HMPatN');">&nbsp;&nbsp;&nbsp;
+   <input name="HMPatN" id="HMPatN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HMPatN', 'HMPatY');">&nbsp;&nbsp;&nbsp;
+   Nicotine or medication patch<br>&nbsp;
+
+   <input name="HClauY" id="HClauY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HClauY', 'HClauN');">&nbsp;&nbsp;&nbsp;
+   <input name="HClauN" id="HClauN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HClauN', 'HClauY');">&nbsp;&nbsp;&nbsp;
+   Claustrophobia/vertigo<br>&nbsp;
+
+   <input name="HFeSuY" id="HFeSuY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HFeSuY', 'HFeSuN');">&nbsp;&nbsp;&nbsp;
+   <input name="HFeSuN" id="HFeSuN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HFeSuN', 'HFeSuY');">&nbsp;&nbsp;&nbsp;
+   Do you take iron supplements<br>&nbsp;
+
+   <input name="HPSurY" id="HPSurY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HPSurY', 'HPSurN');">&nbsp;&nbsp;&nbsp;
+   <input name="HPSurN" id="HPSurN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HPSurN', 'HPSurY');">&nbsp;&nbsp;&nbsp;
+   Previous surgery<br><span style="position:absolute; left:77px">Where and when?</span>
+   <textarea name="HSurT" id="HSurT" type="text" style="position:absolute; left:200px; top:180px; height:40px; width:160px; font-size: 12px;"></textarea><br>&nbsp;
+
+   <input name="HAllgY" id="HAllgY" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HAllgY', 'HAllgN');">&nbsp;&nbsp;&nbsp;
+   <input name="HAllgN" id="HAllgN" type="text" class="YNBox" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); ChkBoxYN('HAllgN', 'HAllgY');">&nbsp;&nbsp;&nbsp;
+   Allergies - if yes, explain
+   <textarea name="HAllgT" id="HAllgT" type="text" style="position:absolute; left:77px; top:240px; height:40px; width:285px; font-size: 12px;"></textarea>
+</div>   
+
+<div style="position:absolute; left:10px; top:730px; width:730px;"><hr/></div>
+
+<!-- height = height of box, -->
+<div style="position:absolute; left:10px; top:738px; height: 140px; width:32px; font-size:28px; background-color:black; color:white; writing-mode:vertical-rl; transform:rotate(180deg);">
+&nbsp;DANGER
+</div>
+
+<div style="position:absolute; left:10px; top:870px; width:730px;"><hr/></div>
+
+<div style="position:absolute; left:70px; top:750px; width:400px;">
+  ITEMS TO BE REMOVED:
+</div>
+  
+<div style="position:absolute; left:80px; top:780px; width:275px;">
+  IV pumps<br>
+  All jewelry<br>
+  Clothing with metal closures<br>
+  EEG + ECG wires and pads<br>
+  BRA
+</div>   
+  
+<div style="position:absolute; left:360px; top:780px; width:200px;">  
+  Safety pins<br>
+  Watch<br>
+  Contact lenses<br>
+  Hearing aids<br>
+  Belts<br>
+</div>   
+  
+<div style="position:absolute; left:580px; top:770px; width:200px;">  
+  Dentures<br>
+  Coins<br>
+  Credit cards<br>
+  Wallet<br>
+  Keys<br>
+</div>   
+
+<div style="position:absolute; left:10px; top:910px; width:275px;">  
+Date:
+<input name="RDate"  class="noborder" type="text" style="width:100px; font-size:16px;" oscardb=today>
+&nbsp;&nbsp;&nbsp;Patient signature:
+</div>
+
+<!-- box size defined in ready(function() -->
+<div id="CanvasSignature1" class="sig" style="position:absolute; left:300px; top:885px; z-index:10;"> </div>
+<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+<!-- hidden fields -->
+<input type="hidden" name="DoctorCPSID" id="DoctorCPSID" oscarDB=doctor_cpsid>
+
+<!-- The submit/print/reset buttons ------------------------------------------------------------->
+<div name="FunctionButtons" class="DoNotPrint" style="position: absolute; left:10px; top:970px; ">
+   <table><tr><td>
+		Subject: <input name="subject" size="40" type="text"><br>
+		<input value="Submit"    name="SubmitButton"  id="SubmitButton"  type="submit" onclick="saveSig(); releaseDirtyFlag();"> 
+		<input value="Save Sig"  name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+		<input value="Clear Sig" name="ClearButton"   id="ClearButton"   type="button" onclick="clearSig();"> 
+		<input value="Reset"     name="ResetButton"   id="ResetButton"   type="reset"> 
+		<input value="Print"     name="PrintButton"   id="PrintButton"   type="button" onclick="formPrint();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);"> 
+	</td></tr></table>
+</div>
+
+</form>
+<!-- ------End of submit/print/reset buttons----------------------------------------------------->
+</body></html>

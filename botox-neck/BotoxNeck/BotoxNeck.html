@@ -1,0 +1,588 @@
+<html>
+<Title>BotoxNeck</title>
+<head>
+<!-- auto-refresh every 3 seconds -->
+<!-- <meta http-equiv="refresh" content="3" > -->
+
+<!-- Rev Jul 2,2019 - E.Wertheimer - path for wz_jsgraphics.js; image to .jpg -->
+
+<!-- CSS Script that removes textarea and textbox borders when printing-->
+<style type="text/css" media="print">
+.DoNotPrint {
+	display: none;
+}
+input.noborder {
+	border: 0px;
+	background: transparent;
+}
+textarea.noborder {
+	background: transparent;
+	overflow: hidden;
+	border: 0px;
+}
+</style>
+
+<!-- main graphic code moved to images folder -->
+<script type="text/javascript" src="${oscar_image_path}wz_jsgraphics.js"></script>
+<!-- DEV: <script type="text/javascript" src="wz_jsgraphics.js"></script>  -->
+
+<!-- mousefunction.js -->
+<script type="text/javascript">
+var mousex = 0;
+var mousey = 0;
+var grabx = 0;
+var graby = 0;
+var orix = 0;
+var oriy = 0;
+var elex = 0;
+var eley = 0;
+var algor = 0;
+
+var dragobj = null;
+
+function falsefunc() { return false; } // used to block cascading events
+
+function init()
+{
+  document.onmousemove = update; // update(event) implied on NS, update(null) implied on IE
+  update();
+}
+
+function getMouseXY(e) // works on IE6,FF,Moz,Opera7
+{ 
+  if (!e) e = window.event; // works on IE, but not NS (we rely on NS passing us the event)
+ 
+  if (e)
+  { 
+    if (e.pageX || e.pageY)
+    { // this doesn't work on IE6!! (works on FF,Moz,Opera7)
+      mousex = e.pageX;
+      mousey = e.pageY;
+      algor = '[e.pageX]';
+      if (e.clientX || e.clientY) algor += ' [e.clientX] '
+    }
+    else if (e.clientX || e.clientY)
+    { // works on IE6,FF,Moz,Opera7
+      // Note: I am adding together both the "body" and "documentElement" scroll positions
+      //       this lets me cover for the quirks that happen based on the "doctype" of the html page.
+      //         (example: IE6 in compatibility mode or strict)
+      //       Based on the different ways that IE,FF,Moz,Opera use these ScrollValues for body and documentElement
+      //       it looks like they will fill EITHER ONE SCROLL VALUE OR THE OTHER, NOT BOTH 
+      //         (from info at http://www.quirksmode.org/js/doctypes.html)
+      mousex = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      mousey = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+      algor = '[e.clientX]';
+      if (e.pageX || e.pageY) algor += ' [e.pageX] '
+    }
+  }
+}
+
+function grab(context)
+{
+  document.onmousedown = falsefunc; // in NS this prevents cascading of events, thus disabling text selection
+  dragobj = context;
+  dragobj.style.zIndex = 10; // move it to the top
+  document.onmousemove = drag;
+  document.onmouseup = drop;
+  grabx = mousex;
+  graby = mousey;
+  elex = orix = dragobj.offsetLeft;
+  eley = oriy = dragobj.offsetTop;
+  update(); 
+}
+
+function drag(e) // parameter passing is important for NS family 
+{
+  if (dragobj)
+  {
+    elex = orix + (mousex-grabx);
+    eley = oriy + (mousey-graby);
+    dragobj.style.position = "absolute";
+    dragobj.style.left = (elex).toString(10) + 'px';
+    dragobj.style.top  = (eley).toString(10) + 'px';
+  }
+  update(e);
+  return false; // in IE this prevents cascading of events, thus text selection is disabled
+}
+
+function drop()
+{
+	if (dragobj)
+	{
+		dragobj.style.zIndex = 0;
+		dragobj = null;
+	}
+	update();
+	document.onmousemove = update;
+	document.onmouseup = null;
+	document.onmousedown = null;   // re-enables text selection on NS
+}
+
+function update(e)
+{
+	  getMouseXY(e); // NS is passing (event), while IE is passing (null)	
+}
+</script>
+
+<script type="text/javascript">
+function Highlight(i){
+	document.getElementById(i).style.border = "2px solid orange";
+}
+function RemoveHighlight(i){
+	document.getElementById(i).style.borderStyle = "none";
+}
+</script>
+
+
+</head>
+
+<body  onload="init(); ReloadImage(); SetSwitchOn('Freehand');">
+
+<!-- position image on page. Image area should be the same -->
+<div style="position: absolute; left: 10px; top: 50px; ">
+<img id="image" src="${oscar_image_path}neck-muscles.jpg" width="750">
+<!-- DEV:  <img id="image" src="neck-muscles.jpg" width="750">   -->
+</div>
+
+<form method="post" action="" name="GraphicForm" id="GraphicForm">
+
+<!-- Clinic Info -->
+<input name="cur_user" id="cur_user" type="text" class="noborder" style="position:absolute; left: 10px; top:10px; width:180px; height:18px; font-size:16px; font-family:sans-serif; font-style:normal; font-weight:normal; text-align:left; background-color:transparent;"  oscarDB=current_user>
+<input name="cur_ohip" id="cur_ohip" type="text" class="noborder" style="position:absolute; left:195px; top:10px; width: 70px; height:18px; font-size:16px; font-family:sans-serif; font-style:normal; font-weight:normal; text-align:left; background-color:transparent;"  oscarDB=current_user_ohip_no>
+<input name="cl_name"  id="cl_name"  type="text" class="noborder" style="position:absolute; left: 10px; top:30px; width:250px; height:18px; font-size:14px; font-family:sans-serif; font-style:normal; font-weight:normal; text-align:left; background-color:transparent;"  oscarDB=clinic_name>
+
+<div style="position:absolute; left:320px; top:10px; font-size:12px; font-family:sans-serif; font-style:normal; font-weight:bold;">Date/Time</div>
+<input name="doc_date"  id="doc_date"  type="text" class="noborder" style="position:absolute; left: 320px; top:30px; width:100px; height:18px; font-size:16px; font-family:sans-serif; font-style:normal; font-weight:normal; text-align:left; background-color:transparent;" oscarDB=today>
+
+<!-- Patient Info -->
+<input name="hinc"      id="hinc"      type="text" class="noborder" style="position:absolute; left:480px; top:10px; width:260px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:16px; text-align:left; background-color:transparent;"  oscarDB=hinc>
+<input name="full_name" id="full_name" type="text" class="noborder" style="position:absolute; left:480px; top:30px; width:260px; height:18px; font-family:sans-serif; font-style:normal; font-weight:normal; font-size:16px; text-align:left; background-color:transparent;"  oscarDB=first_last_name>
+
+
+<!-- ----------------------------All textfields/checkboxes/textareas go here...------ -->
+
+
+<!-- -----------------Hidden input for storing Image data---------------------------------- -->
+<input type="hidden" name="TempData" id="TempData">
+<input type="hidden" name="DrawData" id="DrawData">
+<input type="hidden" name="SubmitData" id="SubmitData">
+<textarea name="Comments" id="Comments" style="position:absolute; top:950px; left:10px; width: 700px; height: 50px">Notes:</textarea>
+
+<!-- ---------------------The submit/print/reset buttons -------------------------------------->
+<div class="DoNotPrint" style="position: absolute; top: 1000px; left: 10px;">
+<table>
+	<tr>
+		<td>
+			Subject: <input name="subject" size="40" type="text">
+			<input value="Submit" name="SubmitButton" type="button" onclick="SubmitImage(); document.GraphicForm.submit()">
+			<input value="Reset" name="ResetButton" type="reset">
+			<input value="Print"  name="PrintButton" onclick="window.print()" type="button">
+		</td>
+	</tr>
+</table>
+</div>
+</form>
+<!-- ------End of submit/print/reset buttons----------------------------------------------------->
+
+<!--  Drawing code: start -->
+<div id="preview"  style="position:absolute; left: 10px; top:50px; width: 750px; height: 900px;"></div>
+<div id="myCanvas" style="position:absolute; left: 10px; top:50px; width: 750px; height: 900px;"
+	onmouseover="SetDrawOn();" onmouseout="SetDrawOff();" onmousedown="SetMouseDown();SetStart();" 
+	onmouseup="SetMouseUp(); DrawMarker();" onmousemove="DrawPreview();"> 
+</div>
+
+<br>
+<div name="ToolSelectDiv" style="position:fixed; left:800px; top:30px" class="DoNotPrint">
+<form name="ToolSelect">
+<table>
+<tr><td>
+	<u>Drawing Tool:</u><br>
+	<input id="Freehand" type="button" value="Freehand" onclick="SetSwitchOn(this.id);" style="width:100px"><br>
+	<input id="Text" type="button" value="Text" onclick="GetTxt(); SetSwitchOn(this.id);" style="width:50px">
+		<select id="FontSize" name="FontSize" style="width:50px;">
+			<option onclick="SetFontSize('10px');">10</option>
+			<option onclick="SetFontSize('11px');">11</opion>
+			<option onclick="SetFontSize('12px');">12</option>
+			<option onclick="SetFontSize('13px');">13</option>
+			<option onclick="SetFontSize('14px');">14</option>
+			<option onclick="SetFontSize('15px');">15</option>
+			<option onclick="SetFontSize('16px');">16</option>
+			<option onclick="SetFontSize('18px');">18</option>
+			<option onclick="SetFontSize('19px');">19</option>
+			<option onclick="SetFontSize('20px');">20</option>
+		</select>
+</td></tr>
+
+<tr><td>
+	<u>Color:</u><br>
+	<table>
+		<tr>
+            <td>
+				<div id="black"   style="width:30px; height:20px;border: 2px solid orange; background-color: black; margin: 2px;" onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+				<div id="red"     style="width:30px; height:20px;background-color: red; border:2px; margin: 2px;" onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+				<div id="lime"    style="width:30px; height:20px;background-color: lime; margin: 2px;"    onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+				<div id="blue"    style="width:30px; height:20px;background-color: blue; margin: 2px;"    onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+			</td>
+			<td>
+				<div id="grey"    style="width:30px; height:20px; background-color: grey; margin: 2px;"   onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+				<div id="magenta" style="width:30px; height:20px;background-color: magenta; margin: 2px;" onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+				<div id="yellow"  style="width:30px; height:20px;background-color: yellow; margin: 2px;"  onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+				<div id="cyan"    style="width:30px; height:20px;background-color: cyan; margin: 2px;"    onmouseover="Highlight(this.id);" onmouseout="RemoveHighlight(this.id);Highlight(StrokeColor);" onclick="RemoveHighlight(StrokeColor);SetStrokeColor(this.id);"></div>
+			</td>
+		</tr>
+	</table>
+</td></tr>
+
+<tr><td>
+	<u>Line Thickness:</u><br>
+	<table>
+		<tr>
+			<td>
+				<input id="SetThickness1" name="Thickness" type="radio" onclick="SetThickness(1);" >1<br>
+				<input id="SetThickness2" name="Thickness" type="radio" onclick="SetThickness(2);">2<br>
+				<input id="SetThickness3" name="Thickness" type="radio" onclick="SetThickness(3);" checked>3<br>
+				<input id="SetThickness4" name="Thickness" type="radio" onclick="SetThickness(4);">4<br>
+				<input id="SetThickness5" name="Thickness" type="radio" onclick="SetThickness(5);">5<br>
+			</td>
+			<td>
+				<input id="SetThickness6" name="Thickness" type="radio" onclick="SetThickness(6);" >6<br>
+				<input id="SetThickness7" name="Thickness" type="radio" onclick="SetThickness(7);">7<br>
+				<input id="SetThickness8" name="Thickness" type="radio" onclick="SetThickness(8);">8<br>
+				<input id="SetThickness9" name="Thickness" type="radio" onclick="SetThickness(9);">9<br>
+				<input id="SetThickness10" name="Thickness" type="radio" onclick="SetThickness(10);">10<br>
+			</td>
+		</tr>
+	</table>
+</td></tr>
+
+<tr><td>
+	<input id="UndoButton" type="button" value="Undo" onclick="Undo();" style="width:100px"><br>
+	<input id="ClearButton" type="button"  value="Clear" onclick="Clear();" style="width:100px">
+</td></tr>
+
+</table>
+</form>
+</div>
+
+<script type="text/javascript">
+var cnv = document.getElementById("myCanvas"); 
+var jg = new jsGraphics(cnv);
+var cnvLeft = parseInt(document.getElementById('myCanvas').style.left); 
+var cnvTop = parseInt(document.getElementById('myCanvas').style.top);
+
+var pvcnv = document.getElementById("preview");
+var pv = new jsGraphics(pvcnv);
+
+var SubmitData = new Array();
+var DrawData  = new Array();
+var TempData = new Array();
+
+jg.setPrintable(true);
+var StrokeColor = "black";
+var StrokeThickness = 3;
+var x0 = 0;
+var y0 = 0;
+var txt = "";
+
+function SetStrokeColor(c){
+	StrokeColor = c;
+}
+
+var FontSize = "10px";
+function SetFontSize(n){
+	FontSize = n;
+}
+
+var MouseDown = false;
+function SetMouseDown(){
+	MouseDown = true;
+}
+function SetMouseUp(){
+	MouseDown = false;
+}
+
+var DrawSwitch = false;
+function SetDrawOn(){
+	DrawSwitch = true;
+}
+function SetDrawOff(){
+	DrawSwitch  = false;
+}
+
+function SetThickness(x){
+	StrokeThickness = parseInt(x);
+}
+
+var TextSwitch = false;
+var FreehandSwitch = false;
+
+function SetSwitchesOff(){
+	TextSwitch = false;
+	FreehandSwitch = false;
+}
+
+var DrawTool = "Freehand";
+function SetSwitchOn(n){	
+	SetSwitchesOff();
+	DrawTool = n;
+	if(n=="Text"){
+		TextSwitch = true;
+	}else if(n=="Freehand"){
+		FreehandSwitch=true;
+	}
+}
+
+function SetStart(){
+	x0 = mousex - cnvLeft;
+	y0 = mousey - cnvTop;
+	if(FreehandSwitch){
+		Xposition.push(x0);
+		Yposition.push(y0);
+	}
+}
+
+function GetTxt(){
+	txt = prompt("Enter Text Here:","");
+}
+
+function DrawText(canvas,x,y,txt,StrokeColor,FontSize){
+	//draws a sting of text
+	canvas.setColor(StrokeColor);
+	canvas.setStroke(StrokeThickness);
+	var FontFamily = "arial";		//sets font
+	var FontStyle = Font.PLAIN;		//Font.PLAIN, Font.BOLD, Font.ITALIC, Font.ITALIC_BOLD
+	canvas.setFont(FontFamily,FontSize,FontStyle);
+
+	var x1 = x;
+	var y1 = y - 10;
+
+	if ((txt != null) && (txt != "")){
+		canvas.drawString(txt, x1, y1);
+		canvas.paint();
+
+		//store parameters in an array 
+		if(canvas == jg){
+			var Parameter = "Text" + "_" +  x + "_" + y + "_" + txt + "_" +  StrokeColor + "_" + FontSize;
+			DrawData.push(Parameter);
+			document.getElementById("DrawData").value = DrawData;
+		}
+	}
+}
+var Xposition = new Array();
+var Yposition = new Array();
+
+function GetXY(x,y){
+var s = StrokeThickness;
+var l = Xposition.length - 1;	//l = last position
+	if ( (Math.abs(Xposition[l] - x) > s) ||  (Math.abs(Yposition[l] - y) > s)){
+		Xposition.push(x);
+		Yposition.push(y);
+
+	}
+	
+}
+
+function ClearXY(){
+	Xposition = new Array();
+	Yposition = new Array();
+}
+
+function ArrToStr(Arr,s){
+	//convert array values to string
+	var Str = "";
+	for (n = 0; (n < Arr.length); n++)
+	 {
+		if (n > 0) 
+		{
+			Str += s; // each set of data separated by s
+		}
+		Str += Arr[n]; 
+	}
+ 	return Str;
+}
+
+function StrToArr(Str,s){
+	//converts string to an array
+	var Arr  = Str.split(s);
+	for (n=0;n<Arr.length;n++){
+		Arr[n] = parseInt(Arr[n]);
+	}
+	return Arr;
+}
+
+function DrawFreehand(canvas,X,Y,StrokeColor,StrokeThickness){
+	if (canvas == pv){
+		jg.setColor(StrokeColor);
+		jg.setStroke(StrokeThickness);
+		if(X.length<2){
+			var x = X[0];
+			var y = Y[0];
+			jg.drawLine(x,y,x,y);
+			jg.paint();
+		}
+		else if (X.length>1){
+			var a = X.length - 2;
+			var b = a + 1;
+			var x1 = parseInt(X[a]);
+			var y1 = parseInt(Y[a]);
+			var x2 = parseInt(X[b]);
+			var y2 = parseInt(Y[b]);
+			jg.drawLine(x1,y1,x2,y2);
+			jg.paint();
+		}
+	}
+	if (canvas == jg){
+		canvas.setColor(StrokeColor);
+		canvas.setStroke(StrokeThickness);
+		if(X.length<2){
+			var x = X[0];
+			var y = Y[0];
+			canvas.drawLine(x,y,x,y);
+			canvas.paint();
+		}
+		if(X.length > 1){
+			canvas.drawPolyline(X,Y);
+			canvas.paint();
+		}
+
+		//store parameters in an array
+		var StrX = ArrToStr(X, ':');
+		var StrY = ArrToStr(Y, ':');
+
+		var Parameter = "Freehand" + "_" +  StrX + "_" + StrY + "_" + StrokeColor + "_" + StrokeThickness;
+		DrawData.push(Parameter);
+		document.getElementById("DrawData").value = DrawData;
+	}
+}
+
+function DrawMarker(){
+	if(DrawSwitch){
+		var x = parseInt(mousex - cnvLeft);	
+		var y = parseInt(mousey - cnvTop);
+		if(TextSwitch){
+			DrawText(jg,x,y,txt,StrokeColor,FontSize);
+		}
+		else if(FreehandSwitch){
+			DrawFreehand(jg,Xposition,Yposition,StrokeColor, StrokeThickness);
+			ClearXY();
+		}
+	}
+}
+		
+function DrawPreview(){
+	pv.clear();
+	var x = parseInt(mousex-cnvLeft);
+	var y = parseInt(mousey-cnvTop);
+	if (MouseDown){
+		if(TextSwitch){
+			DrawText(pv,x,y,txt,StrokeColor,FontSize);
+		}
+		else if(FreehandSwitch){
+			GetXY(x,y);
+			DrawFreehand(pv,Xposition,Yposition,StrokeColor, StrokeThickness);
+		}
+	}
+}
+
+
+function RedrawImage(RedrawParameter){
+		var DrawingType = RedrawParameter[0];
+		if(DrawingType == "Text"){
+			var x = parseInt(RedrawParameter[1]);
+			var y = parseInt(RedrawParameter[2]);
+			var txt = RedrawParameter[3];
+			StrokeColor = RedrawParameter[4];
+			FontSize = RedrawParameter[5];
+			DrawText(jg,x,y,txt,StrokeColor,FontSize);
+		}
+		else if(DrawingType == "Freehand"){
+			var X = StrToArr(RedrawParameter[1], ':');
+			var Y = StrToArr(RedrawParameter[2], ':');
+			StrokeColor = RedrawParameter[3];
+			StrokeThickness = RedrawParameter[4];
+			DrawFreehand(jg,X,Y,StrokeColor,StrokeThickness);
+		}
+}
+
+function Undo(){
+	jg.clear();
+	TempData = DrawData;
+	DrawData = new Array();
+	document.getElementById("DrawData").value = "";
+
+	for (i=0; (i < (TempData.length - 1) ); i++){
+		var Parameters = TempData[i].split("_");
+		RedrawImage(Parameters);
+	}
+}
+
+function RecallImage(){
+	for (i=0; (i < TempData.length);i++){
+		var Parameters = new Array();
+		Parameters =  TempData[i].split("_");
+		RedrawImage(Parameters);
+	}
+}
+
+function Clear(){
+	jg.clear();
+	TempData = new Array();
+	DrawData = new Array();
+	SubmitData = new Array();
+	document.getElementById("TempData").value = "";
+	document.getElementById("DrawData").value = "";
+	document.getElementById("SubmitData").value = "";
+	Xposition = new Array();
+	Yposition = new Array();
+}
+
+function ClearExceptSubmit(){
+	jg.clear();
+	TempData = new Array();
+	DrawData = new Array();
+	document.getElementById("TempData").value = "";
+	document.getElementById("DrawData").value = "";
+	Xposition = new Array();
+	Yposition = new Array();
+}
+
+function SubmitImage(){
+	EncodeData();
+}
+
+function EncodeData(){
+	var packed = "";  // Initialize packed or we get the word 'undefined'
+	//Converting image data in array into a string
+	for (i = 0; (i < DrawData.length); i++)
+	 {
+		if (i > 0) 
+		{
+			packed += ","; // each set of data separated by comma
+		}
+		packed += escape(DrawData[i]); 	//'escape' encodes dataset into unicode
+	}
+	document.getElementById("SubmitData").value = packed;  //stores image data into hidden form field
+}
+
+function DecodeData(){
+	var query = document.getElementById("SubmitData").value;
+	var data = query.split(',');
+	for (i = 0; (i < data.length); i++)
+	{
+		data[i] = unescape(data[i]);
+	}
+	TempData = data;
+	DrawData = new Array();
+	document.getElementById("DrawData").value = document.getElementById("SubmitData").value;
+	document.getElementById("SubmitData").value = "";
+}
+
+function ReloadImage(){
+	DecodeData();
+	RecallImage();
+}
+
+</script>
+<!-- Drawing Code: End -->
+
+</body></html>

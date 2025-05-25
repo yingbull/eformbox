@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Outpatient Speech-Language Pathology Referral</title>
+<!-- Ver 2 - added resize: none; to text area to remove markings in the right bottom corner, added radio boxes -->
+<style>
+ body, textarea {
+	font-size:12px;
+	font-family:sans-serif;
+	font-style:normal;
+	font-weight:normal;
+	text-align:left;
+	background-color:transparent;
+    resize: none;
+ }
+ input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+ }
+ .Xbox {
+	position:absolute;
+	width:12px;
+	height:12px;
+	font-weight:bold;
+	text-align:center;
+	background-color:white;
+ }
+ .Radio {
+	position:absolute;
+	width:12px;
+	height:12px;
+	font-weight:bold;
+	text-align:center;
+	background-color:white;
+ }
+</style>
+
+<style type="text/css" media="screen" >
+ .noborder {
+	border:1px solid; !important
+ }
+ html.touch #content {
+	float:left;
+	width:92%;
+}
+ html.touch #scrollgrabber {
+	float:right;
+	width:4%;
+	margin-right:2%;
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+ }
+ html.borderradius #scrollgrabber {
+	border-radius: 1em;
+ }
+input:invalid {
+    background-color: ivory;
+    border: none;
+    outline: 1px solid red;
+}
+textarea:invalid {
+    background-color: ivory;
+    border: none;
+    outline: 1px solid red;
+}
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {
+	display:none;
+ }
+ .noborder {
+	border:0px;
+	background: transparent;
+</style>
+
+<script language="javascript">
+function formPrint(){
+	window.print();
+} 
+</script>
+
+<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+<script language="javascript">
+//keypress events trigger dirty flag
+var needToConfirm = false;
+document.onkeyup=setDirtyFlag;
+function setDirtyFlag(){
+	needToConfirm = true;
+}
+function releaseDirtyFlag(){
+	needToConfirm = false; //Call this function to prevent an alert.
+	document.getElementById('FormName').submit()
+}
+window.onbeforeunload = confirmExit;
+function confirmExit(){
+	if (needToConfirm){
+		 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+	 }
+}
+</script>
+
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+</head>
+
+<body onload="">
+<form method="post" name="FormName" id="FormName" >
+<div id="page1" style="position:relative;" >
+<img id="BGImage1" src="${oscar_image_path}outpatientspeechreferral.png" style="position: relative; left: 0px; top: 0px; width:750px">
+
+<input name="firstname" id="firstname" type="text" class="noborder" style="position:absolute; left:113px; top:134px; width:263px; height:19px; "  oscarDB=patient_nameF>
+<input name="lastname" id="lastname" type="text" class="noborder" style="position:absolute; left:113px; top:159px; width:263px; height:19px; "  oscarDB=patient_nameL>
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:166px; top:185px; width:189px; height:24px; "  oscarDB=dobc2>
+<input name="phn" id="phn" type="text" class="noborder" style="position:absolute; left:86px; top:215px; width:256px; height:20px; "  oscarDB=hinc>
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:173px; top:241px; width:207px; height:21px; "  oscarDB=phone>
+<input name="email" id="email" type="text" class="noborder" style="position:absolute; left:135px; top:268px; width:253px; height:22px; "  oscarDB=email>
+<input name="dateofreferral" id="dateofreferral" type="text" class="noborder" style="position:absolute; left:481px; top:134px; width:207px; height:18px; "  oscarDB=today>
+<input name="pcp" id="pcp" type="text" class="noborder" style="position:absolute; left:505px; top:159px; width:183px; height:19px; "  oscarDB=current_user>
+<input name="Referral_PCP" id="Referral_PCP" type="text" class="Radio" style="left:471px; top:190px;" onmouseup= "pcp.required = true; other2.required = false;  document.forms['FormName'].checkValidity();" >
+<input name="Referral_Other" id="Referral_Other" type="text" class="Radio" style="left:513px; top:190px;" onmouseup= "pcp.required = false; other2.required = true;  document.forms['FormName'].checkValidity();" >
+<input name="other2" id="other2" type="text" class="noborder" style="position:absolute; left:560px; top:184px; width:128px; height:17px; " >
+<textarea name="referralcontact" id="referralcontact" type="text" class=" noborder" style="position:absolute; left:400px; top:228px; width:288px; height:33px; " ></textarea>
+<input name="Priority_routine" id="Priority_routine" type="text" class="Radio" style="left:436px; top:267px;" >
+<input name="Priority_semi" id="Priority_semi" type="text" class="Radio" style="left:493px; top:267px;" >
+<input name="Priority_urgent" id="Priority_urgent" type="text" class="Radio" style="left:571px; top:267px;" >
+<input name="dysarthria" id="dysarthria" type="text" class="Xbox" style="left:55px; top:310px;" >
+<input name="aphasia" id="aphasia" type="text" class="Xbox" style="left:55px; top:331px;" >
+<input name="cognitive" id="cognitive" type="text" class="Xbox" style="left:55px; top:353px;" >
+<input name="vocal" id="vocal" type="text" class="Xbox" style="left:55px; top:374px;" >
+<input name="swallowing" id="swallowing" type="text" class="Xbox" style="left:55px; top:395px;" >
+<input name="Infection_Yes" id="Infection_Yes" type="text" class="Radio" style="left:394px; top:418px;" >
+<input name="Infection_No" id="Infection_No" type="text" class="Radio" style="left:433px; top:418px;" >
+<input name="Texture_Yes" id="Texture_Yes" type="text" class="Radio" style="left:394px; top:441px;" >
+<input name="Texture_No" id="Texture_No" type="text" class="Radio" style="left:433px; top:441px;" >
+<input name="Weight_Yes" id="Weight_Yes" type="text" class="Radio" style="left:394px; top:475px;" onmouseup= "weight.required = true;  document.forms['FormName'].checkValidity();" >
+<input name="Weight_No" id="Weight_No" type="text" class="Radio" style="left:433px; top:475px;" onmouseup= "weight.required = false;  document.forms['FormName'].checkValidity();" >
+<input name="weight" id="weight" type="text" class="noborder" style="position:absolute; left:234px; top:477px; width:79px; height:17px; " >
+<input name="interdisciplinary" id="interdisciplinary" type="text" class="Xbox" style="position:absolute; left:58px; top:508px;" >
+<textarea name="complaint" id="complaint" type="text" class=" noborder" style="position:absolute; left:60px; top:587px; width:327px; height:56px; background-color:white; " ></textarea>
+<textarea name="diagnosis" id="diagnosis" type="text" class=" noborder" style="position:absolute; left:397px; top:587px; width:292px; height:56px; background-color:white; " ></textarea>
+<textarea name="instrumental" id="instrumental" type="text" class=" noborder" style="position:absolute; left:60px; top:705px; width:629px; height:47px; background-color:white; " ></textarea>
+<input name="Site_campbell" id="Site_campbell" type="text" class="Radio" style="left:87px; top:794px;" >
+<input name="Site_comox" id="Site_comox" type="text" class="Radio" style="left:418px; top:794px;" >
+
+
+<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+	<table><tr><td>
+		Subject: <input name="subject" id="subject" size="40" type="text"> <br> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick=" releaseDirtyFlag();"> 
+		 <input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+	</td></tr></table>
+
+<!-- Copy Left -->
+<a rel="liscence" href="https://www.gnu.org/licenses/gpl.html" target="blank"><img alt="GPLv3" src="https://www.gnu.org/graphics/gplv3-88x31.png"/></a><br>
+</div>
+</div>
+ </form>
+
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup( { inputField : "dateofreferral", ifFormat : "%Y-%m-%d",  button : "dateofreferral" } );
+</script>
+
+
+<!-- Xbox and Radio Script -->
+<script type="text/javascript">
+	var b = document.getElementsByClassName('Xbox');
+	for (var i = 0; i < b.length; i++) {
+		b[i].onclick = function(){
+			let x = this.id;
+			if (document.getElementById(x).value.length < 1) {
+				document.getElementById(x).value ='X';
+			} else {
+				document.getElementById(x).value ='';
+			}
+			return false;
+		}
+	}
+
+var r = document.getElementsByClassName("Radio");
+//console.log("Radio array length is "+r.length);
+for(var i=0; i<r.length; i++){
+
+ r[i].onclick = function(){ 
+	let x = this.id;
+
+   var partA = x.substring(0, x.indexOf("_"));
+   let items = document.querySelectorAll("[id^='"+partA+"_']");
+   //console.log("click on " + x + " in a group of " +items.length); 
+     for(let item of items){
+    if (x != item.id) { 
+		item.value = ''; 
+	} else {
+		document.getElementById(x).value ='X';
+	}
+  }
+
+ } 
+} 
+</script>
+
+</body>
+</html>

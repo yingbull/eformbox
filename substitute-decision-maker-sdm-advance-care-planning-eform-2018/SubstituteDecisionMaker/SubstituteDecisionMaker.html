@@ -1,0 +1,504 @@
+
+<html>
+<head>
+
+<!-- Version 1: created Oct2015 -->
+<!-- Includes: new offline architecture, updated background, jQuery X-boxes. John Yap -->
+<!-- Version 2: Nov3/15 with relationships -->
+<!-- Version 3: Dec13/15 SDM legal references -->
+<!-- Version 4: Jan10/15 - it is a TOOL, not a legal document! -->
+<!-- Version 6: Jan13/15 - with Logo; V7 without logo -->
+<!-- Version 8: Feb25/16 - adjust 2nd page, signature, etc -->
+<!-- Version 9: Mar1/16 - typos fixed -->
+<!-- Version 10: Mar6/16 - versioning label -->
+<!-- Version 11: Mar8/16 - cosmetic tweaks -->
+<!-- Version 12: Apr20/16 - additional Q's as per Dr. C Chen -->
+<!-- Version 13: Apr23/16 - SDM Q's to page 1 -->
+<!-- Version 14: Apr24/16 - links to BC Law, embedded Rep9, Rep 9 checkbox -->
+<!-- Version 15: Apr27/16 - simplified language page 2, as per Dr. P Flynn -->
+<!-- Version 16: May18/16 - adjust as per team Meeting -->
+<!-- Version 17: Aug10/16 - update to Speak UpinBC link, as per R Carter -->
+<!-- Version 18: Nov9/16 - additional cues, modified; as per R Bernacki -->
+<!-- Version 19: Nov25/16 - fix congratulation banner on reload -->
+<!-- V20_Oct7_2018 - fix FHA resource link -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+<!-- Do not use escape "\n" to create line-feeds.  It does not allow for proper unzipping of html; such code needs to be hived off to js file in image library. -->
+
+<!-- eForm DISCLAIMER: As is: eForms are shared as-is, free of charge on a share-alike basis with absolutely no guarantee or warranty.
+ No Quality Control: The author does not vet any eForms and does not purport to apply any manner of quality control.
+ Responsibility: The responsibility for the clinical and medical-legal consequences of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm.
+ This applies to both eForms shared by others, and those created by users themselves.
+ Attribution: eForms are shared freely among the user community, with attribution to the original author of the eForm.
+ Free: eForms so shared may not be sold or purchased.
+ Provincial validation:  eForms are optional and non-essential add-ons, separate from OSCAR, and with their own license terms.
+ eForms are not part of the OSCAR core program functionality and code base.
+ For this reason eForms are not subject to provincial validation testing and conformance criteria. 
+ eForms are also not subject to the ISO production process for OSCAR. -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, and to the right of the double slashes
+// "${oscar_image_path}ACP_SDM_Qs_V3.png"
+// "${oscar_image_path}TSDM_info.png"
+// "${oscar_image_path}jquery-1.12.0.min.js"
+</script>
+
+<link rel="stylesheet" type="text/css" media="print" href="${oscar_image_path}JSMPC.css" />
+
+<!-- jQuery file for testing outside of OSCAR -->
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+
+<!-- OSCAR based files for greater functionality -->
+<script type="text/javascript" src="${oscar_javascript_path}jquery/jquery-1.4.2.js"></script>
+
+<style>
+input {
+	 -moz-box-sizing: content-box;
+	 -webkit-print-color-adjust: exact;
+	 -webkit-box-sizing: content-box;
+	 box-sizing: content-box
+}
+ .sig {
+	 border: 2px dotted blue;
+	 background: lightgrey;
+ }
+</style>
+
+<style type="text/css" media="print">
+ .DoNotPrint {display: none;}
+ .noborder {
+	 border: 0px;
+	 background: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-3dlight-color: transparent;
+	 scrollbar-arrow-color: transparent;
+	 scrollbar-base-color: transparent;
+	 scrollbar-darkshadow-color: transparent;
+	 scrollbar-face-color: transparent;
+	 scrollbar-highlight-color: transparent;
+	 scrollbar-shadow-color: transparent;
+	 scrollbar-track-color: transparent;
+	 overflow: hidden;
+ }
+ .sig {
+	 border-style: solid;
+	 border-color: transparent;
+	 background: transparent;
+ } 
+ .Show {
+	visibility:visible;
+	display:inline;
+ }
+.Hide {
+	visibility:hidden;
+	display:none;
+ }
+ </style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 16px;
+	height: 15px;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: center;
+	background: yellow;
+}
+.box2 {
+	position: absolute;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: yellow;
+	width:10px;
+	height:9px;
+}
+.Show {
+	visibility:visible;
+	display:inline;
+ }
+.Hide {
+	visibility:hidden;
+	display:none;
+ }
+.BoxBorderThick {
+	position:absolute;
+	border:4px solid #808080;
+} 
+.BoxBorderThin {
+	position:absolute;
+	border:1px solid #808080;
+}
+.text1 {
+	position: absolute;
+	font-family: sans-serif;
+	font-size: 18px;
+	background: transparent;
+	text-decoration: underline;
+}
+</style>
+ 
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {
+			setDocumentTitle('Advance Care Planning Tool',document.getElementById('PatientSurname').value);
+			changeImage("ACP_SDM_Qs_V3.png", "BGImage");
+			changeImage("ACP_SDM_Qs_V3.png", "BGImage2");
+			changeImage("TSDM_info.png", "BGImage3");
+			setDefaults();
+			//optimize window size/width
+			top.window.resizeTo(950, screen.availHeight);
+		}
+
+		function resourceLink(resource, extension) {
+			// Takes two arguments -- the base filename and its extension -- and
+			// returns a string depending on whether the page has been opened
+			// locally or if it has been uploaded to OSCAR.
+			//
+			// Example usage: resourceLink('image1', 'png')
+			// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+
+			var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+
+			if (typeof extension === "undefined") {
+				var extension = '';
+			} else {
+				var extension = '.' + extension;
+			}
+
+			return prefix + resource + extension;
+		}
+
+		function selectorValue(selectId) {
+			return selectId.value;
+		}
+
+		function changeImage(img, imgId) {
+			// Changes the src value of an <img>.
+			document.getElementById(imgId).src = resourceLink(img)
+			document.getElementById(imgId).href = resourceLink(img)
+		}
+
+		function setDocumentTitle(Title,PatientSurname) {
+			// set document title
+			document.title = Title + '_' + PatientSurname;					
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True') {
+			document.getElementById("Congratulations").className='Hide';
+			document.getElementById("Links").className='Show';
+			}   
+			else {
+			document.getElementById("Congratulations").className='Show';
+			document.getElementById("Links").className='Hide';
+			}
+		}
+
+		/****************************
+			submit and print functions 
+		****************************/
+		function printSubmit() {
+			printLetter();
+			submission();
+		}
+
+		function printLetter() {
+			// print the letter
+			document.getElementById("Links").className='Hide';
+			document.getElementById("Congratulations").className='Show';
+			window.print();
+		} 
+
+		function submission() {
+			setFlag();
+			releaseDirtyFlag(); 
+			setTimeout('document.FormName.submit()',2000);
+		}
+
+		function setFlag() {
+			// indicate that the form has been submitted
+		if (document.getElementById("newForm").value == 'True')
+		document.getElementById("newForm").value = 'False';
+		}
+		
+		/****************************
+		Checkbox functions 
+		****************************/
+		$(document).ready(function() {
+			$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+			$( this ).val("");
+			}
+			else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+			// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0) {
+			$( this ).click();
+			return false;
+			}
+		});
+	});
+
+		function change_border(x) {
+			if (document.getElementById(x).style.borderWidth == '0px')
+				document.getElementById(x).style.borderWidth = '8px';
+			else
+				document.getElementById(x).style.borderWidth = '0px';
+		}
+
+		// script to confirm closing of window if it has not been saved yet 
+		//keypress events trigger dirty flag
+		var needToConfirm = false;
+		document.onkeyup=setDirtyFlag;
+
+		function setDirtyFlag() {
+		needToConfirm = true;
+	}
+
+		function releaseDirtyFlag() {
+		needToConfirm = false; //Call this function if does not require an alert.
+		//this could be called when save button is clicked
+	}
+	
+		window.onbeforeunload = confirmExit;
+
+		function confirmExit() {
+		if (needToConfirm) {
+		return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+		}
+	}
+</script>
+</head>
+
+<body onload="startUp();">
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for startUp -->
+<input type="hidden" name="PatientSurname" id="PatientSurname" oscarDB=patient_nameL>
+
+<!-- START OF PAGE 1 -->
+<div id="page1" style="position:relative; left:0px; top:0px; width:850px;" class="pagebreak">
+<img id="BGImage" SRC="">
+<span style="position:absolute; left:67px; top:70px; font-family:sans-serif; font-size:10px;">V20 Oct7_2018</span>
+
+<span class="text1" style="left:420px; top:25px;"><b>Today&#8217;s Date: </b></span>
+<input name="TodaysDate1" type="text" class="noborder text1" style="left:545px; top:25px; width:272px; font-weight:bold;" oscarDB=today>
+
+<span class="text1" style="left:420px; top:50px;"><b>For:</b></span>
+<input name="PtName1" id="PtName1" type="text" class="noborder text1" style="left:460px; top:50px; width:357px; font-weight:bold;" oscarDB=patient_name>
+
+<div style="position:absolute; left:0px; top:110px; width:820px;">
+<span style="position:absolute; left:67px; top:0px; width:730px; font-family:sans-serif; font-size:30px;"><b><u><i>Initiating Advance Care Planning....</i></u></b></span>
+
+<span style="position:absolute; left:67px; top:45px; width:760px; font-family:sans-serif; font-size:18px;" title="I am hoping we can talk about your general health and what we may encounter in the future - is this OK? What is your understanding of your current health?"><i>If you became ill - from disease or accident - there may come a time when you cannot think or speak clearly for yourself. &nbsp;If that happens, you will need someone to speak on your behalf, to help doctors or healthcare providers make medical decisions for you. &nbsp;Who would you most like that person to be? Who do you trust? &nbsp;Who knows you best? &nbsp;Please help that person by considering the following questions:</i></span>
+</div>
+
+<div style="position:absolute; left:0px; top:270px; width:810px;"> 
+<span style="position:absolute; left:67px; top:0x; font-family:sans-serif; font-size:18px;">
+	<li><b>What gives you joy? What provides your life with meaning and fulfillment?</b></li></span>
+<span style="position:absolute; left:80px; top:23px; font-family:sans-serif; font-size:13px;">Examples: singing, going to work, cooking food for my family</span>
+<textarea name="Joy" type="text" style="position:absolute; left:67px; top:40px; width:710px; height:80px; max-width:710px; max-height:80px; font-family:sans-serif; font-size:18px; background:transparent;" value="" title="What might your perfect day look like?"></textarea>
+
+<span style="position:absolute; left:67px; top:135px; font-family:sans-serif; font-size:18px;" title="How much does your family know about your priorities and wishes?">
+	<li><b>If you were to become ill, what would be important for others to know about you?</b></li></span>
+<span style="position:absolute; left:80px; top:158px; font-family:sans-serif; font-size:13px;">Examples: I am claustrophic; I have already completed an ACP plan; I wish to donate my organs</span>
+<textarea name="Ill" type="text" style="position:absolute; left:67px; top:175px; width:710px; height:80px; max-width:710px; max-height:80px; font-family:sans-serif; font-size:18px; background:transparent;" value="" title="Are there any medical treatments that you are aware of, and have thought about, and already know you do not want?"></textarea>
+
+<span style="position:absolute; left:67px; top:270px; width:710px; font-family:sans-serif; font-size:18px;" title="What are your most important goals if your health situation changes?">
+	<li><b>If your health were to deteriorate, what are your most important goals? &nbsp; What &nbsp; &nbsp; &nbsp; &nbsp; would be most important for you to accomplish?</b></li></span>
+<span style="position:absolute; left:80px; top:313px; font-family:sans-serif; font-size:13px;">Examples: meet my grandchildren; attend my daughter's wedding</span>
+<textarea name="Deteriorate" type="text" style="position:absolute; left:67px; top:330px; width:710px; height:80px; max-width:710px; max-height:80px; font-family:sans-serif; font-size:18px; background:transparent;" value="" title=""></textarea>
+
+<span style="position:absolute; left:67px; top:425px; width:710px; font-family:sans-serif; font-size:18px;" title="Who or what would provide you strength and support if your health were to change?">
+	<li><b>Do you have any spiritual or religious beliefs that would affect your decisions  &nbsp; &nbsp; &nbsp; &nbsp; about the types of medical treatment you may want or not want?  What are they?</b></li></span>
+<span style="position:absolute; left:80px; top:468px; font-family:sans-serif; font-size:13px;">Examples: I consult with my pastor for important medical decisions; I would refuse blood transfusion</span>
+<textarea name="Spiritual" type="text" style="position:absolute; left:67px; top:485px; width:710px; height:80px; max-width:710px; max-height:80px; font-family:sans-serif; font-size:18px; background:transparent;" value="" title=""></textarea>
+
+<span style="position:absolute; left:67px; top:580px; width:710px; font-family:sans-serif; font-size:18px;">
+	<li><b>What are your biggest fears or worries about your health and medical condition?</b></li></span>
+<span style="position:absolute; left:80px; top:603px; font-family:sans-serif; font-size:13px;">Examples: having to ask others for help; being in severe pain</span>
+<textarea name="Fears" type="text" style="position:absolute; left:67px; top:620px; width:710px; height:80px; max-width:710px; max-height:80px; font-family:sans-serif; font-size:18px; background:transparent;" value="" title=""></textarea>
+</div>
+
+<div name="Links" id="Links" class="Show" style="position:absolute; left:0px; top:1020px; width:810px;">
+<!-- Links to MOST and DNR -->
+<input name="ACP_Record" class="DoNotPrint" type="button" style="position:absolute; left:200px; font-family:sans-serif; font-size:11px; font-weight:bold; background:#8DEEEE; border-width:2; border-style:solid; border-color:#ACF3F3; cursor:pointer;" value="ACP Record" title="to eForm" oscarOpen="ACP Record">
+<input name="MOST" class="DoNotPrint" type="button" style="position:absolute; left:400px; font-family:sans-serif; font-size:11px; font-weight:bold; background:#8DEEEE; border-width:2; border-style:solid; border-color:#ACF3F3; cursor:pointer;" value="MOST" title="to eForm" oscarOpen="MOST">
+<input name="DNR" class="DoNotPrint" type="button" style="position:absolute; left:580px; font-family:sans-serif; font-size:11px; font-weight:bold; background:#8DEEEE; border-width:2; border-style: solid; border-color:#ACF3F3; cursor:pointer;" value="DNR" title="to eForm" oscarOpen="DNR">
+</div>
+
+<div style="position:absolute; left:0px; top:1020px; width:810px;">
+
+<!-- Congrats Banner -->
+<span id="Congratulations" class="hide" style="position:absolute; left:67px; top:-5px; width:710px; font-family:sans-serif; font-size:24px; text-align:center;">Congratulations!  You have engaged in Advance Care Planning!</span>
+
+<!-- Footer -->
+<span class="BoxBorderThick" style="left:67px; top:20px; width:760px;"></span>
+
+<span style="position:absolute; left:67px; top:30px; font-family:sans-serif; font-size:13px;">Information: </span>
+<a style="position:absolute; left:145px; top:30px; font-family:sans-serif; font-size:13px; color:blue;" href="http://www.speak-upinbc.ca/" target="_blank" title="Speak Up BC edition">http://www.speak-upinbc.ca/</a>
+<a style="position:absolute; left:320px; top:30px; width:520px; font-family:sans-serif; font-size:13px; color:blue;" href="https://www.fraserhealth.ca/health-topics-a-to-z/advance-care-planning#.W7qRVo4d9Bw" target="_blank" title="FHA Advanced Care Planning resources">https://www.fraserhealth.ca/health-topics-a-to-z/advance-care-planning#.W7qRVo4d9Bw</a>
+
+<span style="position:absolute; left:67px; top:50px; font-family:sans-serif; font-size:13px;">1-877-TALK-034 (1-877-825-5034) or email: advancecareplanning@fraserhealth.ca</span>
+</div>
+<!-- End of Page 1 -->
+</div>
+
+<div id="page2" style="page-break-after:always; position:relative;">
+<img id="BGImage2" SRC="" width="850px">
+
+<span style="position:absolute; left:67px; top:70px; font-family:sans-serif; font-size:10px;">V19 Nov25_2016</span>
+
+<span class="text1" style="left:420px; top:30px;"><b>Today&#8217;s Date: </b></span>
+<input name="TodaysDate2" type="text" class="noborder text1" style="left:545px; top:30px; width:272px; font-weight:bold;" oscarDB=today>
+
+<span class="text1" style="left:420px; top:55px;"><b>For:</b></span>
+<input name="PtName2" id="PtName2" type="text" class="noborder text1" style="left:460px; top:55px; width:357px; font-weight:bold;" oscarDB=patient_name>
+
+<span style="position:absolute; left:67px; top:110px; font-family:sans-serif; font-size:24px;"><b><u>Did you know.....?</u></b></span>
+
+<div class="text1" style="left:0px; top:165px; width:820px; text-decoration:none;">
+<span style="position:absolute; left:67px; top:0px;" title="In the event you are unable to make decisions for yourself, either by illness or accident, your substitute decision maker (representative) can speak on your behalf."><i>
+You are always the decision maker when you are <b>capable</b> of understanding your medical problem.<br><br>
+
+The Courts may appoint a &quot;COMMITEE&quot; to make these decisions in special situations.<br><br>
+
+In the event that you do not have a <b>representative</b> to help you make health care decisions, <a style="color:black;" title="Health Care (consent) and Care Facility (admission) Act" href="http://www.bclaws.ca/civix/document/id/complete/statreg/96181_01" target="_blank" >Legislation</a> does allow health care providers to choose a <a id="BGImage3" style="color:black; text-decoration:none;" href="" target="_blank" title="Hierarchy for TSDM">Temporary Substitute Decision Maker (TSDM)</a> to make urgent medical decisions on your behalf, if you are not capable at the time. <br><br>
+
+If you wish to specifically choose your representative, please consider completing a  <a style="color:black;" href="http://www2.gov.bc.ca/assets/gov/health/managing-your-health/incapacity-planning/representation_agreement_s9.pdf" target="_blank" title="Section 9 Representation Agreement. Grants authority to SDM to accept or decline life-preserving intervention"><b>representation 9 agreement</b></a> for them.</i><br><br>
+
+When your representative is aware of your advance care plans, understands your values, beliefs and wishes, he or she would be best prepared to speak on your behalf when asked to make health care decisions for you.  See other page. &rarr;
+</span>
+</div>
+
+<!-- TSDM Info
+<div class="text1" name="TSDM_Info" style="left:0px; top:260px; width:810px; text-decoration:none;">
+<span style="position:absolute; left:67px; top:0px; width:760px;">
+
+1. Your spouse (married, common-law, same sex - length of time living together doesn&#8217;t matter)</b><br>
+2. A son or daughter (19 or older, birth order doesn&#8217;t matter)<br>
+3. A parent (either, may be adoptive) <br>
+4. A brother or sister (birth order doesn&#8217;t matter)<br>
+5. A grandparent<br>
+6. A grandchild (birth order doesn&#8217;t matter)<br>
+7. Anyone else related to you by birth or adoption<br>
+8. A close friend<br>
+9. A person immediately related to you by marriage (in-laws, step-parents, step-children, etc.)<br><br>
+</span>
+</div>
+
+<div class="text1" name="TSDM_Info2" style="left:0px; top:450px; width:810px; text-decoration:none;">
+<span class="text1" style="left:67px; top:0px; width:760px; text-decoration:none;">
+<b>The TSDM assigned to you must be 19 or older, be capable, have no dispute with you, and have been in contact with you in the past year.</b><br><br>
+
+Your health care provider may only assign a person lower down on the list as your TSDM if all the people above them do not qualify or are unavailable.<br><br>
+
+<b>In order to choose someone specific</b> (on the list or not) to make your health care decisions, you should name that person legally as your representative using a 
+<a id="Rep9" style="color:black;" href="http://www2.gov.bc.ca/assets/gov/health/managing-your-health/incapacity-planning/representation_agreement_s9.pdf" target="_blank" title="Section 9 Representation Agreement. Grants authority to SDM to accept or decline life-preserving intervention">
+<b>representation agreement form.</b></a> &nbsp;  &nbsp; 
+<b>(<input name="Rep9_box" id="Rep9_box" type="text" class="Xbox box1 Show"> &nbsp; &nbsp; I have a representation agreement.)</b><br><br>
+</span>
+</div>
+
+<div name="SDM_Info" style="position:absolute; left:0px; top:660px; width:810px;">
+<span style="position:absolute; left:67px; top:0px; width:760px; font-family:sans-serif; font-size:18px;"><b>My choice for substitute decision maker</b>, someone I trust and knows me well, would be:</span>
+ -->
+
+<!-- SDM identity #1 
+<span style="position:absolute; left:67px; top:30px; font-family:sans-serif; font-size:18px;">First Choice:</span>
+<input name="SDM_1" type="text" class="noborder text1" style="left:180px; top:30px; width:290px;" value="">
+<span class="BoxBorderThin" style="left:180px; top:47px; width:290px;"></span>
+<span style="position:absolute; left:198px; top:50px; font-family:sans-serif; font-size:12px;">(Please print)</span>
+
+<span style="position:absolute; left:485px; top:30px; font-family:sans-serif; font-size:18px;">Relationship:</span>
+<input name="Relate_1" type="text" class="noborder text1" style="left:595px; top:30px; width:207px;" value="">
+<span class="BoxBorderThin" style="left:595px; top:47px; width:207px;"></span>
+
+<span class="BoxBorderThin" style="left:180px; top:80px; width:280px;"></span>
+<span style="position:absolute; left:470px; top:70px; font-family:sans-serif; font-size:12px;">(Optional signature)</span>
+
+<span style="position:absolute; left:67px; top:90px; font-family:sans-serif; font-size:18px;">Ph (day):</span>
+<input name="SDM_1_Phone1" type="text" class="noborder text1" style="left:150px; top:90px; width:275px;" value="">
+<span class="BoxBorderThin" style="left:150px; top:107px; width:275px;"></span>
+<span style="position:absolute; left:437px; top:90px; font-family:sans-serif; font-size:18px;">Ph (night):</span>
+<input name="SDM_1_Phone2" type="text" class="noborder text1" style="left:527px; top:90px; width:275px;" value="">
+<span class="BoxBorderThin" style="left:527px; top:107px; width:275px;"></span>
+-->
+
+<!-- SDM identity #2
+<span style="position:absolute; left:67px; top:140px; font-family:sans-serif; font-size:18px;">Next Choice:</span>
+<input name="SDM_2" type="text" class="noborder text1" style="left:180px; top:140px; width:290px;" value="">
+<span class="BoxBorderThin" style="left:180px; top:157px; width:290px;"></span>
+<span style="position:absolute; left:198px; top:160px; font-family:sans-serif; font-size:12px;">(Please print)</span>
+
+<span style="position:absolute; left:485px; top:140px; font-family:sans-serif; font-size:18px;">Relationship:</span>
+<input name="Relate_2" type="text" class="noborder text1" style="left:595px; top:140px; width:207px;" value="">
+<span class="BoxBorderThin" style="left:595px; top:157px; width:207px;"></span>
+
+<span class="BoxBorderThin" style="left:180px; top:190px; width:280px;"></span>
+<span style="position:absolute; left:470px; top:180px; font-family:sans-serif; font-size:12px;">(Optional signature)</span>
+
+<span style="position:absolute; left:67px; top:200px; font-family:sans-serif; font-size:18px;">Ph (day):</span>
+<input name="SDM_2_Phone1" type="text" class="noborder text1" style="left:150px; top:200px; width:275px;" value="">
+<span class="BoxBorderThin" style="left:150px; top:217px; width:275px;"></span>
+<span style="position:absolute; left:437px; top:200px; font-family:sans-serif; font-size:18px;">Ph (night):</span>
+<input name="SDM_2_Phone2" type="text" class="noborder text1" style="left:527px; top:200px; width:275px;" value="">
+<span class="BoxBorderThin" style="left:527px; top:217px; width:275px;"></span>
+
+<span style="position:absolute; left:67px; top:250px; font-family:sans-serif; font-size:18px;">
+Your Decision Maker (chosen or assigned) is legally required to make decisions that respect your wishes. If you have had discussions about advance care planning and have written down your beliefs, values and wishes, he or she will be best prepared to speak on your behalf when asked to make health care decisions for you.  See other page. &rarr;
+</span>
+</div>
+ -->
+
+<!-- Footer -->
+<div style="position:absolute; left:0px; top:1015px; width:850px;">
+<span class="BoxBorderThick" style="position:absolute; left:67px; width:760px;"></span>
+
+<span style="position:absolute; left:67px; top:14px; font-family:sans-serif; font-size:13px;">Information: </span>
+<a style="position:absolute; left:150px; top:14px; font-family:sans-serif; font-size:13px; color:blue;" href="http://www.speak-upinbc.ca/" target="_blank" title="Speak Up BC edition">http://www.speak-upinbc.ca/</a>
+<a style="position:absolute; left:320px; top:14px; width:520px; font-family:sans-serif; font-size:13px; color:blue;" href="https://www.fraserhealth.ca/health-topics-a-to-z/advance-care-planning#.W7qRVo4d9Bw" target="_blank" title="FHA Advanced Care Planning resources">https://www.fraserhealth.ca/health-topics-a-to-z/advance-care-planning#.W7qRVo4d9Bw</a>
+
+<span style="position:absolute; left:67px; top:34px; font-family:sans-serif; font-size:13px;">1-877-TALK-034 (1-877-825-5034) or email: advancecareplanning@fraserhealth.ca</span>
+
+<span style="position:absolute; left:67px; top:54px; font-family:sans-serif; font-size:13px;">Find Representation Agreement Form at:</span>
+<a style="position:absolute; left:67px; top:74px; font-family:sans-serif; font-size:13px; color:blue;" href="
+http://www2.gov.bc.ca/assets/gov/health/managing-your-health/incapacity-planning/representation_agreement_s9.pdf" target="_blank">
+http://www2.gov.bc.ca/assets/gov/health/managing-your-health/incapacity-planning/representation_agreement_s9.pdf</a>
+</div>
+<!-- End of Page 2 -->
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:67px; top:1125px;">
+	<table><tr><td style="background:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" onClick="history.go(0);">
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="printLetter();"> 
+		<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="printSubmit();"
+		</td></tr></table>
+</div>
+<!-- End of eForm -->
+</div>
+
+</form>
+</body></html>

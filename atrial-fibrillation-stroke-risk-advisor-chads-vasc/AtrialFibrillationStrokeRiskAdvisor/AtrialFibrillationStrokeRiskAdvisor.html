@@ -1,0 +1,719 @@
+<html>
+<head>
+
+<!-- V2_Feb28_2018 updated with ComboStrokeRisk2_Feb2018.js partner upgrades  to submit delay 2000 ms, typos corrected, input widths adjusted; GM does not seem to transfer eForm inputs to SPARC online; JohnY -->
+
+<!-- V3_Feb4_2024 minor cosmetic updates; JohnY -->
+
+		<!-- jQuery for greater functionality -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+		<script>
+			window.jQuery || document.write('<script src="../js/jquery-1.7.1.min.js">< \/script>');
+		</script>
+		<script>
+			if (typeof jQuery === "undefined") {
+				document.write(unescape("%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E"));
+			}
+		</script>
+
+<script language="javascript" type="text/javascript" src="${oscar_image_path}ComboStrokeRisk2_Feb2018.js"></script>
+<script language="JavaScript1.2" src="ComboStrokeRisk2_Feb2018.js"type="text/javascript"></script>
+<script language="JavaScript1.2" src="DHTMLmain.js"type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}DHTMLmain.js"></script>
+
+<style type="text/css" media="print">
+div.DoNotPrint {
+	display: none;
+}
+
+input.noborder {
+	border : 0px;
+	background: transparent;
+}
+
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	/* scrollbar : none; */
+	border : 0px;
+}
+
+.DoNotPrint {
+	display:none;
+}
+.DoNotPrintSmall {
+	display:none;
+        font-size:11px;
+}
+.noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+
+}
+td.noborder {
+	border : 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+}
+</style>
+
+<style type="text/css">
+tr.smaller {
+     font-family:Arial; 
+     font-size:8pt;
+	 text-align:right;
+}
+td.smaller{
+	font-size:8;
+	font-family:Arial;
+	font-weight:normal;
+	text-align:left;
+	vertical-align:top;
+	color: black;
+}
+</style>
+
+<style>
+/*
+A{text-decoration:none}
+*/
+</style>
+
+<script language="javascript" type="text/javascript">
+function restart() {
+   if (document.getElementById("CHADSCounter").value =='1') {
+       document.getElementById("CHA2DS2VASCSwitch").style.background='yellow';
+	   document.FormName.CHADS2Type.value= '"CHA2DS2 VASC"';
+	}
+	   if (document.getElementById("CHADSCounter").value =='2') {
+       document.getElementById("CHADS2Switch").style.background='yellow';
+	   document.FormName.CHADS2Type.value= '"CHADS2"';
+	}
+}
+function onLoad() {
+	if (document.getElementById("counter").value =='') {
+		document.getElementById("CHADSCounter").value = 1;
+		start();
+		search();
+		passAge();
+		UpdateBP();
+		passGender();
+		checkLab();
+		startUp();
+		parseMeasurementDate("eGFR3");
+		parseMeasurementDate("CREATININE3");
+		parseMeasurementDate("AST3");
+		parseMeasurementDate("ALT3");
+		parseMeasurementDate("BILI3");
+		parseMeasurementDate("ALP3");
+	}
+	 if (document.getElementById("counter").value =='1') {
+	   restart();
+	 }
+}
+
+
+	/****************************
+		Remove time stamp from measurement
+		Oscar default is yyyy-mm-dd hh:mm:ss
+		From database tag e.g. oscardb=m$PHQ9#dateObserved
+	****************************/
+	function parseMeasurementDate(id) {
+		// Change observed measurement date field to yyyy-mm-dd format, without time stamp
+		var FullMeasurementDate = document.getElementById(id).value;
+		var DateOnly = FullMeasurementDate.split(' ')[0];
+		// Show the parsed field 
+		document.getElementById(id).value = DateOnly;
+	}
+
+</script>
+
+</head>
+
+<body onload="onLoad();"> 
+ 
+<div id="TipLayer" style="visibility:hidden; position:absolute; z-index:1000;top:-100;"></div>
+
+ <script language="JavaScript1.2"  type="text/javascript">
+ //-->
+/*
+Please refer to readme.html for full Instructions
+Text[...]=[title,text]
+Style[...]=[TitleColor,TextColor,TitleBgColor,TextBgColor,TitleBgImag,TextBgImag,TitleTextAlign,TextTextAlign, TitleFontFace, TextFontFace, TipPosition, StickyStyle, TitleFontSize, TextFontSize, Width, Height, BorderSize, PadTextArea, CoordinateX , CoordinateY, TransitionNumber, TransitionDuration, TransparencyLevel ,ShadowType, ShadowColor]
+*/
+
+var FiltersEnabled = 1 // if your not going to use transitions or filters in any of the tips set this to 0
+
+Text[0]=["Me Email","Click here to send me an email "]
+Text[1]=["Home Page","Click here to go to my Web site."]
+Text[2]=["This is the title","Well How do you find this Tip message to be?"]
+Text[3]=["Right","This tip Is right positioned"]
+Text[4]=["Center","This tip Is center positioned"]
+Text[5]=["Left","This tip Is left positioned"]
+Text[6]=["Float","This tip Is float positioned at a (10,10) coordinate, It also floats with the scrollbars so it is always static"]
+Text[7]=["Fixed","This tip Is fixed positioned at a (1,1) coordinate"]
+Text[8]=["sticky style","This tip will sticky around<BR>This is useful when you want to insert a link like this <A href='http://migoicons.tripod.com'>Home Page</A>"]
+Text[9]=["keep style","This sticks around the mouse"]
+Text[10]=["Left coordinate control","This tip is right positioned with a 40 X coordinate "]
+Text[11]=["Top coordinate control","This tip is right positioned with a 50 Y coordinate"]
+Text[12]=["Visual effects","This tip has a Shadow and is Transparent a little and also has a random Transition applied to it "]
+Text[13]=["different style","Wow this is a new style and position! "]
+Text[14]=["This is The title","this is the text"]
+Text[15]=["","Abnormal renal function ( defined as the presence of chronic dialysis or renal transplantation or serum creatinine greater than 200 mmol/L (Points: 1 )"]
+Text[16]=["","Some Lists <li>list one</li> <li>list two</li> <li>list three</li> <li>list four</li>"]
+Text[17]=["","Abnormal renal function ( defined as the presence of chronic dialysis or renal transplantation or serum creatinine greater than 200 mmol/L (Points: 1 )"]
+Text[18]=["","Abnormal liver function ( defined as chronic hepatic disease (eg. cirrhosis) or biochemical evidence of significant hepatic derangement (eg. bilirubin >2x upper limit of normal, in association with AST/ALT/ALP >3x upper limit normal) (Points: 1 )"]
+Text[19]=["","Alcohol intake (consuming 8 or more alcoholic drinks per week) (Points: 1)"]
+Text[20]=["","Labile INRs (refers to unstable/high INRs or poor time in therapeutic range(eg<60%))(Points: 1)"]
+Text[21]=["","Hypertension -( systolic blood pressure >160 mmHg) (Points: 1 ) "]
+Text[22]=["","Drug Therapy (concomitant therapy such as antiplatelet agents, NSAID's)   (Points: 1 )"]
+Text[23]=["","Bleeding (Major bleeding history (anemia or predisposition to bleeding))  (Points: 1 )"]
+Text[24]=["","Although elderly is defined as over 65, this is really an assessment of degree of frailty. The physician needs to use their discretion here. "]
+Text[25]=["","Population average"]
+Text[26]=["","or LVEF <= 40%"]
+Text[27]=["","Click here for more information on the Framingham Stroke or Death after Atrial Fibrillation calculator "]
+Text[28]=["","Click here for more information on the CHA2DS2 VASc stroke risk in atrial fibrillation calculator "]
+Text[29]=["","Click here for more information on the HAS BLED bleeding risk calculator "]
+Text[30]=["","In the HAS BLED bleeding risk assessment hypertension is considered a modifiable risk factor. So appropriate treatment of the blood pressure is thought to reduce the risk for bleeding. "]
+Text[31]=["","Requirements for Special Authority approval: For prevention of stroke and systemic embolus in non valvular atrial fibrillation AND anticoagulation with warfarin inadequate after a 2 month trial OR warfarin is contraindicated or not possible (eg no access to INR testing). EXCLUSIONS: eGFR < 30 ml/min OR Age >74 and renal function not stable OR hemodynamically significant rheumatic valvular heart disease (especially mitral stenosis) OR patients with prosthetic heart valves. "]
+Text[32]=["","Requirements for Special Authority approval: Use SA NOAC eForm."]
+Text[33]=["","Requirements for Special Authority approval: If needed for secondary prevention of coronary, cerebral or peripheral vascular occlusion where there has been treatment failure on optimal ASA therapy. "]
+Text[34]=["","Click here for more information on validation of the CHA2DS2 VASc vs CHADS2 calculators."]
+Text[35]=["","Click here to populate the CHA2DS2 VASC results"]
+Text[36]=["","Click here to populate the CHADS2 results"]
+Text[37]=["","Risk determined by HAS-BLED score for warfarin and then adjusted as needed for the newer agents"]
+Text[38]=["","Risk of bleed 20% less than warfarin (based on RE-LY)"]
+Text[39]=["","Risk of bleed similar to warfarin"]
+Text[40]=["","Risk of bleed 31% less than warfarin (based on ARISTOTLE)"]
+Text[41]=["","Risk of bleed similar to warfarin (derived from ACTIVE-W)"]
+Text[42]=["","Use Dabigatran 110MG BID if >= 80yrs OR 75-79 and 1 or more bleeding risk factor OR if eGFR 30-50ml/min.  CI if eGFR <30ml/min. Check eGFR 6-12 monthly."]
+Text[43]=["","Rivaroxaban: If eGFR 30-50ml/min reduce to 15MG OD PO. CI if eGFR < 30ml/min. Give with food and avoid grapefruit. Check eGFR 6-12 monthly."]
+Text[44]=["","Apixaban: Regular dose 5MG BID. Reduce to 2.5MG BID if 2 of following: Age>= 80/ Weight<= 60kg / eGFR < 25ml/min.  CI if eGFR < 15ml/min. Check eGFR 6-12 monthly."]
+
+Style[0]=["white","black","#000099","#E8E8FF","","","","","","","","","","",200,"",2,2,10,10,51,1,0,"",""]
+Style[1]=["white","black","#000099","#E8E8FF","","","","","","","center","","","",200,"",2,2,10,10,"","","","",""]
+Style[2]=["white","black","#000099","#E8E8FF","","","","","","","left","","","",200,"",2,2,10,10,"","","","",""]
+Style[3]=["white","black","#000099","#E8E8FF","","","","","","","float","","","",200,"",2,2,10,10,"","","","",""]
+Style[4]=["white","black","#000099","#E8E8FF","","","","","","","fixed","","","",200,"",2,2,1,1,"","","","",""]
+Style[5]=["white","black","#000099","#E8E8FF","","","","","","","","sticky","","",200,"",2,2,10,10,"","","","",""]
+Style[6]=["white","black","#000099","#E8E8FF","","","","","","","","keep","","",200,"",2,2,10,10,"","","","",""]
+Style[7]=["white","black","#000099","#E8E8FF","","","","","","","","","","",200,"",2,2,40,10,"","","","",""]
+Style[8]=["white","black","#000099","#E8E8FF","","","","","","","","","","",200,"",2,2,10,50,"","","","",""]
+Style[9]=["white","black","#000099","#E8E8FF","","","","","","","","","","",200,"",2,2,10,10,51,0.5,75,"simple","gray"]
+Style[10]=["white","black","black","white","","","right","","Impact","cursive","center","",3,5,200,150,5,20,10,0,50,1,80,"complex","gray"]
+Style[11]=["white","black","#000099","#E8E8FF","","","","","","","","","","",200,"",2,2,10,10,51,0.5,45,"simple","gray"]
+Style[12]=["white","black","#000099","#E8E8FF","","","","","","","","","","",200,"",2,2,10,10,"","","","",""]
+Style[13]=["","black","black","#e5e5e5","","","","","","","","","","2",300,10,2,2,10,10,"","","","",""]
+Style[14]=["","black","black","#e5e5e5","","","","","","","","","","2",500,10,2,2,10,10,"","","","",""]
+Style[15]=["","black","black","#e5e5e5","","","","","","","","","","2",350,10,2,2,10,10,"","","","",""]
+
+applyCssFilter()
+ </script> 
+
+<script type="text/javascript">	
+function getRisks() {
+	if ( $('#CHF1').val() == 'X') {
+	var a = 1;
+	} else { a = 0 }
+
+	if ( $('#HBP1').val() == 'X') {
+	var b = 1;
+	} else { b = 0 }
+
+	if ( $('#Age1').val() == 'X') {
+	var c = 1;
+	}  else { c = 0 }
+	
+	if ( $('#DM1').val() == 'X') {
+	var d = 1;
+	} else { d = 0 }
+	
+	if ( $('#TIA1').val() == 'X') {
+	var e = 1;
+	} else { e = 0 }
+	
+	if ( $('#MI1').val() == 'X') {
+	var f = 1;
+	} else { f = 0 }
+	
+	if ( $('#Age651').val() == 'X') {
+	var g = 1;
+	}  else { g = 0 }
+	
+	if ( $('#Female3').val() == 'X') {
+	var h = 1;
+	} else { h = 0 }
+	
+	if ( $('#AbnRF1').val() == 'X') {
+	var i = 1;
+	}  else { i = 0 }
+	
+	if ( $('#AbnLF1').val() == 'X') {
+	var j = 1;
+	} else { j = 0 }
+	
+	if ( $('#MajorBleed1').val() == 'X') {
+	var k = 1;
+	} else { k = 0 }
+	
+	if ( $('#LabileINR1').val() == 'X') {
+	var l = 1;
+	} else { l = 0 }
+	
+	if ( $('#Alcohol1').val() == 'X') {
+	var m = 1;
+	}  else { m = 0 }
+	
+	if ( $('#NSAID1').val() == 'X') {
+	var n = 1;
+	} else { n = 0 }
+
+	window.open('http://www.sparctool.com/?&a='+a+'&b='+b+'&c='+c+'&d='+d+'&e='+e+'&f='+f+'&g='+g+'&h='+h+'&i='+i+'&j='+j+'&k='+k+'&l='+l+'&m='+m+'&n='+n);
+}
+</script>
+ 
+<form method="post" action="" name="FormName">
+
+<!-- Hidden inputs -->
+<input type="hidden" name="BP" id="BP" oscarDB=m$BP#value>
+<input type="hidden" name="history1" id="history1" oscarDB=OngoingConcerns>
+<input type="hidden" name="history2" id="history2" oscarDB=Medical_History>
+<input type="hidden" name="history3" id="history3" oscarDB=Other_Medications_History>
+<input type="hidden" name="history4" id="history4" oscarDB=Social_Family_History>
+<input type="hidden" name="Meds" id="Meds" oscarDB=druglist_generic>
+<input type="hidden" name="DMT" id="DMT" oscarDB=m$DMME#value>
+<input type="hidden" name="A1C" id="A1C" oscarDB=m$A1C#value>
+<input type="hidden" name="counter" id="counter" class="nodisplay">
+<input type="hidden" name="counter2" id="counter2" class="nodisplay">
+<input type="hidden" name="date" id="date" oscardb=today>
+<input type="hidden" name="SexGender" id="SexGender" oscarDB=sex>
+<input type="hidden" name="PtName" id="PtName" oscarDB=patient_nameL>
+<!-- -->
+
+<table width="770px" style="background:#b0c4de;">
+	<tr><td>
+
+<div id="heading">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td style="text-align:center;"><input name="PatientSurnameFirstName" type="text" class="noborder" style="width:250px; font-family:Arial; font-size:14px; font-weight:bold;" oscarDB=patient_name>
+			<input name="TodaysDate" type="text" class="noborder" style="width:80px; font-family:Arial; font-size:14px; font-weight:bold; text-align:center;" oscardb=today>
+			</td>
+			<td colspan="6" style="text-align:right;"><input name="IntroSelect" id="IntroSelect" type="text" value='X' class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td><b>PERSONALIZED STROKE RISK ASSESSMENT IN ATRIAL FIBRILLATION (non valvular):</b>
+		</td></tr>
+
+		<tr><td>You have been diagnosed with a heart condition called atrial fibrillation. This means that the two small chambers in your heart are not beating properly, which could lead to pooling of the blood and clotting, which could then dislodge and go to the brain and cause a stroke. Because of this possibility, unless your risk score is very low, we recommend that you be on a blood thinner to reduce the risk. This handout is to help provide you with an estimation of your stroke risk and show you how this might change with different interventions. This is to help you come to an informed decision to help you choose one of the blood thinner options. It is important to understand that these numbers that you see are estimates as best as we know and are only there for guidance.
+		</td></tr>
+	</table>	
+</div>
+<br>
+
+<div id="riskfactorsDiv">	
+	<table width="100%" style="outline:black solid thin;" class="DoNotPrint">
+		<tr><td colspan="6"><b>RISK FACTORS:</b></td>
+			<td colspan="2" style="text-align:right;"><input name="RiskFactorsSelect" id="RiskFactorsSelect" type="text" class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr> 
+
+		<tr><td style="text-align:center;">Age:</td>
+			<td style="text-align:left;"><input name="PatientAge" id="PatientAge" type="text" class="noborder" style="width:24px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;" oscardb=age>
+					<input name="PatientAge2" id="PatientAge2" type="hidden"></td>
+			<td style="text-align:center;"><b>C</b>ongestive Heart <A href="#" onMouseOver="stm(Text[26],Style[13])" onMouseOut="htm()">Failure</A> at any time:</td>
+			<td style="text-align:left;"><input name="CHF1" id="CHF1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="CHF2" id="CHF2" type="hidden"></td>
+			<td style="text-align:center;"><b>H</b>ypertension <A href="#" onMouseOver="stm(Text[30],Style[13])" onMouseOut="htm()">(Sys >160):</A></td>
+			<td style="text-align:left;"><input name="HBHypertension1" id="HBHypertension1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();">
+					<input name="HBHypertension2" id="HBHypertension2" type="hidden">
+		</td></tr>
+
+		<tr><td style="text-align:center;">Systolic BP:</td>
+			<td style="text-align:left;"><input name="SystolicBP" id="SystolicBP" type="text" class="noborder" style="width:30px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;"><input name="SystolicBP2" id="SystolicBP2" type="hidden"></td>
+			<td style="text-align:center;"><b>H</b>igh blood pressure (controlled or not):</td>
+			<td style="text-align:left;"><input name="HBP1" id="HBP1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="HBP2" id="HBP2" type="hidden"></td>
+			<td style="text-align:center;"><b>A</b>bnormal <A href="#" onMouseOver="stm(Text[17],Style[13])" onMouseOut="htm()">Kidney</A> function:</td>
+			<td style="text-align:left;"><input name="AbnRF1" id="AbnRF1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="AbnRF2" id="AbnRF2" type="hidden">
+		</td></tr>
+
+		<tr><td style="text-align:center;">Female:</td>
+			<td style="text-align:left;"><input name="Female1" id="Female1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate(); totalScore(); setDirtyFlag();"><input name="Female2" id="Female2" type="hidden"></td>
+			<td style="text-align:center;"><b>A</b>ge > 75:</td>
+			<td style="text-align:left;"><input name="Age1" id="Age1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clear65();duplicate2(); totalScore(); setDirtyFlag();"><input name="Age2" id="Age2" type="hidden"></td>                        
+			<td style="text-align:center;"><b>A</b>bnormal <A href="#" onMouseOver="stm(Text[18],Style[13])" onMouseOut="htm()">Liver</A> function:</td>
+			<td style="text-align:left;"><input name="AbnLF1" id="AbnLF1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="AbnLF2" id="AbnLF2" type="hidden">
+		</td></tr>
+
+		<tr><td style="text-align:center;">Diabetes type 1 or 2:</td>
+			<td style="text-align:left;"><input name="DM3" id="DM3" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate2(); totalScore(); setDirtyFlag();"><input name="DM4" id="DM4" type="hidden"></td>                       
+			<td style="text-align:center;"><b>D</b>iabetes type 1 or 2:</td>
+			<td style="text-align:left;"><input name="DM1" id="DM1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate(); totalScore(); setDirtyFlag();"><input name="DM2" id="DM2" type="hidden"></td>
+			<td style="text-align:center;"><b>S</b>troke or TIA:</A></td>
+			<td style="text-align:left;"><input name="HBStroke1" id="HBStroke1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate3(); totalScore(); setDirtyFlag();"><input name="HBStroke2" id="HBStroke2" type="hidden">
+		</td></tr>
+
+		<tr><td style="text-align:center;">TIA or Stroke in past:</td>
+			<td style="text-align:left;"><input name="TIA3" id="TIA3" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate2(); totalScore(); setDirtyFlag();"><input name="TIA4" id="TIA4" type="hidden"></td>					
+			<td style="text-align:center;"><b>S</b>troke or TIA in past:</td>
+			<td style="text-align:left;"><input name="TIA1" id="TIA1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate(); totalScore(); setDirtyFlag();"><input name="TIA2" id="TIA2" type="hidden"></td>
+			<td style="text-align:center;">History of major <b>B</b>leed:</td>
+			<td style="text-align:left;"><input name="MajorBleed1" id="MajorBleed1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="MajorBleed2" id="MajorBleed2" type="hidden">
+		</td></tr>
+
+		<tr><td></td>
+			<td></td>
+			<td style="text-align:center;"><b>V</b>ascular disease:</td>
+			<td style="text-align:left;"><input name="MI1" id="MI1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="MI2" id="MI2" type="hidden"></td>						
+			<td style="text-align:center;">History of <b>L</b>abile <A href="#" onMouseOver="stm(Text[20],Style[13])" onMouseOut="htm()"> INR:</A></td>
+			<td style="text-align:left;"><input name="LabileINR1" id="LabileINR1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="LabileINR2" id="LabileINR2" type="hidden">
+		</td></tr>
+
+		<tr><td></td>
+			<td></td>					
+			<td style="text-align:center;"><b>A</b>ge 65-75:</td>
+			<td style="text-align:left;"><input name="Age651" id="Age651" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); clear75();duplicate2(); totalScore(); setDirtyFlag();"><input name="Age652" id="Age652" type="hidden"></td>						
+			<td style="text-align:center;"><b>E</b>lderly <A href="#" onMouseOver="stm(Text[24],Style[13])" onMouseOut="htm()">(>65):</A></td>
+			<td style="text-align:left;"><input name="HBElderly1" id="HBElderly1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="HBElderly2" id="HBElderly2" type="hidden">
+		</td></tr>
+
+		<tr><td></td>
+			<td></td>
+			<td style="text-align:center;"><b>S</b>ex: Female:</td>
+			<td style="text-align:left;"><input name="Female3" id="Female3" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); duplicate2(); totalScore(); setDirtyFlag();"><input name="Female4" id="Female4" type="hidden"></td>
+			<td style="text-align:center;">Taking antiplatelet <b>D</b>rug or NSAID:</td>
+			<td style="text-align:left;"><input name="NSAID1" id="NSAID1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="NSAID2" id="NSAID2" type="hidden">
+		</td></tr>
+
+		<tr><td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td style="text-align:center;">Current excess <A href="#" onMouseOver="stm(Text[19],Style[13])" onMouseOut="htm()">Alcohol </A>use:</td>
+			<td style="text-align:left;"><input name="Alcohol1" id="Alcohol1" type="text" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); totalScore(); setDirtyFlag();"><input name="Alcohol2" id="Alcohol2" type="hidden">
+		</td></tr>
+
+		<tr><td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td>&nbsp; </td>
+			<td>&nbsp; 
+		</td></tr>
+
+		<tr><td style="text-align:center;"><a href="https://www.framinghamheartstudy.org/risk-functions/stroke/stroke-after-afib.php" target="_blank" onMouseOver="stm(Text[27],Style[13])" onMouseOut="htm()"><b>FRAMINGHAM</b></a></td>
+			<td><input name="FRAMINGHAMAFIB" id="FRAMINGHAMAFIB" type="text" class="noborder" style="width:25px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;"></td>
+			<td style="text-align:center;"><a href="http://www.bmj.com/content/342/bmj.d124#ref-11" target="_blank" onMouseOver="stm(Text[34],Style[13])" onMouseOut="htm()"><b>#</b></a>
+				<input name="CHA2DS2VASCSwitch" id="CHA2DS2VASCSwitch" type="text" onMouseOver="stm(Text[35],Style[15])" onMouseOut="htm()" style="width:120px; height:20px; border:1px solid #000000; font-weight:bold; text-align:center;" value='CHA2DS2 VASC' onmousedown="switchCHA2DS2VASC(); totalScore();"></td>
+			<td style="text-align:right;"><input name="CHA2DS2VASC" id="CHA2DS2VASC" type="text" class="noborder" style="width:20px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;"></td>
+			<td style="text-align:center;"><a href="http://journal.publications.chestnet.org/article.aspx?articleid=1045174" target="_blank" onMouseOver="stm(Text[29],Style[13])" onMouseOut="htm()"><b>HAS BLED</b></a></td>
+			<td style="text-align:center;"><input name="HASBLED" id="HASBLED" type="text" class="noborder" style="width:20px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;">
+		</td></tr>
+
+		<tr><td></td>
+			<td></td>
+			<td style="text-align:center;"><input name="CHADS2Switch" id="CHADS2Switch" type="text" style="width:70px; height:20px; border:1px solid #000000; font-weight:bold; text-align:center; " value='CHADS2' onMouseOver="stm(Text[36],Style[13])" onMouseOut="htm()" onmousedown="switchCHADS2(); totalScore();"><input name="CHADSCounter" id="CHADSCounter" type="hidden"></td>
+			<td style="text-align:right;"><input name="CHADS2" id="CHADS2" type="text" class="noborder" style="width:20px; font-family:Arial; font-weight:bold; font-size:14px; text-align:center;"></td>
+			<td></td>
+		<td></td></tr>
+	</table>			
+</div>
+
+<div><input name="confirmData" type="button" class="DoNotPrint" onclick="totalScore(); checkLab();" value="Confirm Data Entry and Calculate Scores"> 
+</div>
+
+<div id="notherapyDiv">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><b>NO THERAPY:</b></td>
+			<td colspan="1" style="text-align:right;"><input name="NoTherapySelect" id="NoTherapySelect" type="text" value='X' class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots <b>IF NOT on treatment</b>:</td>
+			<td colspan="1"><input name="AnnualRiskNoTherapy" id="AnnualRiskNoTherapy" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[25],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedNoTherapy" id="AnnualRiskBleedNoTherapy" type="text" class="noborder" style="width:30px;" value="0.6">%
+		</td></tr>
+
+		<tr><td colspan="1">Your FIVE YEAR risk of stroke or serious blood clots not on treatment: &nbsp;&nbsp;&nbsp;&nbsp;
+				<input name="FiveYearRiskNoTherapy" id="FiveYearRiskNoTherapy" type="text" class="noborder" style="width:30px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+	</table>
+</div><br>
+
+<div id="aspirinDiv">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><b>ASPIRIN 80-325 mg/day:</b></td>
+			<td colspan="1" style="text-align:right;" title="Enterophen"><input name="AspirinSelect" id="AspirinSelect" type="text" value='X' class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Aspirin:</td>
+			<td colspan="1"><input name="AnnualRiskAspirin" id="AnnualRiskAspirin" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[25],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedAspirin" id="AnnualRiskBleedAspirin"` type="text" class="noborder" style="width:30px;" value="1.1">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionAspirin" id="RelativeRiskReductionAspirin" type="text" class="noborder" style="width:25px; font-size:12px;" value="22">% &nbsp;&nbsp; ARR:
+				<input name="AbsoluteRiskReductionAspirin" id="AbsoluteRiskReductionAspirin" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearAspirin" id="ChanceofBenefitPerYearAspirin" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MAspirin" id="Cost3MAspirin" type="text" class="noborder" style="width:40px; text-align:center;" value="$8">
+		</td></tr>									         
+	</table>
+</div><br>
+	
+<div id="aspirinPlavixDiv">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><b>ASPIRIN 75-100 mg/day and <A href="#" onMouseOver="stm(Text[33],Style[14])" onMouseOut="htm()" title="Plavix">CLOPIDOGREL</A> 75 mg/day:</b></td>
+			<td colspan="1" style="text-align:right;" title="Enterophen and Plavix"><input name="AspirinPlavixSelect" id="AspirinPlavixSelect" type="text" class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Aspirin and Plavix:</td>
+			<td colspan="1"><input name="AnnualRiskAspirinPlavix" id="AnnualRiskAspirinPlavix" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[41],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedAspirinPlavix" id="AnnualRiskBleedAspirinPlavix" type="text" class="noborder" style="width:30px;">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionAspirinPlavix" id="RelativeRiskReductionAspirinPlavix" type="text" class="noborder" style="width:25px; font-size:12px;" value="44">% &nbsp;&nbsp; ARR:
+				<input name="AbsoluteRiskReductionAspirinPlavix" id="AbsoluteRiskReductionAspirinPlavix" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearAspirinPlavix" id="ChanceofBenefitPerYearAspirinPlavix" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MAspirinPlavix" id="Cost3MAspirinPlavix" type="text" class="noborder" style="width:40px; text-align:center;" value="$110">
+		</td></tr>
+	</table>
+</div><br>
+
+<div id="warfarinDiv">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><b>WARFARIN INR 2-3:</b></td>
+			<td colspan="1" style="text-align:right;" title="Coumadin"><input name="WarfarinSelect" id="WarfarinSelect" type="text" value='X' class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Warfarin:</td>
+			<td colspan="1"><input name="AnnualRiskWarfarin" id="AnnualRiskWarfarin" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[37],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedWarfarin" id="AnnualRiskBleedWarfarin" type="text" class="noborder" style="width:30px;">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionWarfarin" id="RelativeRiskReductionWarfarin" type="text" class="noborder" style="width:25px; font-size:12px;" value="66">% &nbsp;&nbsp; ARR:
+				<input name="AbsoluteRiskReductionWarfarin" id="AbsoluteRiskReductionWarfarin" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearWarfarin" id="ChanceofBenefitPerYearWarfarin" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MWarfarin" id="Cost3MWarfarin" type="text" class="noborder" style="width:40px; text-align:center;" value="$40">
+		</td></tr>
+	</table>
+</div><br>
+
+<div id="Dabigatran110Div">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><A href="#" onMouseOver="stm(Text[31],Style[14])" onMouseOut="htm()"><b>DABIGATRAN</A><A href="#" onMouseOver="stm(Text[42],Style[14])" onMouseOut="htm()"> 110 MG BID PO:</b></A></td>
+			<td colspan="1" style="text-align:right;" title="Pradax"><input name="Dabigatran110Select" id="Dabigatran110Select" type="text" class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Dabigatran 110 mg:</td>
+			<td colspan="1"><input name="AnnualRiskDabigatran110" id="AnnualRiskDabigatran110" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[38],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedDabigatran110" id="AnnualRiskBleedDabigatran110" style="width:30px;">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionDabigatran110" id="RelativeRiskReductionDabigatran110" type="text" class="noborder" style="width:25px; font-size:12px;" value="66">% &nbsp;&nbsp; ARR:
+				<input name="AbsoluteRiskReductionDabigatran110" id="AbsoluteRiskReductionDabigatran110" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearDabigatran110" id="ChanceofBenefitPerYearDabigatran110" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MDabigatran110" id="Cost3MDabigatran110" type="text" class="noborder" style="width:40px; text-align:center;" value="$335">
+		</td></tr>
+	</table>
+</div><br>
+
+<div id="Rivaroxaban20Div">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><A href="#" onMouseOver="stm(Text[31],Style[14])" onMouseOut="htm()"><b>RIVAROXABAN</A><A href="#" onMouseOver="stm(Text[43],Style[14])" onMouseOut="htm()"> 20 MG OD PO:</b></A></td>
+			<td colspan="1" style="text-align:right;" title="Xarelto"><input name="Rivaroxaban20Select" id="Rivaroxaban20Select" type="text" class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Rivaroxaban:</td>
+			<td colspan="1"><input type="text" class="noborder" name="AnnualRiskRivaroxaban20" id="AnnualRiskRivaroxaban20" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[39],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedRivaroxaban20" id="AnnualRiskBleedRivaroxaban20" type="text" class="noborder" style="width:25px;">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionRivaroxaban20" id="RelativeRiskReductionRivaroxaban20" type="text" class="noborder" style="width:25px; font-size:12px;" value="66">% &nbsp;&nbsp; ARR:
+				<input type="text" class="noborder" name="AbsoluteRiskReductionRivaroxaban20" id="AbsoluteRiskReductionRivaroxaban20" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearRivaroxaban20" id="ChanceofBenefitPerYearRivaroxaban20" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MRivaroxaban20" id="Cost3MRivaroxaban20" type="text" class="noborder" style="width:40px; text-align:center" value="$300">
+		</td></tr>
+	</table>
+</div><br>
+
+<div id="Apixaban5Div">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><A href="#" onMouseOver="stm(Text[32],Style[14])" onMouseOut="htm()"><b>APIXABAN</A><A href="#" onMouseOver="stm(Text[44],Style[14])" onMouseOut="htm()"> 5 MG BID PO:</b></A></td>
+			<td colspan="1" style="text-align:right;" title="Eliquis"><input name="Apixaban5Select" id="Apixaban5Select" type="text" class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Apixaban:</td>
+			<td colspan="1"><input name="AnnualRiskApixaban5" id="AnnualRiskApixaban5" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[40],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedApixaban5" id="AnnualRiskBleedApixaban5" type="text" class="noborder" style="width:25px;">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionApixaban5" id="RelativeRiskReductionApixaban5" type="text" class="noborder" style="width:25px; font-size:12px;" value="74">% &nbsp;&nbsp; ARR:
+				<input type="text" class="noborder" name="AbsoluteRiskReductionApixaban5" id="AbsoluteRiskReductionApixaban5" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearApixaban5" id="ChanceofBenefitPerYearApixaban5" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MApixaban5" id="Cost3MApixaban5" type="text" class="noborder" style="width:40px; text-align:center" value="$300">
+		</td></tr>
+	</table>
+</div><br>
+
+<div id="Dabigatran150Div">				
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td colspan="7"><A href="#" onMouseOver="stm(Text[31],Style[14])" onMouseOut="htm()"><b>DABIGATRAN</A><A href="#" onMouseOver="stm(Text[42],Style[14])" onMouseOut="htm()"> 150 MG BID PO:</b></A></td>
+		<td colspan="1" style="text-align:right;" title="Pradax"><input name="Dabigatran150Select" id="Dabigatran150Select" value='X' type="text" class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td colspan="7">Your ANNUAL risk of stroke or serious blood clots on Dabigatran 150 mg:</td>
+			<td colspan="1"><input name="AnnualRiskDabigatran150" id="AnnualRiskDabigatran150" type="text" class="noborder" style="width:40px; font-size:14px; font-weight:bold; text-align:right;">%
+		</td></tr>
+
+		<tr><td colspan="2">Your ANNUAL <A href="#" onMouseOver="stm(Text[39],Style[13])" onMouseOut="htm()">risk</A> of major bleeding: &nbsp;&nbsp;
+				<input name="AnnualRiskBleedDabigatran150" id="AnnualRiskBleedDabigatran150" type="text" class="noborder" style="width:25px;">%
+		</td></tr>
+
+		<tr><td colspan="1">RRR:
+				<input name="RelativeRiskReductionDabigatran150" id="RelativeRiskReductionDabigatran150" type="text" class="noborder" style="width:25px; font-size:12px;" value="78">% &nbsp;&nbsp; ARR:
+				<input type="text" class="noborder" name="AbsoluteRiskReductionDabigatran150" id="AbsoluteRiskReductionDabigatran150" type="text" class="noborder" style="width:28px; font-size:12px;">% &nbsp;&nbsp; Chance of benefit per year:  1 in
+				<input name="ChanceofBenefitPerYearDabigatran150" id="ChanceofBenefitPerYearDabigatran150" type="text" class="noborder" style="width:35px; font-size:12px;"> &nbsp;&nbsp;&nbsp;&nbsp; Cost per 3 months:
+				<input name="Cost3MDabigatran150" id="Cost3MDabigatran150" type="text" class="noborder" style="width:40px; text-align:center" value="$335">
+		</td></tr>
+	</table><br>
+</div>
+
+<div id="GeneralNotesDiv">
+	<table width="100%" style="outline:black solid thin;">
+		<tr><td><b>General Notes:</b></td>
+			<td style="text-align:right;"><input name="GeneralNotesSelect" id="GeneralNotesSelect" type="text" value='X' class="DoNotPrint" style="width:16px; height:16px; border:1px solid #000000; font-weight:bold; color:red; text-align:center; background:white;" onkeypress="javascript:return displayKeyCode(event,this.id);" onmousedown="changeValue(this.id); setDirtyFlag();">
+		</td></tr>
+
+		<tr><td>Warfarin use requires blood work monitoring - initially every 1-2 days until stable, then every 2-4 weeks.</td></tr>
+
+		<tr><td>The newer agents (Dabigatran, Rivaroxaban, Apixaban, etc.) do not require blood work monitoring but are more expensive.</td></tr>
+
+		<tr><td>"Major bleeding" means risk for bleeding in and around the brain, bleeding requiring hospitalization, a haemoglobin drop &gt; 20 g/L, or bleeding that needs transfusion. However it is important to know that the majority of patients with major bleeds have a good outcome and this needs to be weighed against the possible catastrophic effects of a stroke. 
+		</td></tr>
+
+		<tr><td>The risk estimates above are calculated using the "Framingham Stroke or Death after Atrial Fibrillation" tool, the <input name="CHADS2Type" id="CHADS2Type" class="noborder" type="text" style="width:140px; height:20px;text-align:center; font-size:15px; font-weight:bold;"> tool and the "HAS BLED" tool. These tools take into account your age, sex and the presence or absence of certain medical conditions such as diabetes, high blood pressure, heart failure, previous stroke etc. 
+		</td></tr>
+	</table>
+</div>
+
+	</td></tr>
+</table><br>
+
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons">
+	<table><tr><td style="background-color:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" id="subject" size="40" type="text"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" style="color: red" onclick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color: green" onclick="printLetter();">
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onclick="printSubmit();">
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="button" onclick="submission();">
+	</td></tr></table>
+</div>
+
+<div class='DoNotPrint' id='LabBox' style='position:absolute; top:10px; left:800px;'>
+	<table style="outline:black solid thin; background:#D4D4D4;">
+		<tr><td><p id="eGFR">eGFR</p></td>
+			<td><input name="eGFR2" id="eGFR2" type="text" style="width:50px; text-align:center;" oscarDB=m$EGFR#value></td>
+			<td><input name="eGFR3" id="eGFR3" type="text" style="width:90px; text-align:center;" oscarDB=m$EGFR#dateObserved>
+		</td></tr>
+
+		<tr><td><p id="CREAT">CREAT</p></td>
+			<td><input name="CREATININE2" id="CREATININE2" type="text" style="width:50px; text-align:center;" oscarDB=m$SCR#value></td>
+			<td><input name="CREATININE3" id="CREATININE3" type="text" style="width:90px; text-align:center;" oscarDB=m$SCR#dateObserved>
+		</td></tr>
+
+		<tr><td><p id="AST">AST</p></td>
+			<td><input name="AST2" id="AST2" type="text" style="width:50px; text-align:center;" oscarDB=m$AST#value></td>
+			<td><input name="AST3" id="AST3" type="text" style="width:90px; text-align:center;" oscarDB=m$AST#dateObserved>
+		</td></tr>
+
+		<tr><td><p id="ALT">ALT</p></td>
+			<td><input name="ALT2" id="ALT2" type="text" style="width:50px; text-align:center;" oscarDB=m$ALT#value></td>
+			<td><input name="ALT3" id="ALT3" type="text" style="width:90px; text-align:center;" oscarDB=m$ALT#dateObserved>
+		</td></tr>
+
+		<tr><td><p id="BILI">BILI</p></td>
+			<td><input name="BILI2" id="BILI2" type="text" style="width:50px; text-align:center;" oscarDB=m$BILI#value></td>
+			<td><input name="BILI3" id="BILI3" type="text" style="width:90px; text-align:center;" oscarDB=m$BILI#dateObserved>
+		</td></tr>
+
+        <tr><td><p id="ALP">ALP</p></td>
+			<td><input name="ALP2" id="ALP2" type="text" style="width:50px; text-align:center;" oscarDB=m$ALP#value></td>
+			<td><input name="ALP3" id="ALP3" type="text" style="width:90px; text-align:center;" oscarDB=m$ALP#dateObserved>
+		</td></tr>
+	</table>
+</div>
+
+<div class='DoNotPrint' id='Risks' style='position:absolute; top:174px; left:800px;'>
+	<input value="Link to online SPARC Calculator Tool" name="risk" id="risk" type="button" style="outline:black solid thin; background:#B0C4DE;" onclick="getRisks();">
+</div>
+
+<div class='DoNotPrint' id='MedicalHistoryBox' style='position:absolute; top:202px; left:800px;'>
+	<table style="outline:black solid thin; background:#D4D4D4;">
+		<tr><td class="Heading1">Medical History box:</td></tr>
+	</table>
+
+	<table style="outline:black solid thin; background:#D4D4D4;">
+		<tr><td><textarea name="searchbox" id="searchbox" class="information" style="width:300; height:900px;"></textarea></td></tr>
+	</table>
+</div><br>
+
+<div class="DoNotPrint" id="BottomButtons2" style="width:770px; font-size:13px;">
+The CHADS2 and CHA2DS2-VASc risk estimates are based on BMJ 2011;342:d124, 10 year follow-up estimates. This form is adapted with permission from the work by Peter Loewen UBC (Pharm.D, B.Sc. Pharm): <a href="http:www.peterloewen.com/" target="_blank">www.peterloewen.com
+<br><br>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0;" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+<br><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Atrial Fibrillation Stroke Risk Advisor</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Dr. D.A. Page</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>. Update V2_Feb4_2024, by Dr. John Yap. Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.oscarcanada.org/" rel="cc:morePermissions" target="_blank">http://www.oscarcanada.org/</a>.
+</div>
+ 
+</form></body></html>

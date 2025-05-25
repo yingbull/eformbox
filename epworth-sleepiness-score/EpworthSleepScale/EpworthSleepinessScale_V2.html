@@ -1,0 +1,387 @@
+
+<html>
+<head>
+
+<!-- Updated May2014 John Yap; Pushes values to ESS measurement and saves as subject; added background colours; Print/Submit added -->
+<!-- V4_Jan16_2023 add parseName and parseMeasuredate, long overdue! John Yap -->
+
+
+<style type="text/css">
+p.title{
+	text-transform: uppercase;
+	font-size: 16;
+	font-family: Arial;
+	font-weight: bolder;
+	text-align: left;
+	color: black;
+}
+p.heading{
+	font-weight: bolder;
+}
+td.heading1{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	color: white;
+	background:black ;
+	border-width: 1;
+}
+td.heading2{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	color: white;
+	background: #505050;
+	border-width: 1;
+}
+td.heading3{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: top;
+	color: black;
+	background: #E0E0E0 ;
+	border-width: 1;
+}
+tr.odd{
+	background: #ffffff;
+}
+tr.even{
+	background: #dddddd;
+}
+td.question{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	border-width: 1;
+}
+td.answer{
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: top;
+	color: black;
+	border-width: 1;
+}
+td.normaltext{
+	width: 100%;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background: white;
+	border-width: 0;
+}
+input.formtext{
+	width: 100%;
+	height: 100%;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background: white;
+	border-width: 1;
+	border-style: solid; 
+}
+textarea.formtext{
+	width: 100%;
+	height: auto;
+	font-size: 12;
+	font-family: Arial;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	background: white;
+	border-width: 1;
+	border-style: solid;
+}
+</style>
+
+<!-- CSS Script that removes textarea and textbox borders when printing - (put this inbetween <header></header>) -->
+<style type="text/css" media="print">
+.DoNotPrint {
+	 display: none;
+}
+input.noborder {
+	border: 0px;
+	background: transparent;
+}
+textarea.noborder {
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	background: transparent;
+	overflow: hidden;
+	/* scrollbar : none;
+	*/
+	border: 0px;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+	/****************************
+		startup functions 
+	****************************/
+	function startUp() {
+		setDocumentTitle('ESS', document.getElementById('PatientNameL').value);
+		//optimize window size/width
+		top.window.resizeTo(950, screen.availHeight);
+		parseName('patient_name');
+		parseMeasurementDate('ESS_PreviousDate');
+	}
+
+	function setDocumentTitle(Title, PatientNameL) {
+		// set document title
+		document.title = Title + '_' + PatientNameL;
+	}
+
+	/****************************
+		Create name in proper order 
+	****************************/
+	function parseName(id) {
+		// Get the name
+		var fullName = document.getElementById(id).value;
+		// Split the value
+		var splitName = fullName.split(",");
+		var firstName = "";
+		var lastName  = "";
+		// Check for last name
+		if(splitName.length >= 1) {
+			lastName = splitName[0].trim();
+		}
+		if(splitName.length >= 2) {
+			firstName = splitName[1].trim();
+		}
+		var First_Last_Name = firstName + " " + lastName;
+		// Show the fields on the page
+		document.getElementById(id).value = First_Last_Name;
+	}
+
+	/****************************
+		Remove time stamp from measurement
+		Oscar default is yyyy-mm-dd hh:mm:ss
+		From database tag e.g. oscardb=m$PHQ9#dateObserved
+	****************************/
+	function parseMeasurementDate(id) {
+		// Change observed measurement date field to yyyy-mm-dd format, without time stamp
+		var FullMeasurementDate = document.getElementById(id).value;
+		var DateOnly = FullMeasurementDate.split(' ')[0];
+		// Show the parsed field 
+		document.getElementById(id).value = DateOnly;
+	}
+
+	/****************************
+		Scripts to calculate ESS score
+	****************************/
+	function getCheckedValue(radioObj) {
+		if(!radioObj)
+		return parseInt(0);
+	var radioLength = radioObj.length;
+		if(radioLength == undefined)
+			if(radioObj.checked)
+				return parseInt(radioObj.value);
+			else
+				return parseInt(value);
+		for(var i = 0; i < radioLength; i++) {
+			if(radioObj[i].checked) {
+				return parseInt(radioObj[i].value);
+			}
+		}
+	return parseInt(0);
+	}
+
+	function totalScore() {
+		var i = 0;
+		i += getCheckedValue(document.FormName.Q1);
+		i += getCheckedValue(document.FormName.Q2);
+		i += getCheckedValue(document.FormName.Q3);
+		i += getCheckedValue(document.FormName.Q4);
+		i += getCheckedValue(document.FormName.Q5);
+		i += getCheckedValue(document.FormName.Q6);
+		i += getCheckedValue(document.FormName.Q7);
+		i += getCheckedValue(document.FormName.Q8);
+
+		document.FormName.EpworthScore.value = i;
+		document.getElementById("ESSa").value = i;
+		document.FormName.subject.value = 'ESS score = ' + i;
+
+		if (i<=9) {
+			document.getElementById("normal").style.background='lightgreen';
+			document.getElementById("borderline").style.background='transparent';
+			document.getElementById("abnormal").style.background='transparent';
+		} else if (i>=10 && i<=11) {
+			document.getElementById("normal").style.background='transparent';
+			document.getElementById("borderline").style.background='yellow';
+			document.getElementById("abnormal").style.background='transparent';
+		} else {
+			document.getElementById("normal").style.background='transparent';
+			document.getElementById("borderline").style.background='transparent';
+			document.getElementById("abnormal").style.background='orange';
+		}
+	}
+</script>
+</head>
+
+<body onload="startUp();">
+
+<form method="post" action="" name="FormName" id="FormName" >
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for to push ESS score to measurement -->
+<input type="hidden" name="m$ESS#value" id="ESSa">
+
+<!-- Set background colour -->
+	<table width="850px" style="background:#b0c4de;">
+	<tr><td>
+
+<p class="title">Epworth Sleepiness Scale (ESS)</p>
+
+<div name="demographics">
+	<table width="100%">
+		<tr><td class="heading1" width=25%>Patient name: </td>
+		<td class="formtext"><input class="formtext" name="patient_name" id="patient_name" type="text" oscarDB=patient_name></td>
+		</tr>
+		<tr><td class="heading1">Date:</td>
+		<td class="formtext"><input class="formtext" name="TodaysDate" type="text" oscarDB=today></td>
+		</tr>
+	</table>
+</div>
+<br>
+<div name="Questionnaire">
+	<table width="100%">
+		<tr><td class="heading2" width=40%>Situation:</td>
+		<td class="heading2" width=15% style="text-align:center;">Would never doze (0)</td>
+		<td class="heading2" width=15% style="text-align:center;">Slight chance of dozing (1)</td> 
+		<td class="heading2" width=15% style="text-align:center;">Moderate chance of dozing (2)</td>
+		<td class="heading2" width=15% style="text-align:center;">High chance of dozing (3) </td>
+		</tr>
+		<tr class="odd">
+		<td class="question"> 1. Sitting and reading</td>
+		<td class="answer"><input type="radio" name="Q1" value="0"></td>
+		<td class="answer"><input type="radio" name="Q1" value="1"></td>
+		<td class="answer"><input type="radio" name="Q1" value="2"></td>
+		<td class="answer"><input type="radio" name="Q1" value="3"></td>
+		</tr>
+		<tr class="even">
+		<td class="question">2. Watching TV</td>
+		<td class="answer"><input type="radio" name="Q2" value="0"></td>
+		<td class="answer"><input type="radio" name="Q2" value="1"></td>
+		<td class="answer"><input type="radio" name="Q2" value="2"></td>
+		<td class="answer"><input type="radio" name="Q2" value="3"></td>
+		</tr>
+		<tr class="odd">
+		<td class="question">3. Sitting, inactive in a public place (e.g., a theatre or a meeting)</td>
+		<td class="answer"><input type="radio" name="Q3" value="0"></td>
+		<td class="answer"><input type="radio" name="Q3" value="1"></td>
+		<td class="answer"><input type="radio" name="Q3" value="2"></td>
+		<td class="answer"><input type="radio" name="Q3" value="3"></td>
+		</tr>
+		<tr class="even">
+		<td class="question">4. As a passenger in a car for an hour without a break</td>
+		<td class="answer"><input type="radio" name="Q4" value="0"></td>
+		<td class="answer"><input type="radio" name="Q4" value="1"></td>
+		<td class="answer"><input type="radio" name="Q4" value="2"></td>
+		<td class="answer"><input type="radio" name="Q4" value="3"></td>
+		</tr>
+		<tr class="odd">
+		<td class="question">5. Lying down to rest in the afternoon when circumstances permit</td>
+		<td class="answer"><input type="radio" name="Q5" value="0"></td>
+		<td class="answer"><input type="radio" name="Q5" value="1"></td>
+		<td class="answer"><input type="radio" name="Q5" value="2"></td>
+		<td class="answer"><input type="radio" name="Q5" value="3"></td>
+		</tr>
+		<tr class="even">
+		<td class="question">6. Sitting and talking to someone</td>
+		<td class="answer"><input type="radio" name="Q6" value="0"></td>
+		<td class="answer"><input type="radio" name="Q6" value="1"></td>
+		<td class="answer"><input type="radio" name="Q6" value="2"></td>
+		<td class="answer"><input type="radio" name="Q6" value="3"></td>
+		</tr>
+		<tr class="odd">
+		<td class="question">7. Sitting quietly after a lunch without alcohol</td>
+		<td class="answer"><input type="radio" name="Q7" value="0"></td>
+		<td class="answer"><input type="radio" name="Q7" value="1"></td>
+		<td class="answer"><input type="radio" name="Q7" value="2"></td>
+		<td class="answer"><input type="radio" name="Q7" value="3"></td>
+		</tr>
+		<tr class="even">
+		<td class="question">8. In a car, while stopped for a few minutes in traffic</td>
+		<td class="answer"><input type="radio" name="Q8" value="0"></td>
+		<td class="answer"><input type="radio" name="Q8" value="1"></td>
+		<td class="answer"><input type="radio" name="Q8" value="2"></td>
+		<td class="answer"><input type="radio" name="Q8" value="3"></td>
+		</tr>
+	</table>
+<br>
+	<table class="DoNotPrint">
+		<tr>
+		<td><input type="button" onclick="totalScore()" value="Calculate Total Score: "></td>
+		<td><input type="text" name="EpworthScore" size="3" style="text-align:center;" value=""></td>
+		<td><input type="button" name="ESS_ScorePrevious" size="10" value="Previous score: "></td>
+		<td><input type="text" name="ESS_ScorePrevious1" size="3" style="text-align:center;" oscardb=m$ESS#value></td>
+		<td><input type="button" name="PreviousDate" size="10" value="Date: "></td>
+		<td><input type="text" name="ESS_PreviousDate" id="ESS_PreviousDate" size="10" oscardb=m$ESS#dateObserved></td>
+		</tr>
+	</table>
+</div>
+
+<div name="Instructions" class="DoNotPrint">
+	<table>
+		<tr><td><p>Interpretation:</p></td></tr>
+		<tr><td></td></tr>
+	<table>
+		<tr><td class="heading3" width="15%">Score</td>
+			<td class="heading3"></td>
+		</tr>
+		<tr id="normal">
+			<td style="text-align:center;">0-9</td>
+			<td>Normal (a low score does not exclude significant daytime sleepiness)</td>
+		</tr>
+		<tr id="borderline">
+			<td style="text-align:center;">10-11</td>
+			<td>Borderline</td>
+		</tr>
+		<tr id="abnormal">
+			<td style="text-align:center;">12-24</td>
+			<td>Abnormal</td>
+		</tr>
+	</table>
+</table>
+</div>
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" >
+	<table>
+		<tr><td>
+		Subject: <input name="subject" size="40" type="text">
+		<input value="Submit" name="SubmitButton" type="submit">
+		<input value="Reset" name="ResetButton" type="reset" onClick="history.go(0)"> 
+		<input value="Print" name="PrintButton" onclick="window.print();" type="button">
+		<input value="Print and Submit" name="PrintSubmitButton" type="button" onClick="window.print(); setTimeout('document.FormName.submit()',2000);">
+		</td></tr>
+	</table>
+</div>
+<!-- End of submit/print/reset buttons -->
+
+</form></body></html>

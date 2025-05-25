@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Obstetrical Ultrasound Requisition eForm" />
+<meta name="keywords" content="FHA, obstetrics, ultrasound" />
+<meta name="robots" content="nofollow" />
+<meta http-equiv="author" content="John Yap, Herb Chang, Paras Mehta" />
+
+<!-- FHA Obstetrics Specific US Requisition -->
+
+<!-- Update April 2014 with oscarOPEN links, autofill subject -->
+<!-- Update July 2014 with oscarOPEN links to Lab requisition named: 1.1 Lab Requisition; if your lab is named differently, oscarOPEN needs to be updated -->
+<!-- Updated Oct2014 with new server/desktop detection scripts; remove float from side menu; fix submit bar; subject line add -->
+<!-- Updated Apr2015  ImageLocations2015 - WCMI New West moves to RCM -->
+<!-- Updated Aug2015 add MSP # for CC physician -->
+<!-- V9 Oct15_2016: fix textarea sizes; add allergies DB tag; jQuery X-boxes; name order; JY -->
+<!-- V10 Nov22_2016: MedRay will not process request by fax - must call, location info updated; JY -->
+<!-- V11 Mar1_2017: add Langley Memorial Hospital; JY -->
+<!-- V12 Mar26_2017: updated 2016 background - Priority change only! Add link to detailed instructions eForm; JY -->
+<!-- V13 Mar29_2017: add changeFontSize as per KevinY; JY -->
+<!-- V15 Aug10_2017: fix anti-coagulant checker, and add NOAC and Fragmin; JY -->
+<!-- V16 Sep25_2017: update drop down menu function for Chrome, Dr. Paras Mehta
+		Addition of NT quick pick button, Dr. John Yap -->
+<!--2017-10-25- Modified for PCOC with additional obstetrical U/S options by Dr. Herb Chang -->
+<!-- V17_Mar27_2019: update with Toggle function, specific NT sites,  Dr. John Yap -->
+<!-- V18_Apr28_2019: tuned for community GP use; add PCOC/CMC/RCH copies,  Dr. John Yap -->
+<!-- V19_Oct18_2021: detune submit/print buttons, 2021-level upgrades; Dr. John Yap -->
+<!-- V20_Oct24_2021: add Caseroom Default option; Dr. John Yap -->
+
+<!-- Do not use apostrophes in text, only in html-required coding - they do not allow for proper eForm zip inside Oscar.  Instead, use: &#8217; -->
+
+<!-- Locations moved to image library: ImageLocations2017.js -->
+
+<script>
+// For OSCAR to detect what files to include in the generated ZIP, the
+// filename must appear in the HTML document within quotation marks, with the ${oscar_image_path} in front of it;
+// this serves as a workaround to force the files to be included for ZIP exports.
+// Allows for appropriate import of all png files that are not referenced by BGImage tags
+// Place any needed image or js file names within the script tabs, inside double quotations, and to the right of the double slashes
+// "${oscar_image_path}FHAImaging_2016.png"
+</script>
+
+<!-- Files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors 
+<script type='text/javascript' src='jquery-1.12.0.min.js'></script>
+<script language="javascript" type="text/javascript" src="datecalculator.js"></script>
+<script language="javascript" type="text/javascript" src="FHA_ImagingLocations2018_V1.js"></script>
+End of files for testing outside of OSCAR: comment out this section on upload to Oscar to prevent 404 errors -->
+
+<!-- OSCAR based files for greater functionality -->
+<script type='text/javascript' src='${oscar_image_path}jquery-1.12.0.min.js'></script>
+<script language="javascript" type="text/javascript" src="${oscar_image_path}datecalculator.js"></script>
+
+<!-- US locations -->
+<script language="javascript" type="text/javascript" src="${oscar_image_path}FHA_ImagingLocations2018_V1.js"></script>
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<style type="text/css" media="screen">
+*{font-family: Helvetica, Arial, sans-serif;}
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+input#SubmitButton { 
+	color: white;
+	text-shadow: 0px 1px 1px #ffffff;
+	border-bottom: 2px solid #b2b2b2;
+	background: #229ece;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6bb5d2), to(#229ece));
+	background: -moz-linear-gradient(top, #6bb5d2, #229ece);
+	background: -o-linear-gradient(top, #6bb5d2, #229ece);
+	background: -ms-linear-gradient(top, #6bb5d2, #229ece);}
+
+input#SubmitButton:hover {
+	color: #333333;
+	border: 1px solid #a4a4a4;
+	border-top: 2px solid #b2b2b2;
+	background-color: #a0dbc4;
+	background: -webkit-gradient(linear, left top, left bottom, from(#229ece), to(#F2EFFB));
+	background: -moz-linear-gradient(top, #229ece, #6bb5d2);
+	background: -o-linear-gradient(top, #229ece, #6bb5d2);
+	background: -ms-linear-gradient(top, #229ece, #6bb5d2);}
+
+.attn {
+	animation-name: lookHere;
+	animation-duration: 5s;
+	animation-timing-function: linear;
+	animation-iteration-count: 3;
+	animation-direction: alternate;
+}
+
+@keyframes lookHere {
+  0%   {border-color:#ced5e3;
+box-shadow: 0 0 5px #ced5e3;}
+  25%  {border-color:#364460;
+box-shadow: 0 0 20px #364460;}
+  50%  {border-color:#a21d22;
+box-shadow: 0 0 5px #a21d22;}
+  75%  {border-color:#f7977b;
+box-shadow: 0 0 20px #f7977b;}
+  100% {border-color:#ced5e3;
+box-shadow: 0 0 5px #ced5e3;}
+}
+
+
+.sig {
+	border: 2px dotted blue;
+	background: transparent ;
+}
+
+a {text-decoration:none;} 
+a:hover { border: 1px solid #000000; border-style:outset; background:pink; opacity:0.6;}
+a:active { border: 3px solid #000000; border-style: inset;}
+
+::placeholder {
+	color: rebeccapurple;
+	font-style: italic;
+	opacity: 1;
+}
+
+.Show {
+	visibility:visible;
+	display:inline;
+}
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+
+textarea {resize: none;}
+</style>
+
+<style type="text/css" media="print">
+*{font-family: Helvetica, Arial, sans-serif;}
+
+input {
+	-moz-box-sizing: content-box;
+	-webkit-print-color-adjust: exact;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box
+}
+
+.DoNotPrint {display: none;}
+.noborder {
+	border: 0px;
+	background: transparent;
+	scrollbar-3dlight-color: transparent;
+	scrollbar-arrow-color: transparent;
+	scrollbar-base-color: transparent;
+	scrollbar-darkshadow-color: transparent;
+	scrollbar-face-color: transparent;
+	scrollbar-highlight-color: transparent;
+	scrollbar-shadow-color: transparent;
+	scrollbar-track-color: transparent;
+	overflow: hidden;
+}
+.sig {
+	background: transparent;
+}
+
+/* hide placehoders */
+::placeholder {
+	color: transparent;
+} 
+</style>
+
+<!-- Xbox styling -->
+<style type="text/css">
+.box1 {
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	font-size: 14px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+
+.box2 {
+	position: absolute;
+	width:16px;
+	height:16px;
+	font-size: 16px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+
+.box3 {
+	position: absolute;
+	width:12px;
+	height:12px;
+	font-size: 12px;
+	font-family: Arial;
+	border: 1px solid #000000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+	background: aquamarine;
+}
+
+.FontSizeChange {
+	position:absolute;
+	width:16px;
+	height:15px;
+	font-size:13px;
+	cursor:pointer;
+	background:yellow;
+	text-align:center;
+	border: 1px solid #000000;
+}
+
+.Show {
+	visibility:visible;
+	display:inline;
+ }
+.Hide {
+	visibility:hidden;
+	display:none;
+}
+</style>
+
+<script language="javascript" type="text/javascript">
+	/****************************
+		startup functions 
+	****************************/
+	function startUp() {
+		setDocumentTitle('FHA_Obstetrical_US',document.getElementById('PatientNameL').value);
+		changeImage("FHAImaging_2016.png", "BGImage");
+		date();
+
+		setDefaults();
+		loadFontSize();
+
+		parseMeasurementDate("GFR_date");
+
+	//optimize window size/width
+		top.window.resizeTo(1190, screen.availHeight);
+	}
+
+	function resourceLink(resource, extension) {
+		// Takes two arguments -- the base filename and its extension -- and
+		// returns a string depending on whether the page has been opened
+		// locally or if it has been uploaded to OSCAR.
+		//
+		// Example usage: resourceLink('image1', 'png')
+		// Return value: 'image1.png' or '${oscar_image_path}image1.png'
+		var prefix = (window.location.href.toLowerCase().indexOf("http") != -1) ? '${oscar_image_path}' : '';
+		if (typeof extension === "undefined") {
+			var extension = '';
+		} else {
+			var extension = '.' + extension;
+		}
+		return prefix + resource + extension;
+	}
+
+	function changeImage(img, imgId) {
+		// Changes the src value of an <img>.
+		document.getElementById(imgId).src = resourceLink(img)
+		document.getElementById(imgId).href = resourceLink(img)
+	}
+
+	function setDocumentTitle(Title,PatientNameL) {
+		// set document title
+		document.title = Title + '_' + PatientNameL;
+	}
+
+	function setDefaults() {
+		// check the newform flag to ensure this is the initial load of the form PCP
+		if (document.getElementById("newForm").value == 'True') {
+			document.getElementById('Bill_1').value = 'X';
+			document.getElementById('Language').value = 'English';
+			document.getElementById('Isolation_1').value = 'X';
+			CheckCopyTo();
+
+			parseName("current_user");
+
+			parseMeasurementDate("eGFRDate");
+			parseMeasurementDate("CreatinineDate");
+
+			// set default hospital caseroom via eFORM
+			document.getElementById("Default_Caseroom").value = document.getElementById("DefaultHospital").value;
+
+			// set default hospital caseroom for entire clinic - comment out the line above if you choose this
+			// please use the format "RCH caseroom" without the quotes
+			// document.getElementById("DefaultHospital").value = "your chosen hospital";
+		} else { // actions if eForm is reopened
+		}
+	}
+
+	/****************************
+		Create name in proper order 
+	****************************/
+	function parseName(id) {
+		// Get the name
+		var fullName = document.getElementById(id).value;
+
+		// Split the value
+		var splitName = fullName.split(",");
+		var firstName = "";
+		var lastName  = "";
+
+		// Check for last name
+		if(splitName.length >= 1) {
+			lastName = splitName[0].trim();
+		}
+		if(splitName.length >= 2) {
+			firstName = splitName[1].trim();
+		}
+		var First_Last_Name = firstName + " " + lastName;
+
+		// Show the fields on the page
+		document.getElementById(id).value = First_Last_Name;
+	}
+
+	/****************************
+		Remove time stamp from measurement
+		Oscar default is yyyy-mm-dd hh:mm:ss
+	****************************/
+	function parseMeasurementDate(id) {
+		// Change date field to dd/mmm/yyyy format
+		// Function expects an array of date components in yyyy/mm/dd format
+		// Get the date
+		var FullMeasurementDate = document.getElementById(id).value;
+		var delimiter = ' ';
+
+		// Split the value
+		var MeasurementDate = FullMeasurementDate.split(delimiter)[0];
+
+		var DateOnly = MeasurementDate;
+
+		// Show the fields on the page
+		document.getElementById(id).value = DateOnly;
+	}
+
+	/****************************
+		print and submit/save functions 
+	****************************/
+	function printLetter() {
+		// Save reminder; allows for validity testing
+		document.getElementById('ResetButton').style.color = 'black';
+		document.getElementById('SubmitButton').classList.toggle('attn');
+		document.getElementById('SubmitButton').style.border = '2px solid red';
+		alert("eFORM has NOT been submitted.  If needed, cancel print and complete required fields.  Ensure you click SUBMIT after print.");
+		window.print();
+	}
+
+	function submission() {  // requires type="submit" in submit button input to allow for validity testing
+		setFlag();
+		releaseDirtyFlag();
+	}
+
+	function setFlag() {
+	// indicate that the form has been submitted
+	if (document.getElementById("newForm").value == 'True')
+		document.getElementById("newForm").value = 'False';
+	}
+
+	/****************************
+		Checkbox functions 
+	****************************/
+	$(document).ready(function() {
+		$( ".Xbox" ).click(function() {
+		var st = $( this ).val();
+		if (st=="X") {
+		$( this ).val("");
+		}
+		else {
+			$( this ).val("X");
+		}
+	});
+
+	$( ".Xbox" ).keypress(function(event) {
+		// any key press except tab will constitute a value change to the checkbox
+		if (event.which != 0) {
+			$( this ).click();
+			return false;
+			}
+		});
+	});
+
+	/****************************
+		scripts to confirm closing of window if have not saved yet
+	****************************/
+		//keypress events trigger dirty flag
+		var needToConfirm = true;
+		document.onkeyup=setDirtyFlag;
+	function setDirtyFlag() {
+		needToConfirm = true;
+	}
+
+	function releaseDirtyFlag() {
+		needToConfirm = false; //Call this function if does not require an alert.
+		//this could be called when save button is clicked
+	}
+		window.onbeforeunload = confirmExit;
+
+	function confirmExit() {
+		if (needToConfirm) {
+	return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+		}
+	}
+
+	/****************************
+		Yes/No functions 
+	****************************/
+	function changeYes_No(x) {
+		if (document.getElementById(x).value == '')
+			document.getElementById(x).value = 'Y';
+		else if (document.getElementById(x).value == 'Y')
+			document.getElementById(x).value = 'N';
+		else
+			document.getElementById(x).value = '';
+	}
+
+	/****************************
+		Script to calculate eGFR dates 
+	****************************/
+	function date() {
+		var digital = new Date();
+		var days = digital.getDate();
+		var months = (digital.getMonth()*1 +1)*30.4;
+		var years = (digital.getFullYear())*365;
+		var dToday = days+months+years;
+		var myString2= document.getElementById("eGFRDate").value; 
+
+		if (myString2> "0") { 
+		var mySplitResult2 = myString2.split("-");
+		var aeGFR= mySplitResult2[0]*365;
+		var beGFR= mySplitResult2[1]*30.4;
+		var feGFR= mySplitResult2[2];
+		var geGFR= feGFR.split(" ");
+		var ceGFR= geGFR[0];
+		var deGFR= (aeGFR*1)+(beGFR*1)+(ceGFR*1);
+		var eeGFR= dToday - deGFR;
+		}
+
+		// eeGFR = days since last eGFR test
+		if (eeGFR <= 90) {
+		document.getElementById("eGFRDate2").style.background='#9AFF9A';
+		document.getElementById('eGFRDate2').value = (Math.round(eeGFR));
+		}
+
+		if (eeGFR >= 91) {
+		document.getElementById("eGFRDate2").style.background='#C6B5DE';
+		document.getElementById('eGFRDate2').value = (Math.round(eeGFR));
+		}
+
+		if ((document.getElementById ("eGFR").value == "> 120") || (document.getElementById ("eGFR").value >= 60)) {
+		document.getElementById("eGFR2").style.background='#9AFF9A';
+		}
+
+		if (document.getElementById ("eGFR").value <60) {
+		document.getElementById("eGFR2").style.background='#FF0000';
+		document.getElementById("labreq").style.background='#FF0000';
+		}
+	}
+
+	/****************************
+		scripts to copy regular GP if locum or other physician has ordered US
+		also cc to referral doc for specialists
+	****************************/
+	function CheckCopyTo() {
+		if (document.getElementById("PhysicianName").value != document.getElementById("PatientMD").value) {
+				document.getElementById("CopyTo").value = document.getElementById("PatientMD").value + '-' + document.getElementById("PatientMD_MSP").value + ', ' + document.getElementById("ReferralMD").value + '-' + document.getElementById("ReferralMD_MSP").value;
+		}
+		else {
+			document.getElementById("CopyTo").value = document.getElementById("ReferralMD").value + '-' + document.getElementById("ReferralMD_MSP").value;
+		}
+	}
+
+	/****************************
+		Scripts to check for pre-existing conditions
+		and meds
+	****************************/
+	function start() {
+		//Check to see if DM
+		if ((document.getElementById('DMT').value == '')) {
+		document.FormName.DiabeticNo.value='X';
+		document.FormName.DiabeticYes.value='';
+		}
+		if ((document.getElementById('DMT').value == 'No')||(document.getElementById('DMT').value == 'Yes')||(document.getElementById('DMT').value == 'NotApplicable')) {
+		document.FormName.DiabeticYes.value='X';
+		document.FormName.DiabeticNo.value='';
+		}
+		if (document.getElementById("A1C").value >6.2) {
+		document.FormName.DiabeticYes.value='X';
+		document.FormName.DiabeticNo.value='';
+		}
+
+		//Check to see if Pregnant
+		if ((document.getElementById('EDD').value == '')) {
+		document.FormName.PregnantNo.value='';
+		document.FormName.PregnantYes.value='X';
+		}
+		if ((document.getElementById('EDD').value < document.getElementById('Today').value)) {
+		document.FormName.PregnantNo.value='';
+		document.FormName.PregnantYes.value='X';
+		}
+		if ((document.getElementById('EDD').value > document.getElementById('Today').value)) {
+		document.FormName.PregnantNo.value='';
+		document.FormName.PregnantYes.value='X';
+		}
+
+		var Drug = /METFORMIN/;
+		var string1 = document.getElementById("Meds").value;
+		var match = string1.search(Drug);
+		if (match != -1)
+		document.FormName.MetforminYes.value='X';
+		else
+		document.FormName.MetforminNo.value='X';
+
+		//Default is patient not on anticoagulant.  Check below if on VKA or NOAC
+		document.FormName.AnticoagulantNo.value='X';
+		document.FormName.AnticoagulantText.value='';
+
+		var Drug2 = /WARFARIN/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='WARFARIN';
+		}
+
+		var Drug2 = /Apixaban/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='Apixaban';
+		}
+
+		var Drug2 = /ELIQUIS/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='ELIQUIS';
+		}
+
+		var Drug2 = /DABIGATRAN/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='DABIGATRAN';
+		}
+
+		var Drug2 = /PRADAXA/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='PRADAXA';
+		}
+
+		var Drug2 = /RIVAROXABAN/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='RIVAROXABAN';
+		}
+
+		var Drug2 = /XARELTO/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='XARELTO';
+		}
+
+		var Drug2 = /DALTEPARIN/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='DALTEPARIN';
+		}
+
+		var Drug2 = /FRAGMIN/;
+		var string2 = document.getElementById("Meds").value;
+		var match = string2.search(Drug2);
+		if(match != -1) {
+		document.FormName.AnticoagulantYes.value='X';
+		document.FormName.AnticoagulantNo.value='';
+		document.FormName.AnticoagulantText.value='FRAGMIN';
+		}
+	}
+
+	/****************************
+		Scripts to calculate US request dates
+	****************************/
+	function orderUS() {
+		var EDD = Date.parse(document.getElementById('EDD').value);
+		var GA1 = parseInt(document.getElementById('GA1').value);
+		var GA2 = parseInt(document.getElementById('GA2').value);
+		var GA3 = parseInt(document.getElementById('GA3').value);
+
+		if (GA1) {
+		var EDD1 = EDD.clone();
+		var USDate1 = EDD1.addWeeks(-40).addWeeks(GA1).toString('MMM dd, yyyy');
+		var Text1 = "For week " + GA1 + " ultrasound around " + USDate1 + ".";
+		document.getElementById('RelevantHistory').value += Text1;
+		}
+		if (GA2) {
+		var EDD2 = EDD.clone();
+		var USDate2 = EDD2.addWeeks(-40).addWeeks(GA2).toString('MMM dd, yyyy');
+		var Text2 = " For week " + GA2 + " ultrasound around " + USDate2 + ".";
+		document.getElementById('RelevantHistory').value += Text2;
+		}
+		if (GA3) {
+		var EDD3 = EDD.clone();
+		var USDate3 = EDD3.addWeeks(-40).addWeeks(GA3).toString('MMM dd, yyyy');
+		var Text3 = " For week " + GA3 + " ultrasound around " + USDate3 + ".";
+		document.getElementById('RelevantHistory').value += Text3;
+		}
+	}
+
+	function orderNT_US() {
+		// NT range 11w to 13w 6d, ideally 12w to 13w 3d
+		var EDD = Date.parse(document.getElementById('EDD').value);
+		var GA1 = 11;
+		var GA2 = 13.86;
+		var GA3 = 12;
+		var GA4 = 13.43;
+		var EDD = Date.parse(document.getElementById('EDD').value);
+
+		var EDD1 = EDD.clone();
+		var USDate1 = EDD1.addWeeks(-40).addWeeks(GA1).toString('MMM dd, yyyy');
+
+		var EDD2 = EDD.clone();
+		var USDate2 = EDD2.addWeeks(-40).addWeeks(GA2).toString('MMM dd, yyyy');
+
+		var EDD3 = EDD.clone();
+		var USDate3 = EDD3.addWeeks(-40).addWeeks(GA3).toString('MMM dd, yyyy');
+
+		var EDD4 = EDD.clone();
+		var USDate4 = EDD4.addWeeks(-40).addWeeks(GA4).toString('MMM dd, yyyy');
+
+		var Text = "For NT US between " + USDate1 + " and " + USDate2 + ". Ideally between " + USDate3 + " and " + USDate4 + ".";
+
+		document.getElementById('RelevantHistory').value += Text;
+	}
+
+	function orderFT_US() {
+		// First trimester ultrasound range 8w to 9w
+		var EDD = Date.parse(document.getElementById('EDD').value);
+		var GA1 = 8;
+		var GA2 = 10;
+		var EDD = Date.parse(document.getElementById('EDD').value);
+
+		var EDD1 = EDD.clone();
+		var USDate1 = EDD1.addWeeks(-40).addWeeks(GA1).toString('MMM dd, yyyy');
+
+		var EDD2 = EDD.clone();
+		var USDate2 = EDD2.addWeeks(-40).addWeeks(GA2).toString('MMM dd, yyyy');
+
+		var Text = "For First Trimester Dating US between " + USDate1 + " and " + USDate2 + ".";
+
+		document.getElementById('RelevantHistory').value += Text;
+	}
+
+	function order18_US() {
+		// Routine 2nd trimester ultrasound range 18w to 22w
+		var EDD = Date.parse(document.getElementById('EDD').value);
+		var GA1 = 18;
+		var GA2 = 22;
+		var EDD = Date.parse(document.getElementById('EDD').value);
+
+		var EDD1 = EDD.clone();
+		var USDate1 = EDD1.addWeeks(-40).addWeeks(GA1).toString('MMM dd, yyyy');
+
+		var EDD2 = EDD.clone();
+		var USDate2 = EDD2.addWeeks(-40).addWeeks(GA2).toString('MMM dd, yyyy');
+
+		var Text = "For Routine Second Trimester US between " + USDate1 + " and " + USDate2 + ".";
+
+		document.getElementById('RelevantHistory').value += Text;
+	}
+
+		//script to close quick select menu
+	var persistclose=0 //set to 0 or 1. 1 means once the bar is manually closed, it will remain closed for browser session
+
+	function closebar() {
+		if (persistclose)
+		document.cookie="remainclosed=1"
+		document.getElementById("LabQuickSelect").style.visibility="hidden"
+		document.getElementById("LabQuickSelect").style.display="none"
+	}
+
+	function addSubject() {
+		var Exam = document.FormName.ExamRequestedText.value;
+		var Site = document.FormName.HospitalSite.value;
+		if (Site == '') {
+		document.FormName.subject.value += Exam;
+		} else {
+		document.FormName.subject.value += Exam + '-' + Site;
+		}
+	}
+
+	/****************************
+		script to Increase or Decrease the Font Size
+		name = input name/id, delta = increase (+) or decrease (-) increment #
+		Requires loadFontSize(); in startUp, or in onload line
+	****************************/
+	function changeFontSize(name, delta) {
+		var element = $("#" + name)
+		var oldSize = parseInt(element.css("font-size"));
+		var newSize = oldSize + delta;
+
+		// Save new font size into "value" field of hidden element
+		$("#" + name + "_fontsize").attr('value', newSize);
+
+		// Set font size
+		element.css({'font-size': newSize + 'px'});
+	}
+
+		// Retain altered font size when eForm is reopened; create hidden inputs with name_fontsize format
+	function loadFontSize() {
+		$.each($("input[name*='_fontsize'"), function(index, element) {
+			var fontSize = element.value;
+
+			if (!!fontSize) {
+				var name = element.name.split('_')[0];
+				$("#" + name).css({'font-size': fontSize + 'px'});
+			}
+		});
+	}
+
+	/****************************
+		Toggle and Array functions to show and hide supplemental text and X-box combinations
+	****************************/
+	function checkArray(x) {
+	for (var i = 0; i < x.length; i++) {
+		if (document.getElementById(x[i]).value == '') {
+			document.getElementById(x[i]).value='X'}
+		}
+	}
+
+	function uncheckArray(x) {
+	for (var i = 0; i < x.length; i++) {
+		if (document.getElementById(x[i]).value == 'X') {
+			document.getElementById(x[i]).value=''}
+		}
+	}
+
+	function ToggleBoxesAndExamRequestedTextAndSubject(ElementId,BoxesToCheck,ExamRequestedTextValue,SubjectValue) {
+	if (document.getElementById(ElementId).checked == true || (document.getElementById(ElementId).value != 'X' && document.getElementById(ElementId).classList.contains('box1'))) {
+		checkArray(BoxesToCheck)
+		document.FormName.ExamRequestedText.value += ExamRequestedTextValue;
+		document.FormName.subject.value += SubjectValue;
+		} else {
+		uncheckArray(BoxesToCheck)
+		document.FormName.ExamRequestedText.value = document.FormName.ExamRequestedText.value.replace(ExamRequestedTextValue,'');
+		document.FormName.subject.value = document.FormName.subject.value.replace(SubjectValue,'');
+		}
+	}
+
+	function ToggleRelevantHxAndReasonForExam(ElementId,RelevantHistoryValue,ReasonForExamValue) {
+	if (document.getElementById(ElementId).checked == true || (document.getElementById(ElementId).value != 'X' && document.getElementById(ElementId).classList.contains('box1'))) {
+		document.FormName.RelevantHistory.value += RelevantHistoryValue;
+		document.FormName.ReasonForExam.value += ReasonForExamValue;
+		} else {
+		document.FormName.RelevantHistory.value = document.FormName.RelevantHistory.value.replace(RelevantHistoryValue,'');
+		document.FormName.ReasonForExam.value = document.FormName.ReasonForExam.value.replace(ReasonForExamValue,'');
+		}
+	}
+
+	function ToggleProtocolTextbox(ElementId,ProtocolTextboxValue) {
+	if (document.getElementById(ElementId).checked == true || (document.getElementById(ElementId).value != 'X' && document.getElementById(ElementId).classList.contains('box1'))) {
+		document.FormName.ProtocolTextbox.value += ProtocolTextboxValue;
+		} else {
+		document.FormName.ProtocolTextbox.value = document.FormName.ProtocolTextbox.value.replace(ProtocolTextboxValue,'');
+		}
+	}
+
+	function ToggleCopyTo(ElementId,CopyToValue) {
+	if (document.getElementById(ElementId).checked == true || (document.getElementById(ElementId).value != 'X' && document.getElementById(ElementId).classList.contains('box1'))) {
+		document.FormName.CopyTo.value += CopyToValue;
+		} else {
+		document.FormName.CopyTo.value = document.FormName.CopyTo.value.replace(CopyToValue,'');
+		}
+	}
+
+	/****************************
+		Radio-XBox functions 
+		Changes function of X_boxes to radio_boxes when the id of the radiobox is passed as x 
+		and is named in the convention name_X where X appears in the string defined in scales
+		Ensure that the list is sequential. Do no skip numbers. An input can be hidden if appropriate.
+	****************************/
+	function Radio_Box(x) {
+		var scales = ["1", "2", "3", "4", "5"];
+		var partA = x.substring(0, x.indexOf("_"));
+		var i = x.substring(x.indexOf("_"));
+		var j = i.substr(1);
+
+		for (var n in scales) {
+			if ( j == scales[n]) {
+				for (var m in scales){
+					if (m != n) { document.getElementById(partA+"_"+scales[m]).value = ''; }
+				}
+			}
+		}
+		return false;
+	}
+</script>
+</head>
+
+<body onload="startUp(); start();" onbeforeprint="document.forms['FormName'].reportValidity();">
+<div id="Page1" style="position:absolute; left:0px; top:0px; width:850px;">
+	<img id="BGImage" src="" style="position:absolute; left:0px; top:0px; width:850px;">
+
+<form method="post" action="" name="FormName" id="FormName">
+
+<!-- Hidden input for eForm title -->
+<input type="hidden" name="PatientNameL" id="PatientNameL" oscarDB=patient_nameL>
+
+<!-- Hidden input for CheckCopyTo -->
+<input type="hidden" name="PatientMD" id="PatientMD" oscarDB=doctor>
+<input type="hidden" name="PatientMD_MSP" id="PatientMD_MSP" oscarDB=doctor_ohip_no>
+<input type="hidden" name="ReferralMD" id="ReferralMD" oscarDB=referral_name>
+<input type="hidden" name="ReferralMD_MSP" id="ReferralMD_MSP" oscarDB=referral_no>
+<input type="hidden" name="PhysicianName" id="PhysicianName" oscarDB=current_user>
+
+<!-- Hidden input for normal order of user name, name="CurrentProviderDoctor" -->
+<input type="hidden" name="current_user_name" id="current_user_name" oscarDB=current_user>
+
+<!-- Hidden input for font size changer inputs -->
+<input type="hidden" name="Location_fontsize" id="Location_fontsize">
+<input type="hidden" name="addressLine_fontsize" id="addressLine_fontsize">
+<input type="hidden" name="RelevantHistory_fontsize" id="RelevantHistory_fontsize">
+<input type="hidden" name="ReasonForExam_fontsize" id="ReasonForExam_fontsize">
+<input type="hidden" name="ProtocolTextbox_fontsize" id="ProtocolTextbox_fontsize">
+<input type="hidden" name="Allergies_fontsize" id="Allergies_fontsize">
+
+<input type="hidden" name="DMT" id="DMT" oscarDB=m$DMME#value>
+<input type="hidden" name="A1C" id="A1C" oscarDB=m$A1C#value>
+<input type="hidden" name="Meds" id="Meds" oscarDB=druglist_generic>
+<input type="hidden" name="Today" id="Today" oscardb=today>
+
+<!-- Hidden input default caseroom, this will be added to the CopyTo field for any chosen procedure -->
+<input type="hidden" name="Default_Caseroom" id="Default_Caseroom">
+
+<!-- Reference Info -->
+<div name="ReferenceInfo" class="DoNotPrint" style="position:absolute; left:850px; top:490px; font-size:11px;"> 
+<span style="position:absolute; left:0px; top:200px; width:200px; background:pink;">&nbsp; * F5 to reopen menu</span>
+<span style="position:absolute; left:0px; top:220px; width:200px;  background:pink;">&nbsp; ** check sites below for further details</span>
+
+<a href="http://www.brookeimaging.ca/locations.php" style="position:absolute; left:0px; top:240px; width:200px; " target="_blank">Brooke Radiology Locations</a>
+<a href="http://greigassociates.com/location-contact/" style="position:absolute; left:0px; top:260px; width:200px; " target="_blank">Greig Associates Locations</a>
+<a href="https://www.westcoastmedicalimaging.com/location-list" style="position:absolute; left:0px; top:280px; width:200px; " target="_blank">West Coast Medical Imaging Locations</a>
+<a href="http://www.valleymedicalimaging.com/" style="position:absolute; left:0px; top:300px; width:200px; " target="_blank">Valley Medical Imaging Locations</a>
+<a href="http://www.medrayimaging.com/" style="position:absolute; left:0px; top:320px; width:200px; " target="_blank">MedRay Imaging</a>
+<a href="http://nsmi.ca/locations/north-vancouver/" style="position:absolute; left:0px; top:340px; width:200px; " target="_blank">North Shore Medical Imaging</a>
+<a href="https://www.downtownradiology.ca/" style="position:absolute; left:0px; top:360px; width:200px; " target="_blank">Downtown Radiology</a>
+</div>
+
+<!-- top right -->
+<input name="ClinicName" type="text" oscardb=clinic_name class="noborder" style="position:absolute; left:365px; top:2px; width:265px; font-size:14px; background:transparent;">
+<span style="position:absolute; left:690px; top:2px; font-size:14px;">Date: </span>
+<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:730px; top:2px; width:85px; font-size:14px; background:transparent;" oscardb=today>
+
+<!-- top left -->
+<span name="whiteout" style="position:absolute; left:25px; top:20px; width:180px; height:45px; background:white;"></span>
+
+<textarea name="Location" id="Location" type="text" class="noborder" style="position:absolute; left:40px; top:22px; width:315px; height:110px; font-size:14px; background:white;"></textarea>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:20px; top:24px;" onclick="changeFontSize('Location', 1);">&#9650;</span>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:20px; top:39px;" onclick="changeFontSize('Location', -1);">&#9660;</span>
+
+<input name="HospitalSite" type="text" class="noborder" style="position:absolute; left:40px; top:157px; width:70px; font-size:14px; text-align:center; background:transparent;">
+<input name="ApptDateTime" type="text" class="noborder" style="position:absolute; left:150px; top:157px; width:190px; font-size:14px; background:transparent;">
+
+<input name="AlternateHospitalNo" id="AlternateHospitalNo" type="text" class="Xbox box1" style="left:28px; top:177px;">
+
+<input name="InterpreterNeededYes" id="InterpreterNeededYes" type="text" class="Xbox box1" style="left:28px; top:211px;"
+	onclick="if (InterpreterNeededYes.value !='X') {
+		getElementById('Language').required = true; 
+		getElementById('Language').reportValidity(); 
+		} else { 
+		getElementById('Language').value = ''; 
+		getElementById('Language').required = false; 
+		};">
+<input name="Language" id="Language" type="text" class="noborder" style="position:absolute; left:245px; top:210px; width:110px; font-size:14px; background:transparent;">
+
+<!-- top right label -->
+<input name="PatientName" id="PatientName" type="text" class="noborder" style="position:absolute; left:370px; top:40px; width:370px; font-size:16px; background:transparent;" oscarDB=patient_name>
+<input name="PatientSex" type="text" class="noborder" style="position:absolute; left:750px; top:40px; width:20px; font-size:16px; text-align:center; background:transparent;" oscardb=sex>
+<input name="addressLine" id="addressLine" type="text" class="noborder" style="position:absolute; left:370px; top:78px; width:447px; font-size:14px; background:transparent;" oscardb=addressLine>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:74px;" onclick="changeFontSize('addressLine', 1);">&#9650;</span>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:89px;" onclick="changeFontSize('addressLine', -1);">&#9660;</span>
+
+<span style="position:absolute; left:370px; top:103px; font-size:11px;"><b>Cell Phone</b></span>
+<input name="cell" id="cell" type="text" class="noborder" style="position:absolute; left:370px; top:113px; width:240px; font-size:16px; background:transparent;" oscardb=cell>
+<input name="phone" id="phone" type="text" class="noborder" style="position:absolute; left:635px; top:113px; width:180px; font-size:16px; background:transparent;" oscardb=phone>
+
+<input name="dob" id="dob" type="text" class="noborder" style="position:absolute; left:370px; top:146px; width:240px; font-size:16px; background:transparent;" oscardb=dob>
+<input name="phone2" id="phone2" type="text" class="noborder" style="position:absolute; left:635px; top:146px; width:180px; font-size:16px; background:transparent;" oscardb=phone2>
+
+<input name="PHN" type="text" class="noborder" style="position:absolute; left:370px; top:181px; width:240px; font-size:14px; background:transparent;" oscardb=HIN>
+<input name="WCB_Claim" type="text" class="noborder" style="position:absolute; left:635px; top:181px; width:180px; font-size:14px; background:transparent;">
+
+<!-- Bill to: -->
+<input name="BillToMSP" id="Bill_1" type="text" class="Xbox box2" style="left:371px; top:205px;" onclick="getElementById('BillToOther_text').required = false; getElementById('BillToOther_text').value = ''; Radio_Box(this.id);">
+<input name="BillToWCB" id="Bill_2" type="text" class="Xbox box2" style="left:429px; top:205px;" onclick="getElementById('BillToOther_text').required = false; getElementById('BillToOther_text').value = ''; Radio_Box(this.id);">
+<input name="BillToICBC" id="Bill_3" type="text" class="Xbox box2" style="left:492px; top:205px;" onclick="getElementById('BillToOther_text').required = false; getElementById('BillToOther_text').value = ''; Radio_Box(this.id);">
+<input name="BillToPatient" id="Bill_4" type="text" class="Xbox box2" style="left:555px; top:205px;" onclick="getElementById('BillToOther_text').required = false; getElementById('BillToOther_text').value = ''; Radio_Box(this.id);">
+<input name="BillToOther" id="Bill_5" type="text" class="Xbox box2" style="left:631px; top:205px;" 
+	onclick="if (Bill_5.value !='X') {
+		getElementById('BillToOther_text').required = true; 
+		getElementById('BillToOther_text').reportValidity(); 
+		} else { 
+		getElementById('BillToOther_text').value = ''; 
+		getElementById('BillToOther_text').required = false; 
+		}
+	Radio_Box(this.id);">
+<input name="BillToOther_text" id="BillToOther_text" type="text" class="noborder" style="position:absolute; left:695px; top:207px; width:120px; font-size:14px; background:transparent;">
+
+<!-- Modality -->
+<input name="Xray" id="Modality_1" type="text" class="Xbox box2" style="left:44px; top:271px;" onclick="document.FormName.ExamRequestedText.value ='X-ray '; Radio_Box(this.id);">
+<input name="Ultrasound" id="Modality_2" type="text" class="Xbox box2" style="left:132px; top:271px;" onclick="document.FormName.ExamRequestedText.value ='US '; Radio_Box(this.id);">
+<input name="CT" id="Modality_3" type="text" class="Xbox box2" style="left:322px; top:271px;" onclick="document.FormName.ExamRequestedText.value ='CT '; Radio_Box(this.id);">
+<input name="SpecialProcedures" id="Modality_4" type="text" class="Xbox box2" style="left:401px; top:271px;" onclick="Radio_Box(this.id);">
+
+<!-- Exam requested -->
+<input name="ExamRequestedText" id="ExamRequestedText" type="text" style="position:absolute; left:180px; top:298px; width:635px; font-size:14px; font-weight:bold; background:transparent;" class="noborder">
+
+<textarea name="RelevantHistory" id="RelevantHistory" type="text" class="noborder" style="position:absolute; left:45px; top:337px; width:375px; height:55px; font-size:14px;"></textarea>
+<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:10px; top:339px;" onclick="changeFontSize('RelevantHistory', 1);">&#9650;</span>
+<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:10px; top:354px;" onclick="changeFontSize('RelevantHistory', -1);">&#9660;</span>
+
+<textarea name="ReasonForExam" id="ReasonForExam" type="text" class="noborder" style="position:absolute; left:435px; top:337px; width:380px; height:55px; font-size:14px;"></textarea>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:827px; top:339px;" onclick="changeFontSize('ReasonForExam', 1);">&#9650;</span>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:827px; top:354px;" onclick="changeFontSize('ReasonForExam', -1);">&#9660;</span>
+
+<textarea name="ProtocolTextbox" id="ProtocolTextbox" type="text" class="noborder" style="position:absolute; left:45px; top:397px; width:765px; height:34px; font-size:12px;"></textarea>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:10px; top:397px;" onclick="changeFontSize('ProtocolTextbox', 1);">&#9650;</span>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:10px; top:412px;" onclick="changeFontSize('ProtocolTextbox', -1);">&#9660;</span>
+
+<!-- Clinical details -->
+<span name="whiteout" style="position:absolute; left:215px; top:439px; width:90px; height:47px; background:white;"></span>
+
+<span style="position:absolute; left:234px; top:440px; font-size:14px;"><b>Yes</b></span>
+<span style="position:absolute; left:283px; top:440px; font-size:14px;"><b>No</b></span>
+<input name="PregnantYes" id="Pregnant_1" type="text" class="Xbox box3" style="left:216px; top:438px;" onclick="Radio_Box(this.id);">
+<input name="PregnantNo" id="Pregnant_2" type="text" class="Xbox box3" style="left:265px; top:438px;" onclick="Radio_Box(this.id);">
+<input name="LMP" type="text" class="noborder" style="position:absolute; left:415px; top:437px; width:230px; font-size:14px; background:transparent;" oscarDB=m$LMP#value>
+
+<span style="position:absolute; left:234px; top:455px; font-size:14px;"><b>Yes</b></span>
+<span style="position:absolute; left:283px; top:455px; font-size:14px;"><b>No</b></span>
+<input name="DiabeticYes" id="Diabetic_1" type="text" class="Xbox box3" style="left:216px; top:453px;" onclick="Radio_Box(this.id);">
+<input name="DiabeticNo" id="Diabetic_2" type="text" class="Xbox box3" style="left:265px; top:453px;" onclick="Radio_Box(this.id);">
+<input name="MetforminYes" id="Metformin_1" type="text" class="Xbox box3" style="left:671px; top:452px;" onclick="Radio_Box(this.id);">
+<input name="MetforminNo" id="Metformin_2" type="text" class="Xbox box3" style="left:730px; top:452px;" onclick="Radio_Box(this.id);">
+
+<span style="position:absolute; left:234px; top:471px; font-size:14px;"><b>Yes</b></span>
+<span style="position:absolute; left:283px; top:471px; font-size:14px;"><b>No</b></span>
+<input name="DialysisYes" id="Dialysis_1" type="text" class="Xbox box3" style="left:216px; top:469px;" onclick="Radio_Box(this.id);">
+<input name="DialysisNo" id="Dialysis_2" type="text" class="Xbox box3" style="left:265px; top:469px;" onclick="Radio_Box(this.id);">
+
+<input name="AnticoagulantYes" id="Anticoagulant_1" type="text" class="Xbox box3" style="left:495px; top:469px;" onclick="Radio_Box(this.id);">
+<input name="AnticoagulantNo" id="Anticoagulant_2" type="text" class="Xbox box3" style="left:554px; top:469px;" onclick="Radio_Box(this.id);">
+<input name="AnticoagulantText" id="AnticoagulantText" type="text" class="noborder" style="position:absolute; left:595px; top:467px; width:220px; font-size:14px; background:transparent;">
+
+<textarea name="Allergies" id="Allergies" type="text" class="noborder" style="position:absolute; left:120px; top:492px; width:295px; height:33px; font-size:12px; background:transparent;" oscarDB=allergies_des_no_archived></textarea>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Increase Font Size" style="left:10px; top:492px;" onclick="changeFontSize('Allergies', 1);">&#9650;</span>
+	<span type="text" class="DoNotPrint FontSizeChange" title="Decrease Font Size" style="left:10px; top:507px;" onclick="changeFontSize('Allergies', -1);">&#9660;</span>
+
+<input name="IsolationStandard" id="Isolation_1" type="text" class="Xbox box1" style="left:495px; top:502px;" onclick="Radio_Box(this.id);">
+<input name="IsolationOther" id="Isolation_2" type="text" class="Xbox box1" style="left:582px; top:502px;" onclick="Radio_Box(this.id);">
+<input name="IsolationOtherText" type="text" style="position:absolute; left:650px; top:502px; width:165px; font-size:14px; background:transparent;" class="noborder">
+
+<input name="eGFR" id="eGFR" type="text" style="position:absolute; left:270px; top:571px; width:60px; font-size:14px; background:transparent;" class="noborder" oscarDB=m$EGFR#value>
+<input name="eGFR2" id="eGFR2" type="text" class="DoNotPrint" style="position:absolute; left:345px; top:568px; width:20px; height:20px;">
+
+<input name="eGFRDate" id ="eGFRDate" type="text" style="position:absolute; left:495px; top:571px; width:80px; font-size:14px; background:transparent;" class="noborder" oscarDB=m$EGFR#dateObserved>
+<input name="eGFRDate2" id ="eGFRDate2" type="text" class="DoNotPrint" style="position:absolute; left:605px; top:568px; width:35px; height:20px; font-size:14px; text-align:center; background:transparent;">
+<span class="DoNotPrint" style="position:absolute; left:650px; top:570px; width:150px; height:20px; font-size:14px; background:transparent;">Days since last test</span>
+
+<input name="Creatinine" id="Creatinine" type="text" class="noborder" style="position:absolute; left:270px; top:590px; width:60px; font-size:14px; background:transparent;" oscarDB=m$SCR#value>
+<input name="CreatinineDate" id="CreatinineDate" type="text" class="noborder" style="position:absolute; left:495px; top:590px; width:80px; font-size:14px; background:transparent;" oscarDB=m$SCR#dateObserved>
+<input name="labreq" id="labreq" type="button" class="DoNotPrint" style="position:absolute; left:675px; top:587px; background:lightskyblue;" oscarOPEN="1.1 Lab Requisition" value="Lab Requisition" >
+
+<input name="HxContrastAllergy" type="text" class="noborder" style="position:absolute; left:315px; top:608px; width:500px; font-size:16px; background:transparent;">
+
+<!-- Referral Info -->
+<textarea name="current_user" id="current_user" type="text" class="noborder" style="position:absolute; left:110px; top:653px; width:200px; height:31px; font-size:14px; background:transparent;" oscarDB=current_user></textarea>
+<input name="BillingNumber" id="BillingNumber" type="text" style="position:absolute; left:375px; top:653px; width:50px; font-size:14px; background:transparent;" class="noborder" oscarDB=current_user_ohip_no>
+<input name="clinic_phone" id="clinic_phone" type="text" class="noborder" style="position:absolute; left:90px; top:693px; width:165px; font-size:16px; background:transparent;" oscardb=clinic_phone>
+<input name="clinic_fax" id="clinic_fax" type="text" class="noborder" style="position:absolute; left:295px; top:693px; width:130px; font-size:16px; background:transparent;" oscardb=clinic_fax>
+<input name="CopyTo" id="CopyTo" type="text" class="noborder" style="position:absolute; left:110px; top:734px; width:315px; font-size:14px; background:transparent;">
+
+<!-- Relevant Previous Images -->
+<input name="filmreq" id="filmreq" type="text" class="noborder" style="position:absolute; left:615px; top:652px; width:20px; font-size:14px; font-weight:bold; text-align:center; background:yellow;" onclick="changeYes_No(this.id);">
+
+<input name="DateOfRequestedFilm" id="DateOfRequestedFilm" type="text" class="noborder" style="position:absolute; left:700px; top:652px; width:115px; font-size:14px; background:transparent;">
+
+<input name="LocationOfPreviousFilm" type="text" style="position:absolute; left:505px; top:679px; width:145px; font-size:14px; background:transparent;" class="noborder">
+<input name="DateOfPreviousFilm" id="DateOfPreviousFilm" type="text" style="position:absolute; left:700px; top:679px; width:115px; font-size:14px; background:transparent;" class="noborder">
+
+<input name="Reports" id="Reports" type="text" class="Xbox box1" style="left:568px; top:706px;">
+<input name="LabWork" id="LabWork" type="text" class="Xbox box1" style="left:651px; top:706px;">
+<input name="ImagingCD" id="ImagingCD" type="text" class="Xbox box1" style="left:691px; top:706px;">
+
+<input name="Notes" type="text" style="position:absolute; left:490px; top:734px; width:325px; font-size:14px; background:transparent;" class="noborder">
+
+<!-- The submit/print/reset buttons -->
+<div class="DoNotPrint" id="BottomButtons" style="position:absolute; left:25px; top:1080px; width:825px; font-size:13px;">
+	<table><tr><td style="background:#e5f2ff;">
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+		Subject: <input name="subject" size="40" type="text"> 
+		<input value="Reset" name="ResetButton" id="ResetButton" type="reset" style="color:red;" onclick="history.go(0);"> 
+		<input value="Print" name="PrintButton" id="PrintButton" type="button" style="color:green;" onclick="printLetter();"> 
+		<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick="submission();">
+	</td></tr></table><br>
+
+<!-- Copy Left -->
+<a rel="licence" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" id="CreativeCommons" style="border:0px;" src="" /></a>
+<span> FHA Obstetrical US eFORM, V20_Oct24_2021, updated by Dr. John Yap, is licensed under a </span> 
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">GPL.</a><br>
+<span style="color:forestgreen;">Please consider supporting </span><a href="https://oscarbc.ca/" target="_blank">oscarbc.ca.</a> |
+<a id="emailLnk1" style="cursor:pointer;" onclick="javascript:window.open('mailto:info@oscarbc.ca', 'mail'); event.preventDefault();" title="Email to OSCAR BC">Email: info@oscarbc.ca/</a> |
+<a href="https://www.facebook.com/pg/OSCARBCcommunity" target="_blank">Facebook</a> | 
+<a href="https://twitter.com/OSCARBCemr" target="_blank">Twitter</a> | 
+<a href="https://www.linkedin.com/company/oscarbc/" target="_blank">LinkedIn</a> |
+<br><br>
+</div>
+
+<!-- Quick Select menu items -->
+<div id="LabQuickSelect" class="DoNotPrint" style="position:absolute; left:850px; top:2px; width:290px; background:LightYellow; border:solid black 1px; padding:2px; font-size:13px;">
+<b>LOCATION:</b><br>
+<select onchange="setImagingLocation(this.value)" id="LabList">
+	<option value="default" onclick="document.FormName.Location.value = ''; document.FormName.HospitalSite.value = '';">Choose a location</option>
+	<option value="RCH">ROYAL COLUMBIAN HOSPITAL</option>
+	<option value="MEDRAY">MEDRAY Coquitlam-UXBM-MRI</option>
+	<option value="ERH">EAGLE RIDGE HOSPITAL</option>
+	<option value="BH">BURNABY HOSPITAL</option>
+	<option value="RMH">RIDGE MEADOWS HOSPITAL</option>
+	<option value="JPOSC">SURREY PATTISON OUTPATIENT CENTRE</option>
+	<option value="SPH">St. PAUL&#8217;S HOSPITAL</option>
+	<option value="MSJ">Mt. St. JOSEPH&#8217;S HOSPITAL</option>
+	<option value="DH">DELTA HOSPITAL</option>
+	<option value="LMH">LANGLEY MEMORIAL HOSPITAL</option>
+	<option value="ARHCC">ABBOTSFORD HOSPITAL and CANCER CENTER</option>
+	<option onclick="Location.value = '';">U=Ultrasound X=X-ray M=Mammography</option>
+	<option onclick="Location.value = '';">H=Hysterosalpingogram F=Fluoroscopy</option>
+	<option onclick="Location.value = '';">WCMI=West Coast Medical Imaging</option>
+	<option value="MEDRAY">MEDRAY Coquitlam-UXBM-MRI</option>
+	<option value="WCMI_Brewery_District">WCMI Brewery District New West-X</option>
+	<option value="WCMI_New_West">WCMI Royal City Centre New West-UXF</option>
+	<option value="WCMI_Austin">WCMI Austin Coquitlam-UXF</option>
+	<option value="Brooke_MetroTown">Brooke Metrotown-UXM</option>
+	<option value="Brooke_N_Burnaby">Brooke N Burnaby-UX</option>
+	<option value="WCMI_Guildford">WCMI Guildford Health Centre-UXF</option>
+	<option value="WCMI_KGB">WCMI N Surrey City Centre One-XF</option>
+	<option value="WCMI_Scott_Rd">WCMI Scott Rd-UXMF</option>
+	<option value="WCMI_E_Hastings">WCMI Hastings-X</option>
+	<option value="XRAY_505">XRAY 505 VGH-UXM</option>
+	<option value="WCMI_Laurel">WCMI Laurel-XH</option>
+	<option value="WCMI_Arbutus">WCMI-Broadway-Arbutus-X</option>
+	<option value="WCMI_Oakridge">WCMI Oakridge-UXF</option>
+	<option value="Greig_Oakridge">Greig Oakridge-X</option>
+	<option value="RobsonSq">Downtown Radiology Robson Sq-XB</option>
+	<option value="WCMI_Burrard">WCMI Burrard Vancouver-X</option>
+	<option value="Chinatown">Downtown Radiology Chinatown-UXF</option>
+	<option value="WCMI_E_Broadway">WCMI East Broadway-UXM</option>
+	<option value="Greig_Victoria_Dr">Greig Victoria Dr-UXM</option>
+	<option value="NSMI_N_Van">North Shore N Van-UXM</option>
+	<option value="NSMI_W_Van">North Shore W Van-X</option>
+	<option value="Brooke_Richmond_3Rd">Brooke Richmond #3-UXM</option>
+	<option value="Brooke_Richmond_Gilbert">Brooke Richmond Gilbert-X</option>
+	<option value="VMI_Langley">VMI Langley-UXMF</option>
+	<option value="VMI_Chilliwack">VMI Chilliwack-X</option>
+	<option value="VMI_Abbotsford">Abbotsford-Clearbrook-UX</option>
+</select><br><br>
+
+	<input name="DefaultHospital_box" id="DefaultHospital_box" type="checkbox" title="Default Caseroom" 
+	onclick="
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleCopyTo(this.id, CopyToValue);
+		">Default Caseroom
+	<input name="DefaultHospital" id="DefaultHospital" type="text" title="Set Default" style="width:120px;" placeholder="Set default caseroom" oscarDB=e$last#DefaultHospital><br>
+
+	<input name="PCOC" id="PCOC" type="checkbox" title="Primary Care Obstetrical Clinic" 
+	onclick="
+		var CopyToValue = 'PCOC, ';
+		ToggleCopyTo(this.id, CopyToValue);
+		">Copy to PCOC<br>
+
+	<input name="PMMC" id="PMMC" type="checkbox" title="Port Moody Maternity Clinic"
+	onclick="
+		var CopyToValue = 'PMMC, ';
+		ToggleCopyTo(this.id, CopyToValue);
+		">Copy to PMMC<br><br>
+
+<b>TYPE OF PROCEDURE(S):</b><br>
+<u>Prenatal US:</u><br>
+	<input name="MatUS" id="MatUS" type="checkbox" 
+	onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Prenatal Ultrasound, ';
+		var SubjectValue = 'Prenatal US ';
+		var RelevantHistoryValue = '';
+		var ReasonForExamValue = 'Patient is pregnant. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);
+
+			if(MatUS.checked == true) {
+				orderUS();
+			} else {
+				document.FormName.RelevantHistory.value = '';
+			}"
+	onkeypress="
+		if(MatUS.checked == true) {
+			orderUS();
+		} else {
+			document.FormName.RelevantHistory.value = '';
+		}">Ultrasound for Week(s) #:<br>
+
+	<input type="text" name="GA1" id="GA1" style="width:25px; text-align:center;" title="at week 1">
+	<input type="text" name="GA2" id="GA2" style="width:25px; text-align:center;" title="at week 2">
+	<input type="text" name="GA3" id="GA3" style="width:25px; text-align:center;" title="at week 3"><br>
+	Calculate using EDD of (yyyy-mm-dd):<br>
+	<input type="text" name="EDD" id="EDD" style="width:75px; text-align:center;" oscarDB=m$EDD#value><br>
+
+	<input name="First Trimester Dating Obstetrical US" id="FT_Dating_US" type="checkbox" 
+	onclick="
+		document.FormName.GA1.value='8';
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Routine First Trimester Dating Obstetrical Ultrasound &#60; 14 Weeks, ';
+		var SubjectValue = 'Dating Scan ';
+		var RelevantHistoryValue = '';
+		var ReasonForExamValue = 'For first trimester dating scan. Please do the ultrasound on or around this date. Thank you. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);
+
+			if(FT_Dating_US.checked == true) {
+				orderFT_US();
+			} else {
+				document.FormName.RelevantHistory.value = '';
+			}"
+	onkeypress="
+		if(FT_Dating_US.checked == true) {
+			orderFT_US();
+		} else {
+			document.FormName.RelevantHistory.value = '';
+		}"><span title="Ideally between 7-10 wks">First Trimester Dating Obstetrical US</span><br>	
+
+	<input name="NT_Obs_US" id="NT_Obs_US" type="checkbox" title="Book for 11w-13w 6d Gestational Age (optimal 12w-13w 3d). For pt who will be 35 yr or older at EDD." 
+	onclick="
+		document.FormName.GA1.value='11';
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical Nuchal Translucency US scan, ';
+		var SubjectValue = 'NT Scan ';
+		var RelevantHistoryValue = '';
+		var ReasonForExamValue = 'For NT 1st trimester scan. Please do the ultrasound on or around these dates. Thank you. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);
+
+			if(NT_Obs_US.checked == true) {
+				orderNT_US();
+			} else {
+				document.FormName.RelevantHistory.value = '';
+				document.FormName.Location.value = '';
+				document.getElementById('NT_MedRay').checked =false;
+				document.getElementById('NT_RCH').checked =false;
+				document.getElementById('NT_JPOCSC').checked =false;
+				document.getElementById('NT_BCWH').checked =false;
+			}"
+	onkeypress="
+		if(NT_Obs_US.checked == true) {
+			orderNT_US();
+		} else {
+			document.FormName.RelevantHistory.value = '';
+			document.getElementById('NT_MedRay').checked =false;
+			document.getElementById('NT_RCH').checked =false;
+			document.getElementById('NT_JPOCSC').checked =false;
+			document.getElementById('NT_BCWH').checked =false;
+		}"><span title="Ideally between 11-13+6 wks">Nuchal Translucency Obstetrical US</span><br>
+
+&nbsp; &nbsp; <input name="NT_site" id="NT_MedRay" value="NT_MedRay" type="radio" title="Call to book, then fax requisition" onclick="setImagingLocation(this.value)">NT at MedRay<br>
+&nbsp; &nbsp; <input name="NT_site" id="NT_RCH" value="NT_RCH" type="radio" title="Fax number for Nuchal Translucency is different from regular RCH US. Requires dating US first" onclick="setImagingLocation(this.value)">NT at RCH<br>
+&nbsp; &nbsp; <input name="NT_site" id="NT_JPOCSC" value="NT_JPOCSC" type="radio" title="Fax number for Nuchal Translucency is different from regular JPOCSC US" onclick="setImagingLocation(this.value)">NT at JPOCSC<br>
+&nbsp; &nbsp; <input name="NT_site" id="NT_BCWH" value="NT_BCWH" type="radio" onclick="setImagingLocation(this.value)">NT at BCWH<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://www.perinatalservicesbc.ca/health-professionals/professional-resources/screening/prenatal-genetic/nuchal-translucency-(nt)-sites-in-bc" class="DoNotPrint" style="color:red;" target="_blank" title="Book for 11w-13w 6d Gestational Age (optimal 12w-13w 3d)">Nuchal Translucency US sites</a><br><br>
+
+	<input name="Routine 18 week Obstetrical US" id="Routine18WkObsUS" type="checkbox" 
+	onclick="
+		document.FormName.GA1.value='18';
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Detailed 20 weeks Obstetrical US, ';
+		var SubjectValue = '20wk Detail Scan ';
+		var RelevantHistoryValue = '';
+		var ReasonForExamValue = 'For detailed 20 weeks scan. Please do the ultrasound on or around this date. Thank you. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);
+
+			if(Routine18WkObsUS.checked == true) {
+				order18_US();
+			} else {
+				document.FormName.RelevantHistory.value = '';
+			}"
+	onkeypress="
+		if(Routine18WkObsUS.checked == true) {
+			order18_US();
+		}
+		else {
+			document.FormName.RelevantHistory.value = '';
+		}">Detailed 20 weeks Obstetrical US<br>
+
+	<input name="Bleeding Obstetrical US" id="BleedingObsUS" type="checkbox" onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical US - URGENT, ';
+		var SubjectValue = 'US interval growth, ';
+		var RelevantHistoryValue = 'Antepartum hemorrhage, ';
+		var ReasonForExamValue = 'Bleeding during pregnancy. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);">Obstetrical US-Bleeding<br>
+
+	<input name="Growth Obstetrical US" id="GrowthObsUS" type="checkbox" 
+	onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical US, ';
+		var SubjectValue = 'US interval growth, ';
+		var RelevantHistoryValue = 'Pregnant. ';
+		var ReasonForExamValue = 'Please assess interval fetal growth. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);">Obstetrical US-Interval Growth<br>
+
+	<input name="IUGR Obstetrical US" id="IUGR" type="checkbox" onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical US, ';
+		var SubjectValue = 'IUGR ';
+		var RelevantHistoryValue = 'IUGR, ';
+		var ReasonForExamValue = 'Please schedule weekly ultrasound for cord dopplers and every 2 weeks for amniotic fluid volume and interval fetal growth. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);">Obstetrical US-IUGR<br>
+
+	<input name="Macrosomia Obstetrical US" id="Macrosomia" type="checkbox" onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical US, ';
+		var SubjectValue = 'Macrosomia ';
+		var RelevantHistoryValue = '';
+		var ReasonForExamValue = 'Please assess for macrosomia. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);">Obstetrical US-Macrosomia<br>
+
+	<input name="Low Placenta Obstetrical US" id="Praevia" type="checkbox" onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical US, ';
+		var SubjectValue = 'Praevia ';
+		var RelevantHistoryValue = 'Low lying placenta noted on previous obstetrical US.';
+		var ReasonForExamValue = 'Please assess for placental location. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);">Obstetrical US-Low Placenta<br>
+
+	<input name="Post-Dates Obstetrical US" id="PostDates" type="checkbox" onclick="
+		var BoxesToCheck = ['Pregnant_1', 'Modality_2']
+		var ExamRequestedTextValue = 'Obstetrical US, ';
+		var SubjectValue = 'Post-Dates ';
+		var RelevantHistoryValue = '';
+		var ReasonForExamValue = 'Postdates pregnancy.  Please assess amniotic fluid volume. ';
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 2 hours before exam. Immediately drink four 8 oz. (250 ml) glasses of fluid (not milk). Do not void until after exam.';
+		var CopyToValue = document.getElementById('DefaultHospital').value + ', ';
+		ToggleBoxesAndExamRequestedTextAndSubject(this.id, BoxesToCheck, ExamRequestedTextValue, SubjectValue);
+		ToggleRelevantHxAndReasonForExam(this.id, RelevantHistoryValue, ReasonForExamValue);
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);
+		ToggleCopyTo(this.id, CopyToValue);">Obstetrical US-Post-Dates<br><br>
+
+	
+<b>TEST PROTOCOL:</b> &nbsp; <input name="Imaging_Instruction_Link" type="button" style="color:green;" oscarOPEN="2.2 Instructions FHA"  value="Detailed Instructions" title="to eForm">
+<br>
+	<input name="US_Obs" id="US_Obs" type="checkbox" 
+	onclick="
+		var ProtocolTextboxValue = 'INSTRUCTIONS:  Come well hydrated, drink plenty of water the day prior to exam. On day of exam, empty your bladder 2 hours before appointment, then drink 1/2 litre (two 8 oz. glasses) of water (not milk) over next 30 minutes.';
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);">US Obstetric<br>
+
+	<input name="US_Abdomen" id="US_Abdomen" type="checkbox" 
+	onclick="
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Have a fat free supper the night before. Nothing to eat or drink from midnight. If your appointment is in the afternoon, you may drink clear fat-free fluids in the morning.';
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);">US Abdomen<br>
+
+	<input name="US_Pel" id="US_Pel" type="checkbox" 
+	onclick="
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Come well hydrated, drink plenty of water the day prior to exam. On day of exam, empty your bladder 2 hours before appointment, then drink 1 litre (four 8 oz. glasses) of water (not milk) over next 30 minutes.';
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);">US Pelvic<br>
+
+	<input name="US_Renal" id="US_Renal" type="checkbox" 
+	onclick="
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Empty your bladder 1 hr before your appointment, and then drink 1 litre of water over the next 30 minutes.';
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);">US Renal<br>
+
+	<input name="Hysterosalpingogram" id="Hysterosalpingogram" type="checkbox" 
+	onclick="
+		var ProtocolTextboxValue = 'INSTRUCTIONS: Abstain from sexual intercourse from the first day of menstrual period until the examination has been completed. Examination time is approx. 30 min.';
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);">Hysterosalpingogram<br>
+
+	<input name="US_Thyroid_Breast_Scrotal_Other" id="US_Thyroid_Breast_Scrotal_Other" type="checkbox" 
+	onclick="
+		var ProtocolTextboxValue = 'INSTRUCTIONS: No preparation required.';
+		ToggleProtocolTextbox(this.id, ProtocolTextboxValue);">US Thyroid/Breast/Scrotal<br>
+
+	<input value="Reset" name="reset" type="reset" style="color:green;" onclick="history.go(0)"> 
+	<input value="Close" name="Close" type="button" style="color:green;" onclick="closebar();"> F5 to reopen
+</div>
+
+</form>
+<!-- Define Date Calendars -->
+<script type="text/javascript">
+	Calendar.setup({ inputField:"today", ifFormat: "%Y-%m-%d", showsTime:false, button:"today", singleClick:true, step:1 });
+	Calendar.setup({ inputField:"DateOfRequestedFilm", ifFormat: "%Y-%m-%d", showsTime:false, button:"DateOfRequestedFilm", singleClick:true, step:1 });
+	Calendar.setup({ inputField:"DateOfPreviousFilm", ifFormat: "%Y-%m-%d", showsTime:false, button:"DateOfPreviousFilm", singleClick:true, step:1 });
+</script> 
+
+</body></html>

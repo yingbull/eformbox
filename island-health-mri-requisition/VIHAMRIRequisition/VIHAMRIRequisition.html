@@ -1,0 +1,758 @@
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>VIHA MRI Requisition</title>
+
+	<!-- Original version by  Alex Kirkpatrick 17 May 2019 -->
+	<!-- update 08-Nov-2021  added database tags, added esigned text stamp, site selection menu /gk -->
+	<!-- update 11-Nov-2021  added database tags, added HT and WT unit toggle buttons /gk -->
+	<!-- update v21.11.14 - circle_mark edition with help from John Robertson /gk -->
+	<!-- update v21.12.1 - 12-Dec-2021 - minor fixes, added missing <!DOCTYPE html> opening tag, fixed some syntax, repositioned circle marks for more acurate printing /gk -->
+
+
+
+	<!-- E-FORM DISCLAIMER: 
+		Licensing: This eForm was shared by John Robertson and Gunther Klein, and is distributed under the Creative Commons, Attribution-ShareAlike 3.0 Unported Licensse (CC BY-SA 3.0)
+		As is: eForms are shared as-is, free of charge on a share-alike basis 
+		with absolutely no guarantee or warranty. 
+		No Quality Control: The author does not vet any eForms 
+		and does not purport to apply any manner of quality control. 
+		Responsibility: The responsibility for the clinical and medical-legal consequences 
+		of any and all eForms, rest with the clinical OSCAR end-users themselves, not with the author of the eForm. 
+		This applies to both eForms shared by others, and those created by users themselves. 
+		Attribution: eForms are shared freely among the user community, 
+		with attribution to the original author of the eForm. 
+		Free: eForms so shared may not be sold or purchased. 
+		Provincial validation:  eForms are optional and non-essential add-ons, 
+		separate from OSCAR, and with their own license terms.
+		eForms are not part of the OSCAR core program functionality and code base. 
+		For this reason eForms are not subject to provincial validation testing and conformance criteria.
+		eForms are also not subject to the ISO production process for OSCAR. -->
+
+
+	<style type="text/css" media="screen" >
+
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+
+	 input {
+		-moz-box-sizing: content-box;
+		-webkit-print-color-adjust: exact;
+		-webkit-box-sizing: content-box;
+		box-sizing: content-box
+	 }
+
+	 .noborder {
+		border : 0px solid black;
+		background-color: transparent;
+		padding: 3px;
+		overflow: hidden;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 1px solid lightgray;
+		background-color: #e6f2ff;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	 .sig {
+		border: 2px dotted blue;
+		color: Black;
+		background-color: white;
+		cursor: crosshair;
+	 }
+	/* Drawing the 'gripper' for touch-enabled devices */
+	 html.touch #content {
+		float:left;
+		width:92%;
+	}
+	 html.touch #scrollgrabber {
+		float:right;
+		width:4%;
+		margin-right:2%;
+		background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+	 }
+	 html.borderradius #scrollgrabber {
+		border-radius: 1em;
+	 }
+	 .sitebutton {
+		background-color: transparent;
+		border: none;
+		color: black;
+		text-align: left;
+		vertical-align: center;
+		text-decoration: none;
+		display: inline-block;
+		margin: none;
+		padding: none;
+		cursor: pointer;
+		width: 95%;
+	}
+	.sitebutton:hover {
+		background-color: yellow;
+		opacity: 0.1;
+		outline: 2px solid gray;
+	}
+
+
+	input[class*='button']:active {
+		background: red;
+		opacity: 0.1;
+	}
+	 textarea {
+	    resize: none;
+	}
+
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 9px;
+		height: 10px;
+		font-size: 9px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		cursor: pointer;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+
+	.circle_mark{
+		width: 22px; 
+		height: 15px;
+		border-radius: 15px;
+		background: transparent;	
+		cursor: pointer; 
+	}
+	.circle_mark:hover {
+		outline: 2px solid #444;
+		opacity: 0.5;
+	}
+	.circle_mark:active {
+		outline: 2px solid red;
+		opacity: 1;
+	}
+	</style>
+
+	<style type="text/css" media="print">
+
+	 .Show{
+		visibility: visible;
+		display: block;
+	}
+
+	 .Hide{
+		visibility: hidden;
+		display: none;
+	}
+
+	 .DoNotPrint {
+		display: none;
+	 }
+	 .noborder {
+		border : 0px;
+		background: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+	 .border {
+		border : 0px;
+		background-color: transparent;
+		padding: 2px;
+		overflow: hidden;
+		font: normal 12px Arial sans-serif;
+		text-align:left;
+	 }
+
+	.circle_mark{
+		width: 22px; 
+		height: 16px;
+		border-radius: 16px;
+		overflow: hidden;
+		border: 0px solid #444;
+		background: transparent;	
+	}
+	 .sig {
+		border-style: solid;
+		border-color: transparent;
+		color: Black;
+		background-color: transparent;
+	 }
+	/* x-box styling - using the CSS wildcard 'containing' selector * to include all classes of x-boxes*/
+	input[class*='box'] {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		font-size: 12px;
+		font-family: Arial;
+		border: 0.5px solid gray;
+		font-weight: bolder;
+		text-align: center;
+		background: lightyellow;
+	}
+	textarea {
+    		resize: none;
+	}
+
+	#exam_reason {background: white;}
+
+	 </style>
+
+
+<script language="javascript" type="text/javascript">
+		/****************************
+		startup functions 
+		****************************/
+		function startUp() {	
+			// Recircle circled elements
+			$('.circle_mark').each(function(i, obj) {
+    			if (document.getElementById(obj.id + "_circled").value == "1")
+    				obj.style.borderWidth = '2px';
+			});		
+			reImg();
+			checkGender();
+			loadSig();
+			document.FormName.exams_requested.focus();
+			setDefaults();
+		}
+		
+		function setDefaults() {	            
+			// check the newform flag to ensure this is the initial load of the form
+			if (document.getElementById("newForm").value == 'True')
+			{
+				document.getElementById('HeightBorder_1').click();
+				document.getElementById('WeightBorder_1').click();
+		} else { // actions if eForm is reopened
+		}
+	}
+	</script>
+
+
+	<!-- jQuery for greater functionality -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script>
+	if (typeof jQuery === 'undefined') {
+		document.write(unescape('%3Cscript%20src%3D%22../js/jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+	}
+	</script>
+	<script>
+	if (typeof jQuery === 'undefined') {
+		document.write(unescape('%3Cscript%20src%3D%22jquery-1.7.1.min.js%22%3E%3C/script%3E'));
+	}
+	</script>
+
+	
+	<!-- scripts for Xbox functions -->
+	<script language="javascript">
+	$(document).ready(function() {
+		$( ".Xbox" ).click(function() {
+			var st = $( this ).val();
+			if (st=="X") {
+				$( this ).val("");
+			} else {
+				$( this ).val("X");
+			}
+		});
+
+		$( ".Xbox" ).keypress(function(event) {
+		// any key press except tab will constitute a value change to the checkbox
+			if (event.which != 0){
+				$( this ).click();
+				return false;
+				}
+		});
+
+	});
+	</script>
+
+	<!-- jQuery for parent-child and radio fields -->
+		<script>
+		$(document).ready(function() {
+			$('[class^="child-"]').hide();
+			$('.parent-field').click(function() {
+				$('[class^="child-"]').hide();
+				$('.parent-field').each(function() {
+					if ( $(this).is('input:checkbox') ){
+						if(this.checked){
+							$('.child-' +  $(this).prop('id')).show();
+						}else{
+						$('.child-' + $(this).val()).show();
+						}
+					}
+					if ( $(this).is('input:text') ){
+						if($(this).val()=='X'){
+							$('.child-' +  $(this).prop('id')).show();
+						}else{
+						$('.child-' + $(this).val()).show();
+						}
+					}
+				});
+			});
+			$('[class^="only-one-"]').click(function() {
+				if ( $(this).is('input:checkbox') ){
+					$('.'+$(this).attr('class')).prop('checked', false);
+					$(this).prop('checked', true);
+				}
+
+				if ( $(this).is('input:text') ){
+					$('.'+$(this).attr('class')).val('');
+					$( this ).val('X');
+				}
+			});
+		});
+		</script>
+
+<script type="text/javascript">
+		function change_border(x) {
+	//works to change function of circle_markes to radio_boxes when the id of the radiobox is passed as x and is named in the convention name_X where X is a numeric value that appears in the string defined in scales
+		var scales = ["1",
+			"2"
+				  ];
+		var partA = x.substring(0, x.indexOf("_"));
+		var i = x.substring(x.indexOf("_"));
+		var j = i.substr(1);
+
+		for (var n in scales) {
+			if ( j == scales[n]) {
+				for (var m in scales){
+					if (m != n) { document.getElementById(partA+"_"+scales[m]+"_circled").value = '0';  document.getElementById(partA+"_"+scales[m]).style.borderWidth = '0px' }
+				}
+			}
+		}
+
+		
+			if (document.getElementById(x).style.borderWidth == '0px') {
+				document.getElementById(x).style.borderWidth = '2px';
+				document.getElementById(x + "_circled").value = "1";
+			} else {
+				document.getElementById(x).style.borderWidth = '0px';
+				document.getElementById(x + "_circled").value = "0";
+			}
+return false;		
+	}		
+</script>
+
+	<script type="text/javascript" src="${oscar_javascript_path}eforms/signatureControl.jsp"></script>
+	<script type="text/javascript">
+	if (typeof jQuery != "undefined" && typeof signatureControl != "undefined") {jQuery(document).ready(function() {signatureControl.initialize({eform:true, height:0, width:0, top:154, left:100});});}</script>
+
+	<!-- Freeform Signatures -->
+
+
+	<!-- jSignature file for local testing outside of OSCAR -->
+	<script type="text/javascript" src="jSignature.min.js"></script>
+
+	<script type="text/javascript" src="${oscar_image_path}jSignature.min.js"></script>
+
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="${oscar_javascript_path}flashcanvas.js"></script>
+	<![endif]-->
+
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		$("#CanvasSignature1").jSignature({'decor-color':'rgba(255, 255, 255, 0.0)'})
+		var pdf = jQuery("input[name='pdfButton']");
+		if (pdf.size() != 0) {
+			pdf.attr('onclick', '').unbind('click');
+			pdf.attr('value', 'PDF');
+			pdf.click(function(){saveSig();submitPrintButton(false);});
+			}
+		var pdfSave = jQuery("input[name='pdfSaveButton']");
+		if (pdfSave.size() != 0) {
+			pdfSave.attr('onclick', '').unbind('click');
+			pdfSave.attr('value', 'Submit & PDF');
+			pdfSave.click(function(){saveSig();submitPrintButton(true);});
+			}
+	})
+	</script>
+
+	<script type="text/javascript">
+	function saveSig(){
+		var $sig=$("#CanvasSignature1");
+		var datapair=new Array();
+		datapair=$sig.jSignature("getData","base30");
+		document.getElementById("StoreSignature1").value=datapair.join(",");
+	}
+	function clearSig(){
+		$("#CanvasSignature1").jSignature("reset");
+	}
+	function loadSig(){
+		var $sig=$("#CanvasSignature1");
+		var data
+		data=document.getElementById("StoreSignature1").value;
+		$sig.jSignature("setData","data:"+ data) ;
+	}
+	</script>
+
+	<!-- auto ticking gender Xboxes OR checkboxes -->
+	<script type="text/javascript" language="javascript">
+	function checkGender(){
+		 if (document.getElementById("PatientGender").value == "M"){
+		 document.getElementById("Male").value="X";
+		 }else if (document.getElementById("PatientGender").value == "F"){
+		 document.getElementById("Female").value="X";
+		}
+	 }
+	</script>
+
+	<script language="javascript">
+	function formPrint(){
+		window.print();
+	} 
+
+	function submission() {  // requires type="submit" in submit button input to allow for validity testing
+		setFlag();
+		releaseDirtyFlag();
+	}
+
+	function setFlag() {
+	// indicate that the form has been submitted
+	if (document.getElementById("newForm").value == 'True')
+		document.getElementById("newForm").value = 'False';
+	}
+	</script>
+
+	<!-- scripts to confirm closing of window if it hadnt been saved yet -->
+	<script language="javascript">
+	//keypress events trigger dirty flag
+	var needToConfirm = false;
+	document.onkeyup=setDirtyFlag;
+	function setDirtyFlag(){
+		needToConfirm = true;
+	}
+	function releaseDirtyFlag(){
+		needToConfirm = false; //Call this function to prevent an alert.
+	//this could be called when save button is clicked
+	}
+	window.onbeforeunload = confirmExit;
+	function confirmExit(){
+		if (needToConfirm){
+			 return "You have attempted to leave this page. If you have made any changes to the fields without clicking the Save button, your changes will be lost. Are you sure you want to exit this page?";
+		 }
+	}
+	</script>
+
+	<!-- to run the toggle buttons for height and weight units -->
+	<script language="javascript">
+	function toggleHTunits() {
+	  var x = document.getElementById('height_units');
+	  if (x.value === "cm") {
+	    x.value = "ft";
+	  } else {
+	    x.value = "cm";
+	  }
+	}
+	function toggleWTunits() {
+	  var x = document.getElementById('weight_units');
+	  if (x.value === "kg") {
+	    x.value = "lbs";
+	  } else {
+	    x.value = "kg";
+	  }
+	}
+	</script>
+
+	<!-- main calendar program -->
+	<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+	<script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+	<script type="text/javascript">
+	function reImg(){
+	// for stand alone development without uploading to OSCAR
+		var strLoc = window.location.href.toLowerCase();
+		if(strLoc.indexOf("https") == -1) {
+			var src1 = document.getElementById("BGImage1").src;
+			document.getElementById("BGImage1").src = src1.replace("$%7Boscar_image_path%7D","");
+		}
+	}
+	</script>
+	</head>
+
+	<body onload="startUp();">
+	<form method="post" action="" name="FormName" id="FormName" >
+	<div id="page1" style="position:relative;" >
+	<img id="BGImage1" src="${oscar_image_path}29-05-33657-0-1-up-Aug2018.png" style="position: relative; left: 0px; top: 0px; width:750px">
+ 
+<!-- Hidden Inputs -->
+
+
+<!-- End Hidden Inputs -->
+
+	<input name="current_user_ohip_no" id="current_user_ohip_no" type="text" class=" noborder" style="position:absolute; left:230px; top:102px; width:131px; height:15px; "  oscarDB=current_user_ohip_no>
+	<input name="current_user1" id="current_user1" type="text" class=" noborder" style="position:absolute; left:137px; top:122px; width:224px; height:15px; font-weight:bold;"  oscarDB=current_user>
+		
+	<div id="CanvasSignature1" class="sig" style="position:absolute; left:96px; top:138px; width:220px; height:25px; z-index:10;">
+		</div>
+		<input type="hidden" name="StoreSignature1" id="StoreSignature1" value="">
+
+	<!-- E-signed text stamp buttons -->
+
+		<textarea name="eSigned" id="eSigned" type="text" class="Hide" style="position:absolute; left:96px; top:145px; width:220px; height:18px;  font-style:italic; font-weight:bold; font-size:12px; text-align:center; background-color:#ccffff; border-width:0; resize:none;" >&quot;electronically signed&quot;</textarea>
+
+		<input value="eSign" name="eSigButton" id="eSigButton" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:10px; left:325px; top:128px" 
+		onclick="
+				document.getElementById('CanvasSignature1').className = 'Hide';
+				document.getElementById('eSigned').className = 'noborder';
+				">  
+
+		<input value="Clear Sig" name="ClearButton2" id="ClearButton" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:10px; left:325px; top:150px; z-index:10" 
+		onclick="
+				document.getElementById('CanvasSignature1').className = 'sig';
+				document.getElementById('eSigned').className = 'Hide';
+				clearSig();
+				">
+	<!-- end of E-signed text stamp buttons -->
+
+	<input name="clinic_phone" id="clinic_phone" type="text" class=" noborder" style="position:absolute; left:82px; top:166px; width:111px; height:15px; "  oscarDB=clinic_phone>
+	<input name="clinic_fax" id="clinic_fax" type="text" class=" noborder" style="position:absolute; left:233px; top:166px; width:127px; height:15px; "  oscarDB=clinic_fax>
+	<input name="copies_to" id="copies_to" type="text" class="border" style="position:absolute; left:121px; top:187px; width:237px; height:15px; " >
+
+	<input name="today" id="today" type="text" class="noborder" style="position:absolute; left:272px; top:215px; width:80px; height:15px;" oscarDB="today" >
+
+	<textarea name="exams_requested" id="exams_requested" type="text" class="border" style="position:absolute; left:34px; top:235px; width:322px; height:68px; " ></textarea>
+
+	<textarea name="exam_reason" id="exam_reason" type="text" class="border" style="position:absolute; left:35px; top:348px; width:321px; height:65px; resize:horizontal; " ></textarea>
+
+	<!-- height and weight section -->
+
+
+	<input name="height" id="height" type="text" class="border" style="position:absolute; left:76px; top:467px; width:35px; height:15px; "  oscarDB=m$HT#value>
+
+	<span name="HeightBorder_1" id="HeightBorder_1" type="text" class="circle_mark" style="position:absolute; left:138px; top:465px; border:0px solid;"  onClick="change_border(this.id);"></span>
+	<span name="HeightBorder_2" id="HeightBorder_2" type="text" class="circle_mark" style="position:absolute; left:168px; top:465px; border:0px solid; "  onClick="change_border(this.id);"></span>
+
+	<input type="hidden"  name="HeightBorder_1_circled" id="HeightBorder_1_circled">
+	<input type="hidden"  name="HeightBorder_2_circled" id="HeightBorder_2_circled">
+
+	<input name="weight" id="weight" type="text" class="border" style="position:absolute; left:236px; top:467px; width:35px; height:15px; "  oscarDB=m$WT#value>
+
+	<span name="WeightBorder_1" id="WeightBorder_1" type="text" class="circle_mark" style="position:absolute; left:296px; top:465px; border:0px solid;"  onClick="change_border(this.id);"></span>
+	<span name="WeightBorder_2" id="WeightBorder_2" type="text" class="circle_mark" style="position:absolute; left:326px; top:465px; border:0px solid;"  onClick="change_border(this.id);"></span>
+
+	<input type="hidden" name="WeightBorder_1_circled" id="WeightBorder_1_circled">
+	<input type="hidden" name="WeightBorder_2_circled" id="WeightBorder_2_circled">
+
+	<!-- end of height and weight section -->
+
+	<input name="allergies" id="allergies" type="text" class="border" style="position:absolute; left:92px; top:492px; width:266px; height:15px;"  oscarDB=allergies_des_no_archived >
+
+<!-- pregnancy -->
+	<input name="PtPregnant_1" id="PtPregnant_1" type="text" class="circle_mark" style="position:absolute; left:240px; top:514px; border:0px solid;"  onClick="change_border(this.id);">
+	<input name="PtPregnant_2" id="PtPregnant_2" type="text" class="circle_mark" style="position:absolute; left:283px; top:514px; border:0px solid;"  onClick="change_border(this.id);">
+
+	<input type="hidden"  name="PtPregnant_1_circled" id="PtPregnant_1_circled">
+	<input type="hidden"  name="PtPregnant_2_circled" id="PtPregnant_2_circled">
+
+
+<!-- infection -->
+	<input name="infection_1" id="infection_1" type="text" class="circle_mark" style="position:absolute; left:240px; top:538px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="infection_2" id="infection_2" type="text" class="circle_mark" style="position:absolute; left:284px; top:538px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="infection_1_circled" id="infection_1_circled">
+	<input type="hidden" name="infection_2_circled" id="infection_2_circled">
+
+	<input name="infection_specify" id="infection_specify" type="text" class="border" style="position:absolute; left:152px; top:562px; width:205px; height:15px; " >
+
+
+
+	<input name="hinc" id="hinc" type="text" class=" noborder" style="position:absolute; left:424px; top:36px; width:300px; height:15px; "  oscarDB=hinc>
+	<input name="first_last_name" id="first_last_name" type="text" class=" noborder" style="position:absolute; left:469px; top:62px; width:258px; height:15px; font-weight:bold;"  oscarDB=first_last_name>
+	<input name="address_street_number_and_name" id="address_street_number_and_name" type="text" class=" noborder" style="position:absolute; left:446px; top:87px; width:282px; height:15px; "  oscarDB=address_street_number_and_name>
+
+	<input name="city" id="city" type="text" class=" noborder" style="position:absolute; left:446px; top:107px; width:162px; height:15px;"  oscarDB=city>
+	<input name="province" id="province" type="text" class=" noborder" style="position:absolute; left:618px; top:107px; width:20px; height:15px;"  oscarDB=province>
+	<input name="postal" id="postal" type="text" class=" noborder" style="position:absolute; left:648px; top:107px; width:70px; height:15px; "  oscarDB=postal>
+	<input name="phone" id="phone" type="text" class=" noborder" style="position:absolute; left:479px; top:125px; width:250px; height:15px; font-weight:bold;"  oscarDB=phone>
+	<input name="cell" id="cell" type="text" class="border" style="position:absolute; left:466px; top:150px; width:250px; height:15px; font-weight:bold;"  oscarDB=cell>
+
+	<input name="Male" id="Male" type="text" class="only-one-genderbox" style="position:absolute; left:414px; top:190px;" >
+	<input name="Female" id="Female" type="text" class="only-one-genderbox" style="position:absolute; left:442px; top:190px;" >
+	<input name="Other" id="Other" type="text" class="only-one-genderbox" style="position:absolute; left:467px; top:190px;" >
+	<span name="O" id="O" type="text" style="position:absolute; left:483px; top:189px; width:12px; height:10px; font-size:14px; ">O</span>
+
+	<input name="dob" id="dob" type="text" class=" noborder" style="position:absolute; left:527px; top:187px; width:201px; height:15px; "  oscarDB=dob>
+
+	<input name="msp" id="msp" type="text" class="only-one-billingbox" style="position:absolute; left:432px; top:215px;" >
+	<input name="wcb" id="wcb" type="text" class="only-one-billingbox" style="position:absolute; left:473px; top:215px;" >
+	<input name="icbc" id="icbc" type="text" class="only-one-billingbox" style="position:absolute; left:518px; top:215px;" >
+	<input name="other" id="other" type="text" class="only-one-billingbox" style="position:absolute; left:563px; top:215px;" >
+	<input name="other_insurer_specify" id="other_insurer_specify" type="text" class="border" style="position:absolute; left:614px; top:213px;	 width:102px; height:15px; " >
+
+
+<!-- implant  -->
+	<input name="implant_1" id="implant_1" type="text" class="circle_mark" style="position:absolute; left:653px; top:277px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="implant_2" id="implant_2" type="text" class="circle_mark" style="position:absolute; left:687px; top:277px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="implant_1_circled" id="implant_1_circled">
+	<input type="hidden" name="implant_2_circled" id="implant_2_circled">
+
+
+<!-- renal -->
+	<input name="renal_1" id="renal_1" type="text" class="circle_mark" style="position:absolute; left:662px; top:457px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="renal_2" id="renal_2" type="text" class="circle_mark" style="position:absolute; left:693px; top:457px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="renal_1_circled" id="renal_1_circled">
+	<input type="hidden" name="irenal_2_circled" id="renal_2_circled">
+
+	<input name="egfr_value" id="egfr_value" type="text" class="border" style="position:absolute; left:508px; top:484px; width:49px; height:15px; "  oscarDB=m$EGFR#value >
+	<input name="result_date" id="result_date" type="text" class="border" style="position:absolute; left:645px; top:484px; width:73px; height:15px; " oscarDB=m$EGFR#dateObserved >
+
+<!-- FB -->
+	<input name="metalfb_1" id="metalfb_1" type="text" class="circle_mark" style="position:absolute; left:663px; top:526px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="metalfb_2" id="metalfb_2" type="text" class="circle_mark" style="position:absolute; left:693px; top:526px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="metalfb_1_circled" id="metalfb_1_circled">
+	<input type="hidden" name="metalfb_2_circled" id="metalfb_2_circled">
+
+	<input name="ap_orbital_ordered" id="ap_orbital_ordered" type="text" class="Xbox" style="position:absolute; left:443px; top:576px;" >
+	<input name="ap_orbital_result" id="ap_orbital_result" type="text" class="border" style="position:absolute; left:509px; top:574px; width:212px; height:15px; " >
+
+<!-- claustrophobic -->
+	<input name="claustrophobic_1" id="claustrophobic_1" type="text" class="circle_mark" style="position:absolute; left:664px; top:615px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="claustrophobic_2" id="claustrophobic_2" type="text" class="circle_mark" style="position:absolute; left:695px; top:615px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="claustrophobic_1_circled" id="claustrophobic_1_circled">
+	<input type="hidden" name="claustrophobic_2_circled" id="claustrophobic_2_circled">
+
+<!-- mobility -->
+	<input name="mobility_1" id="mobility_1" type="text" class="circle_mark" style="position:absolute; left:664px; top:676px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="mobility_2" id="mobility_2" type="text" class="circle_mark" style="position:absolute; left:695px; top:676px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="mobility_1_circled" id="mobility_1_circled">
+	<input type="hidden" name="mobility_2_circled" id="mobility_2_circled">
+
+	<input name="mobility_specify" id="mobility_specify" type="text" class="border" style="position:absolute; left:524px; top:696px; width:192px; height:15px; " >
+
+<!-- surgery -->
+	<input name="surgery_1" id="surgery_1" type="text" class="circle_mark" style="position:absolute; left:664px; top:735px; border:0px solid;"  onClick="change_border(this.id);" >
+	<input name="surgery_2" id="surgery_2" type="text" class="circle_mark" style="position:absolute; left:695px; top:735px; border:0px solid;"  onClick="change_border(this.id);" >
+
+	<input type="hidden" name="surgery_1_circled" id="surgery_1_circled">
+	<input type="hidden" name="surgery_2_circled" id="surgery_2_circled">
+
+	<input name="surgery_date" id="surgery_date" type="text" class="border" style="position:absolute; left:561px; top:757px; width:155px; height:15px; " >
+
+
+	<!-- Site selection -->
+
+	<input name="closest_site" id="closest_site" type="text" class="only-one-sitebox" style="position:absolute; left:28px; top:645px;" >
+	<input name="south_island" id="south_island" type="text" class="only-one-sitebox" style="position:absolute; left:28px; top:674px;" >
+	<input name="central_island" id="central_island" type="text" class="only-one-sitebox" style="position:absolute; left:28px; top:719px;" >
+	<input name="north_island" id="north_island" type="text" class="only-one-sitebox" style="position:absolute; left:28px; top:783px;" >
+
+	<input name="specific_site" id="specific_site" type="text" class="only-one-sitebox" style="position:absolute; left:28px; top:874px;" 
+				onfocus="
+				document.getElementById('South_Island_button').style.border = '3px solid gold'
+				document.getElementById('NRG_button').style.border = '3px solid gold'
+				document.getElementById('CDH_button').style.border = '3px solid gold'
+				document.getElementById('CRG_button').style.border = '3px solid gold'
+				document.getElementById('CVH_button').style.border = '3px solid gold'
+				">
+
+	<input name="specify_site" id="specify_site" type="text" class="border" style="position:absolute; left:120px; top:874px; width:224px; height:15px; font-weight:bold;"  >
+
+
+	<input name="South_Island_button" id="South_Island_button" type="button" class="DoNotPrint sitebutton" style="position:absolute; left:43px; top:668px; width:298px; height:40px; " 
+				onclick="
+				document.getElementById('specify_site').value = 'South Island - Fax: (250) 727-4448';
+				document.getElementById('specific_site').value = 'X';
+				"> 
+
+	<input name="NRG_button" id="NRG_button" type="button" class="DoNotPrint sitebutton" style="position:absolute; left:43px; top:733px; width:298px; height:16px; "
+	 			onclick="
+				document.getElementById('specify_site').value = 'NRG/WCG - Fax: (250) 716-7725';
+				document.getElementById('specific_site').value = 'X';
+				">
+
+	<input name="CDH_button" id="CDH_button" type="button" class="DoNotPrint sitebutton" style="position:absolute; left:43px; top:754px; width:298px; height:16px; "
+				onclick="
+				document.getElementById('specify_site').value = 'CDH - Fax: (250) 709-3009';
+				document.getElementById('specific_site').value = 'X';
+				" >
+
+	<input name="CRG_button" id="CRG_button" type="button" class="DoNotPrint sitebutton" style="position:absolute; left:43px; top:799px; width:298px; height:16px; " 
+				onclick="
+				document.getElementById('specify_site').value = 'CRG - Fax: (250) 286-7106';
+				document.getElementById('specific_site').value = 'X';
+				">
+
+	<input name="CVH_button" id="CVH_button" type="button" class="DoNotPrint sitebutton" style="position:absolute; left:43px; top:820px; width:298px; height:16px; " 
+				onclick="
+				document.getElementById('specify_site').value = 'CVH - Fax: (250) 331-5906';
+				document.getElementById('specific_site').value = 'X';
+				">
+
+	<input value="clear site selection" name="ClearSite" id="ClearSite" type="button" class="DoNotPrint" style="color:green; position:absolute; font-size:10px; left:255px; top:904px; z-index:10" 
+				onclick="
+				document.getElementById('specify_site').value = '';
+				document.getElementById('specific_site').value = '';
+				document.getElementById('closest_site').value = '';
+				document.getElementById('south_island').value = '';
+				document.getElementById('central_island').value = '';
+				document.getElementById('north_island').value = '';
+				document.getElementById('South_Island_button').style.border = '0px'
+				document.getElementById('NRG_button').style.border = '0px'
+				document.getElementById('CDH_button').style.border = '0px'
+				document.getElementById('CRG_button').style.border = '0px'
+				document.getElementById('CVH_button').style.border = '0px'
+				">
+
+	<!-- Hidden inputs -->
+	<input name="PatientGender" id="PatientGender" type="hidden" oscarDB=sex>
+	<input type="hidden" name="DoctorName" id="DoctorName" oscarDB=doctor>
+	<input type="hidden" name="CurrentUserName" id="CurrentUserName" oscarDB=current_user>
+	<input type="hidden" name="SubmittedBy" id="SubmittedBy">
+
+	<div id="signatureDisplay"></div><input type="hidden" name="signatureValue" id="signatureValue" value="" ></input>
+
+
+	<div class="DoNotPrint" id="BottomButtons" style="position: absolute; top:971px; left:0px;">
+		<table><tr><td>
+		<input type="hidden" id="newForm" name="newForm" value="True" />
+			Subject: <input name="subject" size="40" type="text"> <br> 
+			<input value="Submit" name="SubmitButton" id="SubmitButton" type="submit" onclick=" saveSig(); submission();">
+			<input value="Save Sig" name="SaveSigButton" id="SaveSigButton" type="button" onclick="saveSig();"> 
+			<input value="Clear Sig" name="ClearButton" id="ClearButton" type="button" onclick="clearSig();"> 
+			<input value="Reset" name="ResetButton" id="ResetButton" type="reset"> 
+			<input value="Print" name="PrintButton" id="PrintButton" type="button" onclick="formPrint();"> 
+			<input value="Print & Submit" name="PrintSubmitButton" id="PrintSubmitButton" type="button" onclick="formPrint();setTimeout('SubmitButton.click()',1800);"> 
+		</td></tr></table>
+
+	<!-- Copy Left -->
+	<a rel="liscence" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="blank"><img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png"/></a><br>
+	</div>
+	</div>
+	</form>
+
+<div name="legend" id="legend" class="DoNotPrint" >
+
+<span class="DoNotPrint" style="position:absolute; left:15px; top:470px;color:green; font-size:30px;">*</span>
+<span class="DoNotPrint" style="position:absolute; left:740px; top:285px;color:green; font-size:30px;">* <span style="font-size:14px;">Click on yes / no or units to circle your choice. </span></span>
+
+</div>
+
+	<!-- Define Date Calendars -->
+	<script type="text/javascript">
+		Calendar.setup( { inputField : "today", ifFormat : "%d-%b-%Y",  button : "today" } );
+		Calendar.setup( { inputField : "result_date", ifFormat : "%d-%b-%Y",  button : "result_date" } );
+		Calendar.setup( { inputField : "surgery_date", ifFormat : "%d-%b-%Y",  button : "surgery_date" } );
+	</script>
+
+
+	</body>
+	</html>
